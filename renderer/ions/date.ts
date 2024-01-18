@@ -1,0 +1,1 @@
+import "dayjs/locale/de";

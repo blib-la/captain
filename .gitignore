@@ -1,0 +1,8 @@
+node_modules
+*.log
+.next
+app
+dist
+.cm-cache
+.idea
+venv
