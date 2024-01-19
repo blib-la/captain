@@ -15,7 +15,8 @@ from torchvision.transforms.functional import InterpolationMode
 from blip.blip import blip_decoder
 from utils import glob_images_pathlib
 
-sys.path.append(os.path.dirname(__file__))
+# Add the directory of this script to sys.path to import local modules
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -77,15 +78,22 @@ def main(args):
 
         cwd = os.getcwd()
         print("Current Working Directory is: ", cwd)
-        os.chdir("scripts")
+        # next line was disable because chat-gpt told me to
+        # os.chdir("python") ## this is where we used to have "scripts". I changed it to "python" which is parent to this file
 
     print(f"load images from {args.train_data_dir}")
-    train_data_dir_path = Path(args.train_data_dir)
+    train_data_dir_path = Path(os.path.abspath(args.train_data_dir))
     image_paths = glob_images_pathlib(train_data_dir_path, args.recursive)
     print(f"found {len(image_paths)} images.")
 
     print(f"loading BLIP caption: {args.caption_weights}")
-    model = blip_decoder(pretrained=args.caption_weights, image_size=IMAGE_SIZE, vit="large", med_config="./blip/med_config.json")
+    # Get the directory of the current script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Construct the path to med_config.json
+    med_config_path = os.path.join(script_dir, 'blip', 'med_config.json')
+
+    model = blip_decoder(pretrained=args.caption_weights, image_size=IMAGE_SIZE, vit="large", med_config=med_config_path)
     model.eval()
     model = model.to(DEVICE)
     print("BLIP loaded")

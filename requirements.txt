@@ -1,0 +1,11 @@
+Pillow
+tqdm
+opencv-python
+torch==2.0.1 --index-url https://download.pytorch.org/whl/cu118
+torchvision==0.15.2 --index-url https://download.pytorch.org/whl/cu118
+timm
+pytorch-lightning
+fairscale
+transformers
+huggingface-hub
+tensorflow

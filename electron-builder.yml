@@ -1,6 +1,6 @@
-appId: com.example.nextron
-productName: My Nextron App
-copyright: Copyright © 2018 Yoshihide Shiono
+appId: com.blibla.captain
+productName: Captain
+copyright: Copyright © 2024 Blibla
 directories:
   output: dist
   buildResources: resources
@@ -9,4 +9,9 @@ files:
     filter:
       - package.json
       - app
+      - resources/python/**/*
+      - resources/venv/**/*
 publish: null
+asar: true
+asarUnpack:
+  - "resources/**/*"

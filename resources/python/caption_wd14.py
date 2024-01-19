@@ -76,7 +76,7 @@ def collate_fn_remove_corrupted(batch):
 
 def main(args):
     # hf_hub_downloadをそのまま使うとsymlink関係で問題があるらしいので、キャッシュディレクトリとforce_filenameを指定してなんとかする
-    # depreacatedの警告が出るけどなくなったらその時
+    # deprecatedの警告が出るけどなくなったらその時
     # https://github.com/toriato/stable-diffusion-webui-wd14-tagger/issues/22
     if not os.path.exists(args.model_dir) or args.force_download:
         print(f"downloading wd14 tagger model from hf_hub. id: {args.repo_id}")
@@ -265,14 +265,14 @@ def setup_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--remove_underscore",
         action="store_true",
-        help="replace underscores with spaces in the output tags\",
+        help="replace underscores with spaces in the output tags",
     )
     parser.add_argument("--debug", action="store_true", help="debug mode")
     parser.add_argument(
         "--undesired_tags",
         type=str,
         default="",
-        help="comma-separated list of undesired tags to remove from the output\",
+        help="comma-separated list of undesired tags to remove from the output",
     )
     parser.add_argument("--frequency_tags", action="store_true", help="Show frequency of tags for images")
 

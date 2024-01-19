@@ -3,6 +3,9 @@ node_modules
 .next
 app
 dist
-.cm-cache
+build
 .idea
 venv
+.env
+resources/python-3.11.5-embed-amd64
+wd14_tagger_model
