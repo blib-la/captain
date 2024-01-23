@@ -2,6 +2,8 @@
 
 Captain is the ultimate automatic image captioning tool with a human-in-the-loop approach. It's designed for ease of use with a zero-configuration, standalone `.exe` installation, and comes with everything embedded for a quick start. Whether for professional or casual use, Captain's intuitive design streamlines the captioning process, making it seamless to generate and edit captions for your images.
 
+<p align="center"><img src="img.png" alt="captioning view of captain" width="900"/></p>
+
 ## Features
 
 - **Automatic Captioning** ✅: Leverage various state-of-the-art methods to automatically generate captions for your images.
