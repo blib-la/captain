@@ -14,5 +14,5 @@ files:
 publish: null
 asar: true
 asarUnpack:
-  - "resources/python/*"
-  - "resources/python-embeded/*"
+  - "resources/python/**/*"
+  - "resources/python-embeded/**/*"
