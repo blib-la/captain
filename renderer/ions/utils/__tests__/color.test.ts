@@ -1,37 +1,37 @@
 import {
-	getContrast,
-	getContrastColor,
-	getRelativeLuminance,
-	hexToRGB,
-	mixColors,
-	rgbToHex,
+  getContrast,
+  getContrastColor,
+  getRelativeLuminance,
+  hexToRGB,
+  mixColors,
+  rgbToHex,
 } from "../color";
 
 describe("getContrastColor", () => {
-	it("should return black for light colors", () => {
-		const result = getContrastColor("#FFFFFF");
-		expect(result).toBe("black");
-	});
+  it("should return black for light colors", () => {
+    const result = getContrastColor("#FFFFFF");
+    expect(result).toBe("black");
+  });
 
-	it("should return white for dark colors", () => {
-		const result = getContrastColor("#000000");
-		expect(result).toBe("white");
-	});
+  it("should return white for dark colors", () => {
+    const result = getContrastColor("#000000");
+    expect(result).toBe("white");
+  });
 
-	it("should return black for medium-light colors", () => {
-		const result = getContrastColor("#7BAFD4");
-		expect(result).toBe("black");
-	});
+  it("should return black for medium-light colors", () => {
+    const result = getContrastColor("#7BAFD4");
+    expect(result).toBe("black");
+  });
 
-	it("should return white for medium-dark colors", () => {
-		const result = getContrastColor("#4B372B");
-		expect(result).toBe("white");
-	});
+  it("should return white for medium-dark colors", () => {
+    const result = getContrastColor("#4B372B");
+    expect(result).toBe("white");
+  });
 
-	it("should remove leading hash from hex color", () => {
-		const result = getContrastColor("#FFFFFF");
-		expect(result).toBe("black");
-	});
+  it("should remove leading hash from hex color", () => {
+    const result = getContrastColor("#FFFFFF");
+    expect(result).toBe("black");
+  });
 });
 
 describe("getRelativeLuminance", () => {

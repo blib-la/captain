@@ -14,7 +14,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "downlevelIteration": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
   },
   "exclude": ["node_modules", "renderer/next.config.js", "app", "dist"]
 }

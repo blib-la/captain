@@ -1,23 +1,46 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from "electron";
+import {
+  BLIP,
+  CAPTION,
+  DIRECTORY,
+  EXISTING_PROJECT,
+  GPTV,
+  IMAGE_CACHE,
+  PROJECTS,
+  STORE,
+  WD14,
+} from "./helpers/constants";
 
 const handler = {
-  store: <T>(data: { property: string; value: T }) =>
-    ipcRenderer.invoke("store", data),
-  selectFolder: () => ipcRenderer.invoke("dialog:openDirectory"),
-  showContent: (directory: string) =>
-    ipcRenderer.invoke("showContent", directory),
+  store: (data: Record<string, unknown>) =>
+    ipcRenderer.invoke(`${STORE}:set`, data),
+  saveCaption: (imageData: {
+    caption: string;
+    image: string;
+    captionFile: string;
+  }) => ipcRenderer.invoke(`${CAPTION}:save`, imageData),
+  getDirectory: () => ipcRenderer.invoke(`${DIRECTORY}:get`),
+  createImageCache: (directory: string, name: string) =>
+    ipcRenderer.invoke(`${IMAGE_CACHE}:create`, directory, name),
+  getExistingProject: (project: {
+    id: string;
+    cover?: string;
+    name: string;
+    source: string;
+  }) => ipcRenderer.invoke(`${EXISTING_PROJECT}:get`, project),
+  getProjects: () => ipcRenderer.invoke(`${PROJECTS}:get`),
   handleRunBlip: async (directory: string) =>
-    ipcRenderer.invoke("run-blip", directory),
+    ipcRenderer.invoke(`${BLIP}:run`, directory),
   handleRunGPTV: async (
     directory: string,
     options: {
       exampleResponse: string;
-      systemMessage: string;
-      batchSize: number;
+      guidelines: string;
+      batchSize?: number;
     },
-  ) => ipcRenderer.invoke("run-gpt-v", directory, options),
+  ) => ipcRenderer.invoke(`${GPTV}:run`, directory, options),
   handleRunWd14: async (directory: string) =>
-    ipcRenderer.invoke("run-wd14", directory),
+    ipcRenderer.invoke(`${WD14}:run`, directory),
   send(channel: string, value?: unknown) {
     ipcRenderer.send(channel, value);
   },

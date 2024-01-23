@@ -10,8 +10,9 @@ files:
       - package.json
       - app
       - resources/python/**/*
-      - resources/venv/**/*
+      - resources/python-embeded/**/*
 publish: null
 asar: true
 asarUnpack:
-  - "resources/**/*"
+  - "resources/python/*"
+  - "resources/python-embeded/*"

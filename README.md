@@ -1,39 +1,61 @@
-<p align="center"><img src="https://i.imgur.com/NZfsD1p.png"></p>
+# Captain 🚀
 
-## Usage
+Captain is the ultimate automatic image captioning tool with a human-in-the-loop approach. It's designed for ease of use with a zero-configuration, standalone `.exe` installation, and comes with everything embedded for a quick start. Whether for professional or casual use, Captain's intuitive design streamlines the captioning process, making it seamless to generate and edit captions for your images.
 
-### Create an App
+## Features
 
-```
-# with npx
-$ npx create-nextron-app my-app --example basic-lang-typescript
+- **Automatic Captioning** ✅: Leverage various state-of-the-art methods to automatically generate captions for your images.
+- **Manual Editing** ✅: Refine and personalize captions manually to ensure they are contextually appropriate.
+- **Project Management** ✅: Manage your projects with ease, save them, and retrieve them anytime.
+- **Zero-Configuration Install** ✅: Start captioning right after a simple download and run the `.exe` file, no additional setup needed.
+- **Embedded Resources** ✅: All required resources are included within the app, so there's no need for external dependencies.
 
-# with yarn
-$ yarn create nextron-app my-app --example basic-lang-typescript
+## Upcoming Features
 
-# with pnpm
-$ pnpm dlx create-nextron-app my-app --example basic-lang-typescript
-```
+- **New Captioning Methods** ⏳: We're excited to announce that future updates will include advanced captioning methods such as:
+    - **CLIP**: Utilizing OpenAI's CLIP for contextually-aware captions.
+    - **Llava**: An open-source local multi-modal, offering a similar experience as with GPT-VisionGPT-Vision.
+- **Cross-Platform Support** ⏳: Captain will soon be setting sail on Linux and macOS platforms.
 
-### Install Dependencies
+## Getting Started
 
-```
-$ cd my-app
+### Installation
 
-# using yarn or npm
-$ yarn (or `npm install`)
+1. Download the `Captain.exe` file from the official repository.
+2. Execute the file to install Captain.
+3. Follow the installation wizard to complete setup.
+4. Open Captain and begin your captioning adventure!
 
-# using pnpm
-$ pnpm install --shamefully-hoist
-```
+### Usage
 
-### Use it
+#### Starting a New Project
 
-```
-# development mode
-$ yarn dev (or `npm run dev` or `pnpm run dev`)
+1. Hit `Start New Project`.
+2. Give your project a name and choose a storage directory.
+3. Upload your images.
+4. Let Captain auto-caption or enter your captions manually.
 
-# production build
-$ yarn build (or `npm run build` or `pnpm run build`)
-```
-# captain
+#### Managing Existing Projects
+
+- All projects are displayed in the `Projects` gallery.
+- Select a project to open, review, or edit it as needed.
+
+## Support and Feedback
+
+Got a question or ran into a snag? Check out our FAQ or raise an issue in the [issue tracker](https://github.com/blib-la/captain/issues).
+
+## Contributing
+
+We love seeing community contributions to Captain! If you're interested in contributing, please review our [Contribution Guidelines](./.github/CONTRIBUTING.md).
+
+## License
+
+Captain sails under the [AGPL 3.0 License](./LICENSE).
+
+## Acknowledgments
+
+A big shout-out to all contributors and the community around Captain for making it a go-to solution for image captioning.
+
+---
+
+Need Caption? Use Captain!

@@ -18,6 +18,7 @@ import "codemirror/theme/material-darker.css";
 import "codemirror/theme/material.css";
 import "codemirror/theme/zenburn.css";
 import "codemirror/theme/monokai.css";
+
 if (typeof window !== "undefined") {
   import("codemirror/mode/markdown/markdown");
   import("codemirror/mode/javascript/javascript");
