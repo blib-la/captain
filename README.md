@@ -23,7 +23,7 @@ Captain is the ultimate automatic image captioning tool with a human-in-the-loop
 
 ### Installation
 
-1. Download the `Captain.exe` file from the official repository: [Get the temporary early ALPHA](https://drive.google.com/file/d/1UnhWPbaR3gmxujpdKC30moJ_lQolw3EA/view?usp=drive_link).
+1. Download the `Captain.exe` file from the official repository: [Get the temporary early ALPHA](https://drive.google.com/file/d/1tkMXkLquGUICJjo4PnImoY6UpXVOVBgp/view?usp=sharing).
 2. Execute the file to install Captain.
 3. Follow the installation wizard to complete setup.
 4. Open Captain and begin your captioning adventure!
