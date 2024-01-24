@@ -120,6 +120,7 @@ export function Layout({ children }: { children?: ReactNode }) {
           right: 0,
           pt: 4,
           pr: 4,
+          bgcolor: feedbackOpen ? undefined : "transparent",
         }}
       >
         {feedbackOpen && (
@@ -133,8 +134,8 @@ export function Layout({ children }: { children?: ReactNode }) {
         )}
         <IconButton
           size="sm"
-          color="neutral"
-          variant="soft"
+          color={settingsOpen ? "neutral" : undefined}
+          variant={settingsOpen ? "solid" : undefined}
           aria-label={`${feedbackOpen ? "close" : "open"} feedback`}
           sx={{ position: "absolute", top: 0, right: 0 }}
           onClick={() => {
@@ -161,6 +162,7 @@ export function Layout({ children }: { children?: ReactNode }) {
           left: 0,
           pt: 4,
           pl: 4,
+          bgcolor: keyboardControlOpen ? undefined : "transparent",
         }}
       >
         {keyboardControlOpen && (
@@ -186,8 +188,8 @@ export function Layout({ children }: { children?: ReactNode }) {
         )}
         <IconButton
           size="sm"
-          color="neutral"
-          variant="soft"
+          color={settingsOpen ? "primary" : undefined}
+          variant={settingsOpen ? "solid" : undefined}
           aria-label={`${keyboardControlOpen ? "close" : "open"} hotkeys`}
           sx={{ position: "absolute", top: 0, left: 0 }}
           onClick={() => {
