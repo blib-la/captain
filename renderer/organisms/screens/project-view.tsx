@@ -471,7 +471,7 @@ export function ProjectView({ onDone }: { onDone(): void }) {
                   >
                     <ChevronRightIcon />
                   </IconButton>
-                  <TransformWrapper>
+                  <TransformWrapper wheel={{ step: 0.01, smoothStep: 0.01 }}>
                     <TransformComponent>
                       <img
                         src={`my://${selectedImage.image}`}

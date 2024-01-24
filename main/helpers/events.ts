@@ -12,11 +12,16 @@ import {
   PROJECTS,
   STORE,
   WD14,
+  FEEDBACK,
 } from "./constants";
 import { store } from "./store";
 import path from "node:path";
 import fsp from "node:fs/promises";
-import { createMinifiedImageCache, getDirectory } from "./utils";
+import {
+  createMinifiedImageCache,
+  getDirectory,
+  openNewGitHubIssue,
+} from "./utils";
 import { v4 } from "uuid";
 import { runBlip, runGPTV, runWd14 } from "./caption";
 import { Project } from "./types";
@@ -175,6 +180,24 @@ ipcMain.handle(
         }),
       ),
     };
+  },
+);
+
+// Handler so save caption values to the file
+ipcMain.handle(
+  `${FEEDBACK}:send`,
+  async (
+    event,
+    data: {
+      body: string;
+    },
+  ) => {
+    openNewGitHubIssue({
+      ...data,
+      user: "blib-la",
+      repo: "captain",
+      labels: ["app-feedback"],
+    });
   },
 );
 

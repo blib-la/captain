@@ -14,3 +14,4 @@ export const WD14 = "WD14";
 export const GPTV = "GPTV";
 export const CAPTION = "CAPTION";
 export const GPT_VISION_OPTIONS = "GPT_VISION_OPTIONS";
+export const FEEDBACK = "FEEDBACK";

@@ -41,7 +41,9 @@ app.whenReady().then(() => {
     },
   });
   // Remove the default application menu
-  // Menu.setApplicationMenu(null);
+  if (isProd) {
+    Menu.setApplicationMenu(null);
+  }
 
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     // config.fileProtocol is my custom file protocol

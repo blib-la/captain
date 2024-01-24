@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   adjectives,
   colors,
@@ -29,6 +29,10 @@ export function NewProject({ onDone }: { onDone(): void }) {
 
   const [, setLoading] = useState(false);
   const [, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    setDirectory("");
+  }, [setDirectory]);
 
   return (
     <Stack
@@ -140,7 +144,7 @@ export function NewProject({ onDone }: { onDone(): void }) {
           }
         }}
       >
-        Continue
+        Create a new Project
       </Button>
     </Stack>
   );

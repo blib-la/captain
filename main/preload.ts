@@ -4,6 +4,7 @@ import {
   CAPTION,
   DIRECTORY,
   EXISTING_PROJECT,
+  FEEDBACK,
   GPTV,
   IMAGE_CACHE,
   PROJECTS,
@@ -14,6 +15,8 @@ import {
 const handler = {
   store: (data: Record<string, unknown>) =>
     ipcRenderer.invoke(`${STORE}:set`, data),
+  sendFeedback: (data: { body: string }) =>
+    ipcRenderer.invoke(`${FEEDBACK}:send`, data),
   saveCaption: (imageData: {
     caption: string;
     image: string;
