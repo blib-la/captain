@@ -9,3 +9,4 @@ build
 resources/projects
 wd14_tagger_model
 resources/python-embeded/
+__pycache__
