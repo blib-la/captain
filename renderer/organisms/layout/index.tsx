@@ -134,12 +134,12 @@ export function Layout({ children }: { children?: ReactNode }) {
         )}
         <IconButton
           size="sm"
-          color={settingsOpen ? "neutral" : undefined}
-          variant={settingsOpen ? "solid" : undefined}
+          color={keyboardControlOpen ? "neutral" : undefined}
+          variant={keyboardControlOpen ? "solid" : undefined}
           aria-label={`${feedbackOpen ? "close" : "open"} feedback`}
           sx={{ position: "absolute", top: 0, right: 0 }}
           onClick={() => {
-            setFeedbackOpen(!feedbackOpen);
+            setFeedbackOpen(!keyboardControlOpen);
           }}
         >
           {feedbackOpen ? <CloseIcon /> : <FeedbackIcon />}
@@ -188,8 +188,8 @@ export function Layout({ children }: { children?: ReactNode }) {
         )}
         <IconButton
           size="sm"
-          color={settingsOpen ? "primary" : undefined}
-          variant={settingsOpen ? "solid" : undefined}
+          color={keyboardControlOpen ? "primary" : undefined}
+          variant={keyboardControlOpen ? "solid" : undefined}
           aria-label={`${keyboardControlOpen ? "close" : "open"} hotkeys`}
           sx={{ position: "absolute", top: 0, left: 0 }}
           onClick={() => {
