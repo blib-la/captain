@@ -109,7 +109,7 @@ export function Projects({ onDone }: { onDone(): void }) {
       {projects.map((project_) => (
         <Grid key={project_.id} xs={1} sx={{ position: "relative" }}>
           <DeleteConfirm projectId={project_.id} />
-          <Tooltip title={project_.name}>
+          <Tooltip disableInteractive title={project_.name}>
             <Button
               fullWidth
               color="neutral"
