@@ -146,9 +146,9 @@ export function Projects({ onDone }: { onDone(): void }) {
         justifyContent: "center",
         p: 4,
         ".lf-player-container": {
-          flex: 1,
           overflow: "hidden",
           margin: "auto",
+          height: 300,
         },
       }}
     >

@@ -18,7 +18,7 @@ export function DoneScreen({ onDone }) {
         justifyContent: "center",
         p: 4,
         ".lf-player-container": {
-          flex: 1,
+          height: 300,
           overflow: "hidden",
           margin: "auto",
         },
