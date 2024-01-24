@@ -93,7 +93,7 @@ export function Layout({ children }: { children?: ReactNode }) {
         <IconButton
           size="sm"
           color={settingsOpen ? "primary" : undefined}
-          variant={settingsOpen ? "plain" : undefined}
+          variant={settingsOpen ? "solid" : undefined}
           sx={{ alignSelf: "flex-end" }}
           aria-label={`${settingsOpen ? "close" : "open"} settings`}
           onClick={() => {
