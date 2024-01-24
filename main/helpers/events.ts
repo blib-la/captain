@@ -13,6 +13,7 @@ import {
   STORE,
   WD14,
   FEEDBACK,
+  PROJECT,
 } from "./constants";
 import { store } from "./store";
 import path from "node:path";
@@ -183,7 +184,7 @@ ipcMain.handle(
   },
 );
 
-// Handler so save caption values to the file
+// Handler to send feedback to GitHub
 ipcMain.handle(
   `${FEEDBACK}:send`,
   async (
@@ -200,6 +201,13 @@ ipcMain.handle(
     });
   },
 );
+
+// Handler to delete a project
+
+ipcMain.handle(`${PROJECT}:delete`, async (event, id: string) => {
+  const directory = getDirectory("projects", id);
+  await fsp.rm(directory, { recursive: true, force: true });
+});
 
 // Handler so save caption values to the file
 ipcMain.handle(

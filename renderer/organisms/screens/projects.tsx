@@ -5,14 +5,81 @@ import {
   projectAtom,
   projectsAtom,
 } from "@/ions/atoms";
-import React, { useEffect } from "react";
-import { Button, Grid, Stack, Typography } from "@mui/joy";
+import React, { useEffect, useState } from "react";
+import {
+  Button,
+  Grid,
+  IconButton,
+  Sheet,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/joy";
 import dynamic from "next/dynamic";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 const LottiePlayer = dynamic(
   () => import("@/atoms/lottie-player").then((module_) => module_.LottiePlayer),
   { ssr: false },
 );
+export function DeleteConfirm({ projectId }: { projectId: string }) {
+  const [confirm, setConfirm] = useState(false);
+  const [, setProjects] = useAtom(projectsAtom);
+  return confirm ? (
+    <Sheet
+      sx={{
+        position: "absolute",
+        inset: 0,
+        zIndex: 2,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        gap: 1,
+        px: 1,
+      }}
+    >
+      <Button
+        color={"neutral"}
+        variant={"solid"}
+        size={"sm"}
+        startDecorator={<CancelIcon />}
+        onClick={() => {
+          setConfirm(false);
+        }}
+      >
+        Cancel
+      </Button>
+      <Button
+        color={"danger"}
+        variant={"solid"}
+        size={"sm"}
+        startDecorator={<DeleteForeverIcon />}
+        onClick={async () => {
+          await window.ipc.deleteProject(projectId);
+          await window.ipc.getProjects().then((projects_) => {
+            setProjects(projects_);
+          });
+        }}
+      >
+        Delete
+      </Button>
+    </Sheet>
+  ) : (
+    <IconButton
+      color={"danger"}
+      variant={"solid"}
+      size={"sm"}
+      sx={{ position: "absolute", top: 0, right: 0, zIndex: 2 }}
+      onClick={() => {
+        setConfirm(true);
+      }}
+    >
+      <DeleteForeverIcon />
+    </IconButton>
+  );
+}
+
 export function Projects({ onDone }: { onDone(): void }) {
   const [, setProject] = useAtom(projectAtom);
   const [, setImages] = useAtom(imagesAtom);
@@ -40,34 +107,34 @@ export function Projects({ onDone }: { onDone(): void }) {
       }}
     >
       {projects.map((project_) => (
-        <Grid key={project_.id} xs={1} sx={{ height: "min-content" }}>
-          <Button
-            fullWidth
-            color="neutral"
-            variant="plain"
-            sx={{ flexDirection: "column", overflow: "hidden", p: 1 }}
-            onClick={async () => {
-              const content = await window.ipc.getExistingProject(project_);
-              setImages(content);
-              setProject(project_);
-              setDirectory(project_.source);
-              onDone();
-            }}
-          >
-            <img
-              src={`my://${project_.files}/${project_.cover}`}
-              alt={project_.name}
-              style={{
-                width: "100%",
-                height: "auto",
-                aspectRatio: 1,
-                objectFit: "contain",
+        <Grid key={project_.id} xs={1} sx={{ position: "relative" }}>
+          <DeleteConfirm projectId={project_.id} />
+          <Tooltip title={project_.name}>
+            <Button
+              fullWidth
+              color="neutral"
+              variant="plain"
+              sx={{ flexDirection: "column", overflow: "hidden", p: 1 }}
+              onClick={async () => {
+                const content = await window.ipc.getExistingProject(project_);
+                setImages(content);
+                setProject(project_);
+                setDirectory(project_.source);
+                onDone();
               }}
-            />
-            <Typography noWrap sx={{ mt: 1, display: "block", width: "100%" }}>
-              {project_.name}
-            </Typography>
-          </Button>
+            >
+              <img
+                src={`my://${project_.files}/${project_.cover}`}
+                alt={project_.name}
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  aspectRatio: 1,
+                  objectFit: "contain",
+                }}
+              />
+            </Button>
+          </Tooltip>
         </Grid>
       ))}
     </Grid>

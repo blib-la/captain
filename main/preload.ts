@@ -7,6 +7,7 @@ import {
   FEEDBACK,
   GPTV,
   IMAGE_CACHE,
+  PROJECT,
   PROJECTS,
   STORE,
   WD14,
@@ -32,6 +33,7 @@ const handler = {
     source: string;
   }) => ipcRenderer.invoke(`${EXISTING_PROJECT}:get`, project),
   getProjects: () => ipcRenderer.invoke(`${PROJECTS}:get`),
+  deleteProject: (id: string) => ipcRenderer.invoke(`${PROJECT}:delete`, id),
   handleRunBlip: async (directory: string) =>
     ipcRenderer.invoke(`${BLIP}:run`, directory),
   handleRunGPTV: async (

@@ -6,6 +6,7 @@ export const DIRECTORY = "DIRECTORY";
 export const CURRENT_DIRECTORY = "CURRENT_DIRECTORY";
 export const EXISTING_PROJECT = "EXISTING_PROJECT";
 export const PROJECTS = "PROJECTS";
+export const PROJECT = "PROJECT";
 export const STORE = "STORE";
 export const IMAGE_CACHE = "IMAGE_CACHE";
 export const MINIFIED_IMAGE_SIZE = 768;
