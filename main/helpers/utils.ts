@@ -113,6 +113,9 @@ export const resourcesDirectory = isDev
 export function getDirectory(...subpath: string[]): string {
   return path.join(resourcesDirectory, ...subpath);
 }
+export function getUserData(...subpath: string[]): string {
+  return path.join(app.getPath("userData"), ...subpath);
+}
 
 /**
  * Synchronously get a list of image files from a directory.
