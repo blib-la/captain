@@ -40,7 +40,7 @@ function SidebarButton({
   const { asPath } = useRouter();
   const href_ = `/${locale}${href}/`;
   const isActive = asPath === href_;
-  console.log(href_, asPath, disabled);
+
   return (
     <Tooltip
       placement="right"
@@ -93,7 +93,6 @@ function SidebarButton({
 
 const WindowControls = () => {
   const minimize = () => {
-    console.log("foo");
     window.ipc.send(`${APP}:minimize`);
   };
 

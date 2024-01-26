@@ -6,8 +6,9 @@ import {
   Rectangle,
 } from "electron";
 import Store from "electron-store";
-import { DIRECTORY } from "./constants";
+import { CAPTION_RUNNING, DIRECTORY } from "./constants";
 import { ensureVisibleOnSomeDisplay, getCurrentPosition } from "./utils";
+import { store as userStore } from "./store";
 
 /**
  * Creates a new Electron BrowserWindow with specified options.
@@ -58,6 +59,8 @@ export async function createWindow(
       Object.assign(state, getCurrentPosition(win));
     }
     store.set(key, state);
+    // Set the caption running flag to false, since all services will be aborted when the app is closed
+    userStore.set(CAPTION_RUNNING, false);
   });
 
   // Setup IPC handler to open directory dialog and return the selected path.

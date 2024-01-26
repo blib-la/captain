@@ -21,6 +21,7 @@ import { OPENAI_API_KEY } from "../../../main/helpers/constants";
 import { CustomScrollbars } from "@/organisms/custom-scrollbars";
 import { getStaticPaths, makeStaticProps } from "@/ions/i18n/getStatic";
 import { PasswordField } from "@/organisms/password-field";
+import useSWR from "swr";
 
 export function UserPreferences() {
   const { t } = useTranslation(["common"]);
@@ -64,17 +65,15 @@ export function UserPreferences() {
 export function OpenAISettings() {
   const { t } = useTranslation(["common"]);
   const [openAiApiKey, setOpenAiApiKey] = useState("");
-  useEffect(() => {
-    // Request the API key
-    window.ipc.send(`${OPENAI_API_KEY}:get`);
 
-    // Listener for the apiKey response
-    window.ipc.on(OPENAI_API_KEY, (key) => {
-      if (key) {
-        setOpenAiApiKey(key as string);
-      }
-    });
-  }, []);
+  const { data } = useSWR(OPENAI_API_KEY);
+
+  useEffect(() => {
+    if (data) {
+      setOpenAiApiKey(data);
+    }
+  }, [data]);
+
   return (
     <Card variant="soft">
       <Typography>{t("common:pages.settings.openAiSettings")}</Typography>
@@ -97,9 +96,10 @@ export function OpenAISettings() {
                 onChange={(event) => {
                   setOpenAiApiKey(event.target.value);
                 }}
-                onBlur={() => {
-                  window.ipc.store({
-                    [OPENAI_API_KEY]: openAiApiKey,
+                onBlur={(event) => {
+                  window.ipc.fetch(OPENAI_API_KEY, {
+                    method: "POST",
+                    data: event.target.value,
                   });
                 }}
               />

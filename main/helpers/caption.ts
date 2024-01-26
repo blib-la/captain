@@ -5,7 +5,7 @@ import path from "node:path";
 import fsp from "node:fs/promises";
 import { getDirectory, getImageFiles, parseJsonFromString } from "./utils";
 import { python } from "./python";
-import { OPENAI_API_KEY } from "./constants";
+import { CAPTION_RUNNING, OPENAI_API_KEY } from "./constants";
 
 export async function runBlip(directory: string): Promise<any> {
   try {
@@ -21,6 +21,7 @@ export async function runBlip(directory: string): Promise<any> {
     if (stderr) {
       console.error("Python Error:", stderr);
     }
+    store.set(CAPTION_RUNNING, false);
 
     return stdout?.trim();
   } catch (error) {
@@ -39,6 +40,8 @@ export async function runWd14(directory: string) {
       ".txt",
       "--remove_underscore",
     ]);
+    store.set(CAPTION_RUNNING, false);
+
     return stdout?.trim();
   } catch (error) {
     console.error(error);
@@ -130,6 +133,8 @@ ${exampleResponse}
           console.log(`Description for ${file} written to ${textFilePath}`);
         }),
       );
+      store.set(CAPTION_RUNNING, false);
+      return "done";
     } catch (error) {
       console.error("Error generating descriptions:", error);
     }
