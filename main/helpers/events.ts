@@ -24,7 +24,7 @@ import path from "node:path";
 import fsp from "node:fs/promises";
 import {
   createMinifiedImageCache,
-  getDirectory,
+  getUserData,
   openNewGitHubIssue,
 } from "./utils";
 import { v4 } from "uuid";
@@ -105,7 +105,7 @@ ipcMain.handle(`${LOCALE}:get`, async () => {
 
 // Handler to fetch project details from the 'projects' directory.
 ipcMain.handle(`${PROJECTS}:get`, async (): Promise<Project[]> => {
-  const projectsDir = getDirectory("projects");
+  const projectsDir = getUserData("projects");
 
   try {
     const files = await fsp.readdir(projectsDir);
@@ -139,7 +139,7 @@ ipcMain.handle(`${PROJECTS}:get`, async (): Promise<Project[]> => {
 
 // Handler to fetch image files for a given project.
 ipcMain.handle(`${EXISTING_PROJECT}:get`, async (_event, project: Project) => {
-  const filesDirectory = getDirectory("projects", project.id, "files");
+  const filesDirectory = getUserData("projects", project.id, "files");
   const sourceDirectory = project.source;
   const files = await fsp.readdir(filesDirectory);
   const images = files.filter((file) => /\.(jpg|jpeg|png)$/i.test(file));
@@ -172,8 +172,8 @@ ipcMain.handle(
     const images = files.filter((file) => /\.(jpg|jpeg|png)$/i.test(file));
     // Generate a unique ID for the cache directory.
     const id = v4();
-    const outDirectory = getDirectory("projects", id);
-    const outFilesDirectory = getDirectory("projects", id, "files");
+    const outDirectory = getUserData("projects", id);
+    const outFilesDirectory = getUserData("projects", id, "files");
     await fsp.mkdir(outFilesDirectory, { recursive: true });
 
     const projectConfiguration: Project = {
@@ -244,13 +244,13 @@ Version: ${pkg.version}
 );
 
 ipcMain.handle(`${PROJECT}:delete`, async (event, id: string) => {
-  const directory = getDirectory("projects", id);
+  const directory = getUserData("projects", id);
   await fsp.rm(directory, { recursive: true, force: true });
 });
 
 ipcMain.handle(`${DATASET}:get`, async (event, id: string) => {
-  const datasetConfig = getDirectory("projects", id, "project.json");
-  const filesDirectory = getDirectory("projects", id, "files");
+  const datasetConfig = getUserData("projects", id, "project.json");
+  const filesDirectory = getUserData("projects", id, "files");
   const dataset = await fsp
     .readFile(datasetConfig, "utf-8")
     .then((content) => JSON.parse(content));
@@ -282,14 +282,14 @@ ipcMain.handle(`${DATASET}:get`, async (event, id: string) => {
 });
 
 ipcMain.handle(`${DATASET}:delete`, async (event, id: string) => {
-  const directory = getDirectory("projects", id);
+  const directory = getUserData("projects", id);
   await fsp.rm(directory, { recursive: true, force: true });
 });
 
 ipcMain.handle(
   `${DATASET}:update`,
   async (event, id: string, partial: Partial<Exclude<Project, "id">>) => {
-    const dataset = getDirectory("projects", id, "project.json");
+    const dataset = getUserData("projects", id, "project.json");
     const project = await fsp
       .readFile(dataset, "utf-8")
       .then((content) => JSON.parse(content) as Project);
