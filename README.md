@@ -12,7 +12,8 @@ Captain currently supports English, German, Spanish, French, Hebrew, Italian, Ja
 </p>
 
 
-<p align="center"><img src="./docs/03.png" alt="overview of Captain's AI hub" width="900"/></p>
+
+https://github.com/blib-la/captain/assets/1148334/eecac351-ec1e-4cca-aaf7-89891c436576
 
 <!-- toc -->
 
