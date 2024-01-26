@@ -1,0 +1,81 @@
+{
+  "autoCaption": "כיתוב אוטומטי",
+  "cancel": "בטל",
+  "caption": "כיתוב",
+  "close": "סגור",
+  "colorMode": {
+    "dark": "כהה",
+    "label": "מצב צבע",
+    "light": "בהיר",
+    "system": "מערכת"
+  },
+  "comingSoon": "בקרוב",
+  "create": "צור",
+  "dataset": "מערך נתונים",
+  "datasetName": "שם מערך הנתונים",
+  "datasets": "מערכי נתונים",
+  "delete": "מחק",
+  "directory": "תיקייה",
+  "enterKeyToUseGPTVision": "הזן את מפתח ה-API של OpenAI כדי להשתמש ב-GPT-Vision.",
+  "exampleResponse": "תגובת דוגמה",
+  "feedback": "משוב",
+  "form": {
+    "errors": {
+      "directory": "נא לספק תיקייה",
+      "name": "נא לספק שם"
+    }
+  },
+  "getApiKey": "השג מפתח API כאן.",
+  "github": "GitHub",
+  "guideline": "הנחיות",
+  "inventory": "מלאי",
+  "language": "שפה",
+  "marketplace": "שוק",
+  "menu": "תפריט",
+  "name": "שם",
+  "new": "חדש",
+  "newDataset": "מערך נתונים חדש",
+  "next": "הבא",
+  "noDatasets": "אין מערכי נתונים",
+  "openAiApiKey": "מפתח API של OpenAI",
+  "openFolder": "פתח תיקייה",
+  "pages": {
+    "dataset": {
+      "chooseCaptioningMethod": "בחר שיטת כיתוב",
+      "customCaptionsWithGPTVision": "כיתובים מותאמים אישית עם GPT-Vision",
+      "generateCaptionWithBLIP": "ייצר כיתובים עם BLIP",
+      "generateTagsWithWD14": "ייצר תגיות עם WD14",
+      "oneTimeDownloadNote": "שיטות הכיתוב המתקדמות שלנו דורשות הורדה חד פעמית של המודלים הנחוצים, תהליך שעשוי לקחת מספר רגעים.",
+      "proceedWithGPTVision": "המשך עם GPT-Vision",
+      "selectImage": "בחר תמונה",
+      "warningOpenAI": "שים לב: שימוש ב-GPT-Vision ישלח את תמונותיך ל-OpenAI. נא לציית ל<1>תנאי השימוש</1> של OpenAI"
+    },
+    "datasets": {
+      "dropToAdd": "הוסף תיקייה עם תמונות מערך הנתונים כאן",
+      "newDataset": "צור מערך נתונים חדש"
+    },
+    "feedback": {
+      "giveFeedback": "תן משוב"
+    },
+    "settings": {
+      "colorMode": "מצב צבע",
+      "colorModeDescription": "התאם את חוויית הצפייה שלך על ידי בחירת ערכת צבעים המתאימה להעדפות שלך.",
+      "languageSettings": "הגדרות שפה",
+      "languageSettingsDescription": "התאמת החוויה שלך על ידי בחירת השפה שבה אתה מרגיש הכי בנוח.",
+      "openAiApiKeyDescription": "הזן את מפתח ה-API של OpenAI שלך כדי לאפשר אינטגרציה עם שירותי OpenAI.",
+      "openAiSettings": "הגדרות OpenAI",
+      "runPodSettings": "הגדרות RunPod",
+      "userPreferences": "העדפות משתמש"
+    }
+  },
+  "previous": "הקודם",
+  "readMore": "קרא עוד",
+  "resetTransform": "אפס שינויים",
+  "save": "שמור",
+  "send": "שלח",
+  "settings": "הגדרות",
+  "termsOfUse": "תנאי שימוש",
+  "training": "הדרכה",
+  "zoomIn": "התקרב",
+  "zoomOut": "התרחק"
+}

@@ -1,3 +1,5 @@
+import humanizeString from "humanize-string";
+
 export const adjectives = [
   "quick",
   "lazy",
@@ -322,18 +324,28 @@ export const colors = [
   "tangerine",
   "zircon",
 ];
+
 /**
  * Generates a random name based on the specified dictionaries.
  *
  * @param {string[]} dictionaries - Arrays of words to be used for generating the name.
- * @param {number} length - Number of words to include in the name.
- * @param {string} separator - The separator to use between words.
+ * @param {{length?: number; separator?: string; humanize?: boolean}} [options={}] - Additional options to configure the generated pattern
+ * @param {number} [options.length=dictionaries.length] - Number of words to include in the name.
+ * @param {string} [options.separator="-"] - The separator to use between words.
+ * @param {boolean} [options.humanize] - Allow humanizing the string for titles or similar
  * @returns {string} A randomly generated name.
  */
 export function generateRandomName(
   dictionaries: string[][],
-  length: number = dictionaries.length,
-  separator: string = "-",
+  {
+    length = dictionaries.length,
+    separator = "-",
+    humanize,
+  }: {
+    humanize?: boolean;
+    length?: number;
+    separator?: string;
+  } = {},
 ): string {
   let nameParts = [];
   for (let i = 0; i < length; i++) {
@@ -342,5 +354,6 @@ export function generateRandomName(
     const word = dictionary[Math.floor(Math.random() * dictionary.length)];
     nameParts.push(word);
   }
-  return nameParts.join(separator);
+  const name = nameParts.join(separator);
+  return humanize ? humanizeString(name) : name;
 }

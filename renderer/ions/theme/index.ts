@@ -148,6 +148,10 @@ export const theme = extendTheme({
       },
     },
     JoyButton: {
+      defaultProps: {
+        color: "neutral",
+        variant: "soft",
+      },
       styleOverrides: {
         root: { borderRadius: 0 },
       },
@@ -269,6 +273,12 @@ export const theme = extendTheme({
     JoyTextarea: {
       styleOverrides: {
         root: { borderRadius: 0, boxShadow: "none" },
+      },
+    },
+    JoyTooltip: {
+      defaultProps: {
+        disableInteractive: true,
+        variant: "outlined",
       },
     },
   },

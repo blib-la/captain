@@ -1,0 +1,81 @@
+{
+  "autoCaption": "Авто Подпись",
+  "cancel": "Отменить",
+  "caption": "Подпись",
+  "close": "Закрыть",
+  "colorMode": {
+    "dark": "Тёмный",
+    "label": "Цветовой режим",
+    "light": "Светлый",
+    "system": "Система"
+  },
+  "comingSoon": "Скоро будет",
+  "create": "Создать",
+  "dataset": "Набор данных",
+  "datasetName": "Название набора данных",
+  "datasets": "Наборы данных",
+  "delete": "Удалить",
+  "directory": "Каталог",
+  "enterKeyToUseGPTVision": "Введите свой API-ключ OpenAI для использования GPT-Vision.",
+  "exampleResponse": "Пример ответа",
+  "feedback": "Обратная связь",
+  "form": {
+    "errors": {
+      "directory": "Пожалуйста, укажите каталог",
+      "name": "Пожалуйста, укажите имя"
+    }
+  },
+  "getApiKey": "Получить ключ API здесь.",
+  "github": "GitHub",
+  "guideline": "Руководящие принципы",
+  "inventory": "Инвентарь",
+  "language": "Язык",
+  "marketplace": "Рынок",
+  "menu": "Меню",
+  "name": "Имя",
+  "new": "Новый",
+  "newDataset": "Новый набор данных",
+  "next": "Следующий",
+  "noDatasets": "Нет наборов данных",
+  "openAiApiKey": "Ключ API OpenAI",
+  "openFolder": "Открыть папку",
+  "pages": {
+    "dataset": {
+      "chooseCaptioningMethod": "Выберите метод озвучивания",
+      "customCaptionsWithGPTVision": "Пользовательские подписи с GPT-Vision",
+      "generateCaptionWithBLIP": "Создать подписи с BLIP",
+      "generateTagsWithWD14": "Создать теги с WD14",
+      "oneTimeDownloadNote": "\"Выберите метод озвучивания\" oneTimeDownloadNote: \"Наши передовые методы озвучивания требуют однократной загрузки необходимых моделей, что может занять несколько моментов.",
+      "proceedWithGPTVision": "Продолжить с GPT-Vision",
+      "selectImage": "Выбрать изображение",
+      "warningOpenAI": "Внимание: Использование GPT-Vision отправит ваши изображения в OpenAI. Пожалуйста, соблюдайте <1>Условия использования</1> OpenAI."
+    },
+    "datasets": {
+      "dropToAdd": "Перетащите сюда папку с изображениями набора данных",
+      "newDataset": "Создать новый набор данных"
+    },
+    "feedback": {
+      "giveFeedback": "Оставить отзыв"
+    },
+    "settings": {
+      "colorMode": "Цветовой режим",
+      "colorModeDescription": "Настройте визуальный опыт, выбрав цветовую тему, которая соответствует вашим предпочтениям.",
+      "languageSettings": "Настройки языка",
+      "languageSettingsDescription": "Настройте свой опыт, выбрав язык, на котором вам наиболее комфортно.",
+      "openAiApiKeyDescription": "Введите свой ключ API OpenAI для интеграции с сервисами OpenAI.",
+      "openAiSettings": "Настройки OpenAI",
+      "runPodSettings": "Настройки RunPod",
+      "userPreferences": "Пользовательские настройки"
+    }
+  },
+  "previous": "Предыдущий",
+  "readMore": "Читать далее",
+  "resetTransform": "Сбросить трансформацию",
+  "save": "Сохранить",
+  "send": "Отправить",
+  "settings": "Настройки",
+  "termsOfUse": "Условия использования",
+  "training": "Тренировка",
+  "zoomIn": "Увеличить",
+  "zoomOut": "Уменьшить"
+}

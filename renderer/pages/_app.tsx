@@ -18,6 +18,7 @@ import "codemirror/theme/material-darker.css";
 import "codemirror/theme/material.css";
 import "codemirror/theme/zenburn.css";
 import "codemirror/theme/monokai.css";
+import { Layout } from "@/organisms/layout";
 
 if (typeof window !== "undefined") {
   import("codemirror/mode/markdown/markdown");
@@ -53,8 +54,9 @@ function App({
         <meta name="format-detection" content="telephone=no" />
         <link rel="shortcut icon" type="image/png" href="/images/logo.png" />
       </Head>
-
-      <Component {...pageProperties} />
+      <Layout>
+        <Component {...pageProperties} />
+      </Layout>
     </CssVarsProvider>
   );
 }

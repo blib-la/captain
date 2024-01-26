@@ -1,19 +1,23 @@
-import { ipcMain } from "electron";
+import { BrowserWindow, ipcMain, shell } from "electron";
 import {
+  APP,
   BLIP,
   CAPTION,
   CURRENT_DIRECTORY,
   CURRENT_PROJECT_ID,
-  GPT_VISION_OPTIONS,
+  DATASET,
   EXISTING_PROJECT,
+  FEEDBACK,
+  FOLDER,
+  GPT_VISION_OPTIONS,
   GPTV,
   IMAGE_CACHE,
+  LOCALE,
   OPENAI_API_KEY,
+  PROJECT,
   PROJECTS,
   STORE,
   WD14,
-  FEEDBACK,
-  PROJECT,
 } from "./constants";
 import { store } from "./store";
 import path from "node:path";
@@ -26,6 +30,7 @@ import {
 import { v4 } from "uuid";
 import { runBlip, runGPTV, runWd14 } from "./caption";
 import { Project } from "./types";
+import pkg from "../../package.json";
 
 /**
  * Sets up IPC event listeners for various channels.
@@ -56,10 +61,34 @@ ipcMain.on(`${CURRENT_PROJECT_ID}:get`, (event) => {
   event.sender.send(CURRENT_PROJECT_ID, store.get(CURRENT_PROJECT_ID));
 });
 
+ipcMain.on(`${APP}:minimize`, () => {
+  const window = BrowserWindow.getFocusedWindow();
+  window.minimize();
+});
+
+ipcMain.on(`${FOLDER}:open`, (event, path) => {
+  shell.openPath(path);
+});
+
+ipcMain.on(`${APP}:maximize`, () => {
+  const window = BrowserWindow.getFocusedWindow();
+  if (window.isMaximized()) {
+    window.unmaximize();
+  } else {
+    window.maximize();
+  }
+});
+
+ipcMain.on(`${APP}:close`, () => {
+  const window = BrowserWindow.getFocusedWindow();
+  window.close();
+});
+
 // Handling the 'STORE:set' channel for setting multiple values in the store asynchronously.
 ipcMain.handle(
   `${STORE}:set`,
   async (event, state: Record<string, unknown>) => {
+    console.log(state);
     try {
       for (const key in state) {
         store.set(key, state[key]);
@@ -69,6 +98,10 @@ ipcMain.handle(
     }
   },
 );
+
+ipcMain.handle(`${LOCALE}:get`, async () => {
+  return store.get(LOCALE);
+});
 
 // Handler to fetch project details from the 'projects' directory.
 ipcMain.handle(`${PROJECTS}:get`, async (): Promise<Project[]> => {
@@ -189,12 +222,20 @@ ipcMain.handle(
   `${FEEDBACK}:send`,
   async (
     event,
-    data: {
+    {
+      body,
+    }: {
       body: string;
     },
   ) => {
     openNewGitHubIssue({
-      ...data,
+      body: `${body}
+
+
+----
+
+Version: ${pkg.version}
+`,
       user: "blib-la",
       repo: "captain",
       labels: ["app-feedback"],
@@ -202,18 +243,69 @@ ipcMain.handle(
   },
 );
 
-// Handler to delete a project
-
 ipcMain.handle(`${PROJECT}:delete`, async (event, id: string) => {
   const directory = getDirectory("projects", id);
   await fsp.rm(directory, { recursive: true, force: true });
 });
 
+ipcMain.handle(`${DATASET}:get`, async (event, id: string) => {
+  const datasetConfig = getDirectory("projects", id, "project.json");
+  const filesDirectory = getDirectory("projects", id, "files");
+  const dataset = await fsp
+    .readFile(datasetConfig, "utf-8")
+    .then((content) => JSON.parse(content));
+  const sourceDirectory = dataset.source;
+  const files = await fsp.readdir(filesDirectory);
+  const images = files.filter((file) => /\.(jpg|jpeg|png)$/i.test(file));
+
+  return {
+    dataset,
+    images: await Promise.all(
+      images.map(async (image) => {
+        let caption: string;
+        const captionFile = path
+          .join(sourceDirectory, image)
+          .replace(/\.(jpg|jpeg|png)$/i, ".txt");
+        try {
+          caption = await fsp.readFile(captionFile, "utf-8");
+        } catch (error) {
+          console.log(error);
+        }
+        return {
+          image: path.join(filesDirectory, image),
+          captionFile,
+          caption,
+        };
+      }),
+    ),
+  };
+});
+
+ipcMain.handle(`${DATASET}:delete`, async (event, id: string) => {
+  const directory = getDirectory("projects", id);
+  await fsp.rm(directory, { recursive: true, force: true });
+});
+
+ipcMain.handle(
+  `${DATASET}:update`,
+  async (event, id: string, partial: Partial<Exclude<Project, "id">>) => {
+    const dataset = getDirectory("projects", id, "project.json");
+    const project = await fsp
+      .readFile(dataset, "utf-8")
+      .then((content) => JSON.parse(content) as Project);
+
+    await fsp.writeFile(
+      dataset,
+      JSON.stringify({ ...project, ...partial, id }, null, 2),
+    );
+  },
+);
+
 // Handler so save caption values to the file
 ipcMain.handle(
   `${CAPTION}:save`,
   async (event, imageData: { captionFile: string; caption: string }) => {
-    await fsp.writeFile(imageData.captionFile, imageData.caption);
+    await fsp.writeFile(imageData.captionFile, imageData.caption.trim());
   },
 );
 

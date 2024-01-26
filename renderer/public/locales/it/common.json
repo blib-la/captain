@@ -1,0 +1,81 @@
+{
+  "autoCaption": "Auto Didascalia",
+  "cancel": "Annulla",
+  "caption": "Didascalia",
+  "close": "Chiudi",
+  "colorMode": {
+    "dark": "Scuro",
+    "label": "Modalità Colore",
+    "light": "Chiaro",
+    "system": "Sistema"
+  },
+  "comingSoon": "Prossimamente",
+  "create": "Crea",
+  "dataset": "Dataset",
+  "datasetName": "Nome del Dataset",
+  "datasets": "Dataset",
+  "delete": "Elimina",
+  "directory": "Directory",
+  "enterKeyToUseGPTVision": "Inserisci la tua chiave API OpenAI per utilizzare GPT-Vision.",
+  "exampleResponse": "Esempio di Risposta",
+  "feedback": "Feedback",
+  "form": {
+    "errors": {
+      "directory": "Si prega di fornire una directory",
+      "name": "Si prega di fornire un nome"
+    }
+  },
+  "getApiKey": "Ottieni una chiave API qui",
+  "github": "GitHub",
+  "guideline": "Linee Guida",
+  "inventory": "Inventario",
+  "language": "Lingua",
+  "marketplace": "Marketplace",
+  "menu": "Menu",
+  "name": "Nome",
+  "new": "Nuovo",
+  "newDataset": "Nuovo Dataset",
+  "next": "Avanti",
+  "noDatasets": "Nessun Dataset",
+  "openAiApiKey": "Chiave API di OpenAI",
+  "openFolder": "Apri Cartella",
+  "pages": {
+    "dataset": {
+      "chooseCaptioningMethod": "Scegli un metodo di didascalia",
+      "customCaptionsWithGPTVision": "Didascalie Personalizzate con GPT-Vision",
+      "generateCaptionWithBLIP": "Genera Didascalie con BLIP",
+      "generateTagsWithWD14": "Genera Tag con WD14",
+      "oneTimeDownloadNote": "I nostri metodi di didascalia avanzati richiedono un download una tantum dei modelli necessari, che potrebbe richiedere alcuni istanti.",
+      "proceedWithGPTVision": "Procedi con GPT-Vision",
+      "selectImage": "Seleziona Immagine",
+      "warningOpenAI": "Attenzione: L'utilizzo di GPT-Vision invierà le tue immagini a OpenAI. Si prega di rispettare i <1>termini di utilizzo</1> di OpenAI."
+    },
+    "datasets": {
+      "dropToAdd": "Lascia qui una cartella con le immagini del dataset",
+      "newDataset": "Crea un nuovo dataset"
+    },
+    "feedback": {
+      "giveFeedback": "Dare feedback"
+    },
+    "settings": {
+      "colorMode": "Modalità Colore",
+      "colorModeDescription": "Personalizza la tua esperienza visiva selezionando un tema di colore che si adatta alle tue preferenze.",
+      "languageSettings": "Impostazioni Lingua",
+      "languageSettingsDescription": "Personalizza la tua esperienza scegliendo la lingua con cui ti senti più a tuo agio.",
+      "openAiApiKeyDescription": "Inserisci la tua chiave API OpenAI per abilitare l'integrazione con i servizi OpenAI.",
+      "openAiSettings": "Impostazioni OpenAI",
+      "runPodSettings": "Impostazioni RunPod",
+      "userPreferences": "Preferenze Utente"
+    }
+  },
+  "previous": "Precedente",
+  "readMore": "Leggi di più",
+  "resetTransform": "Reimposta Trasformazione",
+  "save": "Salva",
+  "send": "Inviare",
+  "settings": "Impostazioni",
+  "termsOfUse": "Termini di utilizzo",
+  "training": "Formazione",
+  "zoomIn": "Ingrandire",
+  "zoomOut": "Rimpicciolire"
+}

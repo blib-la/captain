@@ -1,6 +1,6 @@
 {
   "name": "captain",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.0",
   "private": true,
   "description": "The Captain of Captions",
   "author": "Gregor Adams <greg@pixelass.com>",
@@ -12,15 +12,20 @@
     "dev": "nextron",
     "postinstall": "electron-builder install-app-deps",
     "ncu": "npx npm-check-updates@latest -u",
-    "spj": "npx sort-package-json@latest"
+    "spj": "npx sort-package-json@latest",
+    "toc": "npx markdown-toc README.md -i"
   },
   "dependencies": {
+    "@electron/remote": "^2.1.1",
     "@lottiefiles/react-lottie-player": "^3.5.3",
     "@types/electron-util": "^0.11.1",
     "@types/new-github-issue-url": "^0.2.1",
+    "@types/react-custom-scrollbars": "^4.0.13",
     "@types/react-window": "^1.8.8",
     "electron-store": "^8.1.0",
     "new-github-issue-url": "^1.0.0",
+    "next-language-detector": "^1.1.0",
+    "react-custom-scrollbars": "^4.2.1",
     "react-virtualized-auto-sizer": "^1.0.21",
     "react-window": "^1.8.10",
     "react-zoom-pan-pinch": "^3.3.0",
