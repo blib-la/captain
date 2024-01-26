@@ -10,14 +10,7 @@ export interface Project {
 
 export const projectsAtom = atom<Project[]>([]);
 export const projectAtom = atom<Project | false>(false);
-export const selectedImageAtom = atom<
-  | {
-      caption: string;
-      image: string;
-      captionFile: string;
-    }
-  | false
->(false);
+export const selectedImageAtom = atom(0);
 export const imagesAtom = atom<
   {
     caption: string;

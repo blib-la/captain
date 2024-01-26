@@ -1,220 +1,226 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 import {
   Box,
   Button,
-  Chip,
-  FormControl,
-  FormLabel,
+  ButtonProps,
+  Dropdown,
   IconButton,
-  Link,
+  Menu,
+  MenuButton,
+  MenuItem,
   Sheet,
-  Table,
-  Textarea,
-  Typography,
+  Stack,
+  Tooltip,
 } from "@mui/joy";
-import { ColorModeSelector } from "@/organisms/color-mode-selector";
 import SettingsIcon from "@mui/icons-material/Settings";
-import CloseIcon from "@mui/icons-material/Close";
-import FeedbackIcon from "@mui/icons-material/Feedback";
+import CollectionsIcon from "@mui/icons-material/Collections";
+import RateReviewIcon from "@mui/icons-material/RateReview";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import { useForm } from "react-hook-form";
-import KeyboardCommandKeyIcon from "@mui/icons-material/KeyboardCommandKey";
-function FeedbackForm({ onSubmit }: { onSubmit(): void }) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: { body: "" },
-  });
+import { useTranslation } from "next-i18next";
+import Link from "next/link";
+import { Except } from "type-fest";
+import { APP } from "../../../main/helpers/constants";
+import CloseIcon from "@mui/icons-material/Close";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import RemoveIcon from "@mui/icons-material/Remove";
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import InventoryIcon from "@mui/icons-material/Inventory";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Logo } from "@/atoms/logo";
+
+function SidebarButton({
+  children,
+  href,
+  target,
+  ...properties
+}: Except<ButtonProps<"a">, "component">) {
+  return (
+    <Tooltip
+      placement="right"
+      title={children}
+      sx={{ display: { xl: "none" } }}
+    >
+      <Box sx={{ width: "100%", display: "flex" }}>
+        {href && !target ? (
+          <Link legacyBehavior passHref href={href} target={target}>
+            <Button
+              {...properties}
+              size="lg"
+              component="a"
+              sx={{
+                justifyContent: "flex-start",
+                pl: 1.5,
+                flex: 1,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+              }}
+            >
+              {children}
+            </Button>
+          </Link>
+        ) : (
+          <Button
+            {...properties}
+            size="lg"
+            component={href ? "a" : "button"}
+            href={href}
+            target={target}
+            sx={{
+              justifyContent: "flex-start",
+              pl: 1.5,
+              flex: 1,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+            }}
+          >
+            {children}
+          </Button>
+        )}
+      </Box>
+    </Tooltip>
+  );
+}
+
+const WindowControls = () => {
+  const minimize = () => {
+    console.log("foo");
+    window.ipc.send(`${APP}:minimize`);
+  };
+
+  const maximize = () => {
+    window.ipc.send(`${APP}:maximize`);
+  };
+
+  const close = () => {
+    window.ipc.send(`${APP}:close`);
+  };
+
+  return (
+    <Box sx={{ WebkitAppRegion: "no-drag" }}>
+      <IconButton sx={{ cursor: "default" }} onClick={minimize}>
+        <RemoveIcon sx={{ fontSize: 16 }} />
+      </IconButton>
+      <IconButton sx={{ cursor: "default" }} onClick={maximize}>
+        <CheckBoxOutlineBlankIcon sx={{ fontSize: 16 }} />
+      </IconButton>
+      <IconButton
+        color="danger"
+        variant="solid"
+        sx={{
+          cursor: "default",
+          bgcolor: "transparent",
+          color: "text.primary",
+          "&:hover": {
+            color: "common.white",
+          },
+        }}
+        onClick={close}
+      >
+        <CloseIcon sx={{ fontSize: 16 }} />
+      </IconButton>
+    </Box>
+  );
+};
+export function Layout({ children }: { children?: ReactNode }) {
+  const { t } = useTranslation(["common"]);
 
   return (
     <Box
-      component="form"
-      sx={{ width: "100%" }}
-      onSubmit={handleSubmit(async (data) => {
-        await window.ipc.sendFeedback(data);
-        onSubmit();
-      })}
+      sx={{
+        height: "100dvh",
+        overflow: "hidden",
+        display: "grid",
+        gridTemplateColumns: {
+          xs: "36px 1fr",
+          xl: "228px 1fr",
+        },
+        gridTemplateRows: "36px 1fr",
+      }}
     >
-      <FormControl sx={{ width: "100%" }}>
-        <FormLabel>Give Feedback</FormLabel>
-        <Textarea
-          name="body"
-          minRows={6}
-          error={Boolean(errors?.body)}
-          sx={{ width: "100%" }}
-          {...register("body", { required: true })}
-        />
-      </FormControl>
-      <Box sx={{ pt: 2 }}>
-        <Button type="submit">Send</Button>
-      </Box>
-    </Box>
-  );
-}
-
-function Kbd({ children }: { children?: ReactNode }) {
-  return (
-    <Chip variant="outlined" component="kbd" sx={{ borderRadius: 1 }}>
-      {children}
-    </Chip>
-  );
-}
-export function Layout({ children }: { children?: ReactNode }) {
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [feedbackOpen, setFeedbackOpen] = useState(false);
-  const [keyboardControlOpen, setKeyboardControlOpen] = useState(false);
-  return (
-    <Box sx={{ height: "100dvh", overflow: "hidden", display: "flex" }}>
-      <Box sx={{ flex: 1 }}>{children}</Box>
       <Sheet
-        color={settingsOpen ? "primary" : undefined}
-        variant={settingsOpen ? "solid" : undefined}
         sx={{
-          zIndex: 2,
-          height: 32,
           display: "flex",
-          flexDirection: "column",
-          flexWrap: "wrap",
-          alignItems: "flex-start",
-          position: "absolute",
-          width: settingsOpen ? "100%" : "min-content",
-          bottom: 0,
-          right: 0,
-          bgcolor: settingsOpen ? undefined : "transparent",
+          gridColumnStart: 1,
+          gridColumnEnd: 3,
+          WebkitAppRegion: "drag",
         }}
       >
-        {settingsOpen && (
-          <Box sx={{ px: 2 }}>
-            <ColorModeSelector />
-          </Box>
-        )}
-        <IconButton
-          size="sm"
-          color={settingsOpen ? "primary" : undefined}
-          variant={settingsOpen ? "solid" : undefined}
-          sx={{ alignSelf: "flex-end" }}
-          aria-label={`${settingsOpen ? "close" : "open"} settings`}
-          onClick={() => {
-            setSettingsOpen(!settingsOpen);
+        <Box
+          sx={{
+            WebkitAppRegion: "no-drag",
+            display: "flex",
+            alignItems: "center",
           }}
         >
-          {settingsOpen ? <CloseIcon /> : <SettingsIcon />}
-        </IconButton>
-      </Sheet>
-      <Sheet
-        color="neutral"
-        variant="soft"
-        sx={{
-          zIndex: 2,
-          display: "flex",
-          flexDirection: "column",
-          flexWrap: "wrap",
-          alignItems: "flex-start",
-          justifyContent: "flex-start",
-          position: "absolute",
-          width: feedbackOpen ? 400 : "min-content",
-          height: "min-content",
-          top: 0,
-          right: 0,
-          pt: 4,
-          pr: 4,
-          bgcolor: feedbackOpen ? undefined : "transparent",
-        }}
-      >
-        {feedbackOpen && (
-          <Box sx={{ pl: 2, pb: 2, width: "100%" }}>
-            <FeedbackForm
-              onSubmit={() => {
-                setFeedbackOpen(false);
-              }}
-            />
+          <Box
+            sx={{
+              p: 1,
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Logo sx={{ height: 20, width: 20 }} />
           </Box>
-        )}
-        <IconButton
-          size="sm"
-          color={feedbackOpen ? "neutral" : undefined}
-          variant={feedbackOpen ? "solid" : undefined}
-          aria-label={`${feedbackOpen ? "close" : "open"} feedback`}
-          sx={{ position: "absolute", top: 0, right: 0 }}
-          onClick={() => {
-            setFeedbackOpen(!feedbackOpen);
-          }}
-        >
-          {feedbackOpen ? <CloseIcon /> : <FeedbackIcon />}
-        </IconButton>
+          <Dropdown>
+            <MenuButton
+              slots={{ root: IconButton }}
+              slotProps={{ root: { variant: "plain", color: "neutral" } }}
+            >
+              <MoreVertIcon />
+            </MenuButton>
+            <Menu placement="bottom-start" size="sm">
+              <MenuItem sx={{ winWidth: 200 }}>About</MenuItem>
+              <MenuItem>Help</MenuItem>
+            </Menu>
+          </Dropdown>
+        </Box>
+        <Box sx={{ flex: 1 }} />
+        <WindowControls />
       </Sheet>
-      <Sheet
-        color="neutral"
-        variant="soft"
-        sx={{
-          zIndex: 2,
-          display: "flex",
-          flexDirection: "column",
-          flexWrap: "wrap",
-          alignItems: "flex-start",
-          justifyContent: "flex-start",
-          position: "absolute",
-          width: keyboardControlOpen ? 400 : "min-content",
-          height: "min-content",
-          top: 0,
-          left: 0,
-          pt: 4,
-          pl: 4,
-          bgcolor: keyboardControlOpen ? undefined : "transparent",
-        }}
-      >
-        {keyboardControlOpen && (
-          <Box sx={{ pr: 2, pb: 2, width: "100%" }}>
-            <Typography level={"title-lg"}>Editor:</Typography>
-            <Table>
-              <tbody>
-                <tr>
-                  <td>Previous Image:</td>
-                  <td>
-                    <Kbd>Alt</Kbd> + <Kbd>←</Kbd>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Next Image:</td>
-                  <td>
-                    <Kbd>Alt</Kbd> + <Kbd>→</Kbd>
-                  </td>
-                </tr>
-              </tbody>
-            </Table>
-          </Box>
-        )}
-        <IconButton
-          size="sm"
-          color={keyboardControlOpen ? "primary" : undefined}
-          variant={keyboardControlOpen ? "solid" : undefined}
-          aria-label={`${keyboardControlOpen ? "close" : "open"} hotkeys`}
-          sx={{ position: "absolute", top: 0, left: 0 }}
-          onClick={() => {
-            setKeyboardControlOpen(!keyboardControlOpen);
-          }}
+      <Stack sx={{ overflow: "hidden" }}>
+        <SidebarButton href="/home" startDecorator={<CollectionsIcon />}>
+          {t("common:datasets")}
+        </SidebarButton>
+        <SidebarButton
+          disabled
+          href="/marketplace"
+          startDecorator={<StorefrontIcon />}
         >
-          {keyboardControlOpen ? <CloseIcon /> : <KeyboardCommandKeyIcon />}
-        </IconButton>
+          {t("common:marketplace")}
+        </SidebarButton>
+        <SidebarButton
+          disabled
+          href="/inventory"
+          startDecorator={<InventoryIcon />}
+        >
+          {t("common:inventory")}
+        </SidebarButton>
+        <SidebarButton
+          disabled
+          href="/training"
+          startDecorator={<FitnessCenterIcon />}
+        >
+          {t("common:training")}
+        </SidebarButton>
+        <Box sx={{ flex: 1 }} />
+        <SidebarButton
+          href="https://github.com/blib-la/captain"
+          target="_blank"
+          startDecorator={<GitHubIcon />}
+        >
+          {t("common:github")}
+        </SidebarButton>
+        <SidebarButton href="/feedback" startDecorator={<RateReviewIcon />}>
+          {t("common:feedback")}
+        </SidebarButton>
+        <SidebarButton href="/settings" startDecorator={<SettingsIcon />}>
+          {t("common:settings")}
+        </SidebarButton>
+      </Stack>
+      <Sheet variant="plain" sx={{ position: "relative", overflow: "hidden" }}>
+        {children}
       </Sheet>
-      <IconButton
-        component="a"
-        target={"_blank"}
-        href={"https://github.com/blib-la/captain"}
-        aria-label={"github repository"}
-        size="sm"
-        sx={{ position: "absolute", top: 32, right: 0 }}
-      >
-        <GitHubIcon />
-      </IconButton>
-      <Box sx={{ position: "absolute", left: 0, bottom: 0, py: 0.5, px: 1 }}>
-        Brought to you by{" "}
-        <Link href="https://blib.la" target={"_blank"}>
-          Blibla
-        </Link>
-      </Box>
     </Box>
   );
 }

@@ -1,0 +1,79 @@
+{
+  "autoCaption": "Automatische bijschrift",
+  "cancel": "Annuleren",
+  "caption": "Bijschrift",
+  "close": "Sluiten",
+  "colorMode": {
+    "dark": "Donker",
+    "label": "Kleurmodus",
+    "light": "Licht",
+    "system": "Systeem"
+  },
+  "comingSoon": "Binnenkort beschikbaar",
+  "create": "Creëren",
+  "dataset": "Dataset",
+  "datasetName": "Datasetnaam",
+  "datasets": "Datasets",
+  "delete": "Verwijderen",
+  "directory": "Map",
+  "enterKeyToUseGPTVision": "Voer uw OpenAI API-sleutel in om GPT-Vision te gebruiken.",
+  "exampleResponse": "Voorbeeldantwoord",
+  "feedback": "Feedback",
+  "form": {
+    "errors": {
+      "directory": "Geef alstublieft een map op",
+      "name": "Geef alstublieft een naam op"
+    }
+  },
+  "getApiKey": "Hier een API-sleutel krijgen.",
+  "github": "GitHub",
+  "guideline": "Richtlijnen",
+  "inventory": "Voorraad",
+  "language": "Taal",
+  "marketplace": "Marktplaats",
+  "menu": "Menu",
+  "name": "Naam",
+  "new": "Nieuw",
+  "newDataset": "Nieuwe Dataset",
+  "next": "Volgende",
+  "noDatasets": "Geen Datasets",
+  "openAiApiKey": "OpenAI API-sleutel",
+  "openFolder": "Map Openen",
+  "pages": {
+    "dataset": {
+      "customCaptionsWithGPTVision": "Aangepaste onderschriften met GPT-Vision",
+      "generateCaptionWithBLIP": "Onderschriften genereren met BLIP",
+      "generateTagsWithWD14": "Tags genereren met WD14",
+      "proceedWithGPTVision": "Ga verder met GPT-Vision",
+      "selectImage": "Selecteer Afbeelding",
+      "warningOpenAI": "Let op: Het gebruik van GPT-Vision zal uw afbeeldingen naar OpenAI sturen. Gelieve de <1>Gebruiksvoorwaarden</1> van OpenAI na te leven."
+    },
+    "datasets": {
+      "dropToAdd": "Plaats hier een map met datasetafbeeldingen",
+      "newDataset": "Maak een nieuwe dataset"
+    },
+    "feedback": {
+      "giveFeedback": "Feedback geven"
+    },
+    "settings": {
+      "colorMode": "Kleurmodus",
+      "colorModeDescription": "Pas je visuele ervaring aan door een kleurenthema te selecteren dat bij je voorkeur past.",
+      "languageSettings": "Taalinstellingen",
+      "languageSettingsDescription": "Pas je ervaring aan door de taal te kiezen waar je je het meest comfortabel bij voelt.",
+      "openAiApiKeyDescription": "Voer uw OpenAI API-sleutel in om integratie met OpenAI-diensten mogelijk te maken.",
+      "openAiSettings": "OpenAI-instellingen",
+      "runPodSettings": "RunPod-instellingen",
+      "userPreferences": "Gebruikersvoorkeuren"
+    }
+  },
+  "previous": "Vorige",
+  "readMore": "Lees Meer",
+  "resetTransform": "Transformeren Resetten",
+  "save": "Opslaan",
+  "send": "Verzenden",
+  "settings": "Instellingen",
+  "termsOfUse": "Gebruiksvoorwaarden",
+  "training": "Training",
+  "zoomIn": "Inzoomen",
+  "zoomOut": "Uitzoomen"
+}

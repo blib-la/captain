@@ -1,5 +1,5 @@
 import path from "path";
-import { app, shell, protocol, Menu } from "electron";
+import { app, Menu, protocol, shell } from "electron";
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
 
@@ -36,6 +36,7 @@ app.whenReady().then(() => {
     height: 1000,
     minHeight: 600,
     minWidth: 800,
+    frame: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },

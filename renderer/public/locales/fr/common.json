@@ -1,0 +1,79 @@
+{
+  "autoCaption": "Légende automatique",
+  "cancel": "Annuler",
+  "caption": "Légende",
+  "close": "Fermer",
+  "colorMode": {
+    "dark": "Sombre",
+    "label": "Mode Couleur",
+    "light": "Lumière",
+    "system": "Système"
+  },
+  "comingSoon": "Prochainement",
+  "create": "Créer",
+  "dataset": "Jeu de Données",
+  "datasetName": "Nom du Jeu de Données",
+  "datasets": "Jeux de Données",
+  "delete": "Supprimer",
+  "directory": "Répertoire",
+  "enterKeyToUseGPTVision": "Entrez votre clé API OpenAI pour utiliser GPT-Vision.",
+  "exampleResponse": "Exemple de Réponse",
+  "feedback": "Retours",
+  "form": {
+    "errors": {
+      "directory": "Veuillez fournir un répertoire",
+      "name": "Veuillez fournir un nom"
+    }
+  },
+  "getApiKey": "Obtenir une clé API ici.",
+  "github": "GitHub",
+  "guideline": "Directives",
+  "inventory": "Inventaire",
+  "language": "Langue",
+  "marketplace": "Place de marché",
+  "menu": "Menu",
+  "name": "Nom",
+  "new": "Nouveau",
+  "newDataset": "Nouveau Jeu de Données",
+  "next": "Suivant",
+  "noDatasets": "Pas de Jeux de Données",
+  "openAiApiKey": "Clé API OpenAI",
+  "openFolder": "Ouvrir le Dossier",
+  "pages": {
+    "dataset": {
+      "customCaptionsWithGPTVision": "Légendes personnalisées avec GPT-Vision",
+      "generateCaptionWithBLIP": "Générer des légendes avec BLIP",
+      "generateTagsWithWD14": "Générer des étiquettes avec WD14",
+      "proceedWithGPTVision": "Poursuivre avec GPT-Vision",
+      "selectImage": "Sélectionner une image",
+      "warningOpenAI": "Attention : L'utilisation de GPT-Vision enverra vos images à OpenAI. Veuillez respecter les <1>conditions d'utilisation</1> d'OpenAI"
+    },
+    "datasets": {
+      "dropToAdd": "Dépose un dossier avec des images du dataset ici",
+      "newDataset": "Créer un nouveau jeu de données"
+    },
+    "feedback": {
+      "giveFeedback": "Donner un retour"
+    },
+    "settings": {
+      "colorMode": "Mode Couleur",
+      "colorModeDescription": "Personnalisez votre expérience visuelle en sélectionnant un thème de couleur qui correspond à vos préférences.",
+      "languageSettings": "Paramètres de Langue",
+      "languageSettingsDescription": "Personnalisez votre expérience en choisissant la langue avec laquelle vous êtes le plus à l'aise.",
+      "openAiApiKeyDescription": "Entrez votre clé API OpenAI pour activer l'intégration avec les services OpenAI.",
+      "openAiSettings": "Paramètres OpenAI",
+      "runPodSettings": "Paramètres RunPod",
+      "userPreferences": "Préférences de l'utilisateur"
+    }
+  },
+  "previous": "Précédent",
+  "readMore": "En Savoir Plus",
+  "resetTransform": "Réinitialiser la transformation",
+  "save": "Enregistrer",
+  "send": "Envoyer",
+  "settings": "Paramètres",
+  "termsOfUse": "Conditions d'utilisation",
+  "training": "Formation",
+  "zoomIn": "Zoomer",
+  "zoomOut": "Dézoomer"
+}

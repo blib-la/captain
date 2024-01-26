@@ -1,0 +1,79 @@
+{
+  "autoCaption": "Auto-Beschriftung",
+  "cancel": "Abbrechen",
+  "caption": "Beschriftung",
+  "close": "Schließen",
+  "colorMode": {
+    "dark": "Dunkel",
+    "label": "Farbmodus",
+    "light": "Hell",
+    "system": "System"
+  },
+  "comingSoon": "Demnächst",
+  "create": "Erstellen",
+  "dataset": "Datensatz",
+  "datasetName": "Datensatzname",
+  "datasets": "Datensätze",
+  "delete": "Löschen",
+  "directory": "Verzeichnis",
+  "enterKeyToUseGPTVision": " Geben Sie Ihren OpenAI-API-Schlüssel ein, um GPT-Vision zu verwenden. Russian (RU)",
+  "exampleResponse": "Beispielantwort",
+  "feedback": "Feedback",
+  "form": {
+    "errors": {
+      "directory": "Bitte geben Sie ein Verzeichnis an",
+      "name": "Bitte geben Sie einen Namen an"
+    }
+  },
+  "getApiKey": "Hier API-Schlüssel holen",
+  "github": "GitHub",
+  "guideline": "Richtlinien",
+  "inventory": "Inventar",
+  "language": "Sprache",
+  "marketplace": "Marktplatz",
+  "menu": "Menü",
+  "name": "Name",
+  "new": "Neu",
+  "newDataset": "Neues Datenset",
+  "next": "Weiter",
+  "noDatasets": "Keine Datensätze",
+  "openAiApiKey": "OpenAI API-Schlüssel",
+  "openFolder": "Ordner öffnen",
+  "pages": {
+    "dataset": {
+      "customCaptionsWithGPTVision": "Benutzerdefinierte Beschriftungen mit GPT-Vision",
+      "generateCaptionWithBLIP": "Beschriftungen mit BLIP generieren",
+      "generateTagsWithWD14": "Tags mit WD14 generieren",
+      "proceedWithGPTVision": "Mit GPT-Vision fortfahren",
+      "selectImage": "Bild auswählen",
+      "warningOpenAI": "Achtung: Die Verwendung von GPT-Vision wird Ihre Bilder an OpenAI senden. Bitte beachten Sie die <1>Nutzungsbedingungen</1> von OpenAI."
+    },
+    "datasets": {
+      "dropToAdd": "Legen Sie hier einen Ordner mit Bildern des Datensatzes ab",
+      "newDataset": "Neuen Datensatz erstellen"
+    },
+    "feedback": {
+      "giveFeedback": "Feedback geben"
+    },
+    "settings": {
+      "colorMode": "Farbmodus",
+      "colorModeDescription": "Passen Sie Ihr visuelles Erlebnis an, indem Sie ein Farbschema auswählen, das Ihren Vorlieben entspricht.",
+      "languageSettings": "Spracheinstellungen",
+      "languageSettingsDescription": "Passen Sie Ihr Erlebnis an, indem Sie die Sprache auswählen, mit der Sie sich am wohlsten fühlen.",
+      "openAiApiKeyDescription": "Geben Sie Ihren OpenAI API-Schlüssel ein, um die Integration mit OpenAI-Diensten zu ermöglichen.",
+      "openAiSettings": "OpenAI-Einstellungen",
+      "runPodSettings": "RunPod-Einstellungen",
+      "userPreferences": "Benutzereinstellungen"
+    }
+  },
+  "previous": "Zurück",
+  "readMore": "Mehr lesen",
+  "resetTransform": "Transformation zurücksetzen",
+  "save": "Speichern",
+  "send": "Senden",
+  "settings": "Einstellungen",
+  "termsOfUse": "Nutzungsbedingungen",
+  "training": "Training",
+  "zoomIn": "Vergrößern",
+  "zoomOut": "Verkleinern"
+}

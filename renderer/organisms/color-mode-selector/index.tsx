@@ -1,35 +1,45 @@
-import IconButton from "@mui/joy/IconButton";
-import ToggleButtonGroup from "@mui/joy/ToggleButtonGroup";
 import { useTranslation } from "next-i18next";
 
 import { useSsrColorScheme } from "@/ions/hooks/color-scheme";
-import { icons } from "@/organisms/color-mode-selector/icons";
+import Select from "@mui/joy/Select";
+import Option from "@mui/joy/Option";
+
+const colorModes = ["light", "dark", "system"];
 
 export function ColorModeSelector() {
-  const { t } = useTranslation(["button"]);
+  const { t } = useTranslation(["common"]);
   const { mode, setMode } = useSsrColorScheme();
   return (
-    <ToggleButtonGroup
+    <Select
+      data-testid="color-mode-selector"
       value={mode}
+      name="mode"
       variant="soft"
-      color="primary"
-      size="sm"
-      sx={{ flex: { xs: 1, md: "initial" } }}
+      color="neutral"
+      component="label"
+      sx={{ width: { xs: "100%" } }}
+      aria-label={t("common:pages.settings.colorMode")}
+      slotProps={{
+        listbox: {
+          "data-testid": "color-mode-selector-listbox",
+        },
+        button: {
+          "data-testid": "color-mode-selector-button",
+          "aria-label": t(`common:colorMode.${mode}`),
+          sx: {
+            lineHeight: "inherit",
+          },
+        },
+      }}
       onChange={(event, newValue) => {
         setMode(newValue ?? "system");
       }}
     >
-      {Object.entries(icons).map(([key, icon]) => (
-        <IconButton
-          key={key}
-          value={key}
-          data-testid={`color-mode-${key}`}
-          aria-label={t(`button:colorMode.${key}`)}
-          sx={{ flex: 1 }}
-        >
-          {icon}
-        </IconButton>
+      {colorModes.map((key) => (
+        <Option key={key} value={key}>
+          {t(`common:colorMode.${key}`)}
+        </Option>
       ))}
-    </ToggleButtonGroup>
+    </Select>
   );
 }

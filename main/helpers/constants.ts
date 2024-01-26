@@ -16,3 +16,7 @@ export const GPTV = "GPTV";
 export const CAPTION = "CAPTION";
 export const GPT_VISION_OPTIONS = "GPT_VISION_OPTIONS";
 export const FEEDBACK = "FEEDBACK";
+export const DATASET = "DATASET";
+export const DATASETS = "DATASETS";
+export const APP = "APP";
+export const FOLDER = "FOLDER";

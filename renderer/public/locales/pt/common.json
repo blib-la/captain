@@ -1,0 +1,79 @@
+{
+  "autoCaption": "Legendagem Automática",
+  "cancel": "Cancelar",
+  "caption": "Legenda",
+  "close": "Fechar",
+  "colorMode": {
+    "dark": "Escuro",
+    "label": "Modo de Cor",
+    "light": "Claro",
+    "system": "Sistema"
+  },
+  "comingSoon": "Em Breve",
+  "create": "Criar",
+  "dataset": "Conjunto de Dados",
+  "datasetName": "Nome do Conjunto de Dados",
+  "datasets": "Conjuntos de Dados",
+  "delete": "Excluir",
+  "directory": "Diretório",
+  "enterKeyToUseGPTVision": "Insira sua chave de API da OpenAI para usar o GPT-Vision.",
+  "exampleResponse": "Exemplo de Resposta",
+  "feedback": "Feedback",
+  "form": {
+    "errors": {
+      "directory": "Por favor, forneça um diretório",
+      "name": "Por favor, forneça um nome"
+    }
+  },
+  "getApiKey": "Obtenha uma chave API aqui.",
+  "github": "GitHub",
+  "guideline": "Diretrizes",
+  "inventory": "Inventário",
+  "language": "Idioma",
+  "marketplace": "Mercado",
+  "menu": "Menu",
+  "name": "Nome",
+  "new": "Novo",
+  "newDataset": "Novo Conjunto de Dados",
+  "next": "Próximo",
+  "noDatasets": "Sem Conjuntos de Dados",
+  "openAiApiKey": "Chave API OpenAI",
+  "openFolder": "Abrir Pasta",
+  "pages": {
+    "dataset": {
+      "customCaptionsWithGPTVision": "Legendas Personalizadas com GPT-Vision",
+      "generateCaptionWithBLIP": "Gerar Legendas com BLIP",
+      "generateTagsWithWD14": "Gerar Tags com WD14",
+      "proceedWithGPTVision": "Prosseguir com GPT-Vision",
+      "selectImage": "Selecionar Imagem",
+      "warningOpenAI": "Atenção: Usar o GPT-Vision enviará suas imagens para a OpenAI. Por favor, cumpra os <1>Termos de Uso</1> da OpenAI."
+    },
+    "datasets": {
+      "dropToAdd": "Solte uma pasta com imagens do conjunto de dados aqui",
+      "newDataset": "Criar um novo conjunto de dados"
+    },
+    "feedback": {
+      "giveFeedback": "Dar feedback"
+    },
+    "settings": {
+      "colorMode": "Modo de Cor",
+      "colorModeDescription": "Personalize sua experiência visual selecionando um tema de cor que se adapte à sua preferência.",
+      "languageSettings": "Configurações de Idioma",
+      "languageSettingsDescription": "Personalize sua experiência escolhendo o idioma com o qual você se sente mais confortável.",
+      "openAiApiKeyDescription": "Insira sua chave API OpenAI para habilitar a integração com os serviços OpenAI.",
+      "openAiSettings": "Configurações OpenAI",
+      "runPodSettings": "Configurações RunPod",
+      "userPreferences": "Preferências do Usuário"
+    }
+  },
+  "previous": "Anterior",
+  "readMore": "Ler Mais",
+  "resetTransform": "Redefinir Transformação",
+  "save": "Salvar",
+  "send": "Enviar",
+  "settings": "Configurações",
+  "termsOfUse": "Termos de uso",
+  "training": "Treinamento",
+  "zoomIn": "Ampliar",
+  "zoomOut": "Reduzir"
+}

@@ -1,9 +1,8 @@
 import path from "node:path";
-import { app, BrowserWindow, Rectangle, screen } from "electron";
+import { app, BrowserWindow, Rectangle, screen, shell } from "electron";
 import fs from "node:fs";
 import sharp from "sharp";
 import { MINIFIED_IMAGE_SIZE } from "./constants";
-import { shell } from "electron";
 
 interface OpenNewGitHubIssueOptions {
   repoUrl?: string;

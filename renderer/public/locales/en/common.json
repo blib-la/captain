@@ -1,0 +1,79 @@
+{
+  "autoCaption": "Auto Caption",
+  "cancel": "Cancel",
+  "caption": "Caption",
+  "close": "Close",
+  "colorMode": {
+    "dark": "Dark",
+    "label": "Color Mode",
+    "light": "Light",
+    "system": "System"
+  },
+  "comingSoon": "Coming Soon",
+  "create": "Create",
+  "dataset": "Dataset",
+  "datasetName": "Dataset Name",
+  "datasets": "Datasets",
+  "delete": "Delete",
+  "directory": "Directory",
+  "enterKeyToUseGPTVision": "Enter your OpenAI API key to use GPT-Vision.",
+  "exampleResponse": "Example Response",
+  "feedback": "Feedback",
+  "form": {
+    "errors": {
+      "directory": "Please provide a directory",
+      "name": "Please provide a name"
+    }
+  },
+  "getApiKey": "Get an API key here.",
+  "github": "GitHub",
+  "guideline": "Guidelines",
+  "inventory": "Inventory",
+  "language": "Language",
+  "marketplace": "Marketplace",
+  "menu": "Menu",
+  "name": "Name",
+  "new": "New",
+  "newDataset": "New Dataset",
+  "next": "Next",
+  "noDatasets": "No Datasets",
+  "openAiApiKey": "OpenAI API Key",
+  "openFolder": "Open Folder",
+  "pages": {
+    "dataset": {
+      "customCaptionsWithGPTVision": "Custom Captions with GPT-Vision",
+      "generateCaptionWithBLIP": "Generate Captions with BLIP",
+      "generateTagsWithWD14": "Generate Tags with WD14",
+      "proceedWithGPTVision": "Proceed with GPT-Vision",
+      "selectImage": "Select Image",
+      "warningOpenAI": "Attention: Using GPT-Vision will send your images to OpenAI. Please comply with OpenAI's <1>Terms of use</1>"
+    },
+    "datasets": {
+      "dropToAdd": "Drop a folder with dataset images here",
+      "newDataset": "Create a new dataset"
+    },
+    "feedback": {
+      "giveFeedback": "Give Feedback"
+    },
+    "settings": {
+      "colorMode": "Color Mode",
+      "colorModeDescription": "Customize your visual experience by selecting a color theme that suits your preference.",
+      "languageSettings": "Language Settings",
+      "languageSettingsDescription": "Tailor your experience by choosing the language you are most comfortable with.",
+      "openAiApiKeyDescription": "Enter your OpenAI API key to enable integration with OpenAI services.",
+      "openAiSettings": "OpenAI Settings",
+      "runPodSettings": "RunPod Settings",
+      "userPreferences": "User Preferences"
+    }
+  },
+  "previous": "Previous",
+  "readMore": "Read More",
+  "resetTransform": "Reset Transform",
+  "save": "Save",
+  "send": "Send",
+  "settings": "Settings",
+  "termsOfUse": "Terms of use",
+  "training": "Training",
+  "zoomIn": "Zoom In",
+  "zoomOut": "Zoom Out"
+}

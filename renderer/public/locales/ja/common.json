@@ -1,0 +1,79 @@
+{
+  "autoCaption": "自動キャプション",
+  "cancel": "キャンセル",
+  "caption": "キャプション",
+  "close": "閉じる",
+  "colorMode": {
+    "dark": "ダーク",
+    "label": "カラーモード",
+    "light": "ライト",
+    "system": "システム"
+  },
+  "comingSoon": "近日公開",
+  "create": "作成",
+  "dataset": "データセット",
+  "datasetName": "データセット名",
+  "datasets": "データセット",
+  "delete": "削除",
+  "directory": "ディレクトリ",
+  "enterKeyToUseGPTVision": "GPT-Visionを使用するためにOpenAIのAPIキーを入力してください。",
+  "exampleResponse": "例のレスポンス",
+  "feedback": "フィードバック",
+  "form": {
+    "errors": {
+      "directory": "ディレクトリを指定してください",
+      "name": "名前を指定してください"
+    }
+  },
+  "getApiKey": "こちらからAPIキーを取得してください。",
+  "github": "GitHub",
+  "guideline": "ガイドライン",
+  "inventory": "在庫",
+  "language": "言語",
+  "marketplace": "マーケットプレイス",
+  "menu": "メニュー",
+  "name": "名前",
+  "new": "新規",
+  "newDataset": "新しいデータセット",
+  "next": "次へ",
+  "noDatasets": "データセットはありません",
+  "openAiApiKey": "OpenAI APIキー",
+  "openFolder": "フォルダを開く",
+  "pages": {
+    "dataset": {
+      "customCaptionsWithGPTVision": "GPT-Visionでカスタムキャプション",
+      "generateCaptionWithBLIP": "BLIPでキャプションを生成",
+      "generateTagsWithWD14": "WD14でタグを生成",
+      "proceedWithGPTVision": "GPT-Visionで進む",
+      "selectImage": "画像を選択",
+      "warningOpenAI": "注意：GPT-Visionの使用により、あなたの画像がOpenAIに送信されます。OpenAIの<1>利用規約</1>に従ってください。"
+    },
+    "datasets": {
+      "dropToAdd": "ここにデータセット画像が含まれるフォルダをドロップしてください",
+      "newDataset": "新しいデータセットを作成"
+    },
+    "feedback": {
+      "giveFeedback": "フィードバックを与える"
+    },
+    "settings": {
+      "colorMode": "カラーモード",
+      "colorModeDescription": "好みに合ったカラーテーマを選択して視覚体験をカスタマイズします。",
+      "languageSettings": "言語設定",
+      "languageSettingsDescription": "最も快適に使用できる言語を選択して体験をカスタマイズします。",
+      "openAiApiKeyDescription": "OpenAIサービスとの統合を有効にするために、OpenAI APIキーを入力してください。",
+      "openAiSettings": "OpenAI設定",
+      "runPodSettings": "RunPod設定",
+      "userPreferences": "ユーザー設定"
+    }
+  },
+  "previous": "前",
+  "readMore": "もっと読む",
+  "resetTransform": "トランスフォームをリセット",
+  "save": "保存",
+  "send": "送信する",
+  "settings": "設定",
+  "termsOfUse": "利用規約",
+  "training": "トレーニング",
+  "zoomIn": "ズームイン",
+  "zoomOut": "ズームアウト"
+}

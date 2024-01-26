@@ -1,0 +1,79 @@
+{
+  "autoCaption": "自动字幕",
+  "cancel": "取消",
+  "caption": "字幕",
+  "close": "关闭",
+  "colorMode": {
+    "dark": "深色",
+    "label": "颜色模式",
+    "light": "浅色",
+    "system": "系统"
+  },
+  "comingSoon": "即将推出",
+  "create": "创建",
+  "dataset": "数据集",
+  "datasetName": "数据集名称",
+  "datasets": "数据集",
+  "delete": "删除",
+  "directory": "目录",
+  "enterKeyToUseGPTVision": "输入您的OpenAI API密钥以使用GPT-Vision。",
+  "exampleResponse": "示例响应",
+  "feedback": "反馈",
+  "form": {
+    "errors": {
+      "directory": "请提供一个目录",
+      "name": "请提供一个名称"
+    }
+  },
+  "getApiKey": "在此处获取API密钥。",
+  "github": "GitHub",
+  "guideline": "指南",
+  "inventory": "库存",
+  "language": "语言",
+  "marketplace": "市场",
+  "menu": "菜单",
+  "name": "名称",
+  "new": "新建",
+  "newDataset": "新建数据集",
+  "next": "下一个",
+  "noDatasets": "没有数据集",
+  "openAiApiKey": "OpenAI API密钥",
+  "openFolder": "打开文件夹",
+  "pages": {
+    "dataset": {
+      "customCaptionsWithGPTVision": "使用GPT-Vision自定义字幕",
+      "generateCaptionWithBLIP": "使用BLIP生成字幕",
+      "generateTagsWithWD14": "使用WD14生成标签",
+      "proceedWithGPTVision": "继续使用GPT-Vision",
+      "selectImage": "选择图像",
+      "warningOpenAI": "注意：使用GPT-Vision会将您的图片发送至OpenAI。请遵守OpenAI的<1>使用条款</1>。"
+    },
+    "datasets": {
+      "dropToAdd": "在此处拖放包含数据集图像的文件夹",
+      "newDataset": "创建新数据集"
+    },
+    "feedback": {
+      "giveFeedback": "提供反馈"
+    },
+    "settings": {
+      "colorMode": "颜色模式",
+      "colorModeDescription": "选择适合您偏好的颜色主题以自定义视觉体验。",
+      "languageSettings": "语言设置",
+      "languageSettingsDescription": "选择您最舒适的语言以定制体验。",
+      "openAiApiKeyDescription": "输入您的OpenAI API密钥以启用OpenAI服务的集成。",
+      "openAiSettings": "OpenAI设置",
+      "runPodSettings": "RunPod设置",
+      "userPreferences": "用户偏好"
+    }
+  },
+  "previous": "上一个",
+  "readMore": "阅读更多",
+  "resetTransform": "重置变换",
+  "save": "保存",
+  "send": "发送",
+  "settings": "设置",
+  "termsOfUse": "使用条款",
+  "training": "培训",
+  "zoomIn": "放大",
+  "zoomOut": "缩小"
+}

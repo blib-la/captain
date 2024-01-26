@@ -2,6 +2,8 @@ import { contextBridge, ipcRenderer, IpcRendererEvent } from "electron";
 import {
   BLIP,
   CAPTION,
+  DATASET,
+  DATASETS,
   DIRECTORY,
   EXISTING_PROJECT,
   FEEDBACK,
@@ -12,6 +14,8 @@ import {
   STORE,
   WD14,
 } from "./helpers/constants";
+import { Project } from "./helpers/types";
+import { Except } from "type-fest";
 
 const handler = {
   store: (data: Record<string, unknown>) =>
@@ -33,6 +37,11 @@ const handler = {
     source: string;
   }) => ipcRenderer.invoke(`${EXISTING_PROJECT}:get`, project),
   getProjects: () => ipcRenderer.invoke(`${PROJECTS}:get`),
+  getDatasets: () => ipcRenderer.invoke(`${DATASETS}:get`),
+  getDataset: (id: string) => ipcRenderer.invoke(`${DATASET}:get`, id),
+  updateDataset: (id: string, data: Partial<Except<Project, "id">>) =>
+    ipcRenderer.invoke(`${DATASET}:update`, id, data),
+  deleteDataset: (id: string) => ipcRenderer.invoke(`${DATASET}:delete`, id),
   deleteProject: (id: string) => ipcRenderer.invoke(`${PROJECT}:delete`, id),
   handleRunBlip: async (directory: string) =>
     ipcRenderer.invoke(`${BLIP}:run`, directory),
