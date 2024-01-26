@@ -4,6 +4,14 @@ Captain simplifies AI on your desktop. It's a free, open-source application that
 
 Captain currently supports English, German, Spanish, French, Hebrew, Italian, Japanese, Dutch, Polish, Portuguese, Russian, and Chinese.
 
+
+<p align="center">
+  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-beta.0/Captain.Setup.1.0.0-beta.0.exe">
+    <img src="./docs/download.svg" alt="Download Captain" width="300">
+  </a>
+</p>
+
+
 <p align="center"><img src="./docs/03.png" alt="overview of Captain's AI hub" width="900"/></p>
 
 <!-- toc -->
@@ -13,9 +21,8 @@ Captain currently supports English, German, Spanish, French, Hebrew, Italian, Ja
 - [Planned Features](#planned-features)
 - [Getting Started](#getting-started)
   * [Installation](#installation)
-  * [Usage](#usage)
-    + [Detailed User Guide](#detailed-user-guide)
-    + [Project Management](#project-management)
+  * [Detailed User Guide](#detailed-user-guide)
+- [Important Note: Installation Warning for Unsigned App](#important-note-installation-warning-for-unsigned-app)
 - [Community and Support](#community-and-support)
 - [Contribute to Captain](#contribute-to-captain)
 - [License](#license)
@@ -49,9 +56,7 @@ Captain currently supports English, German, Spanish, French, Hebrew, Italian, Ja
 2. Run the executable to launch Captain.
 3. There's no installation wizard – Captain is ready to use right away!
 
-### Usage
-
-#### Detailed User Guide
+### Detailed User Guide
 
 For a comprehensive walkthrough of all features and detailed instructions on how to make the most of Captain, please refer to our dedicated User Guide.
 
@@ -59,9 +64,24 @@ For a comprehensive walkthrough of all features and detailed instructions on how
 
 This guide will assist you in navigating the full capabilities of Captain, ensuring you can leverage the power of local AI with confidence and ease.
 
-#### Project Management
+## Important Note: Installation Warning for Unsigned App
 
-- Create, save, and manage your AI projects all within Captain's streamlined interface.
+As Captain is currently an unsigned application, you may encounter a warning during the installation process. This is a standard notification for unsigned apps and does not indicate any security issue with Captain. Since Captain is open source, you can review the source code to ensure its safety.
+
+If you receive a warning, please follow these steps to proceed with the installation:
+
+1. **Windows Users**:
+  - When the warning appears, click on "More info".
+  - You'll then see the option to "Run anyway". Click it to proceed with the installation.
+
+2. **Mac Users** (if applicable in the future):
+  - Right-click (or Ctrl-click) the downloaded file and select "Open".
+  - In the warning dialog that appears, click "Open" to proceed.
+
+Rest assured, the integrity and security of Captain are paramount to us. If you have any concerns or questions, please feel free to review our source code or contact us directly.
+
+Enjoy the powerful capabilities of Captain, and thank you for your trust and support! 🚀
+
 
 ## Community and Support
 
