@@ -41,9 +41,11 @@
   "openFolder": "Ouvrir le Dossier",
   "pages": {
     "dataset": {
+      "chooseCaptioningMethod": "Choisissez une méthode de légendage",
       "customCaptionsWithGPTVision": "Légendes personnalisées avec GPT-Vision",
       "generateCaptionWithBLIP": "Générer des légendes avec BLIP",
       "generateTagsWithWD14": "Générer des étiquettes avec WD14",
+      "oneTimeDownloadNote": "Nos méthodes de légendage avancées nécessitent un téléchargement unique des modèles nécessaires, ce qui peut prendre quelques instants.",
       "proceedWithGPTVision": "Poursuivre avec GPT-Vision",
       "selectImage": "Sélectionner une image",
       "warningOpenAI": "Attention : L'utilisation de GPT-Vision enverra vos images à OpenAI. Veuillez respecter les <1>conditions d'utilisation</1> d'OpenAI"

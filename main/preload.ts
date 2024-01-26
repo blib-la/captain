@@ -9,6 +9,7 @@ import {
   FEEDBACK,
   GPTV,
   IMAGE_CACHE,
+  LOCALE,
   PROJECT,
   PROJECTS,
   STORE,
@@ -28,6 +29,7 @@ const handler = {
     captionFile: string;
   }) => ipcRenderer.invoke(`${CAPTION}:save`, imageData),
   getDirectory: () => ipcRenderer.invoke(`${DIRECTORY}:get`),
+  getLocale: () => ipcRenderer.invoke(`${LOCALE}:get`),
   createImageCache: (directory: string, name: string) =>
     ipcRenderer.invoke(`${IMAGE_CACHE}:create`, directory, name),
   getExistingProject: (project: {

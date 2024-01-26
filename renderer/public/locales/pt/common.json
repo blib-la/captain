@@ -41,9 +41,11 @@
   "openFolder": "Abrir Pasta",
   "pages": {
     "dataset": {
+      "chooseCaptioningMethod": "Escolha um Método de Legendagem",
       "customCaptionsWithGPTVision": "Legendas Personalizadas com GPT-Vision",
       "generateCaptionWithBLIP": "Gerar Legendas com BLIP",
       "generateTagsWithWD14": "Gerar Tags com WD14",
+      "oneTimeDownloadNote": "Nossos métodos avançados de legendagem exigem um download único dos modelos necessários, o que pode levar alguns momentos.",
       "proceedWithGPTVision": "Prosseguir com GPT-Vision",
       "selectImage": "Selecionar Imagem",
       "warningOpenAI": "Atenção: Usar o GPT-Vision enviará suas imagens para a OpenAI. Por favor, cumpra os <1>Termos de Uso</1> da OpenAI."

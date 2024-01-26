@@ -41,9 +41,11 @@
   "openFolder": "Map Openen",
   "pages": {
     "dataset": {
+      "chooseCaptioningMethod": "Kies een bijschriftmethode",
       "customCaptionsWithGPTVision": "Aangepaste onderschriften met GPT-Vision",
       "generateCaptionWithBLIP": "Onderschriften genereren met BLIP",
       "generateTagsWithWD14": "Tags genereren met WD14",
+      "oneTimeDownloadNote": "Onze geavanceerde bijschriftmethoden vereisen een eenmalige download van de benodigde modellen, wat enkele momenten kan duren.",
       "proceedWithGPTVision": "Ga verder met GPT-Vision",
       "selectImage": "Selecteer Afbeelding",
       "warningOpenAI": "Let op: Het gebruik van GPT-Vision zal uw afbeeldingen naar OpenAI sturen. Gelieve de <1>Gebruiksvoorwaarden</1> van OpenAI na te leven."

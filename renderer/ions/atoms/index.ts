@@ -1,4 +1,5 @@
 import { atom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 
 export interface Project {
   id: string;
@@ -19,4 +20,4 @@ export const imagesAtom = atom<
   }[]
 >([]);
 export const directoryAtom = atom("");
-export const userFlowAtom = atom("none");
+export const modelDownloadNoteAtom = atomWithStorage("modelDownloadNote", true);

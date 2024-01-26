@@ -41,9 +41,11 @@
   "openFolder": "フォルダを開く",
   "pages": {
     "dataset": {
+      "chooseCaptioningMethod": "キャプション方法を選択",
       "customCaptionsWithGPTVision": "GPT-Visionでカスタムキャプション",
       "generateCaptionWithBLIP": "BLIPでキャプションを生成",
       "generateTagsWithWD14": "WD14でタグを生成",
+      "oneTimeDownloadNote": "\"当社の高度なキャプション方法には、必要なモデルの一回限りのダウンロードが必要です。これには数瞬間かかる場合があります。",
       "proceedWithGPTVision": "GPT-Visionで進む",
       "selectImage": "画像を選択",
       "warningOpenAI": "注意：GPT-Visionの使用により、あなたの画像がOpenAIに送信されます。OpenAIの<1>利用規約</1>に従ってください。"

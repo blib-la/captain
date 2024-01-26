@@ -41,9 +41,11 @@
   "openFolder": "Ordner öffnen",
   "pages": {
     "dataset": {
+      "chooseCaptioningMethod": "Wählen Sie eine Beschriftungsmethode",
       "customCaptionsWithGPTVision": "Benutzerdefinierte Beschriftungen mit GPT-Vision",
       "generateCaptionWithBLIP": "Beschriftungen mit BLIP generieren",
       "generateTagsWithWD14": "Tags mit WD14 generieren",
+      "oneTimeDownloadNote": "Unsere fortschrittlichen Beschriftungsmethoden erfordern einen einmaligen Download der notwendigen Modelle, was einige Momente dauern kann.",
       "proceedWithGPTVision": "Mit GPT-Vision fortfahren",
       "selectImage": "Bild auswählen",
       "warningOpenAI": "Achtung: Die Verwendung von GPT-Vision wird Ihre Bilder an OpenAI senden. Bitte beachten Sie die <1>Nutzungsbedingungen</1> von OpenAI."

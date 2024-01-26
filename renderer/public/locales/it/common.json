@@ -41,9 +41,11 @@
   "openFolder": "Apri Cartella",
   "pages": {
     "dataset": {
+      "chooseCaptioningMethod": "Scegli un metodo di didascalia",
       "customCaptionsWithGPTVision": "Didascalie Personalizzate con GPT-Vision",
       "generateCaptionWithBLIP": "Genera Didascalie con BLIP",
       "generateTagsWithWD14": "Genera Tag con WD14",
+      "oneTimeDownloadNote": "I nostri metodi di didascalia avanzati richiedono un download una tantum dei modelli necessari, che potrebbe richiedere alcuni istanti.",
       "proceedWithGPTVision": "Procedi con GPT-Vision",
       "selectImage": "Seleziona Immagine",
       "warningOpenAI": "Attenzione: L'utilizzo di GPT-Vision invierà le tue immagini a OpenAI. Si prega di rispettare i <1>termini di utilizzo</1> di OpenAI."

@@ -21,6 +21,9 @@ import { FlagPt } from "@/atoms/flags/pt";
 import { FlagPl } from "@/atoms/flags/pl";
 import { FlagHe } from "@/atoms/flags/he";
 
+import i18Next from "../../next-i18next.config";
+import { LOCALE } from "../../../main/helpers/constants";
+
 export const localeNames: Record<string, string> = {
   de: "Deutsch",
   en: "English",
@@ -51,11 +54,16 @@ export const localeFlags: Record<string, ReactElement> = {
 };
 
 export function LanguageSelect() {
-  const { asPath, locale, locales = [], push } = useRouter();
-  const { t } = useTranslation(["common"]);
+  const { asPath = [], push } = useRouter();
+  const {
+    t,
+    i18n: { language: locale },
+  } = useTranslation(["common"]);
+  const locales = i18Next.i18n.locales;
+  // const locale = "en";
+  const localeRegex = new RegExp(`/(${locales.join("|")})/`);
+  const asPath_ = (asPath as string).replace(localeRegex, "/");
 
-  const localeRegex = new RegExp(`/(${locales.join("|")})$`);
-  const asPath_ = asPath.replace(localeRegex, "/");
   return (
     <Select
       data-testid="language-selector"
@@ -85,7 +93,9 @@ export function LanguageSelect() {
         </StyledValueWrapper>
       )}
       onChange={async (event, value: string | null) => {
-        await push(asPath_, undefined, { locale: value! });
+        console.log(asPath_, localeRegex);
+        await window.ipc.store({ [LOCALE]: value });
+        await push(`/${value}${asPath_}`, undefined);
       }}
     >
       {locales.map((locale) => (

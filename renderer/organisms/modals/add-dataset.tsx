@@ -16,7 +16,7 @@ import {
 } from "@mui/joy";
 import { useAtom } from "jotai";
 import { directoryAtom, projectsAtom } from "@/ions/atoms";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   adjectives,
   colors,

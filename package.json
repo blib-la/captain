@@ -1,6 +1,6 @@
 {
   "name": "captain",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.0",
   "private": true,
   "description": "The Captain of Captions",
   "author": "Gregor Adams <greg@pixelass.com>",
@@ -23,6 +23,7 @@
     "@types/react-window": "^1.8.8",
     "electron-store": "^8.1.0",
     "new-github-issue-url": "^1.0.0",
+    "next-language-detector": "^1.1.0",
     "react-custom-scrollbars": "^4.2.1",
     "react-virtualized-auto-sizer": "^1.0.21",
     "react-window": "^1.8.10",

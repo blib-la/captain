@@ -41,9 +41,11 @@
   "openFolder": "Open Folder",
   "pages": {
     "dataset": {
+      "chooseCaptioningMethod": "Choose a Captioning Method",
       "customCaptionsWithGPTVision": "Custom Captions with GPT-Vision",
       "generateCaptionWithBLIP": "Generate Captions with BLIP",
       "generateTagsWithWD14": "Generate Tags with WD14",
+      "oneTimeDownloadNote": "Our advanced captioning methods require a one-time download of necessary models, which might take a few moments.",
       "proceedWithGPTVision": "Proceed with GPT-Vision",
       "selectImage": "Select Image",
       "warningOpenAI": "Attention: Using GPT-Vision will send your images to OpenAI. Please comply with OpenAI's <1>Terms of use</1>"

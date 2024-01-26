@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import React, { useId } from "react";
+import { useId } from "react";
 import { Box } from "@mui/joy";
 
 const LottiePlayer = dynamic(

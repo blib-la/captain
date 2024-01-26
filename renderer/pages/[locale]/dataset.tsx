@@ -23,14 +23,13 @@ import {
   Tooltip,
   Typography,
 } from "@mui/joy";
-import { Layout } from "@/organisms/layout";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
+import { InferGetStaticPropsType } from "next";
 import { useRouter } from "next/router";
 import { useAtom } from "jotai";
 import {
   directoryAtom,
   imagesAtom,
+  modelDownloadNoteAtom,
   projectAtom,
   selectedImageAtom,
 } from "@/ions/atoms";
@@ -50,23 +49,22 @@ import {
   FOLDER,
   GPT_VISION_OPTIONS,
   OPENAI_API_KEY,
-} from "../../main/helpers/constants";
+} from "../../../main/helpers/constants";
 import PhotoFilterIcon from "@mui/icons-material/PhotoFilter";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import SearchOffIcon from "@mui/icons-material/SearchOff";
-import {
-  CustomScrollbars,
-  CustomScrollbarsVirtualList,
-} from "@/organisms/custom-scrollbars";
+import { CustomScrollbarsVirtualList } from "@/organisms/custom-scrollbars";
 import ImageIcon from "@mui/icons-material/Image";
 import SettingsIcon from "@mui/icons-material/Settings";
 import StyleIcon from "@mui/icons-material/Style";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import WarningIcon from "@mui/icons-material/Warning";
 import dynamic from "next/dynamic";
-import { PasswordField } from "@/pages/settings";
+import { PasswordField } from "@/organisms/password-field";
+import { getStaticPaths, makeStaticProps } from "@/ions/i18n/getStatic";
+import CloseIcon from "@mui/icons-material/Close";
 
 export const CodeMirror = dynamic(
   () => import("react-codemirror2").then((module_) => module_.Controlled),
@@ -287,7 +285,9 @@ export function CaptionModal({
   const [showGptOptions, setShowGptOptions] = useState(false);
   const [directory] = useAtom(directoryAtom);
   const { t } = useTranslation(["common"]);
-
+  const [modelDownloadNote, setModelDownloadNote] = useAtom(
+    modelDownloadNoteAtom,
+  );
   useEffect(() => {
     // Request the API key
     window.ipc.send(`${OPENAI_API_KEY}:get`);
@@ -322,16 +322,17 @@ export function CaptionModal({
     <Modal keepMounted open={open} onClose={onClose}>
       <ModalDialog
         sx={{
-          width: "100%",
-          height: "100%",
           display: "flex",
           flexDirection: "column",
           pt: 6,
         }}
       >
         <ModalClose aria-label={t("common:close")} />
-        <Typography sx={{ pr: 2 }}>Choose a Captioning Method:</Typography>
-        <CustomScrollbars style={{ flex: 1 }}>
+        <Typography>
+          {t("common:pages.dataset.chooseCaptioningMethod")}:
+        </Typography>
+
+        <Box sx={{ overflow: "auto", WebkitOverflowScrolling: "touch" }}>
           <Stack
             spacing={2}
             sx={{
@@ -341,6 +342,32 @@ export function CaptionModal({
               mx: "auto",
             }}
           >
+            {modelDownloadNote && (
+              <Alert
+                color={"warning"}
+                startDecorator={<WarningIcon />}
+                endDecorator={
+                  <IconButton
+                    color="warning"
+                    variant="solid"
+                    onClick={() => {
+                      setModelDownloadNote(false);
+                    }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                }
+                sx={{
+                  ".MuiAlert-endDecorator": {
+                    alignSelf: "flex-start",
+                    mt: -0.5,
+                    mr: -0.5,
+                  },
+                }}
+              >
+                {t("common:pages.dataset.oneTimeDownloadNote")}
+              </Alert>
+            )}
             <ButtonGroup variant="solid" sx={{ width: "100%" }}>
               <Button
                 startDecorator={<ImageIcon />}
@@ -511,7 +538,7 @@ export function CaptionModal({
               </Box>
             )}
           </Stack>
-        </CustomScrollbars>
+        </Box>
       </ModalDialog>
     </Modal>
   );
@@ -661,7 +688,7 @@ export default function Page(
   }, [dataset]);
 
   return (
-    <Layout>
+    <>
       <Head>
         <title>{`Captain | ${t("common:dataset")}`}</title>
       </Head>
@@ -779,14 +806,9 @@ export default function Page(
           </Grid>
         </Grid>
       </Stack>
-    </Layout>
+    </>
   );
 }
 
-export async function getStaticProps(context: GetStaticPropsContext) {
-  return {
-    props: {
-      ...(await serverSideTranslations(context.locale ?? "en", ["common"])),
-    },
-  };
-}
+const getStaticProps = makeStaticProps(["common"]);
+export { getStaticPaths, getStaticProps };

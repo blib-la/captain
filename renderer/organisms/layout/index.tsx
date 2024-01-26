@@ -1,16 +1,12 @@
-import React, { ReactNode } from "react";
 import {
   Box,
   Button,
   ButtonProps,
-  Dropdown,
   IconButton,
-  Menu,
-  MenuButton,
-  MenuItem,
   Sheet,
   Stack,
   Tooltip,
+  Typography,
 } from "@mui/joy";
 import SettingsIcon from "@mui/icons-material/Settings";
 import CollectionsIcon from "@mui/icons-material/Collections";
@@ -26,28 +22,40 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import InventoryIcon from "@mui/icons-material/Inventory";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Logo } from "@/atoms/logo";
+import { ReactNode } from "react";
+import { useRouter } from "next/router";
+import pkg from "../../../package.json";
 
 function SidebarButton({
   children,
   href,
   target,
+  disabled,
   ...properties
 }: Except<ButtonProps<"a">, "component">) {
+  const {
+    i18n: { language: locale },
+  } = useTranslation(["common"]);
+  const { asPath } = useRouter();
+  const href_ = `/${locale}${href}/`;
+  const isActive = asPath === href_;
+  console.log(href_, asPath, disabled);
   return (
     <Tooltip
       placement="right"
       title={children}
-      sx={{ display: { xl: "none" } }}
+      sx={{ display: { xs: disabled ? "none" : undefined, xl: "none" } }}
     >
       <Box sx={{ width: "100%", display: "flex" }}>
         {href && !target ? (
-          <Link legacyBehavior passHref href={href} target={target}>
+          <Link legacyBehavior passHref href={href_} target={target}>
             <Button
               {...properties}
+              disabled={disabled}
               size="lg"
               component="a"
+              color={isActive ? "primary" : "neutral"}
               sx={{
                 justifyContent: "flex-start",
                 pl: 1.5,
@@ -62,6 +70,7 @@ function SidebarButton({
         ) : (
           <Button
             {...properties}
+            disabled={disabled}
             size="lg"
             component={href ? "a" : "button"}
             href={href}
@@ -144,6 +153,7 @@ export function Layout({ children }: { children?: ReactNode }) {
           gridColumnStart: 1,
           gridColumnEnd: 3,
           WebkitAppRegion: "drag",
+          alignItems: "center",
         }}
       >
         <Box
@@ -162,19 +172,9 @@ export function Layout({ children }: { children?: ReactNode }) {
           >
             <Logo sx={{ height: 20, width: 20 }} />
           </Box>
-          <Dropdown>
-            <MenuButton
-              slots={{ root: IconButton }}
-              slotProps={{ root: { variant: "plain", color: "neutral" } }}
-            >
-              <MoreVertIcon />
-            </MenuButton>
-            <Menu placement="bottom-start" size="sm">
-              <MenuItem sx={{ winWidth: 200 }}>About</MenuItem>
-              <MenuItem>Help</MenuItem>
-            </Menu>
-          </Dropdown>
         </Box>
+
+        <Typography level="body-xs">v{pkg.version}</Typography>
         <Box sx={{ flex: 1 }} />
         <WindowControls />
       </Sheet>
@@ -210,6 +210,13 @@ export function Layout({ children }: { children?: ReactNode }) {
           startDecorator={<GitHubIcon />}
         >
           {t("common:github")}
+        </SidebarButton>
+        <SidebarButton
+          href="https://blib.la"
+          target="_blank"
+          startDecorator={<Logo />}
+        >
+          Blibla
         </SidebarButton>
         <SidebarButton href="/feedback" startDecorator={<RateReviewIcon />}>
           {t("common:feedback")}

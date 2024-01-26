@@ -1,16 +1,10 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import {
   Box,
   Card,
   CardContent,
   Container,
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  IconButton,
-  Input,
-  InputProps,
   List,
   ListItem,
   ListItemContent,
@@ -19,17 +13,14 @@ import {
   Stack,
   Typography,
 } from "@mui/joy";
-import { Layout } from "@/organisms/layout";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
+import { InferGetStaticPropsType } from "next";
 import { ColorModeSelector } from "@/organisms/color-mode-selector";
 import { LanguageSelect } from "@/organisms/language-select";
 import { useTranslation } from "next-i18next";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import { OPENAI_API_KEY } from "../../main/helpers/constants";
-import { Except } from "type-fest";
+import { OPENAI_API_KEY } from "../../../main/helpers/constants";
 import { CustomScrollbars } from "@/organisms/custom-scrollbars";
+import { getStaticPaths, makeStaticProps } from "@/ions/i18n/getStatic";
+import { PasswordField } from "@/organisms/password-field";
 
 export function UserPreferences() {
   const { t } = useTranslation(["common"]);
@@ -67,44 +58,6 @@ export function UserPreferences() {
         </List>
       </CardContent>
     </Card>
-  );
-}
-
-export function PasswordField({
-  helpText,
-  error,
-  label,
-  ...properties
-}: Except<InputProps, "endDecorator" | "type"> & {
-  helpText?: ReactNode;
-  label?: ReactNode;
-  error?: string;
-}) {
-  const [showKey, setShowKey] = useState(false);
-  return (
-    <FormControl
-      error={Boolean(error)}
-      sx={{ width: properties.fullWidth ? "100%" : "max-content" }}
-    >
-      {label && <FormLabel>{label}</FormLabel>}
-      <Input
-        {...properties}
-        type={showKey ? "text" : "password"}
-        endDecorator={
-          <IconButton
-            aria-label={showKey ? "Hide Key" : "Show Key"}
-            onClick={() => {
-              setShowKey(!showKey);
-            }}
-          >
-            {showKey ? <VisibilityOffIcon /> : <VisibilityIcon />}
-          </IconButton>
-        }
-      />
-      {(error || helpText) && (
-        <FormHelperText>{error || helpText}</FormHelperText>
-      )}
-    </FormControl>
   );
 }
 
@@ -180,7 +133,7 @@ export default function Page(
 ) {
   const { t } = useTranslation(["common"]);
   return (
-    <Layout>
+    <>
       <Head>
         <title>{`Captain | ${t("common:settings")}`}</title>
       </Head>
@@ -221,14 +174,9 @@ export default function Page(
           </CustomScrollbars>
         </Box>
       </Box>
-    </Layout>
+    </>
   );
 }
 
-export async function getStaticProps(context: GetStaticPropsContext) {
-  return {
-    props: {
-      ...(await serverSideTranslations(context.locale ?? "en", ["common"])),
-    },
-  };
-}
+const getStaticProps = makeStaticProps(["common"]);
+export { getStaticPaths, getStaticProps };

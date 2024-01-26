@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useAtom } from "jotai";
 import { projectsAtom } from "@/ions/atoms";
 import { Button, IconButton, Sheet } from "@mui/joy";

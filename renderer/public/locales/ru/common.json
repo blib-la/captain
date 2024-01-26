@@ -41,9 +41,11 @@
   "openFolder": "Открыть папку",
   "pages": {
     "dataset": {
+      "chooseCaptioningMethod": "Выберите метод озвучивания",
       "customCaptionsWithGPTVision": "Пользовательские подписи с GPT-Vision",
       "generateCaptionWithBLIP": "Создать подписи с BLIP",
       "generateTagsWithWD14": "Создать теги с WD14",
+      "oneTimeDownloadNote": "\"Выберите метод озвучивания\" oneTimeDownloadNote: \"Наши передовые методы озвучивания требуют однократной загрузки необходимых моделей, что может занять несколько моментов.",
       "proceedWithGPTVision": "Продолжить с GPT-Vision",
       "selectImage": "Выбрать изображение",
       "warningOpenAI": "Внимание: Использование GPT-Vision отправит ваши изображения в OpenAI. Пожалуйста, соблюдайте <1>Условия использования</1> OpenAI."

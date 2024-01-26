@@ -1,20 +1,18 @@
-import React from "react";
 import Head from "next/head";
 import { Box, Sheet, Stack, Typography } from "@mui/joy";
-import { Layout } from "@/organisms/layout";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
+import { InferGetStaticPropsType } from "next";
 import { useTranslation } from "next-i18next";
 import { Lottie } from "@/organisms/lottie";
+import { getStaticPaths, makeStaticProps } from "@/ions/i18n/getStatic";
 
 export default function Page(
   _properties: InferGetStaticPropsType<typeof getStaticProps>,
 ) {
   const { t } = useTranslation(["common"]);
   return (
-    <Layout>
+    <>
       <Head>
-        <title>{`Captain | ${t("common:inventory")}`}</title>
+        <title>{`Captain | ${t("common:training")}`}</title>
       </Head>
 
       <Stack sx={{ position: "absolute", inset: 0, overflow: "hidden" }}>
@@ -30,7 +28,7 @@ export default function Page(
           }}
         >
           <Typography level="h4" component="h1">
-            {t("common:inventory")}
+            {t("common:training")}
           </Typography>
         </Sheet>
         <Box
@@ -43,7 +41,7 @@ export default function Page(
         >
           <Box>
             <Lottie
-              path="/lottie/minimalistic/branding-design.json"
+              path="/lottie/minimalistic/tech-discovery.json"
               height={400}
             />
             <Typography level="h2" sx={{ textAlign: "center" }}>
@@ -52,14 +50,9 @@ export default function Page(
           </Box>
         </Box>
       </Stack>
-    </Layout>
+    </>
   );
 }
 
-export async function getStaticProps(context: GetStaticPropsContext) {
-  return {
-    props: {
-      ...(await serverSideTranslations(context.locale ?? "en", ["common"])),
-    },
-  };
-}
+const getStaticProps = makeStaticProps(["common"]);
+export { getStaticPaths, getStaticProps };

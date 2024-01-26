@@ -12,6 +12,7 @@ import {
   GPT_VISION_OPTIONS,
   GPTV,
   IMAGE_CACHE,
+  LOCALE,
   OPENAI_API_KEY,
   PROJECT,
   PROJECTS,
@@ -29,6 +30,7 @@ import {
 import { v4 } from "uuid";
 import { runBlip, runGPTV, runWd14 } from "./caption";
 import { Project } from "./types";
+import pkg from "../../package.json";
 
 /**
  * Sets up IPC event listeners for various channels.
@@ -86,6 +88,7 @@ ipcMain.on(`${APP}:close`, () => {
 ipcMain.handle(
   `${STORE}:set`,
   async (event, state: Record<string, unknown>) => {
+    console.log(state);
     try {
       for (const key in state) {
         store.set(key, state[key]);
@@ -95,6 +98,10 @@ ipcMain.handle(
     }
   },
 );
+
+ipcMain.handle(`${LOCALE}:get`, async () => {
+  return store.get(LOCALE);
+});
 
 // Handler to fetch project details from the 'projects' directory.
 ipcMain.handle(`${PROJECTS}:get`, async (): Promise<Project[]> => {
@@ -215,20 +222,26 @@ ipcMain.handle(
   `${FEEDBACK}:send`,
   async (
     event,
-    data: {
+    {
+      body,
+    }: {
       body: string;
     },
   ) => {
     openNewGitHubIssue({
-      ...data,
+      body: `${body}
+
+
+----
+
+Version: ${pkg.version}
+`,
       user: "blib-la",
       repo: "captain",
       labels: ["app-feedback"],
     });
   },
 );
-
-// Handler to delete a project
 
 ipcMain.handle(`${PROJECT}:delete`, async (event, id: string) => {
   const directory = getDirectory("projects", id);

@@ -41,9 +41,11 @@
   "openFolder": "פתח תיקייה",
   "pages": {
     "dataset": {
+      "chooseCaptioningMethod": "בחר שיטת כיתוב",
       "customCaptionsWithGPTVision": "כיתובים מותאמים אישית עם GPT-Vision",
       "generateCaptionWithBLIP": "ייצר כיתובים עם BLIP",
       "generateTagsWithWD14": "ייצר תגיות עם WD14",
+      "oneTimeDownloadNote": "שיטות הכיתוב המתקדמות שלנו דורשות הורדה חד פעמית של המודלים הנחוצים, תהליך שעשוי לקחת מספר רגעים.",
       "proceedWithGPTVision": "המשך עם GPT-Vision",
       "selectImage": "בחר תמונה",
       "warningOpenAI": "שים לב: שימוש ב-GPT-Vision ישלח את תמונותיך ל-OpenAI. נא לציית ל<1>תנאי השימוש</1> של OpenAI"

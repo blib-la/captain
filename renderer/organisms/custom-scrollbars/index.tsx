@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback } from "react";
+import { forwardRef, useCallback } from "react";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Box } from "@mui/joy";
 
@@ -29,6 +29,7 @@ export function CustomScrollbars({
   return (
     <Scrollbars
       autoHide
+      universal
       ref={refSetter}
       style={{ ...style, overflow: "hidden" }}
       onScroll={onScroll}

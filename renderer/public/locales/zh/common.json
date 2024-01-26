@@ -41,9 +41,11 @@
   "openFolder": "打开文件夹",
   "pages": {
     "dataset": {
+      "chooseCaptioningMethod": "选择字幕制作方法",
       "customCaptionsWithGPTVision": "使用GPT-Vision自定义字幕",
       "generateCaptionWithBLIP": "使用BLIP生成字幕",
       "generateTagsWithWD14": "使用WD14生成标签",
+      "oneTimeDownloadNote": "我们的高级字幕制作方法需要一次性下载必要的模型，这可能需要一些时间。",
       "proceedWithGPTVision": "继续使用GPT-Vision",
       "selectImage": "选择图像",
       "warningOpenAI": "注意：使用GPT-Vision会将您的图片发送至OpenAI。请遵守OpenAI的<1>使用条款</1>。"

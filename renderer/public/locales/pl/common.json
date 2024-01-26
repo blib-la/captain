@@ -41,9 +41,11 @@
   "openFolder": "Otwórz Folder",
   "pages": {
     "dataset": {
+      "chooseCaptioningMethod": "Wybierz metodę opisywania",
       "customCaptionsWithGPTVision": "Niestandardowe Podpisy z GPT-Vision",
       "generateCaptionWithBLIP": "Generuj Podpisy z BLIP",
       "generateTagsWithWD14": "Generuj Tagi z WD14",
+      "oneTimeDownloadNote": "Nasze zaawansowane metody opisywania wymagają jednorazowego pobrania niezbędnych modeli, co może zająć kilka chwil.",
       "proceedWithGPTVision": "Przejdź do GPT-Vision",
       "selectImage": "Wybierz Obraz",
       "warningOpenAI": "Uwaga: Korzystanie z GPT-Vision spowoduje wysłanie Twoich zdjęć do OpenAI. Prosimy o przestrzeganie <1>Warunków użytkowania</1> OpenAI."

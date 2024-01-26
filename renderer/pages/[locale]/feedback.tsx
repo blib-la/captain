@@ -1,4 +1,3 @@
-import React from "react";
 import Head from "next/head";
 import {
   Box,
@@ -10,12 +9,11 @@ import {
   Textarea,
   Typography,
 } from "@mui/joy";
-import { Layout } from "@/organisms/layout";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
+import { InferGetStaticPropsType } from "next";
 import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 import { CustomScrollbars } from "@/organisms/custom-scrollbars";
+import { getStaticPaths, makeStaticProps } from "@/ions/i18n/getStatic";
 
 function FeedbackForm() {
   const {
@@ -57,7 +55,7 @@ export default function Page(
 ) {
   const { t } = useTranslation(["common"]);
   return (
-    <Layout>
+    <>
       <Head>
         <title>{`Captain | ${t("common:feedback")}`}</title>
       </Head>
@@ -94,14 +92,9 @@ export default function Page(
           </CustomScrollbars>
         </Box>
       </Box>
-    </Layout>
+    </>
   );
 }
 
-export async function getStaticProps(context: GetStaticPropsContext) {
-  return {
-    props: {
-      ...(await serverSideTranslations(context.locale ?? "en", ["common"])),
-    },
-  };
-}
+const getStaticProps = makeStaticProps(["common"]);
+export { getStaticPaths, getStaticProps };
