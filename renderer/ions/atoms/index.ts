@@ -21,3 +21,4 @@ export const imagesAtom = atom<
 >([]);
 export const directoryAtom = atom("");
 export const modelDownloadNoteAtom = atomWithStorage("modelDownloadNote", true);
+export const captionRunningAtom = atomWithStorage("captionRunning", false);

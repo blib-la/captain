@@ -7,6 +7,7 @@ import {
   DIRECTORY,
   EXISTING_PROJECT,
   FEEDBACK,
+  FETCH,
   GPTV,
   IMAGE_CACHE,
   LOCALE,
@@ -21,6 +22,13 @@ import { Except } from "type-fest";
 const handler = {
   store: (data: Record<string, unknown>) =>
     ipcRenderer.invoke(`${STORE}:set`, data),
+  fetch: (
+    key: string,
+    {
+      method = "GET",
+      data,
+    }: { method?: "GET" | "POST" | "DELETE" | "PATCH"; data?: unknown } = {},
+  ) => ipcRenderer.invoke(`${FETCH}:${method.toLowerCase()}`, key, data),
   sendFeedback: (data: { body: string }) =>
     ipcRenderer.invoke(`${FEEDBACK}:send`, data),
   saveCaption: (imageData: {

@@ -3,17 +3,14 @@ import {
   APP,
   BLIP,
   CAPTION,
-  CURRENT_DIRECTORY,
-  CURRENT_PROJECT_ID,
   DATASET,
   EXISTING_PROJECT,
   FEEDBACK,
+  FETCH,
   FOLDER,
-  GPT_VISION_OPTIONS,
   GPTV,
   IMAGE_CACHE,
   LOCALE,
-  OPENAI_API_KEY,
   PROJECT,
   PROJECTS,
   STORE,
@@ -32,63 +29,10 @@ import { runBlip, runGPTV, runWd14 } from "./caption";
 import { Project } from "./types";
 import pkg from "../../package.json";
 
-/**
- * Sets up IPC event listeners for various channels.
- *
- * The ipcMain module of Electron is used to set up listeners in the main process,
- * which respond to messages sent from renderer processes. Each listener is associated
- * with a specific channel, identified by a unique string. When a message is received
- * on a channel, the corresponding listener is invoked.
- */
-
-// Listening for 'GPT_VISION_OPTIONS:get' channel. Sends the GPT_VISION_OPTIONS value back to the renderer process.
-ipcMain.on(`${GPT_VISION_OPTIONS}:get`, (event) => {
-  event.sender.send(GPT_VISION_OPTIONS, store.get(GPT_VISION_OPTIONS));
-});
-
-// Listening for 'OPENAI_API_KEY:get' channel. Sends the OPENAI_API_KEY value back to the renderer process.
-ipcMain.on(`${OPENAI_API_KEY}:get`, (event) => {
-  event.sender.send(OPENAI_API_KEY, store.get(OPENAI_API_KEY));
-});
-
-// Listening for 'CURRENT_DIRECTORY:get' channel. Sends the current directory value back to the renderer process.
-ipcMain.on(`${CURRENT_DIRECTORY}:get`, (event) => {
-  event.sender.send(CURRENT_DIRECTORY, store.get(CURRENT_DIRECTORY));
-});
-
-// Listening for 'CURRENT_PROJECT_ID:get' channel. Sends the current project ID value back to the renderer process.
-ipcMain.on(`${CURRENT_PROJECT_ID}:get`, (event) => {
-  event.sender.send(CURRENT_PROJECT_ID, store.get(CURRENT_PROJECT_ID));
-});
-
-ipcMain.on(`${APP}:minimize`, () => {
-  const window = BrowserWindow.getFocusedWindow();
-  window.minimize();
-});
-
-ipcMain.on(`${FOLDER}:open`, (event, path) => {
-  shell.openPath(path);
-});
-
-ipcMain.on(`${APP}:maximize`, () => {
-  const window = BrowserWindow.getFocusedWindow();
-  if (window.isMaximized()) {
-    window.unmaximize();
-  } else {
-    window.maximize();
-  }
-});
-
-ipcMain.on(`${APP}:close`, () => {
-  const window = BrowserWindow.getFocusedWindow();
-  window.close();
-});
-
 // Handling the 'STORE:set' channel for setting multiple values in the store asynchronously.
 ipcMain.handle(
   `${STORE}:set`,
   async (event, state: Record<string, unknown>) => {
-    console.log(state);
     try {
       for (const key in state) {
         store.set(key, state[key]);
@@ -101,6 +45,50 @@ ipcMain.handle(
 
 ipcMain.handle(`${LOCALE}:get`, async () => {
   return store.get(LOCALE);
+});
+
+ipcMain.handle(`${FETCH}:get`, async (event, key: string) => {
+  return store.get(key);
+});
+ipcMain.handle(`${FETCH}:delete`, async (event, key: string) => {
+  return store.delete(key);
+});
+ipcMain.handle(
+  `${FETCH}:post`,
+  async (event, key: string, data: Record<string, unknown>) => {
+    return store.set(key, data);
+  },
+);
+
+ipcMain.handle(
+  `${FETCH}:patch`,
+  async (event, key: string, partialData: Record<string, unknown>) => {
+    const previousData = (await store.get(key)) as Record<string, unknown>;
+    return store.set(key, { ...previousData, ...partialData });
+  },
+);
+
+ipcMain.on(`${FOLDER}:open`, (event, path) => {
+  shell.openPath(path);
+});
+
+ipcMain.on(`${APP}:close`, () => {
+  const window = BrowserWindow.getFocusedWindow();
+  window.close();
+});
+
+ipcMain.on(`${APP}:minimize`, () => {
+  const window = BrowserWindow.getFocusedWindow();
+  window.minimize();
+});
+
+ipcMain.on(`${APP}:maximize`, () => {
+  const window = BrowserWindow.getFocusedWindow();
+  if (window.isMaximized()) {
+    window.unmaximize();
+  } else {
+    window.maximize();
+  }
 });
 
 // Handler to fetch project details from the 'projects' directory.

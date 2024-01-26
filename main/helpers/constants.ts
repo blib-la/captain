@@ -1,9 +1,7 @@
 // Export constants representing the keys for the store.
 // These constants are used to avoid hard-coding strings and reduce the risk of typos.
 export const OPENAI_API_KEY = "OPENAI_API_KEY";
-export const CURRENT_PROJECT_ID = "CURRENT_PROJECT_ID";
 export const DIRECTORY = "DIRECTORY";
-export const CURRENT_DIRECTORY = "CURRENT_DIRECTORY";
 export const EXISTING_PROJECT = "EXISTING_PROJECT";
 export const PROJECTS = "PROJECTS";
 export const PROJECT = "PROJECT";
@@ -21,3 +19,6 @@ export const DATASET = "DATASET";
 export const DATASETS = "DATASETS";
 export const APP = "APP";
 export const FOLDER = "FOLDER";
+
+export const FETCH = "FETCH";
+export const CAPTION_RUNNING = "CAPTION_RUNNING";

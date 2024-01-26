@@ -19,11 +19,14 @@ import "codemirror/theme/material.css";
 import "codemirror/theme/zenburn.css";
 import "codemirror/theme/monokai.css";
 import { Layout } from "@/organisms/layout";
+import { SWRConfig } from "swr";
+import { fetcher } from "@/ions/swr/fetcher";
 
 if (typeof window !== "undefined") {
   import("codemirror/mode/markdown/markdown");
   import("codemirror/mode/javascript/javascript");
 }
+
 function App({
   Component,
   pageProps: { session, navigation, address, ...pageProperties },
@@ -54,9 +57,19 @@ function App({
         <meta name="format-detection" content="telephone=no" />
         <link rel="shortcut icon" type="image/png" href="/images/logo.png" />
       </Head>
-      <Layout>
-        <Component {...pageProperties} />
-      </Layout>
+      <SWRConfig
+        value={{
+          fetcher,
+          errorRetryCount: 3,
+          focusThrottleInterval: 5 * 1000,
+          revalidateOnReconnect: true,
+          refreshInterval: 1000,
+        }}
+      >
+        <Layout>
+          <Component {...pageProperties} />
+        </Layout>
+      </SWRConfig>
     </CssVarsProvider>
   );
 }

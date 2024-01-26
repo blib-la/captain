@@ -27,6 +27,7 @@ import { InferGetStaticPropsType } from "next";
 import { useRouter } from "next/router";
 import { useAtom } from "jotai";
 import {
+  captionRunningAtom,
   directoryAtom,
   imagesAtom,
   modelDownloadNoteAtom,
@@ -46,6 +47,7 @@ import {
 import { ScreenReaderOnly } from "@/atoms/screen-reader-only";
 import { Trans, useTranslation } from "next-i18next";
 import {
+  CAPTION_RUNNING,
   FOLDER,
   GPT_VISION_OPTIONS,
   OPENAI_API_KEY,
@@ -65,6 +67,7 @@ import dynamic from "next/dynamic";
 import { PasswordField } from "@/organisms/password-field";
 import { getStaticPaths, makeStaticProps } from "@/ions/i18n/getStatic";
 import CloseIcon from "@mui/icons-material/Close";
+import useSWR from "swr";
 
 export const CodeMirror = dynamic(
   () => import("react-codemirror2").then((module_) => module_.Controlled),
@@ -288,35 +291,27 @@ export function CaptionModal({
   const [modelDownloadNote, setModelDownloadNote] = useAtom(
     modelDownloadNoteAtom,
   );
-  useEffect(() => {
-    // Request the API key
-    window.ipc.send(`${OPENAI_API_KEY}:get`);
 
-    // Listener for the apiKey response
-    window.ipc.on(OPENAI_API_KEY, (key) => {
-      if (key) {
-        setOpenAiApiKey(key as string);
-      }
-    });
-  }, []);
+  const { data: openApiKeyData } = useSWR(OPENAI_API_KEY);
+  const { data: gptVisionData } = useSWR(GPT_VISION_OPTIONS);
 
   useEffect(() => {
-    // Request the API key
-    window.ipc.send(`${GPT_VISION_OPTIONS}:get`);
+    if (openApiKeyData) {
+      setOpenAiApiKey(openApiKeyData);
+    }
+  }, [openApiKeyData]);
 
-    // Listener for the apiKey response
-    window.ipc.on(GPT_VISION_OPTIONS, (options) => {
-      if (options) {
-        setGptVisionOptions(
-          options as {
-            batchSize: number;
-            guidelines: string;
-            exampleResponse: string;
-          },
-        );
-      }
-    });
-  }, []);
+  useEffect(() => {
+    if (gptVisionData) {
+      setGptVisionOptions(
+        gptVisionData as {
+          batchSize: number;
+          guidelines: string;
+          exampleResponse: string;
+        },
+      );
+    }
+  }, [gptVisionData]);
 
   return (
     <Modal keepMounted open={open} onClose={onClose}>
@@ -419,6 +414,7 @@ export function CaptionModal({
               </Button>
               <Tooltip disableInteractive title={"GPT-Vision Settings"}>
                 <IconButton
+                  color="warning"
                   onClick={() => {
                     setShowGptOptions(!showGptOptions);
                   }}
@@ -481,9 +477,10 @@ export function CaptionModal({
                   onChange={(event) => {
                     setOpenAiApiKey(event.target.value);
                   }}
-                  onBlur={() => {
-                    window.ipc.store({
-                      [OPENAI_API_KEY]: openAiApiKey,
+                  onBlur={(event) => {
+                    window.ipc.fetch(OPENAI_API_KEY, {
+                      method: "POST",
+                      data: event.target.value,
                     });
                   }}
                 />
@@ -501,8 +498,9 @@ export function CaptionModal({
                         ...gptVisionOptions,
                         guidelines: value,
                       });
-                      window.ipc.store({
-                        [GPT_VISION_OPTIONS]: {
+                      window.ipc.fetch(GPT_VISION_OPTIONS, {
+                        method: "POST",
+                        data: {
                           ...gptVisionOptions,
                           guidelines: value,
                         },
@@ -526,8 +524,9 @@ export function CaptionModal({
                         ...gptVisionOptions,
                         exampleResponse: value,
                       });
-                      window.ipc.store({
-                        [GPT_VISION_OPTIONS]: {
+                      window.ipc.fetch(GPT_VISION_OPTIONS, {
+                        method: "POST",
+                        data: {
                           ...gptVisionOptions,
                           exampleResponse: value,
                         },
@@ -637,8 +636,29 @@ export default function Page(
   const [name, setName] = useState("");
   const { t } = useTranslation(["common"]);
   const [captionModalOpen, setCaptionModalOpen] = useState(false);
-  const [captionLoading, setCaptionLoading] = useState(false);
   const [, setDirectory] = useAtom(directoryAtom);
+
+  const [captionRunning, setCaptionRunning] = useAtom(captionRunningAtom);
+
+  const { data: captionRunningData } = useSWR(CAPTION_RUNNING);
+
+  const { data: imagesData } = useSWR(undefined, () => {
+    if (dataset) {
+      return window.ipc.getExistingProject(dataset);
+    }
+  });
+
+  useEffect(() => {
+    if (typeof captionRunningData === "boolean") {
+      setCaptionRunning(captionRunningData);
+    }
+  }, [captionRunningData]);
+
+  useEffect(() => {
+    if (imagesData) {
+      setImages(imagesData);
+    }
+  }, [imagesData]);
 
   const saveCaptionToFile = useCallback(async () => {
     const image = images[selectedImage];
@@ -693,16 +713,17 @@ export default function Page(
         <title>{`Captain | ${t("common:dataset")}`}</title>
       </Head>
       <CaptionModal
-        open={captionModalOpen}
+        open={captionModalOpen && !captionRunning}
         onStart={() => {
-          setCaptionLoading(true);
+          setCaptionRunning(true);
+          window.ipc.fetch(CAPTION_RUNNING, { method: "POST", data: true });
         }}
         onDone={async () => {
           if (dataset) {
             const content = await window.ipc.getExistingProject(dataset);
             setImages(content);
           }
-          setCaptionLoading(false);
+          setCaptionRunning(false);
         }}
         onClose={() => {
           setCaptionModalOpen(false);
@@ -739,11 +760,14 @@ export default function Page(
             {t("common:openFolder")}
           </Button>
           <Button
+            disabled={captionRunning}
             startDecorator={
-              captionLoading ? <CircularProgress /> : <PhotoFilterIcon />
+              captionRunning ? <CircularProgress /> : <PhotoFilterIcon />
             }
             onClick={() => {
-              setCaptionModalOpen(true);
+              if (!captionRunning) {
+                setCaptionModalOpen(true);
+              }
             }}
           >
             {t("common:autoCaption")}

@@ -12,7 +12,6 @@ export function useRedirect(to?: string) {
       const detectedLocale = languageDetector.detect();
       const storedLocale = await window.ipc.getLocale();
       const appLocale = storedLocale || detectedLocale;
-      console.log({ detectedLocale, storedLocale, appLocale });
       if (to_.startsWith("/" + appLocale) && router.route === "/404") {
         // prevent endless loop
         await router.replace("/" + appLocale + router.route);

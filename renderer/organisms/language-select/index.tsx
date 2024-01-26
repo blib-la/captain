@@ -93,8 +93,7 @@ export function LanguageSelect() {
         </StyledValueWrapper>
       )}
       onChange={async (event, value: string | null) => {
-        console.log(asPath_, localeRegex);
-        await window.ipc.store({ [LOCALE]: value });
+        await window.ipc.fetch(LOCALE, { method: "POST", data: value });
         await push(`/${value}${asPath_}`, undefined);
       }}
     >
