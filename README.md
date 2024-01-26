@@ -4,13 +4,15 @@ Captain simplifies AI on your desktop. It's a free, open-source application that
 
 Captain currently supports English, German, Spanish, French, Hebrew, Italian, Japanese, Dutch, Polish, Portuguese, Russian, and Chinese.
 
+<p align="center">
+    <img src="./docs/logo.png" alt="Download Captain" width="300">
+</p>
 
 <p align="center">
-  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-beta.2/Captain.Setup.1.0.0-beta.2.exe">
+  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-beta.3/Captain.Setup.1.0.0-beta.3.exe">
     <img src="./docs/download.svg" alt="Download Captain" width="300">
   </a>
 </p>
-
 
 
 https://github.com/blib-la/captain/assets/1148334/eecac351-ec1e-4cca-aaf7-89891c436576
