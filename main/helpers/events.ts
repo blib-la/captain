@@ -68,13 +68,18 @@ ipcMain.handle(
   },
 );
 
+ipcMain.on(`${FOLDER}:open`, (event, path) => {
+  shell.openPath(path);
+});
+
+ipcMain.on(`${APP}:close`, () => {
+  const window = BrowserWindow.getFocusedWindow();
+  window.close();
+});
+
 ipcMain.on(`${APP}:minimize`, () => {
   const window = BrowserWindow.getFocusedWindow();
   window.minimize();
-});
-
-ipcMain.on(`${FOLDER}:open`, (event, path) => {
-  shell.openPath(path);
 });
 
 ipcMain.on(`${APP}:maximize`, () => {
