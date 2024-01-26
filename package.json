@@ -12,7 +12,8 @@
     "dev": "nextron",
     "postinstall": "electron-builder install-app-deps",
     "ncu": "npx npm-check-updates@latest -u",
-    "spj": "npx sort-package-json@latest"
+    "spj": "npx sort-package-json@latest",
+    "toc": "npx markdown-toc README.md -i"
   },
   "dependencies": {
     "@electron/remote": "^2.1.1",
