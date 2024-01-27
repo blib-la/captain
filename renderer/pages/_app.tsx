@@ -31,7 +31,7 @@ function App({
   Component,
   pageProps: { session, navigation, address, ...pageProperties },
 }: AppProps) {
-  const { locale } = useRouter();
+  const { locale, asPath } = useRouter();
 
   // Intended abuse of useMemo to allow changes on server and client mount
   useMemo(() => {
@@ -39,7 +39,9 @@ function App({
     dayjs.locale(locale!);
   }, [locale]);
 
-  return (
+  return asPath === "/home/" ? (
+    <Component {...pageProperties} />
+  ) : (
     <CssVarsProvider
       theme={theme}
       defaultMode="system"
