@@ -42,8 +42,11 @@ const handler = {
   getLocale: () => ipcRenderer.invoke(`${LOCALE}:get`),
   createImageCache: (directory: string, name: string) =>
     ipcRenderer.invoke(`${IMAGE_CACHE}:create`, directory, name),
-  downloadModel: (type: string, url: string) =>
-    ipcRenderer.invoke(`${MODEL}:download`, type, url),
+  downloadModel: (
+    type: string,
+    url: string,
+    options: { id: string; storeKey: string },
+  ) => ipcRenderer.invoke(`${MODEL}:download`, type, url, options),
   getModels: (type: string) => ipcRenderer.invoke(`${MODELS}:get`, type),
   getExistingProject: (project: {
     id: string;

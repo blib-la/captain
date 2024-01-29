@@ -4,7 +4,6 @@ import {
   BLIP,
   CAPTION,
   DATASET,
-  DOWNLOADS,
   EXISTING_PROJECT,
   FEEDBACK,
   FETCH,
@@ -98,18 +97,25 @@ ipcMain.on(`${APP}:maximize`, () => {
 
 ipcMain.handle(
   `${MODEL}:download`,
-  async (event, type: string, url: string) => {
+  async (event, type: string, url: string, { storeKey }: { id; storeKey }) => {
     const window_ = BrowserWindow.getFocusedWindow();
 
     const settings = store.get(STABLE_DIFFUSION_SETTINGS) as {
       checkpoints: string;
       loras: string;
     };
-    const storeKey = `${DOWNLOADS}.${url.split("?")[0].replace(/[:.\/]/g, "_")}`;
     store.set(storeKey, true);
+    console.log({ storeKey });
     try {
       const directory = settings[`${type}s`];
-      console.log("START DOWNLOADING", type, url, directory);
+      console.log(
+        "START DOWNLOADING >>>",
+        type,
+        "from: ",
+        url,
+        ", to: ",
+        directory,
+      );
       await download(window_, url, { directory });
       console.log("DONE DOWNLOADING", type, url, directory);
     } catch (error) {

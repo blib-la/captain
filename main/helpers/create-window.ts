@@ -60,8 +60,8 @@ export async function createWindow(
     }
     store.set(key, state);
     // Set the caption running flag to false, since all services will be aborted when the app is closed
-    userStore.set(CAPTION_RUNNING, false);
-    userStore.set(DOWNLOADS, {});
+    userStore.delete(CAPTION_RUNNING);
+    userStore.delete(DOWNLOADS);
   });
 
   // Setup IPC handler to open directory dialog and return the selected path.

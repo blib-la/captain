@@ -4,6 +4,8 @@ import serve from "electron-serve";
 import { createWindow } from "./helpers";
 import { store as userStore } from "./helpers/store";
 import {
+  CAPTION_RUNNING,
+  DOWNLOADS,
   LOCALE,
   MARKETPLACE_INDEX,
   MARKETPLACE_INDEX_DATA,
@@ -69,8 +71,13 @@ async function removeMarketplaceIndex() {
 (async () => {
   await app.whenReady();
 
+  userStore.delete(CAPTION_RUNNING);
+  userStore.delete(DOWNLOADS);
+
   const marketplaceIndex = (userStore.get(MARKETPLACE_INDEX) ||
     "git@github.com:blib-la/captain-marketplace.git") as string;
+
+  userStore.set(MARKETPLACE_INDEX, marketplaceIndex);
 
   try {
     await removeMarketplaceIndex();
