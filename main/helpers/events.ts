@@ -321,7 +321,7 @@ ipcMain.handle(`${DATASET}:get`, async (event, id: string) => {
         try {
           caption = await fsp.readFile(captionFile, "utf-8");
         } catch (error) {
-          console.log(error);
+          // console.log(error);
         }
         return {
           image: path.join(filesDirectory, image),

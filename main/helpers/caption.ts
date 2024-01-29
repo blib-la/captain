@@ -11,19 +11,16 @@ export async function runBlip(directory: string): Promise<any> {
   try {
     const pathToPythonScript = getDirectory("python", "caption_blip.py");
 
-    const { stdout, stderr } = await python([
+    await python([
       pathToPythonScript,
       directory,
       "--caption_extension",
       ".txt",
     ]);
 
-    if (stderr) {
-      console.error("Python Error:", stderr);
-    }
     store.set(CAPTION_RUNNING, false);
 
-    return stdout?.trim();
+    return "done";
   } catch (error) {
     console.error("Error running BLIP:", error);
     throw new Error("Failed to run BLIP script. " + error.message);
@@ -33,7 +30,7 @@ export async function runBlip(directory: string): Promise<any> {
 export async function runWd14(directory: string) {
   try {
     const pathToPythonScript = getDirectory("python", "caption_wd14.py");
-    const { stdout } = await python([
+    await python([
       pathToPythonScript,
       directory,
       "--caption_extension",
@@ -42,7 +39,7 @@ export async function runWd14(directory: string) {
     ]);
     store.set(CAPTION_RUNNING, false);
 
-    return stdout?.trim();
+    return "done";
   } catch (error) {
     console.error(error);
     throw new Error("Failed to run WD14 script.");
@@ -51,7 +48,10 @@ export async function runWd14(directory: string) {
 
 export async function createImageDescriptions(
   images: string[],
-  { systemMessage }: { systemMessage: string },
+  {
+    systemMessage,
+    exampleResponse,
+  }: { systemMessage: string; exampleResponse: string },
 ) {
   const openai = new OpenAI({
     apiKey: store.get(OPENAI_API_KEY) as string,
@@ -67,12 +67,27 @@ export async function createImageDescriptions(
       { role: "system", content: systemMessage },
       {
         role: "user",
+        content: [],
+      },
+      {
+        role: "assistant",
+        content: `
+\`\`\`json
+${exampleResponse}
+\`\`\`
+`,
+      },
+      {
+        role: "user",
         content: imageContents,
       },
     ],
     max_tokens: 1000,
   });
 
+  console.log("\n\nGPT RESULT: -->\n");
+  console.log(response.choices[0].message.content);
+  console.log("\n--------------------\n\n");
   return parseJsonFromString(response.choices[0].message.content);
 }
 
@@ -91,6 +106,7 @@ export async function runGPTV(
   const imageFiles = getImageFiles(directory);
 
   for (let i = 0; i < imageFiles.length; i += batchSize) {
+    console.log(`>>>> running batch ${i + 1} of ${imageFiles.length}`);
     const batch = imageFiles.slice(i, i + batchSize);
     const imageDescriptions = [];
 
@@ -113,9 +129,10 @@ ${guidelines}
 ## EXAMPLE RESPONSE
 
 \`\`\`json
-${exampleResponse}
+["...", "..."]
 \`\`\`
 `,
+        exampleResponse,
       });
       // Write descriptions to corresponding text files
       await Promise.all(
@@ -133,12 +150,11 @@ ${exampleResponse}
           console.log(`Description for ${file} written to ${textFilePath}`);
         }),
       );
-      store.set(CAPTION_RUNNING, false);
-      return "done";
     } catch (error) {
       console.error("Error generating descriptions:", error);
     }
   }
+  store.set(CAPTION_RUNNING, false);
 
   return "done";
 }

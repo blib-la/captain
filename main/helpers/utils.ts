@@ -3,6 +3,7 @@ import { app, BrowserWindow, Rectangle, screen, shell } from "electron";
 import fs from "node:fs";
 import sharp from "sharp";
 import { MINIFIED_IMAGE_SIZE } from "./constants";
+import JSON5 from "json5";
 
 interface OpenNewGitHubIssueOptions {
   repoUrl?: string;
@@ -178,9 +179,9 @@ export function parseJsonFromString(inputString: string) {
 
   // Parse and return the JSON
   try {
-    return JSON.parse(inputString);
-  } catch (e) {
-    console.error("Error parsing JSON:", e);
+    return JSON5.parse(inputString);
+  } catch (eror) {
+    console.error("Error parsing JSON:", eror);
     return null;
   }
 }
