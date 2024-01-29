@@ -7,22 +7,22 @@ import {
   Input,
   InputProps,
 } from "@mui/joy";
-import { ReactNode, useState } from "react";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import { ReactNode } from "react";
+import FolderIcon from "@mui/icons-material/Folder";
 import { useTranslation } from "next-i18next";
 
-export function PasswordField({
+export function FolderField({
   helpText,
   error,
   label,
+  onSelect,
   ...properties
 }: Except<InputProps, "endDecorator" | "type"> & {
   helpText?: ReactNode;
   label?: ReactNode;
   error?: string;
+  onSelect?(value: string): void;
 }) {
-  const [showKey, setShowKey] = useState(false);
   const { t } = useTranslation(["common"]);
   return (
     <FormControl
@@ -32,15 +32,22 @@ export function PasswordField({
       {label && <FormLabel>{label}</FormLabel>}
       <Input
         {...properties}
-        type={showKey ? "text" : "password"}
+        type="text"
         endDecorator={
           <IconButton
-            aria-label={showKey ? t("common:hide") : t("common:show")}
-            onClick={() => {
-              setShowKey(!showKey);
+            aria-label={t("common:selectFolder")}
+            onClick={async () => {
+              try {
+                const directory_ = await window.ipc.getDirectory();
+                if (directory_ && onSelect) {
+                  onSelect(directory_);
+                }
+              } catch (error) {
+                console.log(error);
+              }
             }}
           >
-            {showKey ? <VisibilityOffIcon /> : <VisibilityIcon />}
+            <FolderIcon />
           </IconButton>
         }
       />

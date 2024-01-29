@@ -7,7 +7,6 @@ module.exports = {
       "en", // English
       "es", // Spanish
       "fr", // French
-      "he", // Hebrew
       "it", // Italian
       "ja", // Japanese
       "nl", // Dutch

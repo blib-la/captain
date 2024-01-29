@@ -6,7 +6,7 @@ import {
   Rectangle,
 } from "electron";
 import Store from "electron-store";
-import { CAPTION_RUNNING, DIRECTORY } from "./constants";
+import { CAPTION_RUNNING, DIRECTORY, DOWNLOADS } from "./constants";
 import { ensureVisibleOnSomeDisplay, getCurrentPosition } from "./utils";
 import { store as userStore } from "./store";
 
@@ -61,6 +61,7 @@ export async function createWindow(
     store.set(key, state);
     // Set the caption running flag to false, since all services will be aborted when the app is closed
     userStore.set(CAPTION_RUNNING, false);
+    userStore.set(DOWNLOADS, {});
   });
 
   // Setup IPC handler to open directory dialog and return the selected path.

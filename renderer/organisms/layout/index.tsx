@@ -181,11 +181,7 @@ export function Layout({ children }: { children?: ReactNode }) {
         <SidebarButton href="/home" startDecorator={<CollectionsIcon />}>
           {t("common:datasets")}
         </SidebarButton>
-        <SidebarButton
-          disabled
-          href="/marketplace"
-          startDecorator={<StorefrontIcon />}
-        >
+        <SidebarButton href="/marketplace" startDecorator={<StorefrontIcon />}>
           {t("common:marketplace")}
         </SidebarButton>
         <SidebarButton

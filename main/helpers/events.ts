@@ -4,6 +4,7 @@ import {
   BLIP,
   CAPTION,
   DATASET,
+  DOWNLOADS,
   EXISTING_PROJECT,
   FEEDBACK,
   FETCH,
@@ -11,8 +12,11 @@ import {
   GPTV,
   IMAGE_CACHE,
   LOCALE,
+  MODEL,
+  MODELS,
   PROJECT,
   PROJECTS,
+  STABLE_DIFFUSION_SETTINGS,
   STORE,
   WD14,
 } from "./constants";
@@ -28,6 +32,7 @@ import { v4 } from "uuid";
 import { runBlip, runGPTV, runWd14 } from "./caption";
 import { Project } from "./types";
 import pkg from "../../package.json";
+import { download } from "electron-dl";
 
 // Handling the 'STORE:set' channel for setting multiple values in the store asynchronously.
 ipcMain.handle(
@@ -73,21 +78,74 @@ ipcMain.on(`${FOLDER}:open`, (event, path) => {
 });
 
 ipcMain.on(`${APP}:close`, () => {
-  const window = BrowserWindow.getFocusedWindow();
-  window.close();
+  const window_ = BrowserWindow.getFocusedWindow();
+  window_.close();
 });
 
 ipcMain.on(`${APP}:minimize`, () => {
-  const window = BrowserWindow.getFocusedWindow();
-  window.minimize();
+  const window_ = BrowserWindow.getFocusedWindow();
+  window_.minimize();
 });
 
 ipcMain.on(`${APP}:maximize`, () => {
-  const window = BrowserWindow.getFocusedWindow();
-  if (window.isMaximized()) {
-    window.unmaximize();
+  const window_ = BrowserWindow.getFocusedWindow();
+  if (window_.isMaximized()) {
+    window_.unmaximize();
   } else {
-    window.maximize();
+    window_.maximize();
+  }
+});
+
+ipcMain.handle(
+  `${MODEL}:download`,
+  async (event, type: string, url: string) => {
+    const window_ = BrowserWindow.getFocusedWindow();
+
+    const settings = store.get(STABLE_DIFFUSION_SETTINGS) as {
+      checkpoints: string;
+      loras: string;
+    };
+    const storeKey = `${DOWNLOADS}.${url.split("?")[0].replace(/[:.\/]/g, "_")}`;
+    store.set(storeKey, true);
+    try {
+      const directory = settings[`${type}s`];
+      console.log("START DOWNLOADING", type, url, directory);
+      await download(window_, url, { directory });
+      console.log("DONE DOWNLOADING", type, url, directory);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      store.set(storeKey, false);
+    }
+  },
+);
+
+async function readFilesRecursively(directory: string) {
+  let files = [];
+  const items = await fsp.readdir(directory, { withFileTypes: true });
+
+  for (const item of items) {
+    const fullPath = path.join(directory, item.name);
+    if (item.isDirectory()) {
+      files = [...files, ...(await readFilesRecursively(fullPath))];
+    } else {
+      files.push(item.name);
+    }
+  }
+
+  return files;
+}
+ipcMain.handle(`${MODELS}:get`, async (event, type: string) => {
+  const settings = store.get(STABLE_DIFFUSION_SETTINGS) as {
+    checkpoints: string;
+    loras: string;
+  };
+  try {
+    const directory = settings[`${type}s`];
+    return readFilesRecursively(directory);
+  } catch (error) {
+    console.log(error);
+    return [];
   }
 });
 

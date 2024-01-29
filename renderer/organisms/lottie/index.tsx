@@ -7,16 +7,24 @@ const LottiePlayer = dynamic(
   { ssr: false },
 );
 
-export function Lottie({ path, height }: { path: string; height: number }) {
+export function Lottie({
+  path,
+  height,
+  invert,
+}: {
+  path: string;
+  height: number;
+  invert?: boolean;
+}) {
   const id = useId();
   return (
     <Box
       sx={{
-        filter: "invert(1)",
-        mixBlendMode: "screen",
+        filter: `invert(${invert ? 0 : 1})`,
+        mixBlendMode: invert ? "multiply" : "screen",
         "[data-joy-color-scheme='light'] &": {
-          filter: "unset",
-          mixBlendMode: "multiply",
+          filter: `invert(${invert ? 1 : 0})`,
+          mixBlendMode: invert ? "screen" : "multiply",
         },
         ".lf-player-container": {
           overflow: "hidden",

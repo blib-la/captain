@@ -9,12 +9,14 @@ import {
   FEEDBACK,
   FETCH,
   GPTV,
+  MODEL,
   IMAGE_CACHE,
   LOCALE,
   PROJECT,
   PROJECTS,
   STORE,
   WD14,
+  MODELS,
 } from "./helpers/constants";
 import { Project } from "./helpers/types";
 import { Except } from "type-fest";
@@ -40,6 +42,9 @@ const handler = {
   getLocale: () => ipcRenderer.invoke(`${LOCALE}:get`),
   createImageCache: (directory: string, name: string) =>
     ipcRenderer.invoke(`${IMAGE_CACHE}:create`, directory, name),
+  downloadModel: (type: string, url: string) =>
+    ipcRenderer.invoke(`${MODEL}:download`, type, url),
+  getModels: (type: string) => ipcRenderer.invoke(`${MODELS}:get`, type),
   getExistingProject: (project: {
     id: string;
     cover?: string;

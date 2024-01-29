@@ -68,6 +68,7 @@ import { PasswordField } from "@/organisms/password-field";
 import { getStaticPaths, makeStaticProps } from "@/ions/i18n/getStatic";
 import CloseIcon from "@mui/icons-material/Close";
 import useSWR from "swr";
+import { usePollingEffect } from "@/ions/hooks/polling-effect";
 
 export const CodeMirror = dynamic(
   () => import("react-codemirror2").then((module_) => module_.Controlled),
@@ -680,15 +681,18 @@ export default function Page(
     }
   }, [selectedImage, images]);
 
-  useEffect(() => {
-    if (id) {
-      window.ipc.getDataset(id).then((dataset_) => {
-        setDataset(dataset_.dataset);
-        setImages(dataset_.images);
-        setDirectory(dataset_.dataset.source);
-      });
-    }
-  }, [id]);
+  usePollingEffect(
+    () => {
+      if (id) {
+        window.ipc.getDataset(id).then((dataset_) => {
+          setDataset(dataset_.dataset);
+          setImages(dataset_.images);
+          setDirectory(dataset_.dataset.source);
+        });
+      }
+    },
+    { interval: 2000, initialInterval: 300, initialCount: 2 },
+  );
 
   useEffect(() => {
     const image = images[selectedImage];

@@ -17,11 +17,15 @@ import { InferGetStaticPropsType } from "next";
 import { ColorModeSelector } from "@/organisms/color-mode-selector";
 import { LanguageSelect } from "@/organisms/language-select";
 import { useTranslation } from "next-i18next";
-import { OPENAI_API_KEY } from "../../../main/helpers/constants";
+import {
+  OPENAI_API_KEY,
+  STABLE_DIFFUSION_SETTINGS,
+} from "../../../main/helpers/constants";
 import { CustomScrollbars } from "@/organisms/custom-scrollbars";
 import { getStaticPaths, makeStaticProps } from "@/ions/i18n/getStatic";
 import { PasswordField } from "@/organisms/password-field";
 import useSWR from "swr";
+import { FolderField } from "@/organisms/folder-field";
 
 export function UserPreferences() {
   const { t } = useTranslation(["common"]);
@@ -111,6 +115,111 @@ export function OpenAISettings() {
   );
 }
 
+export function StableDiffusionSettings() {
+  const { t } = useTranslation(["common"]);
+  const [sdSettings, setSdSettings] = useState({ checkpoints: "", loras: "" });
+
+  const { data } = useSWR(STABLE_DIFFUSION_SETTINGS);
+
+  useEffect(() => {
+    if (data) {
+      setSdSettings(data);
+    }
+  }, [data]);
+
+  return (
+    <Card variant="soft">
+      <Typography>
+        {t("common:pages.settings.stableDiffusionSettings")}
+      </Typography>
+      <CardContent>
+        <List>
+          <ListItem>
+            <ListItemContent>
+              <Typography level="title-sm">
+                {t("common:pages.settings.stableDiffusionCheckpoints")}
+              </Typography>
+              <Typography level="body-sm">
+                {t(
+                  "common:pages.settings.stableDiffusionCheckpointsDescription",
+                )}
+              </Typography>
+            </ListItemContent>
+            <ListItemDecorator sx={{ width: 288, flexShrink: 0 }}>
+              <FolderField
+                fullWidth
+                aria-label={t("common:checkpoints")}
+                value={sdSettings.checkpoints}
+                onChange={(event) => {
+                  setSdSettings((previousValue) => ({
+                    ...previousValue,
+                    checkpoints: event.target.value,
+                  }));
+                }}
+                onSelect={async (value) => {
+                  await window.ipc.fetch(STABLE_DIFFUSION_SETTINGS, {
+                    method: "PATCH",
+                    data: { checkpoints: value },
+                  });
+                  setSdSettings((previousValue) => ({
+                    ...previousValue,
+                    checkpoints: value,
+                  }));
+                }}
+                onBlur={(event) => {
+                  window.ipc.fetch(STABLE_DIFFUSION_SETTINGS, {
+                    method: "PATCH",
+                    data: { checkpoints: event.target.value },
+                  });
+                }}
+              />
+            </ListItemDecorator>
+          </ListItem>
+          <ListItem>
+            <ListItemContent>
+              <Typography level="title-sm">
+                {t("common:pages.settings.stableDiffusionLoras")}
+              </Typography>
+              <Typography level="body-sm">
+                {t("common:pages.settings.stableDiffusionLorasDescription")}
+              </Typography>
+            </ListItemContent>
+            <ListItemDecorator sx={{ width: 288, flexShrink: 0 }}>
+              <FolderField
+                fullWidth
+                aria-label={t("common:loras")}
+                value={sdSettings.loras}
+                onChange={(event) => {
+                  setSdSettings((previousValue) => ({
+                    ...previousValue,
+                    loras: event.target.value,
+                  }));
+                }}
+                onSelect={async (value) => {
+                  await window.ipc.fetch(STABLE_DIFFUSION_SETTINGS, {
+                    method: "PATCH",
+                    data: { loras: value },
+                  });
+                  setSdSettings((previousValue) => ({
+                    ...previousValue,
+                    loras: value,
+                  }));
+                }}
+                onBlur={(event) => {
+                  window.ipc.fetch(STABLE_DIFFUSION_SETTINGS, {
+                    method: "PATCH",
+                    data: { loras: event.target.value },
+                  });
+                }}
+              />
+            </ListItemDecorator>
+          </ListItem>
+        </List>
+      </CardContent>
+    </Card>
+  );
+}
+
 export function RunPodSettings() {
   const { t } = useTranslation(["common"]);
   return (
@@ -169,6 +278,7 @@ export default function Page(
                 <UserPreferences />
                 <OpenAISettings />
                 <RunPodSettings />
+                <StableDiffusionSettings />
               </Stack>
             </Container>
           </CustomScrollbars>
