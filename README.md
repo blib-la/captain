@@ -14,6 +14,9 @@ Captain currently supports English, German, Spanish, French, Italian, Japanese, 
   </a>
 </p>
 
+<p align="center">
+    <img src="./docs/marketplace.png" alt="Download Captain" width="900">
+</p>
 
 https://github.com/blib-la/captain/assets/1148334/eecac351-ec1e-4cca-aaf7-89891c436576
 
@@ -32,10 +35,6 @@ https://github.com/blib-la/captain/assets/1148334/eecac351-ec1e-4cca-aaf7-89891c
 
 <!-- tocstop -->
 
-Certainly! Here's an updated section for your README, incorporating the new marketplace feature and the enhancements to live reporting:
-
----
-
 ## Key Features
 
 - **Versatile AI Tool Integration** ✅: Seamlessly connect with various AI tools and models for diverse functionalities.
@@ -51,10 +50,6 @@ Certainly! Here's an updated section for your README, incorporating the new mark
 - **Cross-Platform Compatibility** ⏳: We're steering towards supporting Linux and macOS users soon.
 - **Expanded Local Models** 🧠: Look forward to local models like CLIP for context-aware captions and Llava, offering multi-modal capabilities akin to GPT-Vision.
 - **AI-Assisted Creativity** 🎨: Future updates will introduce live painting with AI and training custom models, like LoRA for Stable Diffusion.
-
----
-
-This update keeps the format consistent with your existing style while incorporating the new marketplace feature and the improved live reporting for caption generation.
 
 ## Getting Started
 
