@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 import { CustomScrollbars } from "@/organisms/custom-scrollbars";
+import { Lottie } from "@/organisms/lottie";
 
 function FeedbackForm() {
 	const {
@@ -42,7 +43,9 @@ function FeedbackForm() {
 				/>
 			</FormControl>
 			<Box sx={{ pt: 2 }}>
-				<Button type="submit">{t("common:send")}</Button>
+				<Button type="submit" color="primary" variant="solid">
+					{t("common:send")}
+				</Button>
 			</Box>
 		</Box>
 	);
@@ -82,7 +85,22 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 				</Sheet>
 				<Box sx={{ flex: 1, position: "relative" }}>
 					<CustomScrollbars>
-						<Container>
+						<Box
+							sx={{
+								backgroundSize: "100% 100%",
+								bgcolor: "common.white",
+								"[data-joy-color-scheme='light'] &": {
+									bgcolor: "common.black",
+								},
+							}}
+						>
+							<Lottie
+								invert
+								path="/lottie/minimalistic/copywriting.json"
+								height={350}
+							/>
+						</Box>
+						<Container sx={{ py: 2 }}>
 							<FeedbackForm />
 						</Container>
 					</CustomScrollbars>
