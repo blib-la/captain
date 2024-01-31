@@ -5,7 +5,7 @@ import { useTranslation } from "next-i18next";
 import type { ReactElement } from "react";
 
 import { LOCALE } from "../../../main/helpers/constants";
-import index18Next from "../../next-i18next.config.js";
+import index18Next from "../../../next-i18next.config.js";
 
 import { FlagDe } from "@/atoms/flags/de";
 import { FlagEs } from "@/atoms/flags/es";

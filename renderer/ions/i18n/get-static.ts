@@ -1,10 +1,10 @@
 import type { GetStaticPropsContext } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-import i18nextConfig from "../../next-i18next.config.js";
+import i18next from "../../../next-i18next.config.js";
 
 export function getI18nPaths() {
-	return i18nextConfig.i18n.locales.map(lng => ({
+	return i18next.i18n.locales.map(lng => ({
 		params: {
 			locale: lng,
 		},
