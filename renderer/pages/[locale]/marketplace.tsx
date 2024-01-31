@@ -14,10 +14,9 @@ import { useTranslation } from "next-i18next";
 import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 
-import { MARKETPLACE_INDEX_DATA } from "../../../main/helpers/constants";
+import { DATASET, MARKETPLACE_INDEX_DATA } from "../../../main/helpers/constants";
 
 import { checkpointsAtom } from "@/ions/atoms";
-import { usePollingEffect } from "@/ions/hooks/polling-effect";
 import { useScrollPosition } from "@/ions/hooks/scroll-position";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 import { CustomScrollbars } from "@/organisms/custom-scrollbars";
@@ -33,6 +32,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	const scrollPosition = useScrollPosition(scrollReference);
 
 	const { data: marketPlaceData } = useSWR(MARKETPLACE_INDEX_DATA);
+	const { data: checkpointsData } = useSWR(DATASET, () => window.ipc.getModels("checkpoint"));
 
 	useEffect(() => {
 		if (marketPlaceData && marketPlaceData["stable-diffusion"].checkpoints) {
@@ -43,16 +43,11 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 		}
 	}, [marketPlaceData]);
 
-	usePollingEffect(
-		() => {
-			window.ipc.getModels("checkpoint").then(models => {
-				setCheckpoints(previousState =>
-					isEqual(previousState, models) ? previousState : models
-				);
-			});
-		},
-		{ interval: 2000, initialInterval: 100, initialCount: 3 }
-	);
+	useEffect(() => {
+		if (checkpointsData) {
+			setCheckpoints(checkpointsData);
+		}
+	}, [checkpointsData, setCheckpoints]);
 
 	return (
 		<>

@@ -48,6 +48,7 @@ import useSWR from "swr";
 
 import {
 	CAPTION_RUNNING,
+	DATASET,
 	FOLDER,
 	GPT_VISION_OPTIONS,
 	OPENAI_API_KEY,
@@ -650,6 +651,8 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 		}
 	});
 
+	const { data: datasetData } = useSWR(DATASET, () => window.ipc.getDataset(id));
+
 	useEffect(() => {
 		setCaptionRunning(Boolean(captionRunningData));
 		if (!captionRunningData) {
@@ -663,6 +666,14 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			setImages(imagesData);
 		}
 	}, [imagesData, setImages]);
+
+	useEffect(() => {
+		if (datasetData) {
+			setDataset(datasetData.dataset);
+			setImages(datasetData.images);
+			setDirectory(datasetData.dataset.source);
+		}
+	}, [datasetData, setDataset, setImages, setDirectory]);
 
 	const saveCaptionToFile = useCallback(async () => {
 		const image = images[selectedImage];
@@ -693,19 +704,6 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			});
 		}
 	}, [id, setDataset, setDirectory, setImages]);
-
-	// UsePollingEffect(
-	// 	() => {
-	// 		if (id) {
-	// 			window.ipc.getDataset(id).then(dataset_ => {
-	// 				setDataset(dataset_.dataset);
-	// 				setImages(dataset_.images);
-	// 				setDirectory(dataset_.dataset.source);
-	// 			});
-	// 		}
-	// 	},
-	// 	{ interval: 2000, initialInterval: 300, initialCount: 2 }
-	// );
 
 	useEffect(() => {
 		const image = images[selectedImage];
