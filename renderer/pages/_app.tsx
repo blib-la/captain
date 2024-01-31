@@ -34,7 +34,7 @@ if (typeof window !== "undefined") {
 }
 
 function App({ Component, pageProps }: AppProps) {
-	const { locale, asPath } = useRouter();
+	const { locale } = useRouter();
 
 	// Intended abuse of useMemo to allow changes on server and client mount
 	useMemo(() => {
