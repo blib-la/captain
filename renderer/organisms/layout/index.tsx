@@ -47,7 +47,7 @@ function SidebarButton({
 			title={children}
 			sx={{ display: { xs: disabled ? "none" : undefined, xl: "none" } }}
 		>
-			<Box sx={{ width: "100%", display: "flex" }}>
+			<Box sx={{ width: "100%", display: "flex", "--focus-outline-offset": "-2px" }}>
 				{href && !target ? (
 					<Link legacyBehavior passHref href={href_} target={target}>
 						<Button
@@ -105,7 +105,7 @@ function close() {
 
 function WindowControls() {
 	return (
-		<Box sx={{ WebkitAppRegion: "no-drag" }}>
+		<Box sx={{ WebkitAppRegion: "no-drag", "--focus-outline-offset": "-2px" }}>
 			<IconButton sx={{ cursor: "default" }} onClick={minimize}>
 				<RemoveIcon sx={{ fontSize: 16 }} />
 			</IconButton>
