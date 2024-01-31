@@ -1,0 +1,28 @@
+{
+  "*.ts": [
+    "npx eslint --fix"
+  ],
+  "*.tsx": [
+    "npx eslint --fix"
+  ],
+  "*.js": [
+    "npx eslint --fix"
+  ],
+  "*.cjs": [
+    "npx eslint --fix"
+  ],
+  "*.mjs": [
+    "npx eslint --fix"
+  ],
+  "package.json": [
+    "npx sort-package-json",
+    "npx prettier --write"
+  ],
+  "*.md": [
+    "npx prettier --write"
+  ],
+  "README.md": [
+    "npx markdown-toc -i",
+    "npx prettier --write"
+  ]
+}

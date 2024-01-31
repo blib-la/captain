@@ -12,8 +12,14 @@ export const BLIP = "BLIP";
 export const WD14 = "WD14";
 export const GPTV = "GPTV";
 export const CAPTION = "CAPTION";
+export const MODEL = "MODEL";
+export const MODELS = "MODELS";
+export const DOWNLOADS = "DOWNLOADS";
 export const GPT_VISION_OPTIONS = "GPT_VISION_OPTIONS";
 export const LOCALE = "LOCALE";
+export const MARKETPLACE_INDEX = "MARKETPLACE_INDEX";
+export const MARKETPLACE_INDEX_DATA = "MARKETPLACE_INDEX_DATA";
+
 export const FEEDBACK = "FEEDBACK";
 export const DATASET = "DATASET";
 export const DATASETS = "DATASETS";
@@ -21,4 +27,7 @@ export const APP = "APP";
 export const FOLDER = "FOLDER";
 
 export const FETCH = "FETCH";
+export const CHECKPOINTS = "CHECKPOINTS";
 export const CAPTION_RUNNING = "CAPTION_RUNNING";
+
+export const STABLE_DIFFUSION_SETTINGS = "STABLE_DIFFUSION_SETTINGS";

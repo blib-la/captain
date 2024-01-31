@@ -1,0 +1,113 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "typescript",
+    "eslint:recommended",
+    "xo",
+    "plugin:unicorn/recommended",
+    "plugin:prettier/recommended",
+    "next/core-web-vitals"
+  ],
+  "env": {
+    "browser": true,
+    "es2022": true,
+    "jest": true,
+    "node": true
+  },
+  "globals": {
+    "BufferEncoding": "readonly"
+  },
+  "plugins": ["@typescript-eslint", "unicorn", "unused-imports", "import", "jest", "prettier"],
+  "ignorePatterns": ["*.d.ts"],
+  "rules": {
+    "import/order": [
+      "error",
+      {
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        },
+        "newlines-between": "always"
+      }
+    ],
+    "@typescript-eslint/no-explicit-any": "warn",
+    "camelcase": "off",
+    "no-await-in-loop": "off",
+    "unicorn/no-null": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
+    "@next/next/no-html-link-for-pages": "off",
+    "@next/next/no-img-element": "off",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+    ],
+    "curly": "error",
+    "no-nested-ternary": "error",
+    "no-multiple-empty-lines": "error",
+    "object-curly-spacing": ["error", "always"],
+    "prettier/prettier": "error",
+    "arrow-body-style": ["error", "as-needed"],
+    "unicorn/prefer-node-protocol": "off",
+    "@typescript-eslint/consistent-type-imports": "error",
+    "react/jsx-curly-brace-presence": "error",
+    "react/self-closing-comp": "error",
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "@mui/joy",
+            "message": "Please use Component from @mui/joy/Component instead."
+          },
+          {
+            "name": "@mui/icons-material",
+            "message": "Please use FooIcon from @mui/icons-material/Foo instead."
+          }
+        ]
+      }
+    ],
+    "func-style": ["error", "declaration"],
+    "prefer-arrow-callback": "error",
+    "unicorn/filename-case": [
+      "error",
+      {
+        "case": "kebabCase",
+        "ignore": ["^\\[.*\\]\\.tsx?$"]
+      }
+    ],
+    "react/jsx-sort-props": [
+      "error",
+      {
+        "callbacksLast": true,
+        "shorthandFirst": true,
+        "multiline": "last",
+        "reservedFirst": true,
+        "noSortAlphabetically": true
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["sanity.cli.ts", "next-i18next.config.js"],
+      "rules": {
+        "unicorn/prefer-module": "off",
+        "unicorn/no-null": "off"
+      }
+    },
+    {
+      "files": "types.ts",
+      "rules": {
+        "no-unused-vars": "off"
+      }
+    },
+    {
+      "files": "cucumber/**/*.ts",
+      "rules": {
+        "new-cap": "off"
+      }
+    }
+  ]
+}
