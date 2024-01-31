@@ -49,7 +49,7 @@ https://github.com/blib-la/captain/assets/1148334/eecac351-ec1e-4cca-aaf7-89891c
 - **Training and Fine-Tuning** ⏳: Personalize and train AI models directly within Captain.
 - **Cross-Platform Compatibility** ⏳: We're steering towards supporting Linux and macOS users soon.
 - **Expanded Local Models** 🧠: Look forward to local models like CLIP for context-aware captions and Llava, offering multi-modal capabilities akin to GPT-Vision.
-- **AI-Assisted Creativity** 🎨: Future updates will introduce live painting with AI and training custom models, like LoRA for Stable Diffusion.
+- **AI-Assisted Creativity** 🎨: Future updates will introduce live painting with AI.
 
 ## Getting Started
 
@@ -57,15 +57,15 @@ https://github.com/blib-la/captain/assets/1148334/eecac351-ec1e-4cca-aaf7-89891c
 
 1. Download `Captain.exe` from our official repository.
 2. Run the executable to launch Captain.
-3. There's no installation wizard – Captain is ready to use right away!
+3. Decide where Captain should be installed in the Installation wizard.
 
 ### Detailed User Guide
 
-For a comprehensive walkthrough of all features and detailed instructions on how to make the most of Captain, please refer to our dedicated User Guide.
+For a comprehensive walkthrough of Captain's captioning feature and detailed instructions on how to make the most of Captain, please refer to our dedicated User Guide.
 
 [Read the Full Guide](./docs/GUIDE.md)
 
-This guide will assist you in navigating the full capabilities of Captain, ensuring you can leverage the power of local AI with confidence and ease.
+This guide will assist you in navigating the captioning capabilities of Captain, ensuring you can leverage the power of local AI with confidence and ease.
 
 ## Important Note: Installation Warning for Unsigned App
 
