@@ -1,31 +1,37 @@
-import { useEffect } from "react";
 import { useRouter } from "next/router";
-import languageDetector from "./languageDetector";
+import { useEffect } from "react";
+
+import i18next from "../../../next-i18next.config.js";
+// Import languageDetector from "./language-detector";
 
 export function useRedirect(to?: string) {
-  const router = useRouter();
-  const to_ = to || router.asPath;
+	const { replace, asPath, route } = useRouter();
+	const to_ = to || asPath;
 
-  // language detection
-  useEffect(() => {
-    async function detectLanguage() {
-      const detectedLocale = languageDetector.detect();
-      const storedLocale = await window.ipc.getLocale();
-      const appLocale = storedLocale || detectedLocale;
-      if (to_.startsWith("/" + appLocale) && router.route === "/404") {
-        // prevent endless loop
-        await router.replace("/" + appLocale + router.route);
-        return;
-      }
+	// Language detection
+	useEffect(() => {
+		async function detectLanguage() {
+			// Const detectedLocale = languageDetector.detect();
+			const storedLocale = await window.ipc.getLocale();
+			const appLocale: string = storedLocale || i18next.i18n.defaultLocale;
+			if (to_.startsWith("/" + appLocale) && route === "/404") {
+				// Prevent endless loop
+				await replace("/" + appLocale + route);
+				return;
+			}
 
-      languageDetector.cache(appLocale);
-      await router.replace("/" + appLocale + to_);
-    }
-    void detectLanguage();
-  }, [to_]);
+			/* If (languageDetector.cache) {
+				languageDetector.cache(appLocale);
+			} */
+
+			await replace("/" + appLocale + to_);
+		}
+
+		detectLanguage();
+	}, [replace, route, to_]);
 }
 
 export function Redirect({ to }: { to?: string }) {
-  useRedirect(to);
-  return null;
+	useRedirect(to);
+	return null;
 }

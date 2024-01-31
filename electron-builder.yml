@@ -12,6 +12,9 @@ files:
       - resources/python/**/*
       - resources/python-embeded/**/*
 publish: null
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
 asar: true
 asarUnpack:
   - "resources/python/**/*"

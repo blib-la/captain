@@ -20,6 +20,6 @@ module.exports = {
   reloadOnPrerender: process.env.NODE_ENV === "development",
   localePath:
     typeof window === "undefined"
-      ? require("node:path").resolve("./renderer/public/locales")
+      ? require("path").resolve("./renderer/public/locales")
       : "/locales",
 };
