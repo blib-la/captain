@@ -2,7 +2,10 @@
 
 Captain simplifies AI on your desktop. It's a free, open-source application that requires no complex setup — just a single .exe file. It provides a variety of AI tools and features a multi-language UI.
 
+[![Discord](https://img.shields.io/discord/1091306623819059300?color=7289da&label=Discord&logo=discord&logoColor=fff&style=for-the-badge)](https://discord.com/invite/m3TBB9XEkb)
+
 Captain currently supports English, German, Spanish, French, Italian, Japanese, Dutch, Polish, Portuguese, Russian, and Chinese.
+
 
 <p align="center">
     <img src="./docs/logo.png" alt="Download Captain" width="300">
