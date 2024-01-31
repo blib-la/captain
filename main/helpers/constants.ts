@@ -27,6 +27,7 @@ export const APP = "APP";
 export const FOLDER = "FOLDER";
 
 export const FETCH = "FETCH";
+export const CHECKPOINTS = "CHECKPOINTS";
 export const CAPTION_RUNNING = "CAPTION_RUNNING";
 
 export const STABLE_DIFFUSION_SETTINGS = "STABLE_DIFFUSION_SETTINGS";

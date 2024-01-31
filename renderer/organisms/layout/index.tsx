@@ -37,9 +37,9 @@ function SidebarButton({
 	const {
 		i18n: { language: locale },
 	} = useTranslation(["common"]);
-	const { asPath } = useRouter();
-	const href_ = `/${locale}${href}/`;
-	const isActive = asPath === href_;
+	const { pathname } = useRouter();
+	const href_ = `/${locale}${href}`;
+	const isActive = pathname.replace("/[locale]", "") === href;
 
 	return (
 		<Tooltip
@@ -49,7 +49,7 @@ function SidebarButton({
 		>
 			<Box sx={{ width: "100%", display: "flex", "--focus-outline-offset": "-2px" }}>
 				{href && !target ? (
-					<Link legacyBehavior passHref href={href_} target={target}>
+					<Link legacyBehavior passHref href={href_}>
 						<Button
 							{...properties}
 							disabled={disabled}

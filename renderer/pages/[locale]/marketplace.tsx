@@ -17,7 +17,7 @@ import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 
 import {
-	DATASET,
+	CHECKPOINTS,
 	MARKETPLACE_INDEX,
 	MARKETPLACE_INDEX_DATA,
 } from "../../../main/helpers/constants";
@@ -39,7 +39,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	const scrollPosition = useScrollPosition(scrollReference);
 
 	const { data: marketPlaceData } = useSWR(MARKETPLACE_INDEX_DATA);
-	const { data: checkpointsData } = useSWR(DATASET, () => window.ipc.getModels("checkpoint"));
+	const { data: checkpointsData } = useSWR(CHECKPOINTS, () => window.ipc.getModels("checkpoint"));
 
 	useEffect(() => {
 		if (marketPlaceData && marketPlaceData["stable-diffusion"].checkpoints) {
