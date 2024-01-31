@@ -20,6 +20,7 @@ import {
 	STORE,
 	WD14,
 	MODELS,
+	MARKETPLACE_INDEX,
 } from "./helpers/constants";
 import type { Project } from "./helpers/types";
 
@@ -53,6 +54,8 @@ const handler = {
 	// TODO migrate to dataset
 	deleteProject: (id: string) => ipcRenderer.invoke(`${PROJECT}:delete`, id),
 	deleteDataset: (id: string) => ipcRenderer.invoke(`${DATASET}:delete`, id),
+	downloadMarketplace: async (gitRepository: string) =>
+		ipcRenderer.invoke(`${MARKETPLACE_INDEX}:download`, gitRepository),
 	handleRunBlip: async (directory: string) => ipcRenderer.invoke(`${BLIP}:run`, directory),
 	handleRunGPTV: async (
 		directory: string,

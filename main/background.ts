@@ -1,7 +1,4 @@
-import { exec } from "child_process";
-import fsp from "fs/promises";
 import path from "path";
-import util from "util";
 
 import { app, Menu, protocol, shell } from "electron";
 import serve from "electron-serve";
@@ -9,19 +6,10 @@ import serve from "electron-serve";
 import i18next from "../next-i18next.config.js";
 
 import { createWindow } from "./helpers";
-import {
-	CAPTION_RUNNING,
-	DOWNLOADS,
-	LOCALE,
-	MARKETPLACE_INDEX,
-	MARKETPLACE_INDEX_DATA,
-} from "./helpers/constants";
-import { createJsonStructure } from "./helpers/read-index";
+import { CAPTION_RUNNING, DOWNLOADS, LOCALE } from "./helpers/constants";
 import { store as userStore } from "./helpers/store";
-import { captainDataPath } from "./helpers/utils";
-const execAsync = util.promisify(exec);
+import { isProduction, protocolName } from "./helpers/utils";
 
-const isProduction = process.env.NODE_ENV === "production";
 app.commandLine.appendSwitch("enable-smooth-scrolling");
 
 if (isProduction) {
@@ -30,47 +18,7 @@ if (isProduction) {
 	app.setPath("userData", `${app.getPath("userData")} (development)`);
 }
 
-const protocolName = "my";
 protocol.registerSchemesAsPrivileged([{ scheme: protocolName, privileges: { bypassCSP: true } }]);
-
-async function removeCaptainData(path_: string) {
-	const directoryPath = path.join(captainDataPath, path_);
-
-	try {
-		await fsp.rm(directoryPath, { recursive: true });
-	} catch (error) {
-		console.error("Error removing directory:", error);
-	}
-}
-
-export async function createMarketplace() {
-	const marketplaceIndex = (userStore.get(MARKETPLACE_INDEX) ||
-		"git@github.com:blib-la/captain-marketplace.git") as string;
-
-	userStore.set(MARKETPLACE_INDEX, marketplaceIndex);
-
-	try {
-		await removeCaptainData("marketplace");
-		await fsp.mkdir(captainDataPath, { recursive: true });
-		const command = `cd ${captainDataPath} && git clone ${marketplaceIndex} marketplace-index`;
-		await execAsync(command);
-	} catch (error) {
-		console.error("Error executing command:", error);
-	}
-
-	const basePath = path.join(captainDataPath, "marketplace-index", "files"); // The path to the top-level directory
-
-	try {
-		const jsonStructure = await createJsonStructure(basePath);
-		userStore.set(MARKETPLACE_INDEX_DATA, jsonStructure);
-		await fsp.writeFile(
-			path.join(captainDataPath, "index.json"),
-			JSON.stringify(jsonStructure, null, 2)
-		);
-	} catch (error) {
-		console.error("Error executing command:", error);
-	}
-}
 
 async function main() {
 	await app.whenReady();
@@ -88,7 +36,6 @@ async function main() {
 	// Ensure no active downloads and no caption running
 	userStore.delete(CAPTION_RUNNING);
 	userStore.delete(DOWNLOADS);
-	userStore.delete(MARKETPLACE_INDEX_DATA);
 
 	const mainWindow = await createWindow("main", {
 		width: 1600,

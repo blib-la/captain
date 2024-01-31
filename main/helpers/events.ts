@@ -20,6 +20,7 @@ import {
 	GPTV,
 	IMAGE_CACHE,
 	LOCALE,
+	MARKETPLACE_INDEX,
 	MODEL,
 	MODELS,
 	PROJECT,
@@ -30,7 +31,12 @@ import {
 } from "./constants";
 import { store } from "./store";
 import type { Project } from "./types";
-import { createMinifiedImageCache, getUserData, openNewGitHubIssue } from "./utils";
+import {
+	createMarketplace,
+	createMinifiedImageCache,
+	getUserData,
+	openNewGitHubIssue,
+} from "./utils";
 
 // Handling the 'STORE:set' channel for setting multiple values in the store asynchronously.
 ipcMain.handle(`${STORE}:set`, async (event, state: Record<string, unknown>) => {
@@ -338,7 +344,12 @@ ipcMain.handle(
 	}
 );
 
-// Handler so save caption values to the file
+// Handler to get the latest marketplace data
+ipcMain.handle(`${MARKETPLACE_INDEX}:download`, async (event, gitRepository: string) => {
+	await createMarketplace(gitRepository);
+});
+
+// Handler to save caption values to the file
 ipcMain.handle(
 	`${CAPTION}:save`,
 	async (event, imageData: { captionFile: string; caption: string }) => {

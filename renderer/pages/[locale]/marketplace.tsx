@@ -1,9 +1,10 @@
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import Box from "@mui/joy/Box";
+import Button from "@mui/joy/Button";
 import Container from "@mui/joy/Container";
 import IconButton from "@mui/joy/IconButton";
-import Link from "@mui/joy/Link";
 import Sheet from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
 import { useAtom } from "jotai";
@@ -78,6 +79,19 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 						{t("common:marketplace")}
 					</Typography>
 					<Box sx={{ flex: 1 }} />
+					<Button
+						color="primary"
+						size="sm"
+						startDecorator={<CloudDownloadIcon />}
+						onClick={() => {
+							console.log("foobar");
+							window.ipc.downloadMarketplace(
+								"git@github.com:blib-la/captain-marketplace.git"
+							);
+						}}
+					>
+						{t("common:download")}
+					</Button>
 				</Sheet>
 				<Box sx={{ flex: 1, position: "relative" }}>
 					<CustomScrollbars>
@@ -99,7 +113,6 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 						<Container sx={{ py: 2 }}>
 							<Box sx={{ py: 2, display: "flex", justifyContent: "space-between" }}>
 								<Typography level="h2">Stable Diffusion</Typography>
-								<Link>{t("common:seeAll")}</Link>
 							</Box>
 							<Box sx={{ position: "relative" }}>
 								<Box
@@ -126,7 +139,6 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 										}}
 										onClick={() => {
 											if (scrollReference.current) {
-												// Scroll one full width of the scrollRef Element to the left
 												scrollReference.current.scrollBy({
 													left: -scrollReference.current.clientWidth,
 													behavior: "smooth",
