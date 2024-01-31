@@ -2,14 +2,14 @@
 
 Captain simplifies AI on your desktop. It's a free, open-source application that requires no complex setup — just a single .exe file. It provides a variety of AI tools and features a multi-language UI.
 
-Captain currently supports English, German, Spanish, French, Hebrew, Italian, Japanese, Dutch, Polish, Portuguese, Russian, and Chinese.
+Captain currently supports English, German, Spanish, French, Italian, Japanese, Dutch, Polish, Portuguese, Russian, and Chinese.
 
 <p align="center">
     <img src="./docs/logo.png" alt="Download Captain" width="300">
 </p>
 
 <p align="center">
-  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-beta.4/Captain.Setup.1.0.0-beta.4.exe">
+  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-beta.5/Captain.Setup.1.0.0-beta.5.exe">
     <img src="./docs/download.svg" alt="Download Captain" width="300">
   </a>
 </p>
@@ -20,7 +20,6 @@ https://github.com/blib-la/captain/assets/1148334/eecac351-ec1e-4cca-aaf7-89891c
 <!-- toc -->
 
 - [Key Features](#key-features)
-- [What's New](#whats-new)
 - [Planned Features](#planned-features)
 - [Getting Started](#getting-started)
   * [Installation](#installation)
@@ -33,23 +32,29 @@ https://github.com/blib-la/captain/assets/1148334/eecac351-ec1e-4cca-aaf7-89891c
 
 <!-- tocstop -->
 
+Certainly! Here's an updated section for your README, incorporating the new marketplace feature and the enhancements to live reporting:
+
+---
+
 ## Key Features
 
 - **Versatile AI Tool Integration** ✅: Seamlessly connect with various AI tools and models for diverse functionalities.
 - **Local and Online Modes** ✅: Operate fully offline after initial model downloads or connect with online AI services like OpenAI's GPT and RunPod.
 - **Self-Contained Application** ✅: Enjoy the simplicity of a single `.exe` file with no need for installing Python dependencies or other software.
 - **Open Source and Free** ✅: Accessible AI for everyone, with the full source code available for modification and extension.
-
-## What's New
-
+- **Dynamic AI Model Marketplace** ✅: Easily download and update Stable Diffusion checkpoints directly through the in-app marketplace.
 - **Image Captioning** 🖼️: Start with state-of-the-art automatic captioning powered by multiple AI methods.
-- **AI-Assisted Creativity** 🎨: Future updates will introduce live painting with AI and training custom models, like LoRA for Stable Diffusion.
-- **Expanded Local Models** 🧠: Look forward to local models like CLIP for context-aware captions and Llava, offering multi-modal capabilities akin to GPT-Vision.
 
 ## Planned Features
 
 - **Training and Fine-Tuning** ⏳: Personalize and train AI models directly within Captain.
 - **Cross-Platform Compatibility** ⏳: We're steering towards supporting Linux and macOS users soon.
+- **Expanded Local Models** 🧠: Look forward to local models like CLIP for context-aware captions and Llava, offering multi-modal capabilities akin to GPT-Vision.
+- **AI-Assisted Creativity** 🎨: Future updates will introduce live painting with AI and training custom models, like LoRA for Stable Diffusion.
+
+---
+
+This update keeps the format consistent with your existing style while incorporating the new marketplace feature and the improved live reporting for caption generation.
 
 ## Getting Started
 
