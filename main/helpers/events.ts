@@ -346,7 +346,13 @@ ipcMain.handle(
 
 // Handler to get the latest marketplace data
 ipcMain.handle(`${MARKETPLACE_INDEX}:download`, async (event, gitRepository: string) => {
+	const window_ = BrowserWindow.getFocusedWindow();
+	if (!window_) {
+		return;
+	}
+
 	await createMarketplace(gitRepository);
+	window_.webContents.send(`${MARKETPLACE_INDEX}:updated`, true);
 });
 
 // Handler to save caption values to the file

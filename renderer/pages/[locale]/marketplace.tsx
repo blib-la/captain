@@ -3,6 +3,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
+import CircularProgress from "@mui/joy/CircularProgress";
 import Container from "@mui/joy/Container";
 import IconButton from "@mui/joy/IconButton";
 import Sheet from "@mui/joy/Sheet";
@@ -15,7 +16,11 @@ import { useTranslation } from "next-i18next";
 import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 
-import { DATASET, MARKETPLACE_INDEX_DATA } from "../../../main/helpers/constants";
+import {
+	DATASET,
+	MARKETPLACE_INDEX,
+	MARKETPLACE_INDEX_DATA,
+} from "../../../main/helpers/constants";
 
 import { checkpointsAtom } from "@/ions/atoms";
 import { useScrollPosition } from "@/ions/hooks/scroll-position";
@@ -29,6 +34,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	const [, setCheckpoints] = useAtom(checkpointsAtom);
 	// TODO create a type for the models
 	const [stableDiffusionModels, setStableDiffusionModels] = useState<any[]>([]);
+	const [marketplaceDownloading, setMarketplaceDownloading] = useState(false);
 	const scrollReference = useRef<HTMLDivElement | null>(null);
 	const scrollPosition = useScrollPosition(scrollReference);
 
@@ -49,6 +55,12 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			setCheckpoints(checkpointsData);
 		}
 	}, [checkpointsData, setCheckpoints]);
+
+	useEffect(() => {
+		window.ipc.on(`${MARKETPLACE_INDEX}:updated`, () => {
+			setMarketplaceDownloading(false);
+		});
+	}, []);
 
 	return (
 		<>
@@ -82,15 +94,17 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 					<Button
 						color="primary"
 						size="sm"
-						startDecorator={<CloudDownloadIcon />}
+						startDecorator={
+							marketplaceDownloading ? <CircularProgress /> : <CloudDownloadIcon />
+						}
 						onClick={() => {
-							console.log("foobar");
+							setMarketplaceDownloading(true);
 							window.ipc.downloadMarketplace(
 								"git@github.com:blib-la/captain-marketplace.git"
 							);
 						}}
 					>
-						{t("common:download")}
+						{t("common:updateMarketplace")}
 					</Button>
 				</Sheet>
 				<Box sx={{ flex: 1, position: "relative" }}>
