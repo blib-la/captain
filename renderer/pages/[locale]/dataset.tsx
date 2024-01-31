@@ -1,3 +1,4 @@
+import ErrorIcon from "@mui/icons-material/Error";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import PhotoFilterIcon from "@mui/icons-material/PhotoFilter";
 import Badge from "@mui/joy/Badge";
@@ -9,6 +10,7 @@ import FormLabel from "@mui/joy/FormLabel";
 import Grid from "@mui/joy/Grid";
 import Input from "@mui/joy/Input";
 import Sheet from "@mui/joy/Sheet";
+import Snackbar from "@mui/joy/Snackbar";
 import Stack from "@mui/joy/Stack";
 import Textarea from "@mui/joy/Textarea";
 import { useAtom } from "jotai";
@@ -26,6 +28,7 @@ import { CAPTION_RUNNING, DATASET, FOLDER } from "../../../main/helpers/constant
 
 import { ScreenReaderOnly } from "@/atoms/screen-reader-only";
 import {
+	captioningErrorAtom,
 	captionRunningAtom,
 	directoryAtom,
 	imagesAtom,
@@ -93,6 +96,39 @@ export function ImageGridCell({
 	);
 }
 
+export function CaptioningError() {
+	const [captioningError, setCaptioningError] = useAtom(captioningErrorAtom);
+
+	if (!captioningError) {
+		return null;
+	}
+
+	return (
+		<Snackbar
+			open
+			invertedColors
+			color="danger"
+			variant="solid"
+			startDecorator={<ErrorIcon />}
+			sx={{
+				maxWidth: 600,
+				".MuiSnackbar-startDecorator": { alignSelf: "flex-start" },
+				".MuiSnackbar-endDecorator": { alignSelf: "flex-end" },
+			}}
+			endDecorator={
+				<Button size="sm" onClick={() => setCaptioningError(false)}>
+					Dismiss
+				</Button>
+			}
+			onClose={() => {
+				setCaptioningError(false);
+			}}
+		>
+			{captioningError}
+		</Snackbar>
+	);
+}
+
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { query } = useRouter();
 	const id = query.id as string;
@@ -107,7 +143,6 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	const [progress, setProgress] = useState(0);
 	const [progressCount, setProgressCount] = useState("");
 	const [, setDirectory] = useAtom(directoryAtom);
-
 	const [captionRunning, setCaptionRunning] = useAtom(captionRunningAtom);
 
 	const { data: captionRunningData } = useSWR(CAPTION_RUNNING);
@@ -201,6 +236,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			<Head>
 				<title>{`Captain | ${t("common:dataset")}`}</title>
 			</Head>
+			<CaptioningError />
 			<CaptionModal
 				open={captionModalOpen && !captionRunning}
 				onStart={() => {
@@ -214,6 +250,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 					}
 
 					setCaptionRunning(false);
+					window.ipc.fetch(CAPTION_RUNNING, { method: "POST", data: false });
 				}}
 				onClose={() => {
 					setCaptionModalOpen(false);

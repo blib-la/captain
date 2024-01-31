@@ -23,3 +23,5 @@ export const directoryAtom = atom("");
 export const modelDownloadNoteAtom = atomWithStorage("modelDownloadNote", true);
 export const captionRunningAtom = atomWithStorage("captionRunning", false);
 export const checkpointsAtom = atom<string[]>([]);
+
+export const captioningErrorAtom = atom<string | false>(false);

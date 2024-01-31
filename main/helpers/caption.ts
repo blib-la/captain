@@ -44,14 +44,14 @@ export async function runBlip(directory: string): Promise<any> {
 			},
 		});
 
-		store.set(CAPTION_RUNNING, false);
-
 		return "done";
 	} catch (error) {
 		console.error("Error running BLIP:", error);
 		if (error instanceof Error) {
 			throw new TypeError("Failed to run BLIP script. " + error.message);
 		}
+	} finally {
+		store.set(CAPTION_RUNNING, false);
 	}
 }
 
@@ -71,12 +71,12 @@ export async function runWd14(directory: string) {
 				},
 			}
 		);
-		store.set(CAPTION_RUNNING, false);
-
 		return "done";
 	} catch (error) {
 		console.error(error);
 		throw new Error("Failed to run WD14 script.");
+	} finally {
+		store.set(CAPTION_RUNNING, false);
 	}
 }
 
@@ -198,6 +198,7 @@ ${guidelines}
 		} catch (error) {
 			const error_ = error as AxiosError;
 			if (error_.code === "invalid_api_key") {
+				store.set(CAPTION_RUNNING, false);
 				throw error;
 			}
 		}

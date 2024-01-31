@@ -25,7 +25,7 @@ import useSWR from "swr";
 
 import { GPT_VISION_OPTIONS, OPENAI_API_KEY } from "../../../../main/helpers/constants";
 
-import { directoryAtom, modelDownloadNoteAtom } from "@/ions/atoms";
+import { captioningErrorAtom, directoryAtom, modelDownloadNoteAtom } from "@/ions/atoms";
 import { PasswordField } from "@/organisms/password-field";
 
 export const CodeMirror = dynamic(
@@ -66,7 +66,7 @@ export function CaptionModal({
 	const [directory] = useAtom(directoryAtom);
 	const { t } = useTranslation(["common"]);
 	const [modelDownloadNote, setModelDownloadNote] = useAtom(modelDownloadNoteAtom);
-
+	const [, setCaptioningError] = useAtom(captioningErrorAtom);
 	const { data: openApiKeyData } = useSWR(OPENAI_API_KEY);
 	const { data: gptVisionData } = useSWR(GPT_VISION_OPTIONS);
 
@@ -233,8 +233,16 @@ export function CaptionModal({
 										onStart();
 										onClose();
 										console.log({ gptVisionOptions });
-										await window.ipc.handleRunGPTV(directory, gptVisionOptions);
-										onDone();
+										try {
+											await window.ipc.handleRunGPTV(
+												directory,
+												gptVisionOptions
+											);
+										} catch (error) {
+											setCaptioningError((error as Error).message);
+										} finally {
+											onDone();
+										}
 									}}
 								>
 									{t("common:pages.dataset.proceedWithGPTVision")}
@@ -258,13 +266,17 @@ export function CaptionModal({
 										});
 									}}
 								/>
-								<Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+								<Box sx={{ display: "flex", justifyContent: "flex-end", my: 1 }}>
 									<Button
 										onClick={() => {
 											setGptVisionOptions(defaultGptOptions);
+											window.ipc.fetch(GPT_VISION_OPTIONS, {
+												method: "POST",
+												data: defaultGptOptions,
+											});
 										}}
 									>
-										{t("common:resetToDefaults")}
+										{t("common:reset")}
 									</Button>
 								</Box>
 								<Typography sx={{ my: 1 }}>{t("common:guideline")}</Typography>
