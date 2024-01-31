@@ -653,6 +653,20 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 
 	const { data: datasetData } = useSWR(DATASET, () => window.ipc.getDataset(id));
 
+	const saveCaptionToFile = useCallback(async () => {
+		const image = images[selectedImage];
+		if (image) {
+			await window.ipc.saveCaption({ ...image, caption });
+			setImages(
+				images.map(image_ =>
+					image_.image === image.image ? { ...image_, caption } : image_
+				)
+			);
+		}
+	}, [images, selectedImage, caption, setImages]);
+
+	useKeyboardControls({ onBeforeChange: saveCaptionToFile });
+
 	useEffect(() => {
 		setCaptionRunning(Boolean(captionRunningData));
 		if (!captionRunningData) {
@@ -674,20 +688,6 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			setDirectory(datasetData.dataset.source);
 		}
 	}, [datasetData, setDataset, setImages, setDirectory]);
-
-	const saveCaptionToFile = useCallback(async () => {
-		const image = images[selectedImage];
-		if (image) {
-			await window.ipc.saveCaption({ ...image, caption });
-			setImages(
-				images.map(image_ =>
-					image_.image === image.image ? { ...image_, caption } : image_
-				)
-			);
-		}
-	}, [images, selectedImage, caption, setImages]);
-
-	useKeyboardControls({ onBeforeChange: saveCaptionToFile });
 
 	useEffect(() => {
 		if (images[selectedImage]) {
