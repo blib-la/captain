@@ -71,12 +71,18 @@
       "openAiApiKeyDescription": "OpenAIサービスとの統合を有効にするために、OpenAI APIキーを入力してください。",
       "openAiSettings": "OpenAI設定",
       "runPodSettings": "RunPod設定",
+      "stableDiffusionCheckpoints": "Stable Diffusionのチェックポイント",
+      "stableDiffusionCheckpointsDescription": "Stable Diffusionのチェックポイントが含まれるフォルダを選択してください。",
+      "stableDiffusionLoras": "Stable DiffusionのLoRAs",
+      "stableDiffusionLorasDescription": "Stable DiffusionのLoRAsが含まれるフォルダを選択してください。",
+      "stableDiffusionSettings": "Stable Diffusionの設定",
       "userPreferences": "ユーザー設定"
     }
   },
   "previous": "前",
   "price": "価格",
   "readMore": "もっと読む",
+  "reset": "リセット",
   "resetTransform": "トランスフォームをリセット",
   "save": "保存",
   "seeAll": "すべてを見る",

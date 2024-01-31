@@ -71,12 +71,18 @@
       "openAiApiKeyDescription": "Voer uw OpenAI API-sleutel in om integratie met OpenAI-diensten mogelijk te maken.",
       "openAiSettings": "OpenAI-instellingen",
       "runPodSettings": "RunPod-instellingen",
+      "stableDiffusionCheckpoints": "Stable Diffusion-controlepunten",
+      "stableDiffusionCheckpointsDescription": "Selecteer de map met uw Stable Diffusion-controlepunten.",
+      "stableDiffusionLoras": "Stable Diffusion LoRAs",
+      "stableDiffusionLorasDescription": "Selecteer de map met uw Stable Diffusion LoRAs.",
+      "stableDiffusionSettings": "Stable Diffusion Instellingen",
       "userPreferences": "Gebruikersvoorkeuren"
     }
   },
   "previous": "Vorige",
   "price": "Prijs",
   "readMore": "Lees Meer",
+  "reset": "Resetten",
   "resetTransform": "Transformeren Resetten",
   "save": "Opslaan",
   "seeAll": "Bekijk alles",

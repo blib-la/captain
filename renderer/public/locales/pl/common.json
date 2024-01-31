@@ -71,12 +71,18 @@
       "openAiApiKeyDescription": "Wprowadź swój klucz API OpenAI, aby umożliwić integrację z usługami OpenAI.",
       "openAiSettings": "Ustawienia OpenAI",
       "runPodSettings": "Ustawienia RunPod",
+      "stableDiffusionCheckpoints": "Punkty kontrolne Stable Diffusion",
+      "stableDiffusionCheckpointsDescription": "Wybierz folder zawierający punkty kontrolne Stable Diffusion.",
+      "stableDiffusionLoras": "LoRAs Stable Diffusion",
+      "stableDiffusionLorasDescription": "Wybierz folder zawierający LoRAs Stable Diffusion.",
+      "stableDiffusionSettings": "Ustawienia Stable Diffusion",
       "userPreferences": "Preferencje Użytkownika"
     }
   },
   "previous": "Poprzedni",
   "price": "Cena",
   "readMore": "Czytaj więcej",
+  "reset": "Resetuj",
   "resetTransform": "Zresetuj Transformację",
   "save": "Zapisz",
   "seeAll": "Zobacz wszystkie",

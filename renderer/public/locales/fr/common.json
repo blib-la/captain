@@ -71,12 +71,18 @@
       "openAiApiKeyDescription": "Entrez votre clé API OpenAI pour activer l'intégration avec les services OpenAI.",
       "openAiSettings": "Paramètres OpenAI",
       "runPodSettings": "Paramètres RunPod",
+      "stableDiffusionCheckpoints": "Points de contrôle de Stable Diffusion",
+      "stableDiffusionCheckpointsDescription": "Sélectionnez le dossier contenant vos points de contrôle de Stable Diffusion.",
+      "stableDiffusionLoras": "LoRAs de Stable Diffusion",
+      "stableDiffusionLorasDescription": "Sélectionnez le dossier contenant vos LoRAs de Stable Diffusion.",
+      "stableDiffusionSettings": "Paramètres de Stable Diffusion",
       "userPreferences": "Préférences de l'utilisateur"
     }
   },
   "previous": "Précédent",
   "price": "Prix",
   "readMore": "En Savoir Plus",
+  "reset": "Réinitialiser",
   "resetTransform": "Réinitialiser la transformation",
   "save": "Enregistrer",
   "seeAll": "Voir tout",

@@ -71,12 +71,18 @@
       "openAiApiKeyDescription": "Введите свой ключ API OpenAI для интеграции с сервисами OpenAI.",
       "openAiSettings": "Настройки OpenAI",
       "runPodSettings": "Настройки RunPod",
+      "stableDiffusionCheckpoints": "Контрольные точки Stable Diffusion",
+      "stableDiffusionCheckpointsDescription": "Выберите папку с контрольными точками Stable Diffusion.",
+      "stableDiffusionLoras": "LoRAs Stable Diffusion",
+      "stableDiffusionLorasDescription": "Выберите папку с LoRAs Stable Diffusion.",
+      "stableDiffusionSettings": "Настройки Stable Diffusion",
       "userPreferences": "Пользовательские настройки"
     }
   },
   "previous": "Предыдущий",
   "price": "Цена",
   "readMore": "Читать далее",
+  "reset": "Сброс",
   "resetTransform": "Сбросить трансформацию",
   "save": "Сохранить",
   "seeAll": "Смотреть все",

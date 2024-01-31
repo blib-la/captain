@@ -71,12 +71,18 @@
       "openAiApiKeyDescription": "הזן את מפתח ה-API של OpenAI שלך כדי לאפשר אינטגרציה עם שירותי OpenAI.",
       "openAiSettings": "הגדרות OpenAI",
       "runPodSettings": "הגדרות RunPod",
+      "stableDiffusionCheckpoints": "נקודות בקרה של Stable Diffusion",
+      "stableDiffusionCheckpointsDescription": "בחר את התיקייה המכילה את נקודות הבקרה של Stable Diffusion שלך.",
+      "stableDiffusionLoras": "LoRAs של Stable Diffusion",
+      "stableDiffusionLorasDescription": "בחר את התיקייה המכילה את LoRAs של Stable Diffusion שלך.",
+      "stableDiffusionSettings": "הגדרות Stable Diffusion",
       "userPreferences": "העדפות משתמש"
     }
   },
   "previous": "הקודם",
   "price": "מחיר",
   "readMore": "קרא עוד",
+  "reset": "איפוס",
   "resetTransform": "אפס שינויים",
   "save": "שמור",
   "seeAll": "ראה הכל",
