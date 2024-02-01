@@ -147,7 +147,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 
 	const { data: captionRunningData } = useSWR(CAPTION_RUNNING);
 
-	const { data: imagesData } = useSWR("", () => {
+	const { data: imagesData } = useSWR("imagesData", () => {
 		if (dataset) {
 			return window.ipc.getExistingProject(dataset);
 		}
