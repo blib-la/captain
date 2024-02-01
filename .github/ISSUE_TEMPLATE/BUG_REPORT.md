@@ -17,9 +17,8 @@ assignees: ""
 
 **Versions (please complete the following information):**
 
-- Node.js: [e.g. v18.14.2]
 - OS: [e.g. macOS 13.1.1]
-- Hyv [e.g. 0.4.0]
+- Captain [e.g. 1.0.0]
 
 **Additional context** 
 <!-- Add any other context about the problem here. -->
