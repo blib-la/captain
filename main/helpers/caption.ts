@@ -188,7 +188,7 @@ ${guidelines}
 					console.log(`Description for ${file} written to ${textFilePath}`);
 				})
 			);
-			const completedCount = (index + 1) * batchSize;
+			const completedCount = index + 1;
 			const percent = (completedCount / imageFiles.length) * 100;
 			window_.webContents.send("caption-progress", {
 				percent,
