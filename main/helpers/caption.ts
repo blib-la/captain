@@ -143,7 +143,7 @@ export async function runGPTV(
 	const imageFiles = getImageFiles(directory);
 
 	window_.webContents.send("caption-progress", {
-		progress: 0,
+		percent: 0,
 		completedCount: 0,
 		totalCount: imageFiles.length,
 	});
@@ -188,7 +188,7 @@ ${guidelines}
 					console.log(`Description for ${file} written to ${textFilePath}`);
 				})
 			);
-			const completedCount = index + 1;
+			const completedCount = index + batchSize;
 			const percent = (completedCount / imageFiles.length) * 100;
 			window_.webContents.send("caption-progress", {
 				percent,
