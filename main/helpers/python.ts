@@ -6,9 +6,10 @@ import { getDirectory } from "./utils";
 
 export async function python(
 	arguments_: string[],
-	{ stdout, stderr }: { stdout?(data: string): void; stderr?(data: string): void } = {}
+	{ stdout, stderr }: { stdout?(data: string): void; stderr?(data: string): void } = {},
+	onProcessStarted = null
 ) {
-	const pathToEmbeddedPython = getDirectory("python-embeded", "python.exe");
+	const pathToEmbeddedPython = getDirectory("python-embedded", "python.exe");
 	const window_ = BrowserWindow.getFocusedWindow();
 
 	return new Promise((resolve, reject) => {
@@ -38,5 +39,9 @@ export async function python(
 				reject(new Error(`Python script exited with code ${code}`));
 			}
 		});
+
+		if (onProcessStarted) {
+			onProcessStarted(process);
+		}
 	});
 }

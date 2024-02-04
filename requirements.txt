@@ -1,11 +1,15 @@
-Pillow
-tqdm
-opencv-python
-torch==2.0.1 --index-url https://download.pytorch.org/whl/cu118
-torchvision==0.15.2 --index-url https://download.pytorch.org/whl/cu118
-timm
-pytorch-lightning
-fairscale
+--extra-index-url https://download.pytorch.org/whl/cu121
+
+wheel 
+torch==2.1.2+cu121
+torchvision
+torchaudio==2.1.2
+nvidia-cudnn-cu12
+nvidia-cuda-runtime-cu12
+xformers
+# triton
+diffusers
 transformers
-huggingface-hub
-tensorflow
+accelerate
+peft
+.\resources\python\live-painting\stable_fast-1.0.1+torch212cu121-cp310-cp310-win_amd64.whl

@@ -1,3 +1,4 @@
+import BrushIcon from "@mui/icons-material/Brush";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CloseIcon from "@mui/icons-material/Close";
 import CollectionsIcon from "@mui/icons-material/Collections";
@@ -190,6 +191,9 @@ export function Layout({ children }: { children?: ReactNode }) {
 				</SidebarButton>
 				<SidebarButton disabled href="/training" startDecorator={<FitnessCenterIcon />}>
 					{t("common:training")}
+				</SidebarButton>
+				<SidebarButton href="/livepainting" startDecorator={<BrushIcon />}>
+					{t("common:livePainting")}
 				</SidebarButton>
 				<Box sx={{ flex: 1 }} />
 				<SidebarButton

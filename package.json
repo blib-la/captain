@@ -14,7 +14,7 @@
     "postinstall": "electron-builder install-app-deps",
     "ncu": "npx npm-check-updates@latest -u",
     "ncu:check": "npx npm-check-updates@latest",
-    "prep:win": "resources/python-embeded/python.exe -m pip install -r requirements.txt",
+    "prep:win": "resources/python-embedded/python.exe -m pip install -r requirements.txt",
     "spj": "npx sort-package-json@latest",
     "toc": "npx markdown-toc README.md -i",
     "tsc:noEmit": "tsc --noEmit"

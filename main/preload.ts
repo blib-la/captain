@@ -80,6 +80,7 @@ const handler = {
 			ipcRenderer.removeListener(channel, subscription);
 		};
 	},
+	handleRunLivePainting: () => ipcRenderer.invoke(`live-painting:start`),
 };
 
 contextBridge.exposeInMainWorld("ipc", handler);

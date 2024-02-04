@@ -9,6 +9,7 @@ import { createWindow } from "./helpers";
 import { CAPTION_RUNNING, DOWNLOADS, LOCALE } from "./helpers/constants";
 import { store as userStore } from "./helpers/store";
 import { isProduction, protocolName } from "./helpers/utils";
+import "./live-painting";
 
 app.commandLine.appendSwitch("enable-smooth-scrolling");
 

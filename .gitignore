@@ -8,5 +8,8 @@ build
 .env
 resources/projects
 wd14_tagger_model
-resources/python-embeded/
+resources/python-embedded/
 __pycache__
+
+live-canvas-frontend-user-data.png
+live-canvas-generate-image-output.png
