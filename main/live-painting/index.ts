@@ -74,6 +74,8 @@ function watchOutputFile() {
 
 	console.log("watching");
 
+	let cache = "";
+
 	watchFile(
 		"live-canvas-generate-image-output.png",
 		{ interval: 33 },
@@ -82,6 +84,17 @@ function watchOutputFile() {
 				try {
 					const imageData = await fsp.readFile("live-canvas-generate-image-output.png");
 					const base64Image = imageData.toString("base64");
+
+					if (!base64Image.trim()) {
+						return;
+					}
+
+					if (base64Image.trim() === cache) {
+						return;
+					}
+
+					cache = base64Image;
+
 					window_.webContents.send(
 						"image-generated",
 						`data:image/png;base64,${base64Image}`
@@ -92,19 +105,4 @@ function watchOutputFile() {
 			}
 		}
 	);
-
-	//
-	// watch("live-canvas-generate-image-output.png", async eventType => {
-	// 	console.log(eventType);
-	// 	if (eventType === "change" && window_) {
-	// 		try {
-	// 			console.log("changed");
-	// 			const imageData = await fsp.readFile("live-canvas-generate-image-output.png");
-	// 			const base64Image = imageData.toString("base64");
-	// 			window_.webContents.send("image-generated", `data:image/png;base64,${base64Image}`);
-	// 		} catch (error) {
-	// 			console.error("Error sending generated image:", error);
-	// 		}
-	// 	}
-	// });
 }

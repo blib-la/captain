@@ -12,6 +12,7 @@ import queue
 import sys
 import json
 import threading
+import os
 
 from sfast.compilers.diffusion_pipeline_compiler import compile, CompilationConfig
 
@@ -46,7 +47,7 @@ torch.backends.cuda.matmul.allow_tf32 = True
 torch.backends.cudnn.allow_tf32 = True
 
 
-def load_image_with_retry(file_path, max_retries=10, delay=0.008):
+def load_image_with_retry(file_path, max_retries=25, delay=0.003):
     for _ in range(max_retries):
         try:
             image = load_image(file_path).resize((512, 512))
@@ -186,14 +187,17 @@ def main():
             end_time = time.time()
 
             # Save file
-            image.save(output_path)
+            image.save(f"{output_path}.tmp.png")
+            time.sleep(0.005)
+            os.replace(f"{output_path}.tmp.png", output_path)
 
             duration = (end_time - start_time) * 1000
             # print(f"{duration:.2f} ms")
             times.append(duration)
         else:
             image = Image.new("RGB", (512, 512), color="white")
-            image.save(output_path)
+            image.save(f"{output_path}.tmp.png")
+            os.replace(f"{output_path}.tmp.png", output_path)
 
 
 if __name__ == "__main__":

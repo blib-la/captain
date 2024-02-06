@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 
 interface OutputCanvasProperties {
 	width?: number;
@@ -7,7 +7,6 @@ interface OutputCanvasProperties {
 
 export function OutputCanvas({ width = 512, height = 512 }: OutputCanvasProperties) {
 	const canvasReference = useRef<HTMLCanvasElement>(null);
-	const [imageData, setImageData] = useState("");
 
 	useEffect(() => {
 		if (canvasReference.current) {
@@ -19,38 +18,30 @@ export function OutputCanvas({ width = 512, height = 512 }: OutputCanvasProperti
 			canvas.style.width = `${width}px`;
 			canvas.style.height = `${height}px`;
 		}
-	}, []);
+	}, [height, width]);
 
 	useEffect(() => {
+		const image = new Image();
+
+		if (!canvasReference.current) {
+			return;
+		}
+
+		const canvas = canvasReference.current;
+		const context = canvas.getContext("2d");
+
+		image.addEventListener("load", () => {
+			context!.clearRect(0, 0, canvas.width, canvas.height);
+			context!.drawImage(image, 0, 0, canvas.width, canvas.height);
+		});
+
 		function handleImageGenerated(base64Image) {
-			setImageData(base64Image);
+			console.log("changed");
+			image.src = `${base64Image}`;
 		}
 
 		window.ipc.on("image-generated", handleImageGenerated);
-
-		return () => {
-			//
-			// window.ipc.removeListener("image-generated", handleImageGenerated);
-		};
 	}, []);
-
-	useEffect(() => {
-		if (imageData && canvasReference.current) {
-			const canvas = canvasReference.current;
-			const context = canvas.getContext("2d");
-
-			if (context) {
-				// Create a new image object
-				const image = new Image();
-				image.addEventListener("load", () => {
-					context.clearRect(0, 0, canvas.width, canvas.height);
-					context.drawImage(image, 0, 0, canvas.width, canvas.height);
-				});
-
-				image.src = `${imageData}`;
-			}
-		}
-	}, [imageData]);
 
 	return <canvas ref={canvasReference} style={{ border: "1px solid #ccc" }} />;
 }
