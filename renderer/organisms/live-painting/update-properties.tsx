@@ -4,40 +4,41 @@ import FormLabel from "@mui/joy/FormLabel";
 import IconButton from "@mui/joy/IconButton";
 import Input from "@mui/joy/Input";
 import Stack from "@mui/joy/Stack";
-import { useState, useEffect } from "react";
+import type { ChangeEvent } from "react";
+import { useState } from "react";
 
 export function UpdateProperties() {
 	const [prompt, setPrompt] = useState("");
-	const [seed, setSeed] = useState(0);
+	const [seed, setSeed] = useState("0");
 	const [size, setSize] = useState({ width: 512, height: 512 });
 	const [strength, setStrength] = useState("1");
 
 	// Handle input changes
-	function handlePromptChange(event) {
+	function handlePromptChange(event: ChangeEvent<HTMLInputElement>) {
 		setPrompt(event.target.value);
 	}
 
-	function handleSeedChange(event) {
+	function handleSeedChange(event: ChangeEvent<HTMLInputElement>) {
 		setSeed(event.target.value);
 	}
 
-	function handleSizeChange(dimension, event) {
+	function handleSizeChange(dimension: "height" | "width", event: ChangeEvent<HTMLInputElement>) {
 		setSize(previousSize => ({
 			...previousSize,
 			[dimension]: Number.parseInt(event.target.value, 10),
 		}));
 	}
 
-	function handleStrengthChange(event) {
+	function handleStrengthChange(event: ChangeEvent<HTMLInputElement>) {
 		setStrength(event.target.value);
 	}
 
-	function randomSeed(event) {
-		setSeed(Math.floor(Math.random() * 100_000_000 + 1));
+	function randomSeed() {
+		setSeed(Math.floor(Math.random() * 100_000_000 + 1).toString());
 	}
 
 	// Use effect to send updates
-	useEffect(() => {
+	/* useEffect(() => {
 		const properties = {
 			prompt,
 			seed: seed === "" ? 0 : Number.parseInt(seed, 10),
@@ -45,7 +46,7 @@ export function UpdateProperties() {
 			strength: Number.parseFloat(strength),
 		};
 		// SendUpdatedProperties(properties);
-	}, [prompt, seed, size, strength]);
+	}, [prompt, seed, size, strength]); */
 
 	return (
 		<Stack direction="row" spacing={2}>
@@ -61,7 +62,9 @@ export function UpdateProperties() {
 					placeholder="Strength"
 					type="number"
 					slotProps={{ input: { min: 0, max: 1, step: 0.1 } }}
-					onChange={event => handleStrengthChange(event)}
+					onChange={event => {
+						handleStrengthChange(event);
+					}}
 				/>
 			</FormControl>
 
@@ -72,11 +75,7 @@ export function UpdateProperties() {
 					placeholder="Enter seed"
 					type="number"
 					endDecorator={
-						<IconButton
-							variant="soft"
-							color="neutral"
-							onClick={event => randomSeed(event)}
-						>
+						<IconButton variant="soft" color="neutral" onClick={randomSeed}>
 							<Recycling />
 						</IconButton>
 					}
@@ -89,7 +88,9 @@ export function UpdateProperties() {
 					value={size.width}
 					placeholder="Width"
 					type="number"
-					onChange={event => handleSizeChange("width", event)}
+					onChange={event => {
+						handleSizeChange("width", event);
+					}}
 				/>
 			</FormControl>
 			<FormControl sx={{ flex: 1, display: "none" }}>
@@ -98,7 +99,9 @@ export function UpdateProperties() {
 					value={size.height}
 					placeholder="Height"
 					type="number"
-					onChange={event => handleSizeChange("height", event)}
+					onChange={event => {
+						handleSizeChange("height", event);
+					}}
 				/>
 			</FormControl>
 		</Stack>

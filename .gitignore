@@ -9,6 +9,7 @@ build
 resources/projects
 wd14_tagger_model
 resources/python-embedded/
+resources/python-embeded/
 __pycache__
 
 live-canvas-frontend-user-data.png

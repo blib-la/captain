@@ -1,4 +1,5 @@
 import { spawn } from "child_process";
+import type { ChildProcessWithoutNullStreams } from "node:child_process";
 
 import { BrowserWindow } from "electron";
 
@@ -6,8 +7,15 @@ import { getDirectory } from "./utils";
 
 export async function python(
 	arguments_: string[],
-	{ stdout, stderr }: { stdout?(data: string): void; stderr?(data: string): void } = {},
-	onProcessStarted = null
+	{
+		stdout,
+		stderr,
+		onProcessStarted,
+	}: {
+		stdout?(data: string): void;
+		stderr?(data: string): void;
+		onProcessStarted?(process: ChildProcessWithoutNullStreams): void;
+	} = {}
 ) {
 	const pathToEmbeddedPython = getDirectory("python-embedded", "python.exe");
 	const window_ = BrowserWindow.getFocusedWindow();

@@ -187,17 +187,14 @@ def main():
             end_time = time.time()
 
             # Save file
-            image.save(f"{output_path}.tmp.png")
-            time.sleep(0.005)
-            os.replace(f"{output_path}.tmp.png", output_path)
+            image.save(output_path)
 
             duration = (end_time - start_time) * 1000
             # print(f"{duration:.2f} ms")
             times.append(duration)
         else:
             image = Image.new("RGB", (512, 512), color="white")
-            image.save(f"{output_path}.tmp.png")
-            os.replace(f"{output_path}.tmp.png", output_path)
+            image.save(output_path)
 
 
 if __name__ == "__main__":

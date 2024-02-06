@@ -69,8 +69,8 @@ const handler = {
 	send(channel: string, value?: unknown) {
 		ipcRenderer.send(channel, value);
 	},
-	on(channel: string, callback: (...arguments_: unknown[]) => void) {
-		function subscription(_event: IpcRendererEvent, ...arguments_: unknown[]) {
+	on(channel: string, callback: (...arguments_: any[]) => void) {
+		function subscription(_event: IpcRendererEvent, ...arguments_: any[]) {
 			return callback(...arguments_);
 		}
 

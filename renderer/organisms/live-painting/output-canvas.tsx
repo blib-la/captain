@@ -30,17 +30,27 @@ export function OutputCanvas({ width = 512, height = 512 }: OutputCanvasProperti
 		const canvas = canvasReference.current;
 		const context = canvas.getContext("2d");
 
-		image.addEventListener("load", () => {
-			context!.clearRect(0, 0, canvas.width, canvas.height);
+		function handleLoad() {
 			context!.drawImage(image, 0, 0, canvas.width, canvas.height);
-		});
+		}
 
-		function handleImageGenerated(base64Image) {
-			console.log("changed");
+		image.addEventListener("load", handleLoad);
+
+		function handleImageGenerated(base64Image: string) {
+			if (!base64Image.trim() || image.src === base64Image) {
+				return;
+			}
+
+			console.log("tick");
 			image.src = `${base64Image}`;
 		}
 
-		window.ipc.on("image-generated", handleImageGenerated);
+		const unsubscribe = window.ipc.on("image-generated", handleImageGenerated);
+
+		return () => {
+			unsubscribe();
+			image.removeEventListener("load", handleLoad);
+		};
 	}, []);
 
 	return <canvas ref={canvasReference} style={{ border: "1px solid #ccc" }} />;
