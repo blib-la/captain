@@ -1,15 +1,14 @@
 --extra-index-url https://download.pytorch.org/whl/cu121
 
-wheel 
+wheel==0.42.0
 torch==2.1.2+cu121
-torchvision
-torchaudio==2.1.2
-nvidia-cudnn-cu12
-nvidia-cuda-runtime-cu12
-xformers
-# triton
-diffusers
-transformers
-accelerate
-peft
+torchvision==0.16.2+cu121
+torchaudio==2.1.2+cu121
+nvidia-cudnn-cu12==8.9.7.29
+nvidia-cuda-runtime-cu12==12.3.101
+xformers==0.0.23.post1
+diffusers==0.26.2
+transformers==4.37.2
+accelerate==0.26.1
+peft==0.8.2
 .\resources\python\live-painting\stable_fast-1.0.1+torch212cu121-cp310-cp310-win_amd64.whl
