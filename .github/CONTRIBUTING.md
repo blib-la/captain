@@ -50,7 +50,7 @@ Before you begin, ensure you have Node.js installed (the version can be found in
       Captain:
 
         ```powershell
-        .\embed-my-python-win.ps1 -v 3.10.9 -r \full\path\to\captain\requirements.txt -d \full\path\to\captain\resources\python-embedded
+        .\embed-my-python-win.ps1 -v 3.10.11 -r \full\path\to\captain\requirements.txt -d \full\path\to\captain\resources\python-embedded
         ```
 
     **Note**: It's crucial to remove any existing `python-embedded` folder in
