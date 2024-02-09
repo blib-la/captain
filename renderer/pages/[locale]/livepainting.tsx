@@ -33,7 +33,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 						zIndex: 1,
 					}}
 				>
-					<Typography level="h4" component="h1">
+					<Typography level="h4" component="h1" sx={{ mr: 1 }}>
 						{t("common:livepainting")}
 					</Typography>
 					<Button onClick={() => window.ipc.handleRunLivePainting()}>Start</Button>
@@ -41,6 +41,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 				<Box
 					sx={{
 						flex: 1,
+						padding: 1,
 					}}
 				>
 					<Grid container spacing={2} columns={{ xs: 1, md: 2 }}>
