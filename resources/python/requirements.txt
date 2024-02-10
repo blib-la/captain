@@ -11,4 +11,10 @@ diffusers==0.26.2
 transformers==4.37.2
 accelerate==0.26.1
 peft==0.8.2
-.\resources\python\live-painting\stable_fast-1.0.1+torch212cu121-cp310-cp310-win_amd64.whl
+.\live-painting\stable_fast-1.0.1+torch212cu121-cp310-cp310-win_amd64.whl
+
+onnxruntime==1.17.0
+opencv-python==4.9.0.80
+
+# Testing
+pytest==8.0.0

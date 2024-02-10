@@ -17,7 +17,8 @@
     "prep:win": "resources/python-embedded/python.exe -m pip install -r requirements.txt",
     "spj": "npx sort-package-json@latest",
     "toc": "npx markdown-toc README.md -i",
-    "tsc:noEmit": "tsc --noEmit"
+    "tsc:noEmit": "tsc --noEmit",
+    "test:unit": "jest --runInBand --config jest.config.unit.mjs --verbose"
   },
   "dependencies": {
     "electron-dl": "^3.5.1",
