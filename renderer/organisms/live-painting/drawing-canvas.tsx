@@ -17,7 +17,7 @@ export function DrawingCanvas({ width = 512, height = 512 }: DrawingCanvasProper
 	const [isDrawing, setIsDrawing] = useState(false);
 	const [strokeColor, setStrokeColor] = useState("#00ff00");
 	const [brushSize, setBrushSize] = useState(30);
-	const [backgroundColor] = useState("transparent");
+	const [backgroundColor] = useState("#ffffff");
 	const brushReference = useRef<HTMLDivElement>(null);
 
 	function startDrawing({ nativeEvent }: MouseEvent) {

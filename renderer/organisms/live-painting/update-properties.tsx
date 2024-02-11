@@ -5,13 +5,14 @@ import IconButton from "@mui/joy/IconButton";
 import Input from "@mui/joy/Input";
 import Stack from "@mui/joy/Stack";
 import type { ChangeEvent } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function UpdateProperties() {
 	const [prompt, setPrompt] = useState("");
 	const [seed, setSeed] = useState("0");
 	const [size, setSize] = useState({ width: 512, height: 512 });
 	const [strength, setStrength] = useState("1");
+	const [guidance, setGuidance] = useState("0");
 
 	// Handle input changes
 	function handlePromptChange(event: ChangeEvent<HTMLInputElement>) {
@@ -33,20 +34,25 @@ export function UpdateProperties() {
 		setStrength(event.target.value);
 	}
 
+	function handleGuidanceChange(event: ChangeEvent<HTMLInputElement>) {
+		setGuidance(event.target.value);
+	}
+
 	function randomSeed() {
 		setSeed(Math.floor(Math.random() * 100_000_000 + 1).toString());
 	}
 
 	// Use effect to send updates
-	/* useEffect(() => {
+	useEffect(() => {
 		const properties = {
 			prompt,
 			seed: seed === "" ? 0 : Number.parseInt(seed, 10),
 			size,
 			strength: Number.parseFloat(strength),
+			guidance_scale: Number.parseFloat(guidance),
 		};
-		// SendUpdatedProperties(properties);
-	}, [prompt, seed, size, strength]); */
+		window.ipc.send("live-painting:update-properties", properties);
+	}, [prompt, seed, size, strength, guidance]);
 
 	return (
 		<Stack direction="row" spacing={2}>
@@ -67,6 +73,19 @@ export function UpdateProperties() {
 					}}
 				/>
 			</FormControl>
+
+			{/* <FormControl sx={{ flex: 1 }}>
+				<FormLabel>Guidance</FormLabel>
+				<Input
+					value={guidance}
+					placeholder="Guidance"
+					type="number"
+					slotProps={{ input: { min: 0, max: 2, step: 0.1 } }}
+					onChange={event => {
+						handleGuidanceChange(event);
+					}}
+				/>
+			</FormControl> */}
 
 			<FormControl sx={{ flex: 1 }}>
 				<FormLabel>Seed</FormLabel>

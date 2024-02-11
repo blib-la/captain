@@ -3,28 +3,19 @@ from diffusers import (
     AutoencoderTiny,
     EulerAncestralDiscreteScheduler,
 )
-from diffusers.utils import load_image
 import torch
 import time
 from PIL import Image
-import math
 import queue
 import sys
 import json
 import threading
 import os
-
+import time
+import math
+import torch
+from diffusers.utils import load_image
 from sfast.compilers.diffusion_pipeline_compiler import compile, CompilationConfig
-
-# Initial/default values for parameters
-prompt = None
-seed = None
-strength = None
-input_path = "live-canvas-frontend-user-data.png"
-output_path = "live-canvas-generate-image-output.png"
-
-# Queue to hold parameters received from stdin
-params_queue = queue.Queue()
 
 
 def read_stdin_loop():
@@ -36,15 +27,29 @@ def read_stdin_loop():
                 print(f"Error decoding JSON: {e}")
 
 
-# Start the stdin reading thread
-stdin_thread = threading.Thread(target=read_stdin_loop, daemon=True)
-stdin_thread.start()
+def safe_rename_with_retries(src, dst, max_retries=5, delay=0.005):
+    """
+    Attempts to rename a file from `src` to `dst` with retries.
 
+    Parameters:
+    - src: The source file path.
+    - dst: The destination file path.
+    - max_retries: Maximum number of retries if the rename operation fails.
+    - delay: Delay between retries in seconds.
 
-# Torch optimizations
-torch.set_grad_enabled(False)
-torch.backends.cuda.matmul.allow_tf32 = True
-torch.backends.cudnn.allow_tf32 = True
+    If all retries are exhausted, it logs an error message but does not raise an exception.
+    """
+    for attempt in range(max_retries):
+        try:
+            os.replace(src, dst)
+            break
+        except OSError as e:
+            if attempt < max_retries - 1:
+                time.sleep(delay)
+            else:
+                print(
+                    f"Failed to rename {src} to {dst} after {max_retries} attempts. Error: {e}"
+                )
 
 
 def load_image_with_retry(file_path, max_retries=25, delay=0.003):
@@ -54,7 +59,8 @@ def load_image_with_retry(file_path, max_retries=25, delay=0.003):
             return image
         except:
             time.sleep(delay)
-    raise Exception("Failed to load image after several retries.")
+    print(f"Failed to load image {file_path} after {max_retries} retries.")
+    return None
 
 
 def calculate_min_inference_steps(strength):
@@ -62,11 +68,26 @@ def calculate_min_inference_steps(strength):
     return math.ceil(1.0 / strength)
 
 
-def quantize_unet(m):
-    m = torch.quantization.quantize_dynamic(
-        m, {torch.nn.Linear}, dtype=torch.qint8, inplace=True
-    )
-    return m
+# Initial/default values for parameters
+prompt = None
+seed = None
+strength = None
+guidance_scale = None
+input_path = "live-canvas-frontend-user-data.png"
+output_path = "live-canvas-generate-image-output.png"
+
+# Queue to hold parameters received from stdin
+params_queue = queue.Queue()
+
+# Start the stdin reading thread
+stdin_thread = threading.Thread(target=read_stdin_loop, daemon=True)
+stdin_thread.start()
+
+
+# Torch optimizations
+torch.set_grad_enabled(False)
+torch.backends.cuda.matmul.allow_tf32 = True
+torch.backends.cudnn.allow_tf32 = True
 
 
 pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
@@ -119,9 +140,6 @@ pipe.vae = AutoencoderTiny.from_pretrained("madebyollin/taesd").to(
 pipe.unet.to(memory_format=torch.channels_last)
 pipe.vae.to(memory_format=torch.channels_last)
 
-# Quantization
-# pipe.unet = quantize_unet(pipe.unet)
-
 # Disable inference progress bar
 pipe.set_progress_bar_config(leave=False)
 pipe.set_progress_bar_config(disable=True)
@@ -146,7 +164,7 @@ print("warmup done")
 
 
 def main():
-    global prompt, seed, strength, input_path, output_path
+    global prompt, seed, strength, guidance_scale, input_path, output_path
 
     while True:
         try:
@@ -157,8 +175,9 @@ def main():
                 seed = parameters.get("seed", seed)
                 input_path = parameters.get("input_path", input_path)
                 strength = parameters.get("strength", strength)
+                guidance_scale = parameters.get("guidance_scale", guidance_scale)
                 output_path = parameters.get("output_path", output_path)
-                print(f"Updated parameters: {parameters}")
+                print(f"Updated parameters {parameters}")
         except queue.Empty:
             pass  # No new parameters, proceed with the existing ones
 
@@ -170,7 +189,12 @@ def main():
 
             init_image = load_image_with_retry(input_path)
 
+            # Image couldn't be loaded, skip this iteration
+            if init_image is None:
+                continue
+
             strength_ = float(strength)
+            guidance_scale_ = float(guidance_scale)
             denoise_steps_ = calculate_min_inference_steps(strength_)
 
             image = pipe(
@@ -178,23 +202,25 @@ def main():
                 image=init_image,
                 height=512,
                 width=512,
-                num_inference_steps=denoise_steps_,
+                num_inference_steps=3,
                 num_images_per_prompt=1,
                 strength=strength_,
-                guidance_scale=0.0,
+                guidance_scale=1.5,
             ).images[0]
 
             end_time = time.time()
 
             # Save file
-            image.save(output_path)
+            image.save(f"{output_path}.tmp.png")
+            safe_rename_with_retries(f"{output_path}.tmp.png", output_path)
 
             duration = (end_time - start_time) * 1000
             # print(f"{duration:.2f} ms")
             times.append(duration)
         else:
             image = Image.new("RGB", (512, 512), color="white")
-            image.save(output_path)
+            image.save(f"{output_path}.tmp.png")
+            safe_rename_with_retries(f"{output_path}.tmp.png", output_path)
 
 
 if __name__ == "__main__":

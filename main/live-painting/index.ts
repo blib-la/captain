@@ -1,3 +1,4 @@
+import type { ChildProcessWithoutNullStreams } from "node:child_process";
 import fsp from "node:fs/promises";
 
 import { BrowserWindow, ipcMain } from "electron";
@@ -5,6 +6,8 @@ import { watchFile } from "fs-extra";
 
 import { python } from "../helpers/python";
 import { getDirectory } from "../helpers/utils";
+
+let process_: ChildProcessWithoutNullStreams;
 
 export async function runLivePainting(): Promise<any> {
 	const window_ = BrowserWindow.getFocusedWindow();
@@ -25,15 +28,7 @@ export async function runLivePainting(): Promise<any> {
 				console.log(`stdout ${data}`);
 			},
 			onProcessStarted(process) {
-				process.stdin.write(
-					JSON.stringify({
-						prompt: "highres person",
-						seed: 123,
-						strength: "1.0",
-						input_path: "live-canvas-frontend-user-data.png",
-						output_path: "live-canvas-generate-image-output.png",
-					}) + "\n"
-				);
+				process_ = process;
 			},
 		});
 
@@ -53,8 +48,6 @@ function watchOutputFile() {
 	if (!window_) {
 		return;
 	}
-
-	console.log("watching");
 
 	let cache = "";
 
@@ -100,4 +93,18 @@ ipcMain.on("live-painting:input", (event, input) => {
 ipcMain.handle("live-painting:start", () => {
 	runLivePainting();
 	watchOutputFile();
+});
+
+ipcMain.on("live-painting:update-properties", (event, input) => {
+	if (!process_) {
+		return;
+	}
+
+	const data = {
+		...input,
+		input_path: "live-canvas-frontend-user-data.png",
+		output_path: "live-canvas-generate-image-output.png",
+	};
+
+	process_.stdin.write(JSON.stringify(data) + "\n");
 });

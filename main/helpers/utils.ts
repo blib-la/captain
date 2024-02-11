@@ -86,7 +86,7 @@ export async function openNewGitHubIssue(options: OpenNewGitHubIssueOptions) {
 
 // Check if the app is running in development mode.
 // This is typically set using the NODE_ENV environment variable.
-const isDevelopment = process.env.NODE_ENV === "development";
+const isDevelopment = process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test";
 
 // Define a variable for the resources directory.
 // If in development mode, it sets the resources directory relative to the current working directory.
