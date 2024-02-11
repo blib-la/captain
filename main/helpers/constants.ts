@@ -22,6 +22,7 @@ export const MARKETPLACE_INDEX_DATA = "MARKETPLACE_INDEX_DATA";
 
 export const FEEDBACK = "FEEDBACK";
 export const DATASET = "DATASET";
+export const EXISTING_DATASET = "EXISTING_DATASET";
 export const DATASETS = "DATASETS";
 export const APP = "APP";
 export const FOLDER = "FOLDER";

@@ -8,21 +8,17 @@ import {
 	DATASET,
 	DATASETS,
 	DIRECTORY,
-	EXISTING_PROJECT,
 	FEEDBACK,
 	FETCH,
 	GPTV,
 	MODEL,
-	IMAGE_CACHE,
 	LOCALE,
-	PROJECT,
-	PROJECTS,
 	STORE,
 	WD14,
 	MODELS,
 	MARKETPLACE_INDEX,
 } from "./helpers/constants";
-import type { Project } from "./helpers/types";
+import type { Dataset } from "./helpers/types";
 
 const handler = {
 	store: (data: Record<string, unknown>) => ipcRenderer.invoke(`${STORE}:set`, data),
@@ -38,33 +34,27 @@ const handler = {
 		ipcRenderer.invoke(`${CAPTION}:save`, imageData),
 	getDirectory: () => ipcRenderer.invoke(`${DIRECTORY}:get`),
 	getLocale: () => ipcRenderer.invoke(`${LOCALE}:get`),
-	createImageCache: (directory: string, name: string) =>
-		ipcRenderer.invoke(`${IMAGE_CACHE}:create`, directory, name),
 	downloadModel: (type: string, url: string, options: { id: string; storeKey: string }) =>
 		ipcRenderer.invoke(`${MODEL}:download`, type, url, options),
 	getModels: (type: string) => ipcRenderer.invoke(`${MODELS}:get`, type),
-	getExistingProject: (project: { id: string; cover?: string; name: string; source: string }) =>
-		ipcRenderer.invoke(`${EXISTING_PROJECT}:get`, project),
-	// TODO migrate to datasets
-	getProjects: () => ipcRenderer.invoke(`${PROJECTS}:get`),
 	getDatasets: () => ipcRenderer.invoke(`${DATASETS}:get`),
+	createDataset: (directory: string, name: string) =>
+		ipcRenderer.invoke(`${DATASET}:create`, directory, name),
 	getDataset: (id: string) => ipcRenderer.invoke(`${DATASET}:get`, id),
-	updateDataset: (id: string, data: Partial<Except<Project, "id">>) =>
+	updateDataset: (id: string, data: Partial<Except<Dataset, "id">>) =>
 		ipcRenderer.invoke(`${DATASET}:update`, id, data),
-	// TODO migrate to dataset
-	deleteProject: (id: string) => ipcRenderer.invoke(`${PROJECT}:delete`, id),
 	deleteDataset: (id: string) => ipcRenderer.invoke(`${DATASET}:delete`, id),
 	downloadMarketplace: async (gitRepository: string) =>
 		ipcRenderer.invoke(`${MARKETPLACE_INDEX}:download`, gitRepository),
 	handleRunBlip: async (directory: string) => ipcRenderer.invoke(`${BLIP}:run`, directory),
 	handleRunGPTV: async (
-		directory: string,
+		images: string[],
 		options: {
 			exampleResponse: string;
 			guidelines: string;
 			batchSize?: number;
 		}
-	) => ipcRenderer.invoke(`${GPTV}:run`, directory, options),
+	) => ipcRenderer.invoke(`${GPTV}:run`, images, options),
 	handleRunWd14: async (directory: string) => ipcRenderer.invoke(`${WD14}:run`, directory),
 	send(channel: string, value?: unknown) {
 		ipcRenderer.send(channel, value);

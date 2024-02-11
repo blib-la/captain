@@ -112,8 +112,6 @@ export function getUserData(...subpath: string[]): string {
 	return path.join(app.getPath("userData"), ...subpath);
 }
 
-export const captainDataPath = getUserData("Captain_Data");
-
 /**
  * Synchronously get a list of image files from a directory.
  * @param {string} directoryPath - The path of the directory to scan.
@@ -253,7 +251,7 @@ export const isProduction = process.env.NODE_ENV === "production";
 export const protocolName = "my";
 
 export async function removeCaptainData(path_: string) {
-	const directoryPath = path.join(captainDataPath, path_);
+	const directoryPath = path.join(getUserData("Captain_Data"), path_);
 
 	try {
 		await fsp.rm(directoryPath, { recursive: true });
@@ -272,19 +270,21 @@ export async function createMarketplace(gitRepository?: string) {
 
 	try {
 		await removeCaptainData("marketplace-index");
-		await fsp.mkdir(captainDataPath, { recursive: true });
-		await execAsync(`cd ${captainDataPath} && git clone ${marketplaceIndex} marketplace-index`);
+		await fsp.mkdir(getUserData("Captain_Data"), { recursive: true });
+		await execAsync(
+			`cd ${getUserData("Captain_Data")} && git clone ${marketplaceIndex} marketplace-index`
+		);
 	} catch (error) {
 		console.error("Error executing command:", error);
 	}
 
-	const basePath = path.join(captainDataPath, "marketplace-index", "files");
+	const basePath = path.join(getUserData("Captain_Data"), "marketplace-index", "files");
 
 	try {
 		const jsonStructure = await createJsonStructure(basePath);
 		userStore.set(MARKETPLACE_INDEX_DATA, jsonStructure);
 		await fsp.writeFile(
-			path.join(captainDataPath, "index.json"),
+			path.join(getUserData("Captain_Data"), "index.json"),
 			JSON.stringify(jsonStructure, null, 2)
 		);
 	} catch (error) {

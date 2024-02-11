@@ -20,11 +20,11 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { Except } from "type-fest";
 
-import { directoryAtom, projectsAtom } from "@/ions/atoms";
+import { directoryAtom, datasetsAtom } from "@/ions/atoms";
 import { adjectives, colors, generateRandomName, nouns } from "@/ions/utils/get-random-name";
 
 function AddDatasetForm({ onClose }: { onClose: ModalProps["onClose"] }) {
-	const [, setDatasets] = useAtom(projectsAtom);
+	const [, setDatasets] = useAtom(datasetsAtom);
 	const [directory, setDirectory] = useAtom(directoryAtom);
 
 	const [loading, setLoading] = useState(false);
@@ -58,8 +58,8 @@ function AddDatasetForm({ onClose }: { onClose: ModalProps["onClose"] }) {
 			onSubmit={handleSubmit(async data => {
 				setLoading(true);
 				try {
-					await window.ipc.createImageCache(data.directory, data.name);
-					await window.ipc.getProjects().then(datasets_ => {
+					await window.ipc.createDataset(data.directory, data.name);
+					await window.ipc.getDatasets().then(datasets_ => {
 						setDatasets(datasets_);
 					});
 					setDirectory("");

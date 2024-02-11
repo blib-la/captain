@@ -7,11 +7,11 @@ import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
 import { useState } from "react";
 
-import { projectsAtom } from "@/ions/atoms";
+import { datasetsAtom } from "@/ions/atoms";
 
 export function DeleteConfirm({ projectId }: { projectId: string }) {
 	const [confirm, setConfirm] = useState(false);
-	const [, setProjects] = useAtom(projectsAtom);
+	const [, setDatasets] = useAtom(datasetsAtom);
 	const { t } = useTranslation(["common"]);
 	return confirm ? (
 		<Sheet
@@ -41,9 +41,9 @@ export function DeleteConfirm({ projectId }: { projectId: string }) {
 				size="sm"
 				startDecorator={<DeleteForeverIcon />}
 				onClick={async () => {
-					await window.ipc.deleteProject(projectId);
-					await window.ipc.getProjects().then(projects_ => {
-						setProjects(projects_);
+					await window.ipc.deleteDataset(projectId);
+					await window.ipc.getDatasets().then(datasets_ => {
+						setDatasets(datasets_);
 					});
 				}}
 			>

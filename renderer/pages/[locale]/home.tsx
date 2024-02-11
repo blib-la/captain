@@ -13,7 +13,7 @@ import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
 
 import { StyledImage } from "@/atoms/image/styled";
-import { directoryAtom, imagesAtom, projectsAtom } from "@/ions/atoms";
+import { directoryAtom, imagesAtom, datasetsAtom } from "@/ions/atoms";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 import { CustomScrollbars } from "@/organisms/custom-scrollbars";
 import { DeleteConfirm } from "@/organisms/delete-confirm";
@@ -22,7 +22,7 @@ import { Lottie } from "@/organisms/lottie";
 import { AddDatasetModal } from "@/organisms/modals/add-dataset";
 
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
-	const [datasets, setDatasets] = useAtom(projectsAtom);
+	const [datasets, setDatasets] = useAtom(datasetsAtom);
 	const [, setImages] = useAtom(imagesAtom);
 	const [, setDirectory] = useAtom(directoryAtom);
 	const {
@@ -40,7 +40,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	}
 
 	useEffect(() => {
-		window.ipc.getProjects().then(datasets_ => {
+		window.ipc.getDatasets().then(datasets_ => {
 			setDatasets(datasets_);
 		});
 	}, [setDatasets]);
@@ -142,7 +142,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 																}}
 															>
 																<StyledImage
-																	src={`my://${dataset.files}/${dataset.cover}`}
+																	src={`my://${dataset.servedFiles}/${dataset.cover}`}
 																	alt=""
 																	height={1024}
 																	width={1024}

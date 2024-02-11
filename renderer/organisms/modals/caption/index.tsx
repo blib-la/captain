@@ -1,7 +1,5 @@
 import CloseIcon from "@mui/icons-material/Close";
-import ImageIcon from "@mui/icons-material/Image";
 import SettingsIcon from "@mui/icons-material/Settings";
-import StyleIcon from "@mui/icons-material/Style";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import WarningIcon from "@mui/icons-material/Warning";
 import Alert from "@mui/joy/Alert";
@@ -25,7 +23,7 @@ import useSWR from "swr";
 
 import { GPT_VISION_OPTIONS, OPENAI_API_KEY } from "../../../../main/helpers/constants";
 
-import { captioningErrorAtom, directoryAtom, modelDownloadNoteAtom } from "@/ions/atoms";
+import { captioningErrorAtom, imagesAtom, modelDownloadNoteAtom } from "@/ions/atoms";
 import { PasswordField } from "@/organisms/password-field";
 
 export const CodeMirror = dynamic(
@@ -63,7 +61,7 @@ export function CaptionModal({
 	const [gptVisionOptions, setGptVisionOptions] = useState(defaultGptOptions);
 	const [confirmGpt, setConfirmGpt] = useState(false);
 	const [showGptOptions, setShowGptOptions] = useState(false);
-	const [directory] = useAtom(directoryAtom);
+	const [images] = useAtom(imagesAtom);
 	const { t } = useTranslation(["common"]);
 	const [modelDownloadNote, setModelDownloadNote] = useAtom(modelDownloadNoteAtom);
 	const [, setCaptioningError] = useAtom(captioningErrorAtom);
@@ -138,44 +136,6 @@ export function CaptionModal({
 						)}
 						<ButtonGroup variant="solid" sx={{ width: "100%" }}>
 							<Button
-								startDecorator={<ImageIcon />}
-								sx={{ flex: 1 }}
-								onClick={async () => {
-									onStart();
-									onClose();
-									await window.ipc.handleRunBlip(directory);
-									onDone();
-								}}
-							>
-								{t("common:pages.dataset.generateCaptionWithBLIP")}
-							</Button>
-							<Tooltip disableInteractive title="BLIP Settings">
-								<IconButton disabled>
-									<SettingsIcon />
-								</IconButton>
-							</Tooltip>
-						</ButtonGroup>
-						<ButtonGroup variant="solid" sx={{ width: "100%" }}>
-							<Button
-								startDecorator={<StyleIcon />}
-								sx={{ flex: 1 }}
-								onClick={async () => {
-									onStart();
-									onClose();
-									await window.ipc.handleRunWd14(directory);
-									onDone();
-								}}
-							>
-								{t("common:pages.dataset.generateTagsWithWD14")}
-							</Button>
-							<Tooltip disableInteractive title="WD14 Settings">
-								<IconButton disabled>
-									<SettingsIcon />
-								</IconButton>
-							</Tooltip>
-						</ButtonGroup>
-						<ButtonGroup variant="solid" sx={{ width: "100%" }}>
-							<Button
 								color="warning"
 								startDecorator={<VisibilityIcon />}
 								sx={{ flex: 1 }}
@@ -234,14 +194,15 @@ export function CaptionModal({
 										onClose();
 										console.log({ gptVisionOptions });
 										try {
-											await window.ipc.handleRunGPTV(
-												directory,
+											const a = await window.ipc.handleRunGPTV(
+												images.map(image => image.image),
 												gptVisionOptions
 											);
+											console.log(a);
 										} catch (error) {
 											setCaptioningError((error as Error).message);
 										} finally {
-											onDone();
+											// OnDone();
 										}
 									}}
 								>

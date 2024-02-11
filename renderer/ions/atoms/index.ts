@@ -1,6 +1,8 @@
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
+import type { Dataset } from "../../../main/helpers/types";
+
 export interface Project {
 	id: string;
 	name: string;
@@ -9,7 +11,7 @@ export interface Project {
 	source: string;
 }
 
-export const projectsAtom = atom<Project[]>([]);
+export const datasetsAtom = atom<Dataset[]>([]);
 export const projectAtom = atom<Project | false>(false);
 export const selectedImageAtom = atom(0);
 export const imagesAtom = atom<

@@ -9,14 +9,17 @@ import { createWindow } from "./helpers";
 import { CAPTION_RUNNING, DOWNLOADS, LOCALE } from "./helpers/constants";
 import { store as userStore } from "./helpers/store";
 import { isProduction, protocolName } from "./helpers/utils";
+
 import "./live-painting";
+import "./datasets";
+import "./captions";
 
 app.commandLine.appendSwitch("enable-smooth-scrolling");
 
 if (isProduction) {
 	serve({ directory: "app" });
 } else {
-	app.setPath("userData", `${app.getPath("userData")} (development)`);
+	app.setPath("userData", `${app.getPath("userData")}__development__`);
 }
 
 protocol.registerSchemesAsPrivileged([{ scheme: protocolName, privileges: { bypassCSP: true } }]);

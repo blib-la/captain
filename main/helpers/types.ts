@@ -1,7 +1,8 @@
-export interface Project {
+export interface Dataset {
 	id: string;
 	name: string;
 	files: string;
+	servedFiles: string;
 	cover: string;
 	source: string;
 }
