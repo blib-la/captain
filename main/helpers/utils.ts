@@ -10,9 +10,7 @@ import { app, screen, shell } from "electron";
 import JSON5 from "json5";
 import sharp from "sharp";
 
-import { MARKETPLACE_INDEX, MARKETPLACE_INDEX_DATA, MINIFIED_IMAGE_SIZE } from "./constants";
-import { createJsonStructure } from "./read-index";
-import { store as userStore } from "./store";
+import { MINIFIED_IMAGE_SIZE } from "./constants";
 
 interface OpenNewGitHubIssueOptions {
 	repoUrl?: string;
@@ -257,37 +255,5 @@ export async function removeCaptainData(path_: string) {
 		await fsp.rm(directoryPath, { recursive: true });
 	} catch (error) {
 		console.error("Error removing directory:", error);
-	}
-}
-
-export async function createMarketplace(gitRepository?: string) {
-	const marketplaceIndex =
-		gitRepository ||
-		(userStore.get(MARKETPLACE_INDEX) as string) ||
-		"git@github.com:blib-la/captain-marketplace.git";
-
-	userStore.set(MARKETPLACE_INDEX, marketplaceIndex);
-
-	try {
-		await removeCaptainData("marketplace-index");
-		await fsp.mkdir(getUserData("Captain_Data"), { recursive: true });
-		await execAsync(
-			`cd ${getUserData("Captain_Data")} && git clone ${marketplaceIndex} marketplace-index`
-		);
-	} catch (error) {
-		console.error("Error executing command:", error);
-	}
-
-	const basePath = path.join(getUserData("Captain_Data"), "marketplace-index", "files");
-
-	try {
-		const jsonStructure = await createJsonStructure(basePath);
-		userStore.set(MARKETPLACE_INDEX_DATA, jsonStructure);
-		await fsp.writeFile(
-			path.join(getUserData("Captain_Data"), "index.json"),
-			JSON.stringify(jsonStructure, null, 2)
-		);
-	} catch (error) {
-		console.error("Error executing command:", error);
 	}
 }
