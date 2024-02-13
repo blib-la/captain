@@ -31,9 +31,10 @@ export const editCaptionScopeAtom = atomWithStorage<"all" | "empty" | "selected"
 	"empty"
 );
 export const imagesAtom = atom<DatasetEntry[]>([]);
+export const filteredImagesAtom = atom<DatasetEntry[]>([]);
 export const directoryAtom = atom("");
 export const modelDownloadNoteAtom = atomWithStorage("modelDownloadNote", true);
-export const captionRunningAtom = atomWithStorage("captionRunning", false);
+export const captionRunningAtom = atom(false);
 export const checkpointsAtom = atom<string[]>([]);
 export const lorasAtom = atom<string[]>([]);
 export const captionsAtom = atom<string[]>([]);

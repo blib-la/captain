@@ -56,12 +56,8 @@ export function PrefixIcon() {
 export function BatchEditModal({
 	open,
 	onClose,
-	onStart,
-	onDone,
 }: {
 	onClose(): void | Promise<void>;
-	onStart?(): void | Promise<void>;
-	onDone?(): void | Promise<void>;
 	open: boolean;
 }) {
 	const FindReplaceId = useId();
@@ -112,7 +108,6 @@ export function BatchEditModal({
 							return image;
 						});
 						setImages(newData);
-						console.log(newData);
 						window.ipc.batchEditCaption(newData);
 						reset();
 						onClose();

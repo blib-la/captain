@@ -108,8 +108,6 @@ export function ModelCard({
 		buttonText = t("common:installed");
 	}
 
-	console.log(link);
-
 	return (
 		<Card color="neutral" variant="soft">
 			<>

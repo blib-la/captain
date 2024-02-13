@@ -3,7 +3,6 @@ import { contextBridge, ipcRenderer } from "electron";
 import type { Except } from "type-fest";
 
 import {
-	BLIP,
 	CAPTION,
 	CAPTIONS,
 	DATASET,
@@ -13,7 +12,6 @@ import {
 	FEEDBACK,
 	FETCH,
 	GPTV,
-	LOCALE,
 	MARKETPLACE_INDEX,
 	MODEL,
 	MODELS,
@@ -35,7 +33,6 @@ const handler = {
 	saveCaption: (imageData: { caption: string; image: string; captionFile: string }) =>
 		ipcRenderer.invoke(`${CAPTION}:save`, imageData),
 	getDirectory: () => ipcRenderer.invoke(`${DIRECTORY}:get`),
-	getLocale: () => ipcRenderer.invoke(`${LOCALE}:get`),
 	downloadModel: (type: string, url: string, options: { id: string; storeKey: string }) =>
 		ipcRenderer.invoke(`${MODEL}:download`, type, url, options),
 	download: (url: string, directory: string, options: { storeKey: string }) =>
@@ -51,7 +48,6 @@ const handler = {
 	deleteDataset: (id: string) => ipcRenderer.invoke(`${DATASET}:delete`, id),
 	downloadMarketplace: async (url: string) =>
 		ipcRenderer.invoke(`${MARKETPLACE_INDEX}:download`, url),
-	handleRunBlip: async (directory: string) => ipcRenderer.invoke(`${BLIP}:run`, directory),
 	batchEditCaption: (images: DatasetEntry[]) =>
 		ipcRenderer.invoke(`${CAPTIONS}:runBatch`, images),
 	handleRunGPTV: async (

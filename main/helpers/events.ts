@@ -8,10 +8,8 @@ import { download } from "electron-dl";
 
 import package_ from "../../package.json";
 
-import { runBlip } from "./caption";
 import {
 	APP,
-	BLIP,
 	CAPTION,
 	DATASET,
 	DATASETS,
@@ -167,6 +165,34 @@ async function readFilesRecursively(directory: string) {
 	return files;
 }
 
+// Handler to send feedback to GitHub
+ipcMain.handle(
+	`${FEEDBACK}:send`,
+	async (
+		event,
+		{
+			body,
+		}: {
+			body: string;
+		}
+	) => {
+		openNewGitHubIssue({
+			body: `${body}
+
+
+----
+
+Version: ${package_.version}
+`,
+			user: "blib-la",
+			repo: "captain",
+			labels: ["app-feedback"],
+		});
+	}
+);
+
+/// ////  NEW SHIT
+
 ipcMain.handle(`${MODELS}:get`, async (_event, type: "loras" | "checkpoints" | "captions") => {
 	if (type === "captions") {
 		const directory = getUserData("Captain_Data", "downloads", "caption", "wd14");
@@ -237,32 +263,6 @@ ipcMain.handle(`${DATASETS}:get`, async (): Promise<Dataset[]> => {
 	}
 });
 
-// Handler to send feedback to GitHub
-ipcMain.handle(
-	`${FEEDBACK}:send`,
-	async (
-		event,
-		{
-			body,
-		}: {
-			body: string;
-		}
-	) => {
-		openNewGitHubIssue({
-			body: `${body}
-
-
-----
-
-Version: ${package_.version}
-`,
-			user: "blib-la",
-			repo: "captain",
-			labels: ["app-feedback"],
-		});
-	}
-);
-
 // Handler to get the latest marketplace data
 ipcMain.handle(`${MARKETPLACE_INDEX}:download`, async (event, url: string) => {
 	const window_ = BrowserWindow.getFocusedWindow();
@@ -274,18 +274,10 @@ ipcMain.handle(`${MARKETPLACE_INDEX}:download`, async (event, url: string) => {
 
 	await fsp.mkdir(directory, { recursive: true });
 	const { data } = await axios.get<JSON>(url);
-	console.log(typeof data);
 	store.set(MARKETPLACE_INDEX_DATA, data);
 	// Await download(window_, url, { directory, filename: "index.json" });
 	window_.webContents.send(`${MARKETPLACE_INDEX}:updated`, data);
 });
-
-// Handler to execute the BLIP image captioning service.
-ipcMain.handle(`${BLIP}:run`, async (_event, directory: string) => runBlip(directory));
-
-// Handler to execute the WD14 image tagging service.
-
-/// ////  NEW SHIT
 
 ipcMain.handle(
 	`${DATASET}:update`,

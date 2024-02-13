@@ -24,7 +24,7 @@ export function runCaptions<T extends CaptionOptions>(
 	}
 
 	store.set(CAPTION_RUNNING, true);
-	handleFiles(files, {
+	return handleFiles(files, {
 		batchSize,
 		parallel,
 		async onProgress({ counter, totalCount, descriptions, done }) {
@@ -71,9 +71,7 @@ ipcMain.handle(
 			model: string;
 			exclude: string[];
 		}
-	) => {
-		runCaptions(files, wd14, options);
-	}
+	) => runCaptions(files, wd14, options)
 );
 
 ipcMain.handle(
@@ -83,12 +81,11 @@ ipcMain.handle(
 		files: string[],
 		options: {
 			batchSize?: number;
-			exampleResponse: string;
+			exampleResponse: string[];
 			instructions: string;
+			parallel?: boolean;
 		}
-	) => {
-		runCaptions(files, gpt, options);
-	}
+	) => runCaptions(files, gpt, options)
 );
 
 ipcMain.handle(`${CAPTIONS}:runBatch`, async (_event, images: DatasetEntry[]) => {

@@ -5,7 +5,6 @@ import RuleIcon from "@mui/icons-material/Rule";
 import StyleIcon from "@mui/icons-material/Style";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import WarningIcon from "@mui/icons-material/Warning";
-import { ToggleButtonGroup } from "@mui/joy";
 import Alert from "@mui/joy/Alert";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
@@ -26,6 +25,7 @@ import TabList from "@mui/joy/TabList";
 import TabPanel from "@mui/joy/TabPanel";
 import Tabs from "@mui/joy/Tabs";
 import Textarea from "@mui/joy/Textarea";
+import ToggleButtonGroup from "@mui/joy/ToggleButtonGroup";
 import Typography from "@mui/joy/Typography";
 import { useAtom } from "jotai/index";
 import dynamic from "next/dynamic";
@@ -56,6 +56,7 @@ export const StyledEditor = styled(CodeMirror)({
 
 export const defaultGptOptions = {
 	batchSize: 4,
+	parallel: true,
 	guidelines: `Please caption these images, separate groups by comma, ensure logical groups: "black torn wide pants, red stained sweater" instead of "black, torn, wide pants and red, stained sweater"`,
 	exampleResponse: `[
   "a photo of a young man, red hair, blue torn overalls with brass buttons, orange t-shirt with holes, white background",
@@ -73,7 +74,7 @@ export function EmptyCaptionIcon() {
 
 export function useFilteredImages() {
 	const [filterScope] = useAtom(editCaptionScopeAtom);
-	const [images, setImages] = useAtom(imagesAtom);
+	const [images] = useAtom(imagesAtom);
 	return useMemo(() => {
 		switch (filterScope) {
 			case "empty": {
@@ -84,9 +85,12 @@ export function useFilteredImages() {
 				return images.filter(image => image.selected);
 			}
 
-			case "all":
-			default: {
+			case "all": {
 				return images;
+			}
+
+			default: {
+				return [];
 			}
 		}
 	}, [filterScope, images]);
@@ -124,7 +128,6 @@ export function EditCaptionScope() {
 export function GPTVCaptionModal({
 	onClose,
 	onStart,
-	onDone,
 }: {
 	onClose(): void | Promise<void>;
 	onStart(): void | Promise<void>;
@@ -133,11 +136,11 @@ export function GPTVCaptionModal({
 	const [openAiApiKey, setOpenAiApiKey] = useState("");
 	const [gptVisionOptions, setGptVisionOptions] = useState(defaultGptOptions);
 	const [confirmGpt, setConfirmGpt] = useState(false);
-	const [images] = useAtom(imagesAtom);
 	const { t } = useTranslation(["common"]);
 	const [, setCaptioningError] = useAtom(captioningErrorAtom);
 	const { data: openApiKeyData } = useSWR(OPENAI_API_KEY);
 	const { data: gptVisionData } = useSWR(GPT_VISION_OPTIONS);
+	const filteredImages = useFilteredImages();
 
 	useEffect(() => {
 		if (openApiKeyData) {
@@ -152,6 +155,7 @@ export function GPTVCaptionModal({
 					batchSize: number;
 					guidelines: string;
 					exampleResponse: string;
+					parallel: boolean;
 				}
 			);
 		}
@@ -213,7 +217,7 @@ export function GPTVCaptionModal({
 						</Alert>
 					)}
 					<Button
-						disabled={!openAiApiKey}
+						disabled={!openAiApiKey || filteredImages.length === 0}
 						color="danger"
 						startDecorator={<VisibilityIcon />}
 						sx={{ flex: 1 }}
@@ -222,10 +226,17 @@ export function GPTVCaptionModal({
 							onClose();
 							try {
 								await window.ipc.handleRunGPTV(
-									images.map(image => image.image),
-									gptVisionOptions
+									filteredImages.map(image => image.image),
+									{
+										...gptVisionOptions,
+										exampleResponse: JSON.parse(
+											gptVisionOptions.exampleResponse
+										),
+									}
 								);
 							} catch (error) {
+								console.log(".... error");
+								console.log(error);
 								setCaptioningError((error as Error).message);
 							}
 						}}
@@ -345,7 +356,6 @@ export function GPTVCaptionModal({
 export function WD14CaptionModal({
 	onClose,
 	onStart,
-	onDone,
 }: {
 	onClose(): void | Promise<void>;
 	onStart(): void | Promise<void>;

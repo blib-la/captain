@@ -1,12 +1,14 @@
 import { readFile } from "node:fs/promises";
 import path from "path";
 
-import { BrowserWindow } from "electron";
+import type { AxiosError } from "axios";
 import _ from "lodash";
 import sharp from "sharp";
 
-import { MINIFIED_IMAGE_SIZE } from "../helpers/constants";
+import { createImageDescriptions } from "../helpers/caption";
+import { CAPTION_RUNNING, MINIFIED_IMAGE_SIZE } from "../helpers/constants";
 import { python } from "../helpers/python";
+import { store } from "../helpers/store";
 import { getDirectory, getUserData } from "../helpers/utils";
 
 export interface CaptionOptions {
@@ -15,7 +17,7 @@ export interface CaptionOptions {
 }
 
 export function toBase64Url(base64String: string) {
-	return `data:image/jpeg;base64,${base64String}`;
+	return `data:image/jpeg;base64,${base64String}`.trim();
 }
 
 export async function prepareFileBatches(filePaths: string[], { batchSize = 4 }: CaptionOptions) {
@@ -27,7 +29,7 @@ export async function prepareFileBatches(filePaths: string[], { batchSize = 4 }:
 					const fileContent = await readFile(filePath, "base64");
 					return {
 						filePath,
-						base64: toBase64Url(fileContent.slice(1, 10)),
+						base64: toBase64Url(fileContent),
 					};
 				})
 			)
@@ -35,34 +37,49 @@ export async function prepareFileBatches(filePaths: string[], { batchSize = 4 }:
 	);
 }
 
-export function gpt(
+export async function gpt(
 	batch: { base64: string; filePath: string }[],
-	options: { instructions: string }
+	{ exampleResponse, instructions }: { instructions: string; exampleResponse: string[] }
 ): Promise<{ filePath: string; caption: string }[]> {
-	return new Promise(resolve => {
-		setTimeout(
-			() => {
-				resolve(
-					batch.map(() => ({
-						caption: "a red apple",
-						filePath: "foo.bar",
-					}))
-				);
-			},
-			Math.random() * 3000 + 3000
-		);
-	});
+	const images = batch.map(image => image.base64);
+	try {
+		const descriptions = await createImageDescriptions(images, {
+			systemMessage: `You are an expert in captioning images based on given guidelines.
+You caption each image one by one and return an Array of strings, one string for each of the images.
+
+## GUIDELINES
+Follow these guidelines precisely:
+
+${instructions}
+
+> :warning: It is crucial to submit a valid JSON code block (see TEMPLATE), invalid JSON or missing
+code block will cause errors.
+
+## TEMPLATE
+
+\`\`\`json
+["...", "..."]
+\`\`\`
+`,
+			exampleResponse,
+		});
+		return batch.map(({ filePath }, index) => ({ filePath, caption: descriptions[index] }));
+	} catch (error) {
+		const error_ = error as AxiosError;
+		if (error_.code === "invalid_api_key") {
+			console.log("API key issue");
+			store.set(CAPTION_RUNNING, false);
+			throw error;
+		}
+
+		return [];
+	}
 }
 
 export async function wd14(
 	batch: { base64: string; filePath: string }[],
 	options: { model: string; exclude: string[] }
 ) {
-	const window_ = BrowserWindow.getFocusedWindow();
-	if (!window_) {
-		return [];
-	}
-
 	const images = batch.map(entry => entry.filePath);
 	const pathToPythonScript = getDirectory("python/caption/wd14/main.py");
 	const wd14Path = getUserData("Captain_Data/downloads/caption/wd14");
@@ -144,6 +161,7 @@ export async function handleFiles<T>(
 	let counter = 0;
 	let done = false;
 	const totalCount = filePaths.length;
+	const promises: Promise<any>[] = [];
 	for (const batch of batches) {
 		const runner = handler(batch, options).then(descriptions => {
 			counter += batch.length;
@@ -160,7 +178,11 @@ export async function handleFiles<T>(
 		if (!parallel) {
 			await runner;
 		}
+
+		promises.push(runner);
 	}
+
+	return Promise.all(promises);
 }
 
 export async function createImageCache(

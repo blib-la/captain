@@ -4,10 +4,10 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import ErrorIcon from "@mui/icons-material/Error";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import PhotoFilterIcon from "@mui/icons-material/PhotoFilter";
-import { Checkbox } from "@mui/joy";
 import Badge from "@mui/joy/Badge";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
+import Checkbox from "@mui/joy/Checkbox";
 import CircularProgress from "@mui/joy/CircularProgress";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
@@ -63,7 +63,7 @@ export function ImageGridCell({
 	const [selectedImage, setSelectedImage] = useAtom(selectedImageAtom);
 	const columnCount = useColumns({ xs: 2, sm: 3, md: 4, lg: 6 });
 	const { t } = useTranslation(["common"]);
-	const [canSelectImages, setCanSelectImages] = useAtom(canSelectImagesAtom);
+	const [canSelectImages] = useAtom(canSelectImagesAtom);
 
 	const index = rowIndex * columnCount + columnIndex;
 	const image = images[index];
@@ -151,7 +151,12 @@ export function CaptioningError() {
 				".MuiSnackbar-endDecorator": { alignSelf: "flex-end" },
 			}}
 			endDecorator={
-				<Button size="sm" onClick={() => setCaptioningError(false)}>
+				<Button
+					size="sm"
+					onClick={() => {
+						setCaptioningError(false);
+					}}
+				>
 					Dismiss
 				</Button>
 			}
@@ -205,10 +210,9 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	useKeyboardControlledImagesNavigation({ onBeforeChange: saveCaptionToFile });
 
 	useEffect(() => {
-		setCaptionRunning(Boolean(captionRunningData));
-		if (!captionRunningData) {
-			setProgress(0);
-			setProgressCount("");
+		console.log({ captionRunningData });
+		if (typeof captionRunningData === "boolean") {
+			setCaptionRunning(captionRunningData);
 		}
 	}, [captionRunningData, setCaptionRunning]);
 
@@ -247,7 +251,6 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 				totalCount: number;
 				done: boolean;
 			}) => {
-				// Console.log({ progress_, counter, totalCount, done });
 				setProgress(progress_);
 				setProgressCount(`${counter}/${totalCount}`);
 				if (done) {
@@ -255,7 +258,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 				}
 			}
 		);
-	}, []);
+	}, [setCaptionRunning]);
 
 	// Set initially selected image to 0
 	useEffect(() => {
@@ -280,6 +283,8 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 				open={captionModalOpen && !captionRunning}
 				onStart={() => {
 					setCaptionRunning(true);
+					setProgress(0);
+					setProgressCount(`0/${filteredImages.length}`);
 					window.ipc.fetch(CAPTION_RUNNING, { method: "POST", data: true });
 				}}
 				onDone={async () => {
@@ -421,9 +426,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 								/>
 							)}
 							<Box sx={{ position: "relative", minWidth: 100 }}>
-								{captionRunning
-									? progressCount || `0/${filteredImages.length}`
-									: t("common:autoCaption")}
+								{captionRunning ? progressCount : t("common:autoCaption")}
 							</Box>
 						</Button>
 					</Tooltip>
