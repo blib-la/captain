@@ -1,5 +1,5 @@
-import { Button } from "@mui/joy";
 import Box from "@mui/joy/Box";
+import Button from "@mui/joy/Button";
 import Grid from "@mui/joy/Grid";
 import Sheet from "@mui/joy/Sheet";
 import Stack from "@mui/joy/Stack";
