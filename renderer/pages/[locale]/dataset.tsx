@@ -238,7 +238,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	// TODO: probably needs adjustment to new mechanism
 	// Track progress of potential captioning progress
 	useEffect(() => {
-		window.ipc.on(
+		const unsubscribe = window.ipc.on(
 			`${CAPTION}:updated`,
 			({
 				progress: progress_,
@@ -258,6 +258,9 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 				}
 			}
 		);
+		return () => {
+			unsubscribe();
+		};
 	}, [setCaptionRunning]);
 
 	// Set initially selected image to 0

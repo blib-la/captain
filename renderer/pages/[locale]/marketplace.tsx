@@ -512,9 +512,12 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	const [marketplaceDownloading, setMarketplaceDownloading] = useState(false);
 
 	useEffect(() => {
-		window.ipc.on(`${MARKETPLACE_INDEX}:updated`, (_event, data) => {
+		const unsubscribe = window.ipc.on(`${MARKETPLACE_INDEX}:updated`, (_event, data) => {
 			setMarketplaceDownloading(false);
 		});
+		return () => {
+			unsubscribe();
+		};
 	}, []);
 
 	return (
