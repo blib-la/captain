@@ -14,6 +14,7 @@ import CircularProgress from "@mui/joy/CircularProgress";
 import IconButton from "@mui/joy/IconButton";
 import Menu from "@mui/joy/Menu";
 import MenuItem from "@mui/joy/MenuItem";
+import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
 import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
@@ -23,7 +24,7 @@ import useSWR from "swr";
 
 import { DOWNLOADS } from "../../../main/helpers/constants";
 
-import { checkpointsAtom } from "@/ions/atoms";
+import { captionsAtom, checkpointsAtom, lorasAtom } from "@/ions/atoms";
 import { fetcher } from "@/ions/swr/fetcher";
 
 export const architectureMap = {
@@ -34,6 +35,13 @@ export const architectureMap = {
 	"sd-xl-1-0": "SDXL",
 };
 
+const modelAtoms = {
+	loras: lorasAtom,
+	checkpoints: checkpointsAtom,
+	wd14: captionsAtom,
+};
+
+// TODO this component has too much business logic.
 export function ModelCard({
 	id,
 	title,
@@ -50,12 +58,12 @@ export function ModelCard({
 	author: string;
 	license: string;
 	link: string;
-	type: string;
+	type: "loras" | "checkpoints" | "wd14";
 	caption?: string;
 	architecture: string;
-	files: Array<{ filename: string; variant: string }>;
+	files: Array<{ filename: string; variant?: string; required?: boolean }>;
 	title: string;
-	image: string;
+	image?: string;
 }) {
 	const [isDownloading, setIsDownloading] = useState(false);
 	const { t } = useTranslation(["common"]);
@@ -63,11 +71,20 @@ export function ModelCard({
 
 	const anchorReference = useRef<HTMLDivElement>(null);
 	const [selectedIndex, setSelectedIndex] = useState(0);
-	const [checkpoints] = useAtom(checkpointsAtom);
+	const [checkpoints] = useAtom(modelAtoms[type]);
 
 	const selectedFile = files[selectedIndex];
-	const installed = Boolean(selectedFile) && checkpoints.includes(selectedFile.filename);
-	const hasVersion = files.some(({ filename }) => checkpoints.includes(filename));
+	const installed =
+		type === "wd14"
+			? Boolean(selectedFile) && checkpoints.includes([id, selectedFile.filename].join("/"))
+			: Boolean(selectedFile) && checkpoints.includes(selectedFile.filename);
+
+	const hasVersion =
+		type === "wd14"
+			? files.some(({ filename }) => checkpoints.includes([id, filename].join("/")))
+			: files.some(({ filename }) => checkpoints.includes(filename));
+
+	const hasMultipleVersions = files.filter(item => !item.required).length > 1;
 
 	function handleMenuItemClick(event: ReactMouseEvent<HTMLElement, MouseEvent>, index: number) {
 		setSelectedIndex(index);
@@ -91,6 +108,8 @@ export function ModelCard({
 		buttonText = t("common:installed");
 	}
 
+	console.log(link);
+
 	return (
 		<Card color="neutral" variant="soft">
 			<>
@@ -100,6 +119,7 @@ export function ModelCard({
 						size="sm"
 						invisible={!hasVersion}
 						badgeContent={<CheckIcon />}
+						sx={{ display: "block" }}
 						anchorOrigin={{
 							vertical: "top",
 							horizontal: "left",
@@ -156,34 +176,38 @@ export function ModelCard({
 							},
 						}}
 					>
-						<Box
-							component="img"
-							src={`my://${image}`}
-							loading="lazy"
-							alt=""
-							sx={{
-								width: "100%",
-								objectFit: "cover",
-								aspectRatio: 1,
-								bgcolor: "common.white",
-							}}
-						/>
+						<Box sx={{ width: "100%" }}>
+							{image && (
+								<Box
+									component="img"
+									src={image}
+									loading="lazy"
+									alt=""
+									sx={{
+										width: "100%",
+										objectFit: "cover",
+										aspectRatio: 1,
+										bgcolor: "common.white",
+									}}
+								/>
+							)}
+							{caption && (
+								<Typography
+									level="body-md"
+									sx={{
+										mt: 1,
+										WebkitLineClamp: 3,
+										height: 48,
+										WebkitBoxOrient: "vertical",
+										overflow: "hidden",
+										display: "-webkit-box",
+									}}
+								>
+									{caption}
+								</Typography>
+							)}
+						</Box>
 					</Badge>
-					{caption && (
-						<Typography
-							level="body-md"
-							sx={{
-								mt: 1,
-								WebkitLineClamp: 2,
-								height: 48,
-								WebkitBoxOrient: "vertical",
-								overflow: "hidden",
-								display: "-webkit-box",
-							}}
-						>
-							{caption}
-						</Typography>
-					)}
 				</Box>
 				<Typography noWrap level="body-sm" startDecorator={<WorkspacePremiumIcon />}>
 					{license}
@@ -202,34 +226,55 @@ export function ModelCard({
 								color="primary"
 								sx={{ width: "100%" }}
 							>
-								<Button
-									disabled={installed || isDownloading || !selectedFile}
-									sx={{ flex: 1 }}
-									startDecorator={
-										isDownloading ? <CircularProgress /> : <DownloadIcon />
+								<Tooltip
+									sx={{ display: hasMultipleVersions ? undefined : "none" }}
+									title={
+										selectedFile
+											? `${selectedFile.filename}${hasMultipleVersions ? ` (${selectedFile.variant})` : ""}`
+											: ""
 									}
-									onClick={async () => {
-										setIsDownloading(true);
-										try {
-											await window.ipc.fetch(storeKey, {
-												method: "POST",
-												data: true,
-											});
-											await window.ipc.downloadModel(
-												type,
-												`${link}/resolve/main/${selectedFile.filename}?download=true`,
-												{ id, storeKey }
-											);
-										} catch (error) {
-											console.log(error);
-										} finally {
-											setIsDownloading(false);
-										}
-									}}
 								>
-									{buttonText}
-								</Button>
-								{files.length > 1 && (
+									<Button
+										disabled={installed || isDownloading || !selectedFile}
+										sx={{ flex: 1 }}
+										startDecorator={
+											isDownloading ? <CircularProgress /> : <DownloadIcon />
+										}
+										onClick={async () => {
+											setIsDownloading(true);
+											try {
+												await window.ipc.fetch(storeKey, {
+													method: "POST",
+													data: true,
+												});
+
+												if (files.every(file => file.required)) {
+													console.log("all required");
+													for (const file of files) {
+														await window.ipc.downloadModel(
+															type,
+															`${link}/resolve/main/${file.filename}?download=true`,
+															{ id, storeKey }
+														);
+													}
+												} else {
+													await window.ipc.downloadModel(
+														type,
+														`${link}/resolve/main/${selectedFile.filename}?download=true`,
+														{ id, storeKey }
+													);
+												}
+											} catch (error) {
+												console.log(error);
+											} finally {
+												setIsDownloading(false);
+											}
+										}}
+									>
+										{buttonText}
+									</Button>
+								</Tooltip>
+								{hasMultipleVersions && (
 									<IconButton
 										onClick={() => {
 											setIsDownloadOptionsOpen(!isDownloadOptionsOpen);

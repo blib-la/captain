@@ -1,5 +1,7 @@
 {
   "autoCaption": "Auto Didascalia",
+  "batch": "Gruppo",
+  "batchEdit": "Modifica in batch",
   "cancel": "Annulla",
   "caption": "Didascalia",
   "close": "Chiudi",
@@ -18,8 +20,8 @@
   "directory": "Directory",
   "download": "Scarica",
   "downloading": "Scaricando",
-  "enterKeyToUseGPTVision": "Inserisci la tua chiave API OpenAI per utilizzare GPT-Vision.",
   "exampleResponse": "Esempio di Risposta",
+  "excludedTags": "Tag esclusi",
   "feedback": "Feedback",
   "form": {
     "errors": {
@@ -38,17 +40,20 @@
   "license": "Licenza",
   "marketplace": "Marketplace",
   "menu": "Menu",
+  "model": "Modello",
   "name": "Nome",
   "new": "Nuovo",
   "newDataset": "Nuovo Dataset",
   "next": "Avanti",
   "noDatasets": "Nessun Dataset",
+  "onlyCaptionEmptyItems": "Solo elementi senza didascalia",
   "openAiApiKey": "Chiave API di OpenAI",
   "openFolder": "Apri Cartella",
   "pages": {
     "dataset": {
       "chooseCaptioningMethod": "Scegli un metodo di didascalia",
       "customCaptionsWithGPTVision": "Didascalie Personalizzate con GPT-Vision",
+      "enterKeyToUseGPTVision": "Inserisci la tua chiave API OpenAI per usare GPT-Vision.",
       "generateCaptionWithBLIP": "Genera Didascalie con BLIP",
       "generateTagsWithWD14": "Genera Tag con WD14",
       "oneTimeDownloadNote": "I nostri metodi di didascalia avanzati richiedono un download una tantum dei modelli necessari, che potrebbe richiedere alcuni istanti.",
@@ -94,5 +99,10 @@
   "training": "Formazione",
   "updateMarketplace": "Aggiorna Marketplace",
   "zoomIn": "Ingrandire",
-  "zoomOut": "Rimpicciolire"
+  "zoomOut": "Rimpicciolire",
+  "prefix": "Prefisso",
+  "suffix": "Suffisso",
+  "submit": "Invia",
+  "searchAndReplace": "Cerca e sostituisci",
+  "regexp": "Espressioni regolari"
 }

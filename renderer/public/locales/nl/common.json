@@ -1,5 +1,7 @@
 {
   "autoCaption": "Automatische bijschrift",
+  "batch": "Batch",
+  "batchEdit": "Batchbewerking",
   "cancel": "Annuleren",
   "caption": "Bijschrift",
   "close": "Sluiten",
@@ -18,8 +20,8 @@
   "directory": "Map",
   "download": "Downloaden",
   "downloading": "Downloaden",
-  "enterKeyToUseGPTVision": "Voer uw OpenAI API-sleutel in om GPT-Vision te gebruiken.",
   "exampleResponse": "Voorbeeldantwoord",
+  "excludedTags": "Uitgesloten tags",
   "feedback": "Feedback",
   "form": {
     "errors": {
@@ -38,17 +40,20 @@
   "license": "Licentie",
   "marketplace": "Marktplaats",
   "menu": "Menu",
+  "model": "Model",
   "name": "Naam",
   "new": "Nieuw",
   "newDataset": "Nieuwe Dataset",
   "next": "Volgende",
   "noDatasets": "Geen Datasets",
+  "onlyCaptionEmptyItems": "Alleen items zonder onderschrift",
   "openAiApiKey": "OpenAI API-sleutel",
   "openFolder": "Map Openen",
   "pages": {
     "dataset": {
       "chooseCaptioningMethod": "Kies een bijschriftmethode",
       "customCaptionsWithGPTVision": "Aangepaste onderschriften met GPT-Vision",
+      "enterKeyToUseGPTVision": "Voer je OpenAI API-sleutel in om GPT-Vision te gebruiken.",
       "generateCaptionWithBLIP": "Onderschriften genereren met BLIP",
       "generateTagsWithWD14": "Tags genereren met WD14",
       "oneTimeDownloadNote": "Onze geavanceerde bijschriftmethoden vereisen een eenmalige download van de benodigde modellen, wat enkele momenten kan duren.",
@@ -94,5 +99,10 @@
   "training": "Training",
   "updateMarketplace": "Marktplaats bijwerken",
   "zoomIn": "Inzoomen",
-  "zoomOut": "Uitzoomen"
+  "zoomOut": "Uitzoomen",
+  "prefix": "Voorvoegsel",
+  "suffix": "Achtervoegsel",
+  "submit": "Verzenden",
+  "searchAndReplace": "Zoeken & vervangen",
+  "regexp": "Reguliere expressies"
 }

@@ -12,8 +12,10 @@ export const BLIP = "BLIP";
 export const WD14 = "WD14";
 export const GPTV = "GPTV";
 export const CAPTION = "CAPTION";
+export const CAPTIONS = "CAPTIONS";
 export const MODEL = "MODEL";
 export const MODELS = "MODELS";
+export const DOWNLOAD = "DOWNLOAD";
 export const DOWNLOADS = "DOWNLOADS";
 export const GPT_VISION_OPTIONS = "GPT_VISION_OPTIONS";
 export const LOCALE = "LOCALE";
@@ -29,6 +31,7 @@ export const FOLDER = "FOLDER";
 
 export const FETCH = "FETCH";
 export const CHECKPOINTS = "CHECKPOINTS";
+export const LORAS = "LORAS";
 export const CAPTION_RUNNING = "CAPTION_RUNNING";
 
 export const STABLE_DIFFUSION_SETTINGS = "STABLE_DIFFUSION_SETTINGS";

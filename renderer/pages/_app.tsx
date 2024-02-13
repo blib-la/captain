@@ -66,7 +66,7 @@ function App({ Component, pageProps }: AppProps) {
 					errorRetryCount: 3,
 					focusThrottleInterval: 5 * 1000,
 					revalidateOnReconnect: true,
-					refreshInterval: 1000,
+					refreshInterval: 100,
 				}}
 			>
 				<Layout>

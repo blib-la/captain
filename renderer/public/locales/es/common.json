@@ -1,5 +1,7 @@
 {
   "autoCaption": "Auto Subtítulo",
+  "batch": "Lote",
+  "batchEdit": "Edición por lotes",
   "cancel": "Cancelar",
   "caption": "Subtítulo",
   "close": "Cerrar",
@@ -18,8 +20,8 @@
   "directory": "Directorio",
   "download": "Descargar",
   "downloading": "Descargando",
-  "enterKeyToUseGPTVision": "Introduce tu clave de API de OpenAI para usar GPT-Vision.",
   "exampleResponse": "Respuesta de Ejemplo",
+  "excludedTags": "Etiquetas excluidas",
   "feedback": "Comentarios",
   "form": {
     "errors": {
@@ -38,17 +40,20 @@
   "license": "Licencia",
   "marketplace": "Mercado",
   "menu": "Menú",
+  "model": "Modelo",
   "name": "Nombre",
   "new": "Nuevo",
   "newDataset": "Nuevo Conjunto de Datos",
   "next": "Siguiente",
   "noDatasets": "No hay Conjuntos de Datos",
+  "onlyCaptionEmptyItems": "Solo elementos sin título",
   "openAiApiKey": "Clave API de OpenAI",
   "openFolder": "Abrir Carpeta",
   "pages": {
     "dataset": {
       "chooseCaptioningMethod": "\"Elija un método de subtitulación",
       "customCaptionsWithGPTVision": "Subtítulos Personalizados con GPT-Vision",
+      "enterKeyToUseGPTVision": "Introduce tu clave de API de OpenAI para usar GPT-Vision.",
       "generateCaptionWithBLIP": "Generar Subtítulos con BLIP",
       "generateTagsWithWD14": "Generar Etiquetas con WD14",
       "oneTimeDownloadNote": "Nuestros métodos avanzados de subtitulación requieren una descarga única de los modelos necesarios, lo que puede llevar unos momentos.",
@@ -94,5 +99,10 @@
   "training": "Entrenamiento",
   "updateMarketplace": "Actualizar Mercado",
   "zoomIn": "Aumentar",
-  "zoomOut": "Disminuir"
+  "zoomOut": "Disminuir",
+  "prefix": "Prefijo",
+  "suffix": "Sufijo",
+  "submit": "Enviar",
+  "searchAndReplace": "Buscar y reemplazar",
+  "regexp": "Expresiones regulares"
 }

@@ -55,64 +55,6 @@ export async function runBlip(directory: string): Promise<any> {
 	}
 }
 
-export async function runWd14() {
-	const window_ = BrowserWindow.getFocusedWindow();
-	if (!window_) {
-		return;
-	}
-
-	const images = [
-		path.resolve("resources\\python\\caption\\wd14\\tests\\test_image1.jpg"),
-		path.resolve("resources\\python\\caption\\wd14\\tests\\test_image2.png"),
-	];
-
-	const modelPath = path.resolve("resources\\python\\caption\\wd14\\tests\\model.onnx");
-	const tagsPath = path.resolve("resources\\python\\caption\\wd14\\tests\\selected_tags.csv");
-
-	try {
-		const pathToPythonScript = getDirectory("python", "caption", "wd14", "main.py");
-
-		await python(
-			[
-				pathToPythonScript,
-				"--remove_underscore",
-				"--image_paths",
-				...images,
-				"--model_path",
-				modelPath,
-				"--tags_path",
-				tagsPath,
-			],
-			{
-				stderr(data: string) {
-					console.log(`stderr ${data}`);
-					// There is no progress information anymore, if you want this, I can add that
-					// Window_.webContents.send("caption-progress", parseCaptionLogs(data));
-				},
-				stdout(data: string) {
-					console.log(`stdout ${data}`);
-					// When the script is done, it will provide an JSON array of objects like this in here:
-					/* 
-						[
-							{
-								"filePath": "D:\\dev\\blibla\\captain\\resources\\python\\caption\\wd14\\tests\\test_image1.jpg", 
-								"tags": ["general", "simple background", "white background", "heart", "no humans", "colorful"]
-							}
-						]	
-					*/
-				},
-			}
-		);
-
-		return "done";
-	} catch (error) {
-		console.error(error);
-		throw new Error("Failed to run WD14 script.");
-	} finally {
-		store.set(CAPTION_RUNNING, false);
-	}
-}
-
 export async function createImageDescriptions(
 	images: string[],
 	{ systemMessage, exampleResponse }: { systemMessage: string; exampleResponse: string }

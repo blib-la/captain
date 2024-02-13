@@ -5,20 +5,22 @@ import type { Except } from "type-fest";
 import {
 	BLIP,
 	CAPTION,
+	CAPTIONS,
 	DATASET,
 	DATASETS,
 	DIRECTORY,
+	DOWNLOAD,
 	FEEDBACK,
 	FETCH,
 	GPTV,
-	MODEL,
 	LOCALE,
+	MARKETPLACE_INDEX,
+	MODEL,
+	MODELS,
 	STORE,
 	WD14,
-	MODELS,
-	MARKETPLACE_INDEX,
 } from "./helpers/constants";
-import type { Dataset } from "./helpers/types";
+import type { Dataset, DatasetEntry } from "./helpers/types";
 
 const handler = {
 	store: (data: Record<string, unknown>) => ipcRenderer.invoke(`${STORE}:set`, data),
@@ -36,7 +38,10 @@ const handler = {
 	getLocale: () => ipcRenderer.invoke(`${LOCALE}:get`),
 	downloadModel: (type: string, url: string, options: { id: string; storeKey: string }) =>
 		ipcRenderer.invoke(`${MODEL}:download`, type, url, options),
-	getModels: (type: string) => ipcRenderer.invoke(`${MODELS}:get`, type),
+	download: (url: string, directory: string, options: { storeKey: string }) =>
+		ipcRenderer.invoke(`${DOWNLOAD}`, url, directory, options),
+	getModels: (type: "loras" | "checkpoints" | "captions") =>
+		ipcRenderer.invoke(`${MODELS}:get`, type),
 	getDatasets: () => ipcRenderer.invoke(`${DATASETS}:get`),
 	createDataset: (directory: string, name: string) =>
 		ipcRenderer.invoke(`${DATASET}:create`, directory, name),
@@ -44,9 +49,11 @@ const handler = {
 	updateDataset: (id: string, data: Partial<Except<Dataset, "id">>) =>
 		ipcRenderer.invoke(`${DATASET}:update`, id, data),
 	deleteDataset: (id: string) => ipcRenderer.invoke(`${DATASET}:delete`, id),
-	downloadMarketplace: async (gitRepository: string) =>
-		ipcRenderer.invoke(`${MARKETPLACE_INDEX}:download`, gitRepository),
+	downloadMarketplace: async (url: string) =>
+		ipcRenderer.invoke(`${MARKETPLACE_INDEX}:download`, url),
 	handleRunBlip: async (directory: string) => ipcRenderer.invoke(`${BLIP}:run`, directory),
+	batchEditCaption: (images: DatasetEntry[]) =>
+		ipcRenderer.invoke(`${CAPTIONS}:runBatch`, images),
 	handleRunGPTV: async (
 		images: string[],
 		options: {
@@ -55,7 +62,14 @@ const handler = {
 			batchSize?: number;
 		}
 	) => ipcRenderer.invoke(`${GPTV}:run`, images, options),
-	handleRunWd14: async (directory: string) => ipcRenderer.invoke(`${WD14}:run`, directory),
+	handleRunWd14: async (
+		images: string[],
+		options: {
+			batchSize?: number;
+			model: string;
+			exclude: string[];
+		}
+	) => ipcRenderer.invoke(`${WD14}:run`, images, options),
 	send(channel: string, value?: unknown) {
 		ipcRenderer.send(channel, value);
 	},

@@ -1,5 +1,7 @@
 {
   "autoCaption": "Авто Подпись",
+  "batch": "Пакет",
+  "batchEdit": "Пакетное редактирование",
   "cancel": "Отменить",
   "caption": "Подпись",
   "close": "Закрыть",
@@ -18,8 +20,8 @@
   "directory": "Каталог",
   "download": "Скачать",
   "downloading": "загрузка",
-  "enterKeyToUseGPTVision": "Введите свой API-ключ OpenAI для использования GPT-Vision.",
   "exampleResponse": "Пример ответа",
+  "excludedTags": "Исключенные теги",
   "feedback": "Обратная связь",
   "form": {
     "errors": {
@@ -38,17 +40,20 @@
   "license": "Лицензия",
   "marketplace": "Рынок",
   "menu": "Меню",
+  "model": "Модель",
   "name": "Имя",
   "new": "Новый",
   "newDataset": "Новый набор данных",
   "next": "Следующий",
   "noDatasets": "Нет наборов данных",
+  "onlyCaptionEmptyItems": "Только элементы без подписи",
   "openAiApiKey": "Ключ API OpenAI",
   "openFolder": "Открыть папку",
   "pages": {
     "dataset": {
       "chooseCaptioningMethod": "Выберите метод озвучивания",
       "customCaptionsWithGPTVision": "Пользовательские подписи с GPT-Vision",
+      "enterKeyToUseGPTVision": "Введите ваш ключ API OpenAI для использования GPT-Vision.",
       "generateCaptionWithBLIP": "Создать подписи с BLIP",
       "generateTagsWithWD14": "Создать теги с WD14",
       "oneTimeDownloadNote": "\"Выберите метод озвучивания\" oneTimeDownloadNote: \"Наши передовые методы озвучивания требуют однократной загрузки необходимых моделей, что может занять несколько моментов.",
@@ -94,5 +99,10 @@
   "training": "Тренировка",
   "updateMarketplace": "Обновить рынок",
   "zoomIn": "Увеличить",
-  "zoomOut": "Уменьшить"
+  "zoomOut": "Уменьшить",
+  "prefix": "Префикс",
+  "suffix": "Суффикс",
+  "submit": "Отправить",
+  "searchAndReplace": "Поиск и замена",
+  "regexp": "Регулярные выражения"
 }

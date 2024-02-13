@@ -1,5 +1,7 @@
 {
   "autoCaption": "自动字幕",
+  "batch": "批次",
+  "batchEdit": "批量编辑",
   "cancel": "取消",
   "caption": "字幕",
   "close": "关闭",
@@ -18,8 +20,8 @@
   "directory": "目录",
   "download": "下载",
   "downloading": "下载中",
-  "enterKeyToUseGPTVision": "输入您的OpenAI API密钥以使用GPT-Vision。",
   "exampleResponse": "示例响应",
+  "excludedTags": "排除的标签",
   "feedback": "反馈",
   "form": {
     "errors": {
@@ -38,17 +40,20 @@
   "license": "许可证",
   "marketplace": "市场",
   "menu": "菜单",
+  "model": "模型",
   "name": "名称",
   "new": "新建",
   "newDataset": "新建数据集",
   "next": "下一个",
   "noDatasets": "没有数据集",
+  "onlyCaptionEmptyItems": "仅空白标题项",
   "openAiApiKey": "OpenAI API密钥",
   "openFolder": "打开文件夹",
   "pages": {
     "dataset": {
       "chooseCaptioningMethod": "选择字幕制作方法",
       "customCaptionsWithGPTVision": "使用GPT-Vision自定义字幕",
+      "enterKeyToUseGPTVision": "输入您的OpenAI API密钥以使用GPT-Vision。",
       "generateCaptionWithBLIP": "使用BLIP生成字幕",
       "generateTagsWithWD14": "使用WD14生成标签",
       "oneTimeDownloadNote": "我们的高级字幕制作方法需要一次性下载必要的模型，这可能需要一些时间。",
@@ -94,5 +99,10 @@
   "training": "培训",
   "updateMarketplace": "更新市场",
   "zoomIn": "放大",
-  "zoomOut": "缩小"
+  "zoomOut": "缩小",
+  "prefix": "前缀",
+  "suffix": "后缀",
+  "submit": "提交",
+  "searchAndReplace": "搜索与替换",
+  "regexp": "正则表达式"
 }

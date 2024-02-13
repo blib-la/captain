@@ -11,3 +11,13 @@ export interface Dimensions {
 	width: number;
 	height: number;
 }
+
+export interface DatasetEntry {
+	files: string;
+	servedFiles: string;
+	image: string;
+	imageFile: string;
+	servedImageFile: string;
+	captionFile: string;
+	caption: string;
+}

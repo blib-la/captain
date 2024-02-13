@@ -1,3 +1,5 @@
+import EditIcon from "@mui/icons-material/Edit";
+import EditNoteIcon from "@mui/icons-material/EditNote";
 import ErrorIcon from "@mui/icons-material/Error";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import PhotoFilterIcon from "@mui/icons-material/PhotoFilter";
@@ -13,12 +15,14 @@ import Sheet from "@mui/joy/Sheet";
 import Snackbar from "@mui/joy/Snackbar";
 import Stack from "@mui/joy/Stack";
 import Textarea from "@mui/joy/Textarea";
+import Tooltip from "@mui/joy/Tooltip";
 import { useAtom } from "jotai";
 import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import type { CSSProperties } from "react";
+import { useMemo } from "react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeGrid } from "react-window";
@@ -29,6 +33,7 @@ import { CAPTION, CAPTION_RUNNING, DATASET, FOLDER } from "../../../main/helpers
 import { ScreenReaderOnly } from "@/atoms/screen-reader-only";
 import {
 	captioningErrorAtom,
+	captionOnlyEmptyAtom,
 	captionRunningAtom,
 	directoryAtom,
 	imagesAtom,
@@ -36,9 +41,11 @@ import {
 	selectedImageAtom,
 } from "@/ions/atoms";
 import { useColumns } from "@/ions/hooks/columns";
+import { useKeyboardControlledImagesNavigation } from "@/ions/hooks/keyboard-controlled-images-navigation";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 import { CustomScrollbarsVirtualList } from "@/organisms/custom-scrollbars";
 import { CaptionModal } from "@/organisms/modals/caption";
+import { BatchEditModal } from "@/organisms/modals/caption/batch-edit";
 import { ZoomImageStage } from "@/organisms/zoomable-image-stage";
 
 export function ImageGridCell({
@@ -138,11 +145,13 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	const [caption, setCaption] = useState("");
 	const [name, setName] = useState("");
 	const { t } = useTranslation(["common"]);
+	const [batchModalOpen, setBatchModalOpen] = useState(false);
 	const [captionModalOpen, setCaptionModalOpen] = useState(false);
 	const [progress, setProgress] = useState(0);
 	const [progressCount, setProgressCount] = useState("");
 	const [, setDirectory] = useAtom(directoryAtom);
 	const [captionRunning, setCaptionRunning] = useAtom(captionRunningAtom);
+	const [onlyEmpty, setOnlyEmpty] = useAtom(captionOnlyEmptyAtom);
 
 	const { data: captionRunningData } = useSWR(CAPTION_RUNNING);
 
@@ -151,7 +160,10 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			return window.ipc.getDataset(id);
 		}
 	});
-
+	const filteredImages = useMemo(
+		() => (onlyEmpty ? images.filter(image => !image.caption) : images),
+		[onlyEmpty, images]
+	);
 	const saveCaptionToFile = useCallback(async () => {
 		const image = images[selectedImage];
 		if (image) {
@@ -164,12 +176,11 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 		}
 	}, [images, selectedImage, caption, setImages]);
 
-	//
-	// useKeyboardControlledImagesNavigation({ onBeforeChange: saveCaptionToFile });
+	useKeyboardControlledImagesNavigation({ onBeforeChange: saveCaptionToFile });
 
 	useEffect(() => {
 		setCaptionRunning(Boolean(captionRunningData));
-		if (captionRunningData === false) {
+		if (!captionRunningData) {
 			setProgress(0);
 			setProgressCount("");
 		}
@@ -203,14 +214,19 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 				progress: progress_,
 				counter,
 				totalCount,
+				done,
 			}: {
 				progress: number;
 				counter: number;
 				totalCount: number;
+				done: boolean;
 			}) => {
-				console.log(progress_);
+				// Console.log({ progress_, counter, totalCount, done });
 				setProgress(progress_);
 				setProgressCount(`${counter}/${totalCount}`);
+				if (done) {
+					setCaptionRunning(false);
+				}
 			}
 		);
 	}, []);
@@ -241,16 +257,16 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 					window.ipc.fetch(CAPTION_RUNNING, { method: "POST", data: true });
 				}}
 				onDone={async () => {
-					if (id) {
-						const datasetData_ = await window.ipc.getDataset(id);
-						setImages(datasetData_.images);
-					}
-
-					setCaptionRunning(false);
-					window.ipc.fetch(CAPTION_RUNNING, { method: "POST", data: false });
+					console.log("done");
 				}}
 				onClose={() => {
 					setCaptionModalOpen(false);
+				}}
+			/>
+			<BatchEditModal
+				open={batchModalOpen}
+				onClose={() => {
+					setBatchModalOpen(false);
 				}}
 			/>
 			<Stack sx={{ position: "absolute", inset: 0 }}>
@@ -259,9 +275,11 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 						{dataset && (
 							<Input
 								fullWidth
+								component="label"
 								variant="plain"
 								aria-label={t("common:datasetName")}
 								value={name}
+								startDecorator={<EditIcon />}
 								onChange={event => {
 									setName(event.target.value);
 								}}
@@ -273,59 +291,99 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 							/>
 						)}
 					</Box>
-					<Button
-						startDecorator={<FolderOpenIcon />}
-						onClick={() => {
-							if (dataset) {
-								window.ipc.send(`${FOLDER}:open`, dataset.source);
-							}
-						}}
-					>
-						{t("common:openFolder")}
-					</Button>
-					<Button
-						color="primary"
-						variant="solid"
-						disabled={captionRunning}
-						startDecorator={
-							captionRunning && progress === 0 ? (
-								<CircularProgress />
-							) : (
-								<PhotoFilterIcon />
-							)
+					<Tooltip title={t("common:batchEdit")} sx={{ display: { md: "none" } }}>
+						<Button
+							startDecorator={<EditNoteIcon />}
+							sx={{
+								width: { xs: 36, md: "auto" },
+								px: 1.5,
+								whiteSpace: "nowrap",
+								justifyContent: "flex-start",
+								overflow: "hidden",
+							}}
+							onClick={() => {
+								setBatchModalOpen(true);
+							}}
+						>
+							{t("common:batchEdit")}
+						</Button>
+					</Tooltip>
+					<Tooltip title={t("common:openFolder")} sx={{ display: { md: "none" } }}>
+						<Button
+							startDecorator={<FolderOpenIcon />}
+							sx={{
+								width: { xs: 36, md: "auto" },
+								px: 1.5,
+								whiteSpace: "nowrap",
+								justifyContent: "flex-start",
+								overflow: "hidden",
+							}}
+							onClick={() => {
+								if (dataset) {
+									window.ipc.send(`${FOLDER}:open`, dataset.files);
+								}
+							}}
+						>
+							{t("common:openFolder")}
+						</Button>
+					</Tooltip>
+					<Tooltip
+						sx={{ display: { md: "none" } }}
+						title={
+							captionRunning
+								? progressCount || `0/${filteredImages.length}`
+								: t("common:autoCaption")
 						}
-						sx={{
-							position: "relative",
-							overflow: "hidden",
-							"&.Mui-disabled": {
-								color: captionRunning ? "common.white" : undefined,
-							},
-							".MuiButton-startDecorator": { position: "relative", zIndex: 1 },
-						}}
-						onClick={() => {
-							if (!captionRunning) {
-								setCaptionModalOpen(true);
-							}
-						}}
 					>
-						{captionRunning && (
-							<Box
-								sx={{
-									position: "absolute",
-									inset: 0,
-									zIndex: 0,
-									transformOrigin: "0 0",
-									transform: `scale3d(${progress}, 1, 1)`,
-									bgcolor: "primary.500",
-								}}
-							/>
-						)}
-						<Box sx={{ position: "relative", minWidth: 100 }}>
-							{captionRunning
-								? progressCount || `0/${images.length}`
-								: t("common:autoCaption")}
-						</Box>
-					</Button>
+						<Button
+							color="primary"
+							variant="solid"
+							disabled={captionRunning}
+							startDecorator={
+								captionRunning && progress === 0 ? (
+									<CircularProgress />
+								) : (
+									<PhotoFilterIcon />
+								)
+							}
+							sx={{
+								position: "relative",
+								width: { xs: 36, md: "auto" },
+								px: 1.5,
+								whiteSpace: "nowrap",
+								justifyContent: "flex-start",
+								overflow: "hidden",
+								"&.Mui-disabled": {
+									color: captionRunning ? "common.white" : undefined,
+								},
+								".MuiButton-startDecorator": { position: "relative", zIndex: 1 },
+							}}
+							onClick={() => {
+								if (!captionRunning) {
+									setCaptionModalOpen(true);
+								}
+							}}
+						>
+							{captionRunning && (
+								<Box
+									sx={{
+										position: "absolute",
+										inset: 0,
+										zIndex: 0,
+										transformOrigin: "0 0",
+										transform: `scale3d(${progress}, 1, 1)`,
+										transition: "transform 0.3s linear",
+										bgcolor: "primary.500",
+									}}
+								/>
+							)}
+							<Box sx={{ position: "relative", minWidth: 100 }}>
+								{captionRunning
+									? progressCount || `0/${filteredImages.length}`
+									: t("common:autoCaption")}
+							</Box>
+						</Button>
+					</Tooltip>
 				</Sheet>
 				<Grid container spacing={2} columns={{ xs: 1, sm: 2 }} sx={{ flex: 1 }}>
 					<Grid xs={1} sx={{ display: "flex" }}>

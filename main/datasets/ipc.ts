@@ -4,7 +4,7 @@ import path from "path";
 import { ipcMain } from "electron";
 import { v4 } from "uuid";
 
-import { createImageCache } from "../captions";
+import { createImageCache } from "../captions/misc";
 import { DATASET } from "../helpers/constants";
 import type { Dataset } from "../helpers/types";
 import { getUserData } from "../helpers/utils";

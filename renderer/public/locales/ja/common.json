@@ -1,5 +1,7 @@
 {
   "autoCaption": "自動キャプション",
+  "batch": "バッチ",
+  "batchEdit": "一括編集",
   "cancel": "キャンセル",
   "caption": "キャプション",
   "close": "閉じる",
@@ -18,8 +20,8 @@
   "directory": "ディレクトリ",
   "download": "ダウンロード",
   "downloading": "ダウンロード中",
-  "enterKeyToUseGPTVision": "GPT-Visionを使用するためにOpenAIのAPIキーを入力してください。",
   "exampleResponse": "例のレスポンス",
+  "excludedTags": "除外されたタグ",
   "feedback": "フィードバック",
   "form": {
     "errors": {
@@ -38,17 +40,20 @@
   "license": "ライセンス",
   "marketplace": "マーケットプレイス",
   "menu": "メニュー",
+  "model": "モデル",
   "name": "名前",
   "new": "新規",
   "newDataset": "新しいデータセット",
   "next": "次へ",
   "noDatasets": "データセットはありません",
+  "onlyCaptionEmptyItems": "キャプションのないアイテムのみ",
   "openAiApiKey": "OpenAI APIキー",
   "openFolder": "フォルダを開く",
   "pages": {
     "dataset": {
       "chooseCaptioningMethod": "キャプション方法を選択",
       "customCaptionsWithGPTVision": "GPT-Visionでカスタムキャプション",
+      "enterKeyToUseGPTVision": "GPT-Visionを使用するには、あなたのOpenAI APIキーを入力してください。",
       "generateCaptionWithBLIP": "BLIPでキャプションを生成",
       "generateTagsWithWD14": "WD14でタグを生成",
       "oneTimeDownloadNote": "\"当社の高度なキャプション方法には、必要なモデルの一回限りのダウンロードが必要です。これには数瞬間かかる場合があります。",
@@ -94,5 +99,10 @@
   "training": "トレーニング",
   "updateMarketplace": "マーケットプレースを更新",
   "zoomIn": "ズームイン",
-  "zoomOut": "ズームアウト"
+  "zoomOut": "ズームアウト",
+  "prefix": "接頭辞",
+  "suffix": "接尾辞",
+  "submit": "提出",
+  "searchAndReplace": "検索 & 置換",
+  "regexp": "正規表現"
 }

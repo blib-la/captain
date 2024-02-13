@@ -1,5 +1,7 @@
 {
   "autoCaption": "כיתוב אוטומטי",
+  "batch": "אצווה",
+  "batchEdit": "עריכת אצווה",
   "cancel": "בטל",
   "caption": "כיתוב",
   "close": "סגור",
@@ -18,8 +20,8 @@
   "directory": "תיקייה",
   "download": "הורדה",
   "downloading": "מוריד",
-  "enterKeyToUseGPTVision": "הזן את מפתח ה-API של OpenAI כדי להשתמש ב-GPT-Vision.",
   "exampleResponse": "תגובת דוגמה",
+  "excludedTags": "תגיות מוצאות",
   "feedback": "משוב",
   "form": {
     "errors": {
@@ -38,17 +40,20 @@
   "license": "רישיון",
   "marketplace": "שוק",
   "menu": "תפריט",
+  "model": "דגם",
   "name": "שם",
   "new": "חדש",
   "newDataset": "מערך נתונים חדש",
   "next": "הבא",
   "noDatasets": "אין מערכי נתונים",
+  "onlyCaptionEmptyItems": "רק פריטים ללא כיתוב",
   "openAiApiKey": "מפתח API של OpenAI",
   "openFolder": "פתח תיקייה",
   "pages": {
     "dataset": {
       "chooseCaptioningMethod": "בחר שיטת כיתוב",
       "customCaptionsWithGPTVision": "כיתובים מותאמים אישית עם GPT-Vision",
+      "enterKeyToUseGPTVision": "הזן את מפתח ה-API של OpenAI שלך כדי להשתמש ב-GPT-Vision.",
       "generateCaptionWithBLIP": "ייצר כיתובים עם BLIP",
       "generateTagsWithWD14": "ייצר תגיות עם WD14",
       "oneTimeDownloadNote": "שיטות הכיתוב המתקדמות שלנו דורשות הורדה חד פעמית של המודלים הנחוצים, תהליך שעשוי לקחת מספר רגעים.",
@@ -94,5 +99,10 @@
   "training": "הדרכה",
   "updateMarketplace": "עדכן את השוק",
   "zoomIn": "התקרב",
-  "zoomOut": "התרחק"
+  "zoomOut": "התרחק",
+  "prefix": "קידומת",
+  "suffix": "סיומת",
+  "submit": "שלח",
+  "searchAndReplace": "חפש והחלף",
+  "regexp": "ביטויים רגולריים"
 }

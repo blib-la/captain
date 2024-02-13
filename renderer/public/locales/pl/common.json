@@ -1,5 +1,7 @@
 {
   "autoCaption": "Automatyczne Podpisy",
+  "batch": "Partia",
+  "batchEdit": "Edycja grupowa",
   "cancel": "Anuluj",
   "caption": "Podpis",
   "close": "Zamknij",
@@ -18,8 +20,8 @@
   "directory": "Katalog",
   "download": "Pobierz",
   "downloading": "Pobieranie",
-  "enterKeyToUseGPTVision": "Wprowadź swój klucz API OpenAI, aby korzystać z GPT-Vision.",
   "exampleResponse": "Przykładowa Odpowiedź",
+  "excludedTags": "Wykluczone tagi",
   "feedback": "Opinie",
   "form": {
     "errors": {
@@ -38,17 +40,20 @@
   "license": "Licencja",
   "marketplace": "Rynek",
   "menu": "Menu",
+  "model": "Model",
   "name": "Nazwa",
   "new": "Nowy",
   "newDataset": "Nowy Zbiór Danych",
   "next": "Następny",
   "noDatasets": "Brak Zbiorów Danych",
+  "onlyCaptionEmptyItems": "Tylko elementy bez podpisu",
   "openAiApiKey": "Klucz API OpenAI",
   "openFolder": "Otwórz Folder",
   "pages": {
     "dataset": {
       "chooseCaptioningMethod": "Wybierz metodę opisywania",
       "customCaptionsWithGPTVision": "Niestandardowe Podpisy z GPT-Vision",
+      "enterKeyToUseGPTVision": "Wprowadź swój klucz API OpenAI, aby używać GPT-Vision.",
       "generateCaptionWithBLIP": "Generuj Podpisy z BLIP",
       "generateTagsWithWD14": "Generuj Tagi z WD14",
       "oneTimeDownloadNote": "Nasze zaawansowane metody opisywania wymagają jednorazowego pobrania niezbędnych modeli, co może zająć kilka chwil.",
@@ -94,5 +99,10 @@
   "training": "Szkolenie",
   "updateMarketplace": "Zaktualizuj Rynek",
   "zoomIn": "Powiększenie",
-  "zoomOut": "Pomniejszenie"
+  "zoomOut": "Pomniejszenie",
+  "prefix": "Prefiks",
+  "suffix": "Sufiks",
+  "submit": "Zatwierdź",
+  "searchAndReplace": "Szukaj i zamień",
+  "regexp": "Wyrażenia regularne"
 }
