@@ -15,10 +15,11 @@ import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
 import { useAtom } from "jotai/index";
 import { useTranslation } from "next-i18next";
-import { useId, useState } from "react";
+import React, { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { datasetsAtom, imagesAtom } from "@/ions/atoms";
+import { editCaptionScopeAtom, imagesAtom } from "@/ions/atoms";
+import { EditCaptionScope } from "@/organisms/modals/caption/index";
 
 export function RegexIcon() {
 	return (
@@ -67,7 +68,7 @@ export function BatchEditModal({
 	const { t } = useTranslation(["common"]);
 	const [regex, setRegex] = useState(false);
 	const [images, setImages] = useAtom(imagesAtom);
-	const [dataset] = useAtom(datasetsAtom);
+	const [editCaptionScope] = useAtom(editCaptionScopeAtom);
 	const { register, reset, handleSubmit } = useForm({
 		defaultValues: {
 			find: "",
@@ -88,12 +89,20 @@ export function BatchEditModal({
 				}}
 			>
 				<ModalClose aria-label={t("common:close")} />
+				<EditCaptionScope />
 				<Typography>{t("common:batchEdit")}:</Typography>
 				<Box
 					component="form"
 					onSubmit={handleSubmit(data => {
-						console.log(data);
 						const newData = images.map(image => {
+							if (editCaptionScope === "empty" && image.caption) {
+								return image;
+							}
+
+							if (editCaptionScope === "selected" && !image.selected) {
+								return image;
+							}
+
 							if (data.find) {
 								const pattern = regex ? new RegExp(data.find, "ig") : data.find;
 								image.caption = image.caption.replace(pattern, data.replace);

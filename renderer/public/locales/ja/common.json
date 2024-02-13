@@ -1,4 +1,5 @@
 {
+  "all": "すべて",
   "autoCaption": "自動キャプション",
   "batch": "バッチ",
   "batchEdit": "一括編集",
@@ -20,6 +21,7 @@
   "directory": "ディレクトリ",
   "download": "ダウンロード",
   "downloading": "ダウンロード中",
+  "empty": "空",
   "exampleResponse": "例のレスポンス",
   "excludedTags": "除外されたタグ",
   "feedback": "フィードバック",
@@ -84,25 +86,28 @@
       "userPreferences": "ユーザー設定"
     }
   },
+  "prefix": "接頭辞",
   "previous": "前",
   "price": "価格",
   "readMore": "もっと読む",
+  "regexp": "正規表現",
   "reset": "リセット",
   "resetTransform": "トランスフォームをリセット",
   "save": "保存",
+  "scopeForEditing": "編集の範囲",
+  "searchAndReplace": "検索 & 置換",
   "seeAll": "すべてを見る",
   "selectFolder": "フォルダを選択",
+  "selectImages": "画像を選択",
+  "selected": "選択済み",
   "send": "送信する",
   "settings": "設定",
   "show": "表示",
+  "submit": "提出",
+  "suffix": "接尾辞",
   "termsOfUse": "利用規約",
   "training": "トレーニング",
   "updateMarketplace": "マーケットプレースを更新",
   "zoomIn": "ズームイン",
-  "zoomOut": "ズームアウト",
-  "prefix": "接頭辞",
-  "suffix": "接尾辞",
-  "submit": "提出",
-  "searchAndReplace": "検索 & 置換",
-  "regexp": "正規表現"
+  "zoomOut": "ズームアウト"
 }

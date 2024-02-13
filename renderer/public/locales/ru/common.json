@@ -1,4 +1,5 @@
 {
+  "all": "Все",
   "autoCaption": "Авто Подпись",
   "batch": "Пакет",
   "batchEdit": "Пакетное редактирование",
@@ -20,6 +21,7 @@
   "directory": "Каталог",
   "download": "Скачать",
   "downloading": "загрузка",
+  "empty": "Пусто",
   "exampleResponse": "Пример ответа",
   "excludedTags": "Исключенные теги",
   "feedback": "Обратная связь",
@@ -84,25 +86,28 @@
       "userPreferences": "Пользовательские настройки"
     }
   },
+  "prefix": "Префикс",
   "previous": "Предыдущий",
   "price": "Цена",
   "readMore": "Читать далее",
+  "regexp": "Регулярные выражения",
   "reset": "Сброс",
   "resetTransform": "Сбросить трансформацию",
   "save": "Сохранить",
+  "scopeForEditing": "Область для редактирования",
+  "searchAndReplace": "Поиск и замена",
   "seeAll": "Смотреть все",
   "selectFolder": "выбрать папку",
+  "selectImages": "Выбрать изображения",
+  "selected": "Выбранные",
   "send": "Отправить",
   "settings": "Настройки",
   "show": "показать",
+  "submit": "Отправить",
+  "suffix": "Суффикс",
   "termsOfUse": "Условия использования",
   "training": "Тренировка",
   "updateMarketplace": "Обновить рынок",
   "zoomIn": "Увеличить",
-  "zoomOut": "Уменьшить",
-  "prefix": "Префикс",
-  "suffix": "Суффикс",
-  "submit": "Отправить",
-  "searchAndReplace": "Поиск и замена",
-  "regexp": "Регулярные выражения"
+  "zoomOut": "Уменьшить"
 }

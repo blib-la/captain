@@ -1,4 +1,5 @@
 {
+  "all": "Todas",
   "autoCaption": "Legendagem Automática",
   "batch": "Lote",
   "batchEdit": "Edição em lote",
@@ -20,6 +21,7 @@
   "directory": "Diretório",
   "download": "Baixar",
   "downloading": "Baixando",
+  "empty": "Vazio",
   "exampleResponse": "Exemplo de Resposta",
   "excludedTags": "Tags excluídas",
   "feedback": "Feedback",
@@ -84,25 +86,28 @@
       "userPreferences": "Preferências do Usuário"
     }
   },
+  "prefix": "Prefixo",
   "previous": "Anterior",
   "price": "Preço",
   "readMore": "Ler Mais",
+  "regexp": "Expressões regulares",
   "reset": "Resetar",
   "resetTransform": "Redefinir Transformação",
   "save": "Salvar",
+  "scopeForEditing": "Escopo para edição",
+  "searchAndReplace": "Pesquisar e substituir",
   "seeAll": "Ver todos",
   "selectFolder": "selecionar pasta",
+  "selectImages": "Selecionar imagens",
+  "selected": "Selecionadas",
   "send": "Enviar",
   "settings": "Configurações",
   "show": "mostrar",
+  "submit": "Submeter",
+  "suffix": "Sufixo",
   "termsOfUse": "Termos de uso",
   "training": "Treinamento",
   "updateMarketplace": "Atualizar Mercado",
   "zoomIn": "Ampliar",
-  "zoomOut": "Reduzir",
-  "prefix": "Prefixo",
-  "suffix": "Sufixo",
-  "submit": "Submeter",
-  "searchAndReplace": "Pesquisar e substituir",
-  "regexp": "Expressões regulares"
+  "zoomOut": "Reduzir"
 }

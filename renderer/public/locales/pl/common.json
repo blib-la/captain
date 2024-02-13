@@ -1,4 +1,5 @@
 {
+  "all": "Wszystkie",
   "autoCaption": "Automatyczne Podpisy",
   "batch": "Partia",
   "batchEdit": "Edycja grupowa",
@@ -20,6 +21,7 @@
   "directory": "Katalog",
   "download": "Pobierz",
   "downloading": "Pobieranie",
+  "empty": "Puste",
   "exampleResponse": "Przykładowa Odpowiedź",
   "excludedTags": "Wykluczone tagi",
   "feedback": "Opinie",
@@ -84,25 +86,28 @@
       "userPreferences": "Preferencje Użytkownika"
     }
   },
+  "prefix": "Prefiks",
   "previous": "Poprzedni",
   "price": "Cena",
   "readMore": "Czytaj więcej",
+  "regexp": "Wyrażenia regularne",
   "reset": "Resetuj",
   "resetTransform": "Zresetuj Transformację",
   "save": "Zapisz",
+  "scopeForEditing": "Zakres do edycji",
+  "searchAndReplace": "Szukaj i zamień",
   "seeAll": "Zobacz wszystkie",
   "selectFolder": "wybierz folder",
+  "selectImages": "Wybierz obrazy",
+  "selected": "Wybrane",
   "send": "Wyślij",
   "settings": "Ustawienia",
   "show": "pokaż",
+  "submit": "Zatwierdź",
+  "suffix": "Sufiks",
   "termsOfUse": "Warunki korzystania",
   "training": "Szkolenie",
   "updateMarketplace": "Zaktualizuj Rynek",
   "zoomIn": "Powiększenie",
-  "zoomOut": "Pomniejszenie",
-  "prefix": "Prefiks",
-  "suffix": "Sufiks",
-  "submit": "Zatwierdź",
-  "searchAndReplace": "Szukaj i zamień",
-  "regexp": "Wyrażenia regularne"
+  "zoomOut": "Pomniejszenie"
 }

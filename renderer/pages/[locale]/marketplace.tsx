@@ -83,10 +83,12 @@ function findAllParentObjectsWithId<T>(object: NestedObjectWithOptionalId, paren
 
 	if (object && typeof object === "object") {
 		for (const key in object) {
-			const child = object[key];
-			// Check if child is a non-null object but not an array (as arrays might not have id properties in the same sense)
-			if (child && typeof child === "object" && !Array.isArray(child)) {
-				findAllParentObjectsWithId(child, parents);
+			if (Object.hasOwn(object, key)) {
+				const child = object[key];
+				// Check if child is a non-null object but not an array (as arrays might not have id properties in the same sense)
+				if (child && typeof child === "object" && !Array.isArray(child)) {
+					findAllParentObjectsWithId(child, parents);
+				}
 			}
 		}
 	}

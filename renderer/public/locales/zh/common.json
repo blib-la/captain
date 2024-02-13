@@ -1,4 +1,5 @@
 {
+  "all": "全部",
   "autoCaption": "自动字幕",
   "batch": "批次",
   "batchEdit": "批量编辑",
@@ -20,6 +21,7 @@
   "directory": "目录",
   "download": "下载",
   "downloading": "下载中",
+  "empty": "空",
   "exampleResponse": "示例响应",
   "excludedTags": "排除的标签",
   "feedback": "反馈",
@@ -84,25 +86,28 @@
       "userPreferences": "用户偏好"
     }
   },
+  "prefix": "前缀",
   "previous": "上一个",
   "price": "价格",
   "readMore": "阅读更多",
+  "regexp": "正则表达式",
   "reset": "重置",
   "resetTransform": "重置变换",
   "save": "保存",
+  "scopeForEditing": "编辑范围",
+  "searchAndReplace": "搜索与替换",
   "seeAll": "查看全部",
   "selectFolder": "选择文件夹",
+  "selectImages": "选择图片",
+  "selected": "已选",
   "send": "发送",
   "settings": "设置",
   "show": "显示",
+  "submit": "提交",
+  "suffix": "后缀",
   "termsOfUse": "使用条款",
   "training": "培训",
   "updateMarketplace": "更新市场",
   "zoomIn": "放大",
-  "zoomOut": "缩小",
-  "prefix": "前缀",
-  "suffix": "后缀",
-  "submit": "提交",
-  "searchAndReplace": "搜索与替换",
-  "regexp": "正则表达式"
+  "zoomOut": "缩小"
 }

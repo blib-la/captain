@@ -19,12 +19,17 @@ export interface DatasetEntry {
 	servedImageFile: string;
 	captionFile: string;
 	caption: string;
+	selected?: boolean;
 }
 
 export const datasetsAtom = atom<Dataset[]>([]);
 export const projectAtom = atom<Project | false>(false);
 export const selectedImageAtom = atom(0);
-export const captionOnlyEmptyAtom = atom(true);
+export const canSelectImagesAtom = atom(false);
+export const editCaptionScopeAtom = atomWithStorage<"all" | "empty" | "selected">(
+	"editCaptionScope",
+	"empty"
+);
 export const imagesAtom = atom<DatasetEntry[]>([]);
 export const directoryAtom = atom("");
 export const modelDownloadNoteAtom = atomWithStorage("modelDownloadNote", true);

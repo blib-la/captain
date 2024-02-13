@@ -1,4 +1,5 @@
 {
+  "all": "הכל",
   "autoCaption": "כיתוב אוטומטי",
   "batch": "אצווה",
   "batchEdit": "עריכת אצווה",
@@ -20,6 +21,7 @@
   "directory": "תיקייה",
   "download": "הורדה",
   "downloading": "מוריד",
+  "empty": "ריק",
   "exampleResponse": "תגובת דוגמה",
   "excludedTags": "תגיות מוצאות",
   "feedback": "משוב",
@@ -84,25 +86,28 @@
       "userPreferences": "העדפות משתמש"
     }
   },
+  "prefix": "קידומת",
   "previous": "הקודם",
   "price": "מחיר",
   "readMore": "קרא עוד",
+  "regexp": "ביטויים רגולריים",
   "reset": "איפוס",
   "resetTransform": "אפס שינויים",
   "save": "שמור",
+  "scopeForEditing": "היקף לעריכה",
+  "searchAndReplace": "חפש והחלף",
   "seeAll": "ראה הכל",
   "selectFolder": "בחר תיקייה",
+  "selectImages": "בחר תמונות",
+  "selected": "נבחרים",
   "send": "שלח",
   "settings": "הגדרות",
   "show": "הצג",
+  "submit": "שלח",
+  "suffix": "סיומת",
   "termsOfUse": "תנאי שימוש",
   "training": "הדרכה",
   "updateMarketplace": "עדכן את השוק",
   "zoomIn": "התקרב",
-  "zoomOut": "התרחק",
-  "prefix": "קידומת",
-  "suffix": "סיומת",
-  "submit": "שלח",
-  "searchAndReplace": "חפש והחלף",
-  "regexp": "ביטויים רגולריים"
+  "zoomOut": "התרחק"
 }

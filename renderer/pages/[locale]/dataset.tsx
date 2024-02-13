@@ -1,8 +1,10 @@
+import ChecklistIcon from "@mui/icons-material/Checklist";
 import EditIcon from "@mui/icons-material/Edit";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import ErrorIcon from "@mui/icons-material/Error";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import PhotoFilterIcon from "@mui/icons-material/PhotoFilter";
+import { Checkbox } from "@mui/joy";
 import Badge from "@mui/joy/Badge";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
@@ -22,7 +24,6 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import type { CSSProperties } from "react";
-import { useMemo } from "react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeGrid } from "react-window";
@@ -32,8 +33,8 @@ import { CAPTION, CAPTION_RUNNING, DATASET, FOLDER } from "../../../main/helpers
 
 import { ScreenReaderOnly } from "@/atoms/screen-reader-only";
 import {
+	canSelectImagesAtom,
 	captioningErrorAtom,
-	captionOnlyEmptyAtom,
 	captionRunningAtom,
 	directoryAtom,
 	imagesAtom,
@@ -44,7 +45,7 @@ import { useColumns } from "@/ions/hooks/columns";
 import { useKeyboardControlledImagesNavigation } from "@/ions/hooks/keyboard-controlled-images-navigation";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 import { CustomScrollbarsVirtualList } from "@/organisms/custom-scrollbars";
-import { CaptionModal } from "@/organisms/modals/caption";
+import { CaptionModal, useFilteredImages } from "@/organisms/modals/caption";
 import { BatchEditModal } from "@/organisms/modals/caption/batch-edit";
 import { ZoomImageStage } from "@/organisms/zoomable-image-stage";
 
@@ -58,15 +59,43 @@ export function ImageGridCell({
 	style: CSSProperties;
 }) {
 	const reference = useRef<HTMLDivElement>(null);
-	const [images] = useAtom(imagesAtom);
+	const [images, setImages] = useAtom(imagesAtom);
 	const [selectedImage, setSelectedImage] = useAtom(selectedImageAtom);
 	const columnCount = useColumns({ xs: 2, sm: 3, md: 4, lg: 6 });
 	const { t } = useTranslation(["common"]);
+	const [canSelectImages, setCanSelectImages] = useAtom(canSelectImagesAtom);
+
 	const index = rowIndex * columnCount + columnIndex;
 	const image = images[index];
 
 	return (
 		<Box ref={reference} style={style}>
+			{canSelectImages && image && (
+				<Box
+					sx={theme => ({
+						position: "absolute",
+						top: 0,
+						left: 0,
+						zIndex: theme.zIndex.badge + 1,
+					})}
+				>
+					<Checkbox
+						checked={image.selected}
+						onChange={event => {
+							setImages(previousState =>
+								previousState.map(image_ =>
+									image_ === image
+										? {
+												...image_,
+												selected: event.target.checked,
+											}
+										: image_
+								)
+							);
+						}}
+					/>
+				</Box>
+			)}
 			{image && (
 				<Badge
 					color={image.caption ? "success" : "danger"}
@@ -151,7 +180,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	const [progressCount, setProgressCount] = useState("");
 	const [, setDirectory] = useAtom(directoryAtom);
 	const [captionRunning, setCaptionRunning] = useAtom(captionRunningAtom);
-	const [onlyEmpty, setOnlyEmpty] = useAtom(captionOnlyEmptyAtom);
+	const [, setCanSelectImages] = useAtom(canSelectImagesAtom);
 
 	const { data: captionRunningData } = useSWR(CAPTION_RUNNING);
 
@@ -160,10 +189,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			return window.ipc.getDataset(id);
 		}
 	});
-	const filteredImages = useMemo(
-		() => (onlyEmpty ? images.filter(image => !image.caption) : images),
-		[onlyEmpty, images]
-	);
+	const filteredImages = useFilteredImages();
 	const saveCaptionToFile = useCallback(async () => {
 		const image = images[selectedImage];
 		if (image) {
@@ -291,11 +317,28 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 							/>
 						)}
 					</Box>
-					<Tooltip title={t("common:batchEdit")} sx={{ display: { md: "none" } }}>
+					<Tooltip title={t("common:selectImages")} sx={{ display: { lg: "none" } }}>
+						<Button
+							startDecorator={<ChecklistIcon />}
+							sx={{
+								width: { xs: 36, lg: "auto" },
+								px: 1.5,
+								whiteSpace: "nowrap",
+								justifyContent: "flex-start",
+								overflow: "hidden",
+							}}
+							onClick={() => {
+								setCanSelectImages(previousState => !previousState);
+							}}
+						>
+							{t("common:selectImages")}
+						</Button>
+					</Tooltip>
+					<Tooltip title={t("common:batchEdit")} sx={{ display: { lg: "none" } }}>
 						<Button
 							startDecorator={<EditNoteIcon />}
 							sx={{
-								width: { xs: 36, md: "auto" },
+								width: { xs: 36, lg: "auto" },
 								px: 1.5,
 								whiteSpace: "nowrap",
 								justifyContent: "flex-start",
@@ -308,11 +351,11 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 							{t("common:batchEdit")}
 						</Button>
 					</Tooltip>
-					<Tooltip title={t("common:openFolder")} sx={{ display: { md: "none" } }}>
+					<Tooltip title={t("common:openFolder")} sx={{ display: { lg: "none" } }}>
 						<Button
 							startDecorator={<FolderOpenIcon />}
 							sx={{
-								width: { xs: 36, md: "auto" },
+								width: { xs: 36, lg: "auto" },
 								px: 1.5,
 								whiteSpace: "nowrap",
 								justifyContent: "flex-start",

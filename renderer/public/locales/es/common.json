@@ -1,4 +1,5 @@
 {
+  "all": "Todas",
   "autoCaption": "Auto Subtítulo",
   "batch": "Lote",
   "batchEdit": "Edición por lotes",
@@ -20,6 +21,7 @@
   "directory": "Directorio",
   "download": "Descargar",
   "downloading": "Descargando",
+  "empty": "Vacío",
   "exampleResponse": "Respuesta de Ejemplo",
   "excludedTags": "Etiquetas excluidas",
   "feedback": "Comentarios",
@@ -84,25 +86,28 @@
       "userPreferences": "Preferencias del Usuario"
     }
   },
+  "prefix": "Prefijo",
   "previous": "Anterior",
   "price": "Precio",
   "readMore": "Leer Más",
+  "regexp": "Expresiones regulares",
   "reset": "Restablecer",
   "resetTransform": "Restablecer Transformación",
   "save": "Guardar",
+  "scopeForEditing": "Alcance para la edición",
+  "searchAndReplace": "Buscar y reemplazar",
   "seeAll": "Ver todos",
   "selectFolder": "seleccionar carpeta",
+  "selectImages": "Seleccionar imágenes",
+  "selected": "Seleccionadas",
   "send": "Enviar",
   "settings": "Configuración",
   "show": "mostrar",
+  "submit": "Enviar",
+  "suffix": "Sufijo",
   "termsOfUse": "Términos de Uso",
   "training": "Entrenamiento",
   "updateMarketplace": "Actualizar Mercado",
   "zoomIn": "Aumentar",
-  "zoomOut": "Disminuir",
-  "prefix": "Prefijo",
-  "suffix": "Sufijo",
-  "submit": "Enviar",
-  "searchAndReplace": "Buscar y reemplazar",
-  "regexp": "Expresiones regulares"
+  "zoomOut": "Disminuir"
 }

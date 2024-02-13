@@ -1,4 +1,5 @@
 {
+  "all": "Tutte",
   "autoCaption": "Auto Didascalia",
   "batch": "Gruppo",
   "batchEdit": "Modifica in batch",
@@ -20,6 +21,7 @@
   "directory": "Directory",
   "download": "Scarica",
   "downloading": "Scaricando",
+  "empty": "Vuoto",
   "exampleResponse": "Esempio di Risposta",
   "excludedTags": "Tag esclusi",
   "feedback": "Feedback",
@@ -84,25 +86,28 @@
       "userPreferences": "Preferenze Utente"
     }
   },
+  "prefix": "Prefisso",
   "previous": "Precedente",
   "price": "Prezzo",
   "readMore": "Leggi di più",
+  "regexp": "Espressioni regolari",
   "reset": "Reset",
   "resetTransform": "Reimposta Trasformazione",
   "save": "Salva",
+  "scopeForEditing": "Ambito di modifica",
+  "searchAndReplace": "Cerca e sostituisci",
   "seeAll": "Vedi tutto",
   "selectFolder": "seleziona cartella",
+  "selectImages": "Seleziona immagini",
+  "selected": "Selezionate",
   "send": "Inviare",
   "settings": "Impostazioni",
   "show": "mostra",
+  "submit": "Invia",
+  "suffix": "Suffisso",
   "termsOfUse": "Termini di utilizzo",
   "training": "Formazione",
   "updateMarketplace": "Aggiorna Marketplace",
   "zoomIn": "Ingrandire",
-  "zoomOut": "Rimpicciolire",
-  "prefix": "Prefisso",
-  "suffix": "Suffisso",
-  "submit": "Invia",
-  "searchAndReplace": "Cerca e sostituisci",
-  "regexp": "Espressioni regolari"
+  "zoomOut": "Rimpicciolire"
 }

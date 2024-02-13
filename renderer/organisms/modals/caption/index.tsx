@@ -1,9 +1,11 @@
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
+import CheckAllIcon from "@mui/icons-material/DoneAll";
 import ErrorIcon from "@mui/icons-material/Error";
+import RuleIcon from "@mui/icons-material/Rule";
 import StyleIcon from "@mui/icons-material/Style";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import WarningIcon from "@mui/icons-material/Warning";
-import { Checkbox } from "@mui/joy";
+import { ToggleButtonGroup } from "@mui/joy";
 import Alert from "@mui/joy/Alert";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
@@ -18,6 +20,7 @@ import Select from "@mui/joy/Select";
 import Slider from "@mui/joy/Slider";
 import Stack from "@mui/joy/Stack";
 import { styled } from "@mui/joy/styles";
+import SvgIcon from "@mui/joy/SvgIcon";
 import Tab from "@mui/joy/Tab";
 import TabList from "@mui/joy/TabList";
 import TabPanel from "@mui/joy/TabPanel";
@@ -37,7 +40,7 @@ import {
 	OPENAI_API_KEY,
 } from "../../../../main/helpers/constants";
 
-import { captioningErrorAtom, imagesAtom, captionOnlyEmptyAtom } from "@/ions/atoms";
+import { captioningErrorAtom, imagesAtom, editCaptionScopeAtom } from "@/ions/atoms";
 import { PasswordField } from "@/organisms/password-field";
 
 export const CodeMirror = dynamic(
@@ -60,6 +63,64 @@ export const defaultGptOptions = {
 ]`,
 };
 
+export function EmptyCaptionIcon() {
+	return (
+		<SvgIcon>
+			<path d="M3 13H15V11H3M3 6V8H21V6M3 18H9V16H3V18M22.54 16.88L20.41 19L22.54 21.12L21.12 22.54L19 20.41L16.88 22.54L15.47 21.12L17.59 19L15.47 16.88L16.88 15.47L19 17.59L21.12 15.46L22.54 16.88" />
+		</SvgIcon>
+	);
+}
+
+export function useFilteredImages() {
+	const [filterScope] = useAtom(editCaptionScopeAtom);
+	const [images, setImages] = useAtom(imagesAtom);
+	return useMemo(() => {
+		switch (filterScope) {
+			case "empty": {
+				return images.filter(image => !image.caption);
+			}
+
+			case "selected": {
+				return images.filter(image => image.selected);
+			}
+
+			case "all":
+			default: {
+				return images;
+			}
+		}
+	}, [filterScope, images]);
+}
+
+export function EditCaptionScope() {
+	const { t } = useTranslation(["common"]);
+	const [value, setValue] = useAtom(editCaptionScopeAtom);
+
+	return (
+		<Box>
+			<Typography sx={{ my: 1 }}>{t("common:scopeForEditing")}</Typography>
+			<ToggleButtonGroup
+				value={value}
+				onChange={(event, newValue) => {
+					if (newValue) {
+						setValue(newValue);
+					}
+				}}
+			>
+				<Button value="all" startDecorator={<CheckAllIcon />}>
+					{t("common:all")}
+				</Button>
+				<Button value="empty" startDecorator={<EmptyCaptionIcon />}>
+					{t("common:empty")}
+				</Button>
+				<Button value="selected" startDecorator={<RuleIcon />}>
+					{t("common:selected")}
+				</Button>
+			</ToggleButtonGroup>
+		</Box>
+	);
+}
+
 export function GPTVCaptionModal({
 	onClose,
 	onStart,
@@ -69,7 +130,6 @@ export function GPTVCaptionModal({
 	onStart(): void | Promise<void>;
 	onDone(): void | Promise<void>;
 }) {
-	const [onlyEmpty, setOnlyEmpty] = useAtom(captionOnlyEmptyAtom);
 	const [openAiApiKey, setOpenAiApiKey] = useState("");
 	const [gptVisionOptions, setGptVisionOptions] = useState(defaultGptOptions);
 	const [confirmGpt, setConfirmGpt] = useState(false);
@@ -203,15 +263,7 @@ export function GPTVCaptionModal({
 						{t("common:reset")}
 					</Button>
 				</Box>
-				<Box sx={{ px: 0.5, pt: 2 }}>
-					<Checkbox
-						label={t("common:onlyCaptionEmptyItems")}
-						checked={onlyEmpty}
-						onChange={event => {
-							setOnlyEmpty(event.target.checked);
-						}}
-					/>
-				</Box>
+
 				<Box component="label" sx={{ px: 2, pt: 3, display: "block" }}>
 					<Box>{t("common:batch")}</Box>
 					<Slider
@@ -299,9 +351,7 @@ export function WD14CaptionModal({
 	onStart(): void | Promise<void>;
 	onDone(): void | Promise<void>;
 }) {
-	const [images] = useAtom(imagesAtom);
 	const [options, setOptions] = useState({ batchSize: 10, model: "", exclude: "" });
-	const [onlyEmpty, setOnlyEmpty] = useAtom(captionOnlyEmptyAtom);
 	const { t } = useTranslation(["common"]);
 	const [, setCaptioningError] = useAtom(captioningErrorAtom);
 	const { data: loadingModel } = useSWR("SmilingWolf/wd-v1-4-convnextv2-tagger-v2/model");
@@ -319,10 +369,7 @@ export function WD14CaptionModal({
 		}
 	}, [checkpointsData]);
 
-	const filteredImages = useMemo(
-		() => (onlyEmpty ? images.filter(image => !image.caption) : images),
-		[onlyEmpty, images]
-	);
+	const filteredImages = useFilteredImages();
 
 	return (
 		<Stack
@@ -427,15 +474,6 @@ export function WD14CaptionModal({
 						}}
 					/>
 				</FormControl>
-				<Box sx={{ px: 0.5, pt: 2 }}>
-					<Checkbox
-						label={t("common:onlyCaptionEmptyItems")}
-						checked={onlyEmpty}
-						onChange={event => {
-							setOnlyEmpty(event.target.checked);
-						}}
-					/>
-				</Box>
 				<Box component="label" sx={{ px: 2, pt: 3, display: "block" }}>
 					<Box>{t("common:batch")}</Box>
 					<Slider
@@ -481,6 +519,7 @@ export function CaptionModal({
 				}}
 			>
 				<ModalClose aria-label={t("common:close")} />
+				<EditCaptionScope />
 				<Typography>{t("common:pages.dataset.chooseCaptioningMethod")}:</Typography>
 				<Tabs
 					defaultValue={0}

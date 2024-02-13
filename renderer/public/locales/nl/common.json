@@ -1,4 +1,5 @@
 {
+  "all": "Alles",
   "autoCaption": "Automatische bijschrift",
   "batch": "Batch",
   "batchEdit": "Batchbewerking",
@@ -20,6 +21,7 @@
   "directory": "Map",
   "download": "Downloaden",
   "downloading": "Downloaden",
+  "empty": "Leeg",
   "exampleResponse": "Voorbeeldantwoord",
   "excludedTags": "Uitgesloten tags",
   "feedback": "Feedback",
@@ -84,25 +86,28 @@
       "userPreferences": "Gebruikersvoorkeuren"
     }
   },
+  "prefix": "Voorvoegsel",
   "previous": "Vorige",
   "price": "Prijs",
   "readMore": "Lees Meer",
+  "regexp": "Reguliere expressies",
   "reset": "Resetten",
   "resetTransform": "Transformeren Resetten",
   "save": "Opslaan",
+  "scopeForEditing": "Bereik voor bewerking",
+  "searchAndReplace": "Zoeken & vervangen",
   "seeAll": "Bekijk alles",
   "selectFolder": "map selecteren",
+  "selectImages": "Selecteer afbeeldingen",
+  "selected": "Geselecteerd",
   "send": "Verzenden",
   "settings": "Instellingen",
   "show": "tonen",
+  "submit": "Verzenden",
+  "suffix": "Achtervoegsel",
   "termsOfUse": "Gebruiksvoorwaarden",
   "training": "Training",
   "updateMarketplace": "Marktplaats bijwerken",
   "zoomIn": "Inzoomen",
-  "zoomOut": "Uitzoomen",
-  "prefix": "Voorvoegsel",
-  "suffix": "Achtervoegsel",
-  "submit": "Verzenden",
-  "searchAndReplace": "Zoeken & vervangen",
-  "regexp": "Reguliere expressies"
+  "zoomOut": "Uitzoomen"
 }
