@@ -12,7 +12,7 @@ Captain currently supports English, German, Spanish, French, Italian, Japanese, 
 </p>
 
 <p align="center">
-  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-beta.7/Captain.Setup.1.0.0-beta.7.exe">
+  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-beta.8/Captain.Setup.1.0.0-beta.8.exe">
     <img src="./docs/download.svg" alt="Download Captain" width="300">
   </a>
 </p>

@@ -1,3 +1,12 @@
+# [1.0.0-beta.8](https://github.com/blib-la/captain/compare/v1.0.0-beta.7...v1.0.0-beta.8) (2024-02-14)
+
+
+### Bug Fixes
+
+* downloads not possible ([#38](https://github.com/blib-la/captain/issues/38)) ([9f0dc48](https://github.com/blib-la/captain/commit/9f0dc482d77b697ffafe34f67ab22578a2fde242))
+
+
+
 # [1.0.0-beta.7](https://github.com/blib-la/captain/compare/v1.0.0-beta.6...v1.0.0-beta.7) (2024-02-14)
 
 
