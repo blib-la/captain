@@ -14,7 +14,7 @@ import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 
-import { INSTALLING_PYTHON } from "../../../main/helpers/constants";
+import { APP, INSTALLING_PYTHON } from "../../../main/helpers/constants";
 
 import { StyledImage } from "@/atoms/image/styled";
 import { directoryAtom, imagesAtom, datasetsAtom } from "@/ions/atoms";
@@ -36,7 +36,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	const [newDatasetOpen, setNewDatasetOpen] = useState(false);
 	const [appReady, setAppReady] = useState(false);
 
-	const { data: pythonInstallingData } = useSWR(`${INSTALLING_PYTHON}`);
+	const { data: pythonInstallingData } = useSWR(INSTALLING_PYTHON);
 
 	function handleCloseNewDataset() {
 		setNewDatasetOpen(false);
@@ -61,6 +61,16 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			setAppReady(!pythonInstallingData);
 		}
 	}, [pythonInstallingData]);
+
+	useEffect(() => {
+		const unsubscribe = window.ipc.on(`${APP}:ready`, () => {
+			console.log("APP IS READY");
+			setAppReady(true);
+		});
+		return () => {
+			unsubscribe();
+		};
+	}, []);
 
 	return (
 		<>

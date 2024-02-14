@@ -2,11 +2,13 @@ param(
     [string]$v = "3.10.9",
     [string]$r = ".\requirements.txt",
     [string]$d = ".\python-embedded",
+    [string]$c,
     [string]$a
 )
 
 $pythonVersion = $v
 $requirementsPath = $r
+$captainVersion = $c
 $zipPath = "python_embedded-$v.zip"
 $pythonEmbeddedPath = $d
 
@@ -69,7 +71,8 @@ if (Test-Path $requirementsPath) {
     # Check if pip install was successful
     if ($LASTEXITCODE -eq 0) {
         $flagFilePath = Join-Path -Path $pythonEmbeddedPath -ChildPath "installation_successful.flag"
-        "Installation was successful" | Out-File $flagFilePath
+        $flagContent = $captainVersion
+        $flagContent | Out-File $flagFilePath -Encoding UTF8
         Write-Host "Installation successful. Flag file created at $flagFilePath"
     } else {
         Write-Host "Installation failed. Check the error messages above."
