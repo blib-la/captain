@@ -18,10 +18,11 @@ Captain currently supports English, German, Spanish, French, Italian, Japanese, 
 </p>
 
 <p align="center">
-    <img src="./docs/marketplace.png" alt="Download Captain" width="900">
+    <img src="https://github.com/blib-la/captain/assets/1148334/7fef8f62-f522-44e4-a668-ee66a43ede6e" alt="The captain marketplace" width="900">
 </p>
 
-https://github.com/blib-la/captain/assets/1148334/eecac351-ec1e-4cca-aaf7-89891c436576
+https://github.com/blib-la/captain/assets/1148334/e9f9419e-f6d7-4f35-96a7-667c18b799e2
+
 
 <!-- toc -->
 
