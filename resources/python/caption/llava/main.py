@@ -22,26 +22,11 @@ def inference(image_path, prompt, pipe, temperature, top_p, length_penalty, repe
     generated_text = outputs[0]["generated_text"]
     return generated_text
 
-def extract_tags(generated_text):
+def extract_text(generated_text):
     # Extract text after "ASSISTANT:"
-    tags_text = generated_text.split("ASSISTANT:")[1].strip()  
+    text = generated_text.split("ASSISTANT:")[1].strip()
 
-    # Split by comma and strip spaces
-    tags = [tag.strip() for tag in tags_text.split(',') if tag.strip()]  
-
-     # Clean the tags to remove unwanted characters
-    cleaned_tags = clean_tags(tags)
-
-    return cleaned_tags
-
-def clean_tags(tags, unwanted_chars=".#"):
-    # Remove unwanted characters from each tag
-    cleaned_tags = []
-    for tag in tags:
-        for char in unwanted_chars:
-            tag = tag.replace(char, "")
-        cleaned_tags.append(tag.strip())
-    return cleaned_tags
+    return text
 
 def main(args):
     quantization_config = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_compute_dtype=torch.float16)
@@ -52,8 +37,8 @@ def main(args):
     for image_path in args.image_paths:
         print(f"Processing image: {image_path}")
         generated_text = inference(image_path, prompt, pipe, args.temperature, args.top_p, args.length_penalty, args.repetition_penalty, args.max_length, args.min_length, args.do_sample)
-        tags = extract_tags(generated_text)
-        results.append({"filePath": image_path, "tags": tags})
+        text = extract_text(generated_text)
+        results.append({"filePath": image_path, "output": text})
 
     # Convert the results list to a JSON-formatted string
     json_results = json.dumps(results, indent=2)
@@ -62,8 +47,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate detailed captions for images using LLaVA model.')
     parser.add_argument('--image_paths', nargs='+', type=str, help='Paths to the input images', required=True)
-    parser.add_argument('--model_id', type=str, help='Model ID for the transformer model', default="D:\\dev\\huggingface\\llava-1.5-7b-hf")
-    # Describe the image in very intense details as a list of booru tags.
+    parser.add_argument('--model_path', type=str, help='Absolute path to the directory that contains the model', required=True)
     parser.add_argument('--prompt', type=str, help='Prompt for guiding the caption generation', default="Describe the image in detail as a list of simple booru tags. Don't tell me anything else.")
     parser.add_argument('--max_length', type=int, help='Maximum length of the generated captions', default=200)
     parser.add_argument('--min_length', type=int, help='Minimum length of the generated captions', default=75)
