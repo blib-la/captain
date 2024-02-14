@@ -48,7 +48,13 @@ function SidebarButton({
 			title={children}
 			sx={{ display: { xs: disabled ? "none" : undefined, xl: "none" } }}
 		>
-			<Box sx={{ width: "100%", display: "flex", "--focus-outline-offset": "-2px" }}>
+			<Box
+				sx={{
+					width: "100%",
+					"--focus-outline-offset": "-2px",
+					display: disabled ? "none" : "flex",
+				}}
+			>
 				{href && !target ? (
 					<Link legacyBehavior passHref href={href_}>
 						<Button
@@ -192,7 +198,7 @@ export function Layout({ children }: { children?: ReactNode }) {
 				<SidebarButton disabled href="/training" startDecorator={<FitnessCenterIcon />}>
 					{t("common:training")}
 				</SidebarButton>
-				<SidebarButton href="/livepainting" startDecorator={<BrushIcon />}>
+				<SidebarButton disabled href="/livepainting" startDecorator={<BrushIcon />}>
 					{t("common:livePainting")}
 				</SidebarButton>
 				<Box sx={{ flex: 1 }} />

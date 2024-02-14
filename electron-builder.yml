@@ -10,7 +10,7 @@ files:
       - package.json
       - app
       - resources/python/**/*
-      - resources/python-embeded/**/*
+      - resources/powershell/**/*
 publish: null
 nsis:
   oneClick: false
@@ -18,4 +18,4 @@ nsis:
 asar: true
 asarUnpack:
   - "resources/python/**/*"
-  - "resources/python-embeded/**/*"
+  - "resources/powershell/**/*"

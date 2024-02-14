@@ -1,42 +1,33 @@
 import fsp from "fs/promises";
+import type { Dirent } from "node:fs";
 import path from "path";
 
+import axios from "axios";
 import { BrowserWindow, ipcMain, shell } from "electron";
 import { download } from "electron-dl";
-import { v4 } from "uuid";
 
 import package_ from "../../package.json";
 
-import { runBlip, runGPTV, runWd14 } from "./caption";
 import {
 	APP,
-	BLIP,
 	CAPTION,
 	DATASET,
-	EXISTING_PROJECT,
+	DATASETS,
+	DOWNLOAD,
 	FEEDBACK,
 	FETCH,
 	FOLDER,
-	GPTV,
-	IMAGE_CACHE,
 	LOCALE,
 	MARKETPLACE_INDEX,
+	MARKETPLACE_INDEX_DATA,
 	MODEL,
 	MODELS,
-	PROJECT,
-	PROJECTS,
 	STABLE_DIFFUSION_SETTINGS,
 	STORE,
-	WD14,
 } from "./constants";
 import { store } from "./store";
-import type { Project } from "./types";
-import {
-	createMarketplace,
-	createMinifiedImageCache,
-	getUserData,
-	openNewGitHubIssue,
-} from "./utils";
+import type { Dataset } from "./types";
+import { getUserData, openNewGitHubIssue } from "./utils";
 
 // Handling the 'STORE:set' channel for setting multiple values in the store asynchronously.
 ipcMain.handle(`${STORE}:set`, async (event, state: Record<string, unknown>) => {
@@ -96,7 +87,12 @@ ipcMain.on(`${APP}:maximize`, () => {
 
 ipcMain.handle(
 	`${MODEL}:download`,
-	async (_event, type: string, url: string, { storeKey }: { id: string; storeKey: string }) => {
+	async (
+		_event,
+		type: string,
+		url: string,
+		{ storeKey, id }: { id: string; storeKey: string }
+	) => {
 		const window_ = BrowserWindow.getFocusedWindow();
 		if (!window_) {
 			return;
@@ -109,9 +105,15 @@ ipcMain.handle(
 		store.set(storeKey, true);
 		console.log({ storeKey });
 		try {
-			const directory = settings[`${type}s` as keyof typeof settings];
+			let directory = settings[type as keyof typeof settings];
+			if (type === "wd14") {
+				directory = getUserData("Captain_Data", "downloads", "caption", "wd14", id);
+			}
+
+			await fsp.mkdir(directory, { recursive: true });
+
 			console.log("START DOWNLOADING >>>", type, "from:", url, ", to:", directory);
-			await download(window_, url, { directory });
+			await download(window_, url, { directory, overwrite: true });
 			console.log("DONE DOWNLOADING", type, url, directory);
 		} catch (error) {
 			console.log(error);
@@ -121,8 +123,34 @@ ipcMain.handle(
 	}
 );
 
+ipcMain.handle(
+	`${DOWNLOAD}`,
+	async (_event, url: string, directory_: string, { storeKey }: { storeKey: string }) => {
+		const window_ = BrowserWindow.getFocusedWindow();
+		if (!window_) {
+			return;
+		}
+
+		store.set(storeKey, true);
+		console.log({ storeKey });
+
+		const directory = getUserData("Captain_Data", "downloads", directory_);
+		await fsp.mkdir(directory, { recursive: true });
+
+		try {
+			console.log("START DOWNLOADING >>>", "from:", url, ", to:", directory);
+			await download(window_, url, { directory });
+			console.log("DONE DOWNLOADING", url, directory);
+		} catch (error) {
+			console.log(error);
+		} finally {
+			store.set(storeKey, false);
+		}
+	}
+);
+
 async function readFilesRecursively(directory: string) {
-	let files: string[] = [];
+	let files: Dirent[] = [];
 	const items = await fsp.readdir(directory, { withFileTypes: true });
 
 	for (const item of items) {
@@ -130,139 +158,12 @@ async function readFilesRecursively(directory: string) {
 		if (item.isDirectory()) {
 			files = [...files, ...(await readFilesRecursively(fullPath))];
 		} else {
-			files.push(item.name);
+			files.push(item);
 		}
 	}
 
 	return files;
 }
-
-ipcMain.handle(`${MODELS}:get`, async (_event, type: string) => {
-	const settings = store.get(STABLE_DIFFUSION_SETTINGS) as {
-		checkpoints: string;
-		loras: string;
-	};
-	try {
-		const directory = settings[`${type}s` as keyof typeof settings];
-		return readFilesRecursively(directory);
-	} catch (error) {
-		console.log(error);
-		return [];
-	}
-});
-
-// Handler to fetch project details from the 'projects' directory.
-ipcMain.handle(`${PROJECTS}:get`, async (): Promise<Project[]> => {
-	const projectsDirectory = getUserData("projects");
-
-	try {
-		const files = await fsp.readdir(projectsDirectory);
-		const projects = await Promise.all(
-			files.map(async (file): Promise<null | Project> => {
-				// For each file or directory, determine if it's a directory (a project).
-				const projectPath = path.join(projectsDirectory, file);
-				const stat = await fsp.stat(projectPath);
-				if (stat.isDirectory()) {
-					// If it's a directory, attempt to read the project configuration file.
-					const configPath = path.join(projectPath, "project.json");
-					try {
-						const projectConfig = await fsp.readFile(configPath, "utf8");
-						return JSON.parse(projectConfig) as Project;
-					} catch {
-						return null;
-					}
-				} else {
-					return null;
-				}
-			})
-		);
-
-		return projects.filter(Boolean) as Project[];
-	} catch (error) {
-		console.error("Error fetching projects:", error);
-		// In case of an error, return an empty array.
-		return [];
-	}
-});
-
-// Handler to fetch image files for a given project.
-ipcMain.handle(`${EXISTING_PROJECT}:get`, async (_event, project: Project) => {
-	const filesDirectory = getUserData("projects", project.id, "files");
-	const sourceDirectory = project.source;
-	const files = await fsp.readdir(filesDirectory);
-	const images = files.filter(file => /\.(jpg|jpeg|png)$/i.test(file));
-
-	return Promise.all(
-		images.map(async image => {
-			let caption = "";
-			const captionFile = path
-				.join(sourceDirectory, image)
-				.replace(/\.(jpg|jpeg|png)$/i, ".txt");
-			try {
-				caption = await fsp.readFile(captionFile, "utf8");
-			} catch (error) {
-				console.log(error);
-			}
-
-			return {
-				image: path.join(filesDirectory, image),
-				captionFile,
-				caption,
-			};
-		})
-	);
-});
-
-// Handler to create an image cache for a directory.
-ipcMain.handle(`${IMAGE_CACHE}:create`, async (_event, directory: string, name: string) => {
-	const files = await fsp.readdir(directory);
-	const images = files.filter(file => /\.(jpg|jpeg|png)$/i.test(file));
-	// Generate a unique ID for the cache directory.
-	const id = v4();
-	const outDirectory = getUserData("projects", id);
-	const outFilesDirectory = getUserData("projects", id, "files");
-	await fsp.mkdir(outFilesDirectory, { recursive: true });
-
-	const projectConfiguration: Project = {
-		id,
-		name,
-		files: outFilesDirectory,
-		cover: images[0],
-		source: directory,
-	};
-
-	await fsp.writeFile(
-		path.join(outDirectory, "project.json"),
-		JSON.stringify(projectConfiguration, null, 2)
-	);
-
-	// Process and cache each image file.
-	return {
-		config: projectConfiguration,
-		images: await Promise.all(
-			images.map(async image => {
-				let caption = "";
-				const captionFile = path
-					.join(directory, image)
-					.replace(/\.(jpg|jpeg|png)$/i, ".txt");
-				try {
-					caption = await fsp.readFile(captionFile, "utf8");
-				} catch (error) {
-					console.log(error);
-				}
-
-				return {
-					image: await createMinifiedImageCache(
-						path.join(directory, image),
-						path.join(outFilesDirectory, image)
-					),
-					captionFile,
-					caption,
-				};
-			})
-		),
-	};
-});
 
 // Handler to send feedback to GitHub
 ipcMain.handle(
@@ -290,35 +191,139 @@ Version: ${package_.version}
 	}
 );
 
-ipcMain.handle(`${PROJECT}:delete`, async (_event, id: string) => {
-	const directory = getUserData("projects", id);
-	await fsp.rm(directory, { recursive: true, force: true });
+/// ////  NEW SHIT
+
+ipcMain.handle(`${MODELS}:get`, async (_event, type: "loras" | "checkpoints" | "captions") => {
+	if (type === "captions") {
+		const directory = getUserData("Captain_Data", "downloads", "caption", "wd14");
+		try {
+			const files = await readFilesRecursively(directory);
+			return files
+				.filter(item => item.name.endsWith(".onnx"))
+				.map(item => {
+					const id = path
+						.normalize(item.path)
+						.replaceAll("\\", "/")
+						.split("/")
+						.slice(-2)
+						.join("/");
+					return [id, item.name].join("/");
+				});
+		} catch (error) {
+			console.log(error);
+			return [];
+		}
+	}
+
+	const settings = store.get(STABLE_DIFFUSION_SETTINGS) as {
+		checkpoints: string;
+		loras: string;
+	};
+	try {
+		const directory = settings[type as keyof typeof settings];
+		const files = await readFilesRecursively(directory);
+		return files.filter(dirent => dirent.name.endsWith(".safetensors")).map(({ name }) => name);
+	} catch (error) {
+		console.log(error);
+		return [];
+	}
 });
 
+// Handler to fetch project details from the 'projects' directory.
+ipcMain.handle(`${DATASETS}:get`, async (): Promise<Dataset[]> => {
+	const projectsDirectory = path.join(getUserData("Captain_Data"), "datasets");
+
+	try {
+		const files = await fsp.readdir(projectsDirectory);
+		const projects = await Promise.all(
+			files.map(async (file): Promise<null | Dataset> => {
+				// For each file or directory, determine if it's a directory (a project).
+				const projectPath = path.join(projectsDirectory, file);
+				const stat = await fsp.stat(projectPath);
+				if (stat.isDirectory()) {
+					// If it's a directory, attempt to read the project configuration file.
+					const configPath = path.join(projectPath, "config.json");
+					try {
+						const projectConfig = await fsp.readFile(configPath, "utf8");
+						return JSON.parse(projectConfig) as Dataset;
+					} catch {
+						return null;
+					}
+				} else {
+					return null;
+				}
+			})
+		);
+
+		return projects.filter(Boolean) as Dataset[];
+	} catch (error) {
+		console.error("Error fetching projects:", error);
+		// In case of an error, return an empty array.
+		return [];
+	}
+});
+
+// Handler to get the latest marketplace data
+ipcMain.handle(`${MARKETPLACE_INDEX}:download`, async (event, url: string) => {
+	const window_ = BrowserWindow.getFocusedWindow();
+	if (!window_) {
+		return;
+	}
+
+	const directory = getUserData("Captain_Data", "marketplace");
+
+	await fsp.mkdir(directory, { recursive: true });
+	const { data } = await axios.get<JSON>(url);
+	store.set(MARKETPLACE_INDEX_DATA, data);
+	// Await download(window_, url, { directory, filename: "index.json" });
+	window_.webContents.send(`${MARKETPLACE_INDEX}:updated`, data);
+});
+
+ipcMain.handle(
+	`${DATASET}:update`,
+	async (event, id: string, partial: Partial<Exclude<Dataset, "id">>) => {
+		const dataset = getUserData("Captain_Data", "datasets", id, "config.json");
+		const project = await fsp
+			.readFile(dataset, "utf8")
+			.then(content => JSON.parse(content) as Dataset);
+
+		await fsp.writeFile(dataset, JSON.stringify({ ...project, ...partial, id }, null, 2));
+	}
+);
+
 ipcMain.handle(`${DATASET}:get`, async (_event, id: string) => {
-	const datasetConfig = getUserData("projects", id, "project.json");
-	const filesDirectory = getUserData("projects", id, "files");
-	const dataset = await fsp.readFile(datasetConfig, "utf8").then(content => JSON.parse(content));
-	const sourceDirectory = dataset.source;
-	const files = await fsp.readdir(filesDirectory);
-	const images = files.filter(file => /\.(jpg|jpeg|png)$/i.test(file));
+	const datasetConfig = getUserData("Captain_Data", "datasets", id, "config.json");
+	// TODO We need error handling here
+	const dataset = await fsp
+		.readFile(datasetConfig, "utf8")
+		.then(content => JSON.parse(content) as Dataset);
+	const { files, servedFiles } = dataset;
+	const datasetFiles = await fsp.readdir(files);
+	const imageFiles = datasetFiles.filter(file => file.endsWith(".png"));
 
 	return {
 		dataset,
 		images: await Promise.all(
-			images.map(async image => {
+			imageFiles.map(async imageFile => {
 				let caption = "";
-				const captionFile = path
-					.join(sourceDirectory, image)
-					.replace(/\.(jpg|jpeg|png)$/i, ".txt");
+				const captionFile = imageFile.replace(/\.png/, ".txt");
+				const servedImageFile = imageFile.replace(/\.png/, ".jpg");
 				try {
-					caption = await fsp.readFile(captionFile, "utf8");
-				} catch {
-					// Console.log(error);
+					caption = await fsp.readFile(path.join(files, captionFile), "utf8");
+				} catch (error) {
+					if (error instanceof Error) {
+						console.log(error.message);
+					}
+				} finally {
+					// Console.log(caption);
 				}
 
 				return {
-					image: path.join(filesDirectory, image),
+					files,
+					servedFiles,
+					image: path.join(servedFiles, servedImageFile),
+					imageFile,
+					servedImageFile,
 					captionFile,
 					caption,
 				};
@@ -327,58 +332,14 @@ ipcMain.handle(`${DATASET}:get`, async (_event, id: string) => {
 	};
 });
 
-ipcMain.handle(`${DATASET}:delete`, async (_event, id: string) => {
-	const directory = getUserData("projects", id);
-	await fsp.rm(directory, { recursive: true, force: true });
-});
-
-ipcMain.handle(
-	`${DATASET}:update`,
-	async (event, id: string, partial: Partial<Exclude<Project, "id">>) => {
-		const dataset = getUserData("projects", id, "project.json");
-		const project = await fsp
-			.readFile(dataset, "utf8")
-			.then(content => JSON.parse(content) as Project);
-
-		await fsp.writeFile(dataset, JSON.stringify({ ...project, ...partial, id }, null, 2));
-	}
-);
-
-// Handler to get the latest marketplace data
-ipcMain.handle(`${MARKETPLACE_INDEX}:download`, async (event, gitRepository: string) => {
-	const window_ = BrowserWindow.getFocusedWindow();
-	if (!window_) {
-		return;
-	}
-
-	await createMarketplace(gitRepository);
-	window_.webContents.send(`${MARKETPLACE_INDEX}:updated`, true);
-});
-
 // Handler to save caption values to the file
 ipcMain.handle(
 	`${CAPTION}:save`,
-	async (event, imageData: { captionFile: string; caption: string }) => {
-		await fsp.writeFile(imageData.captionFile, imageData.caption.trim());
+	async (event, imageData: { captionFile: string; caption: string; files: string }) => {
+		console.log({ imageData });
+		await fsp.writeFile(
+			path.join(imageData.files, imageData.captionFile),
+			imageData.caption.trim()
+		);
 	}
-);
-
-// Handler to execute the BLIP image captioning service.
-ipcMain.handle(`${BLIP}:run`, async (_event, directory: string) => runBlip(directory));
-
-// Handler to execute the WD14 image tagging service.
-ipcMain.handle(`${WD14}:run`, async (_event, directory: string) => runWd14(directory));
-
-// Handler to execute the GPT-Vision (GPTV) service.
-ipcMain.handle(
-	`${GPTV}:run`,
-	async (
-		_event,
-		directory: string,
-		options: {
-			batchSize?: number;
-			exampleResponse: string;
-			guidelines: string;
-		}
-	) => runGPTV(directory, options)
 );

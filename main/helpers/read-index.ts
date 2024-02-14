@@ -6,7 +6,7 @@ import fse from "fs-extra";
 import JSON5 from "json5";
 import sharp from "sharp";
 
-import { captainDataPath } from "./utils";
+import { getUserData } from "./utils";
 
 type JsonStructure = Record<string, any>;
 
@@ -43,7 +43,7 @@ export async function createJsonStructure(basePath: string): Promise<JsonStructu
 						.jpeg({ quality: 70, progressive: true })
 						.toBuffer();
 
-					const indexPath = path.join(captainDataPath, "index");
+					const indexPath = path.join(getUserData("Captain_Data"), "index");
 					const previewPath = path.join(indexPath, `${id}.jpg`);
 					object.preview = previewPath;
 					object.meta = exifData;
