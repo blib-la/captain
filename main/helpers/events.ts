@@ -98,10 +98,11 @@ ipcMain.handle(
 			return;
 		}
 
-		const settings = store.get(STABLE_DIFFUSION_SETTINGS) as {
-			checkpoints: string;
-			loras: string;
-		};
+		const settings =
+			(store.get(STABLE_DIFFUSION_SETTINGS) as {
+				checkpoints: string;
+				loras: string;
+			}) ?? {};
 		store.set(storeKey, true);
 		console.log({ storeKey });
 		try {
@@ -215,10 +216,11 @@ ipcMain.handle(`${MODELS}:get`, async (_event, type: "loras" | "checkpoints" | "
 		}
 	}
 
-	const settings = store.get(STABLE_DIFFUSION_SETTINGS) as {
-		checkpoints: string;
-		loras: string;
-	};
+	const settings =
+		(store.get(STABLE_DIFFUSION_SETTINGS) as {
+			checkpoints: string;
+			loras: string;
+		}) ?? {};
 	try {
 		const directory = settings[type as keyof typeof settings];
 		const files = await readFilesRecursively(directory);
