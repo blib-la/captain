@@ -40,6 +40,7 @@ export function runCaptions<T extends CaptionOptions>(
 				}
 			} catch (error) {
 				if (error instanceof Error) {
+					store.set(CAPTION_RUNNING, false);
 					console.log(error.message);
 				}
 			}

@@ -109,5 +109,7 @@
   "training": "Entrenamiento",
   "updateMarketplace": "Actualizar Mercado",
   "zoomIn": "Aumentar",
-  "zoomOut": "Disminuir"
+  "zoomOut": "Disminuir",
+  "initialSetup": "Configuración inicial",
+  "settingUpApp": "Configurando la aplicación. Esto puede tardar un tiempo dependiendo del servidor y la velocidad de internet."
 }

@@ -109,5 +109,7 @@
   "training": "Training",
   "updateMarketplace": "Update Marketplace",
   "zoomIn": "Zoom In",
-  "zoomOut": "Zoom Out"
+  "zoomOut": "Zoom Out",
+  "initialSetup": "Initial Setup",
+  "settingUpApp": "Setting up the app. This might take a while depending on server and internet speed."
 }

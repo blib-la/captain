@@ -109,5 +109,7 @@
   "training": "Formazione",
   "updateMarketplace": "Aggiorna Marketplace",
   "zoomIn": "Ingrandire",
-  "zoomOut": "Rimpicciolire"
+  "zoomOut": "Rimpicciolire",
+  "initialSetup": "Configurazione iniziale",
+  "settingUpApp": "Configurazione dell'app in corso. Potrebbe richiedere del tempo a seconda del server e della velocità di internet."
 }

@@ -17,6 +17,9 @@ export const MODEL = "MODEL";
 export const MODELS = "MODELS";
 export const DOWNLOAD = "DOWNLOAD";
 export const DOWNLOADS = "DOWNLOADS";
+export const INSTALLING_PYTHON = "INSTALLING_PYTHON";
+export const BUILDING_CORE = "BUILDING_CORE";
+
 export const GPT_VISION_OPTIONS = "GPT_VISION_OPTIONS";
 export const LOCALE = "LOCALE";
 export const MARKETPLACE_INDEX = "MARKETPLACE_INDEX";

@@ -109,5 +109,7 @@
   "training": "Training",
   "updateMarketplace": "Marktplaats bijwerken",
   "zoomIn": "Inzoomen",
-  "zoomOut": "Uitzoomen"
+  "zoomOut": "Uitzoomen",
+  "initialSetup": "Eerste instelling",
+  "settingUpApp": "De app wordt ingesteld. Dit kan afhankelijk van de server en internetsnelheid enige tijd duren."
 }

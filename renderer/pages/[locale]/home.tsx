@@ -2,6 +2,7 @@ import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import Grid from "@mui/joy/Grid";
+import LinearProgress from "@mui/joy/LinearProgress";
 import Sheet from "@mui/joy/Sheet";
 import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
@@ -11,6 +12,9 @@ import Head from "next/head";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
+import useSWR from "swr";
+
+import { INSTALLING_PYTHON } from "../../../main/helpers/constants";
 
 import { StyledImage } from "@/atoms/image/styled";
 import { directoryAtom, imagesAtom, datasetsAtom } from "@/ions/atoms";
@@ -30,6 +34,9 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 		i18n: { language: locale },
 	} = useTranslation(["common"]);
 	const [newDatasetOpen, setNewDatasetOpen] = useState(false);
+	const [appReady, setAppReady] = useState(false);
+
+	const { data: pythonInstallingData } = useSWR(`${INSTALLING_PYTHON}`);
 
 	function handleCloseNewDataset() {
 		setNewDatasetOpen(false);
@@ -48,6 +55,12 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	useEffect(() => {
 		setImages([]);
 	}, [setImages]);
+
+	useEffect(() => {
+		if (typeof pythonInstallingData === "boolean") {
+			setAppReady(!pythonInstallingData);
+		}
+	}, [pythonInstallingData]);
 
 	return (
 		<>
@@ -79,6 +92,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 					</Typography>
 					<Box sx={{ flex: 1 }} />
 					<Button
+						disabled={!appReady}
 						color="primary"
 						size="sm"
 						startDecorator={<AddToPhotosIcon />}
@@ -92,11 +106,13 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 					<Box sx={{ position: "absolute", inset: 0 }}>
 						<FolderDrop
 							onDrop={path => {
-								setDirectory(path);
-								handleOpenNewDataset();
+								if (appReady) {
+									setDirectory(path);
+									handleOpenNewDataset();
+								}
 							}}
 						>
-							{datasets.length > 0 ? (
+							{datasets.length > 0 && appReady ? (
 								<CustomScrollbars>
 									<Grid
 										container
@@ -167,22 +183,45 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 										alignItems: "center",
 									}}
 								>
-									<Box
-										sx={{
-											width: "max-content",
-										}}
-									>
-										<Lottie
-											path="/lottie/minimalistic/welcome.json"
-											height={400}
-										/>
-										<Typography level="h2" sx={{ textAlign: "center" }}>
-											{t("common:noDatasets")}
-										</Typography>
-										<Typography sx={{ textAlign: "center" }}>
-											{t("common:pages.datasets.dropToAdd")}
-										</Typography>
-									</Box>
+									{appReady ? (
+										<Box
+											sx={{
+												width: "max-content",
+											}}
+										>
+											<Lottie
+												path="/lottie/minimalistic/welcome.json"
+												height={400}
+											/>
+											<Typography level="h2" sx={{ textAlign: "center" }}>
+												{t("common:noDatasets")}
+											</Typography>
+											<Typography sx={{ textAlign: "center" }}>
+												{t("common:pages.datasets.dropToAdd")}
+											</Typography>
+										</Box>
+									) : (
+										<Box
+											sx={{
+												width: "max-content",
+											}}
+										>
+											<Lottie
+												path="/lottie/minimalistic/tech-discovery.json"
+												height={400}
+											/>
+											<LinearProgress />
+											<Typography
+												level="h2"
+												sx={{ textAlign: "center", mt: 2 }}
+											>
+												{t("common:initialSetup")}
+											</Typography>
+											<Typography sx={{ textAlign: "center" }}>
+												{t("common:settingUpApp")}
+											</Typography>
+										</Box>
+									)}
 								</Box>
 							)}
 						</FolderDrop>

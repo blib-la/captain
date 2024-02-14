@@ -109,5 +109,7 @@
   "training": "トレーニング",
   "updateMarketplace": "マーケットプレースを更新",
   "zoomIn": "ズームイン",
-  "zoomOut": "ズームアウト"
+  "zoomOut": "ズームアウト",
+  "initialSetup": "初期設定",
+  "settingUpApp": "アプリを設定しています。サーバーとインターネットの速度によっては、時間がかかる場合があります。"
 }

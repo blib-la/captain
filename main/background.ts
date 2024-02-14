@@ -1,6 +1,6 @@
 import path from "path";
 
-import { app, Menu, protocol, shell } from "electron";
+import { Menu, app, protocol, shell } from "electron";
 import serve from "electron-serve";
 
 import i18next from "../next-i18next.config.js";
@@ -9,7 +9,8 @@ import { createWindow } from "./helpers";
 import { CAPTION_RUNNING, DOWNLOADS, LOCALE } from "./helpers/constants";
 import { store as userStore } from "./helpers/store";
 import { isProduction, protocolName } from "./helpers/utils";
-
+import { init } from "./init";
+import { isPythonInstalled } from "./utils/first-launch";
 import "./live-painting";
 import "./datasets";
 import "./captions";
@@ -40,6 +41,13 @@ async function main() {
 	// Ensure no active downloads and no caption running
 	userStore.delete(CAPTION_RUNNING);
 	userStore.delete(DOWNLOADS);
+
+	if (!isPythonInstalled() && isProduction) {
+		userStore.set("INSTALLING_PYTHON", true);
+		init();
+	} else {
+		userStore.set("INSTALLING_PYTHON", false);
+	}
 
 	const mainWindow = await createWindow("main", {
 		width: 1600,
