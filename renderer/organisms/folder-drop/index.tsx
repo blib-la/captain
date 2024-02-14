@@ -39,12 +39,9 @@ export function FolderDrop({
 				setDragCounter(0);
 				const folder = event.dataTransfer.items[0];
 				if (folder?.kind === "file" && folder.webkitGetAsEntry()?.isDirectory && onDrop) {
-					// TODO please fix the typing issue
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-expect-error
-					const { path } = folder.getAsFile();
-					if (path) {
-						onDrop(path);
+					const file = folder.getAsFile();
+					if (file?.path) {
+						onDrop(file.path);
 					}
 				}
 			}}

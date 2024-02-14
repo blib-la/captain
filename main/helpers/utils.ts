@@ -10,9 +10,7 @@ import { app, screen, shell } from "electron";
 import JSON5 from "json5";
 import sharp from "sharp";
 
-import { MARKETPLACE_INDEX, MARKETPLACE_INDEX_DATA, MINIFIED_IMAGE_SIZE } from "./constants";
-import { createJsonStructure } from "./read-index";
-import { store as userStore } from "./store";
+import { MINIFIED_IMAGE_SIZE } from "./constants";
 
 interface OpenNewGitHubIssueOptions {
 	repoUrl?: string;
@@ -86,7 +84,7 @@ export async function openNewGitHubIssue(options: OpenNewGitHubIssueOptions) {
 
 // Check if the app is running in development mode.
 // This is typically set using the NODE_ENV environment variable.
-const isDevelopment = process.env.NODE_ENV === "development";
+const isDevelopment = process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test";
 
 // Define a variable for the resources directory.
 // If in development mode, it sets the resources directory relative to the current working directory.
@@ -111,8 +109,6 @@ export function getDirectory(...subpath: string[]): string {
 export function getUserData(...subpath: string[]): string {
 	return path.join(app.getPath("userData"), ...subpath);
 }
-
-export const captainDataPath = getUserData("Captain_Data");
 
 /**
  * Synchronously get a list of image files from a directory.
@@ -253,41 +249,11 @@ export const isProduction = process.env.NODE_ENV === "production";
 export const protocolName = "my";
 
 export async function removeCaptainData(path_: string) {
-	const directoryPath = path.join(captainDataPath, path_);
+	const directoryPath = path.join(getUserData("Captain_Data"), path_);
 
 	try {
 		await fsp.rm(directoryPath, { recursive: true });
 	} catch (error) {
 		console.error("Error removing directory:", error);
-	}
-}
-
-export async function createMarketplace(gitRepository?: string) {
-	const marketplaceIndex =
-		gitRepository ||
-		(userStore.get(MARKETPLACE_INDEX) as string) ||
-		"git@github.com:blib-la/captain-marketplace.git";
-
-	userStore.set(MARKETPLACE_INDEX, marketplaceIndex);
-
-	try {
-		await removeCaptainData("marketplace-index");
-		await fsp.mkdir(captainDataPath, { recursive: true });
-		await execAsync(`cd ${captainDataPath} && git clone ${marketplaceIndex} marketplace-index`);
-	} catch (error) {
-		console.error("Error executing command:", error);
-	}
-
-	const basePath = path.join(captainDataPath, "marketplace-index", "files");
-
-	try {
-		const jsonStructure = await createJsonStructure(basePath);
-		userStore.set(MARKETPLACE_INDEX_DATA, jsonStructure);
-		await fsp.writeFile(
-			path.join(captainDataPath, "index.json"),
-			JSON.stringify(jsonStructure, null, 2)
-		);
-	} catch (error) {
-		console.error("Error executing command:", error);
 	}
 }

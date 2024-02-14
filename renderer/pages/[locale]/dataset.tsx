@@ -1,18 +1,26 @@
+import ChecklistIcon from "@mui/icons-material/Checklist";
+import DeselectIcon from "@mui/icons-material/Deselect";
+import EditIcon from "@mui/icons-material/Edit";
+import EditNoteIcon from "@mui/icons-material/EditNote";
 import ErrorIcon from "@mui/icons-material/Error";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import PhotoFilterIcon from "@mui/icons-material/PhotoFilter";
+import SelectAllIcon from "@mui/icons-material/SelectAll";
 import Badge from "@mui/joy/Badge";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
+import Checkbox from "@mui/joy/Checkbox";
 import CircularProgress from "@mui/joy/CircularProgress";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Grid from "@mui/joy/Grid";
+import IconButton from "@mui/joy/IconButton";
 import Input from "@mui/joy/Input";
 import Sheet from "@mui/joy/Sheet";
 import Snackbar from "@mui/joy/Snackbar";
 import Stack from "@mui/joy/Stack";
 import Textarea from "@mui/joy/Textarea";
+import Tooltip from "@mui/joy/Tooltip";
 import { useAtom } from "jotai";
 import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
@@ -24,10 +32,11 @@ import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeGrid } from "react-window";
 import useSWR from "swr";
 
-import { CAPTION_RUNNING, DATASET, FOLDER } from "../../../main/helpers/constants";
+import { CAPTION, CAPTION_RUNNING, DATASET, FOLDER } from "../../../main/helpers/constants";
 
 import { ScreenReaderOnly } from "@/atoms/screen-reader-only";
 import {
+	canSelectImagesAtom,
 	captioningErrorAtom,
 	captionRunningAtom,
 	directoryAtom,
@@ -39,7 +48,8 @@ import { useColumns } from "@/ions/hooks/columns";
 import { useKeyboardControlledImagesNavigation } from "@/ions/hooks/keyboard-controlled-images-navigation";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 import { CustomScrollbarsVirtualList } from "@/organisms/custom-scrollbars";
-import { CaptionModal } from "@/organisms/modals/caption";
+import { CaptionModal, useFilteredImages } from "@/organisms/modals/caption";
+import { BatchEditModal } from "@/organisms/modals/caption/batch-edit";
 import { ZoomImageStage } from "@/organisms/zoomable-image-stage";
 
 export function ImageGridCell({
@@ -52,16 +62,44 @@ export function ImageGridCell({
 	style: CSSProperties;
 }) {
 	const reference = useRef<HTMLDivElement>(null);
-	const [images] = useAtom(imagesAtom);
+	const [images, setImages] = useAtom(imagesAtom);
 	const [selectedImage, setSelectedImage] = useAtom(selectedImageAtom);
 	const columnCount = useColumns({ xs: 2, sm: 3, md: 4, lg: 6 });
 	const { t } = useTranslation(["common"]);
+	const [canSelectImages] = useAtom(canSelectImagesAtom);
+
 	const index = rowIndex * columnCount + columnIndex;
 	const image = images[index];
 
 	return (
-		<Box ref={reference} style={style}>
-			{image && (
+		image && (
+			<Box ref={reference} style={style}>
+				{canSelectImages && image && (
+					<Box
+						sx={theme => ({
+							position: "absolute",
+							top: 0,
+							left: 0,
+							zIndex: theme.zIndex.badge + 1,
+						})}
+					>
+						<Checkbox
+							checked={Boolean(image.selected)}
+							onChange={event => {
+								setImages(previousState =>
+									previousState.map(image_ =>
+										image_ === image
+											? {
+													...image_,
+													selected: event.target.checked,
+												}
+											: image_
+									)
+								);
+							}}
+						/>
+					</Box>
+				)}
 				<Badge
 					color={image.caption ? "success" : "danger"}
 					sx={{ mt: 1.5, mr: 1.5 }}
@@ -91,8 +129,8 @@ export function ImageGridCell({
 						<ScreenReaderOnly>{t("common:pages.dataset.selectImage")}</ScreenReaderOnly>
 					</Button>
 				</Badge>
-			)}
-		</Box>
+			</Box>
+		)
 	);
 }
 
@@ -116,7 +154,12 @@ export function CaptioningError() {
 				".MuiSnackbar-endDecorator": { alignSelf: "flex-end" },
 			}}
 			endDecorator={
-				<Button size="sm" onClick={() => setCaptioningError(false)}>
+				<Button
+					size="sm"
+					onClick={() => {
+						setCaptioningError(false);
+					}}
+				>
 					Dismiss
 				</Button>
 			}
@@ -131,7 +174,7 @@ export function CaptioningError() {
 
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { query } = useRouter();
-	const id = query.id as string;
+	const id = query.id as string | undefined;
 	const [images, setImages] = useAtom(imagesAtom);
 	const [selectedImage, setSelectedImage] = useAtom(selectedImageAtom);
 	const [dataset, setDataset] = useAtom(projectAtom);
@@ -139,97 +182,102 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	const [caption, setCaption] = useState("");
 	const [name, setName] = useState("");
 	const { t } = useTranslation(["common"]);
+	const [batchModalOpen, setBatchModalOpen] = useState(false);
 	const [captionModalOpen, setCaptionModalOpen] = useState(false);
 	const [progress, setProgress] = useState(0);
 	const [progressCount, setProgressCount] = useState("");
 	const [, setDirectory] = useAtom(directoryAtom);
 	const [captionRunning, setCaptionRunning] = useAtom(captionRunningAtom);
+	const [canSelectImages, setCanSelectImages] = useAtom(canSelectImagesAtom);
 
 	const { data: captionRunningData } = useSWR(CAPTION_RUNNING);
 
-	const { data: imagesData } = useSWR("imagesData", () => {
-		if (dataset) {
-			return window.ipc.getExistingProject(dataset);
+	const { data: datasetData } = useSWR(captionRunningData ? DATASET : undefined, () => {
+		if (id) {
+			return window.ipc.getDataset(id);
 		}
 	});
-
-	const { data: datasetData } = useSWR(DATASET, () => window.ipc.getDataset(id));
-
+	const filteredImages = useFilteredImages();
 	const saveCaptionToFile = useCallback(async () => {
 		const image = images[selectedImage];
 		if (image) {
-			await window.ipc.saveCaption({ ...image, caption });
 			setImages(
 				images.map(image_ =>
 					image_.image === image.image ? { ...image_, caption } : image_
 				)
 			);
+			await window.ipc.saveCaption({ ...image, caption });
 		}
 	}, [images, selectedImage, caption, setImages]);
 
 	useKeyboardControlledImagesNavigation({ onBeforeChange: saveCaptionToFile });
 
 	useEffect(() => {
-		setCaptionRunning(Boolean(captionRunningData));
-		if (!captionRunningData) {
-			setProgress(0);
-			setProgressCount("");
+		console.log({ captionRunningData });
+		if (typeof captionRunningData === "boolean") {
+			setCaptionRunning(captionRunningData);
 		}
 	}, [captionRunningData, setCaptionRunning]);
-
-	useEffect(() => {
-		if (imagesData) {
-			setImages(imagesData);
-		}
-	}, [imagesData, setImages]);
 
 	useEffect(() => {
 		if (datasetData) {
 			setDataset(datasetData.dataset);
 			setImages(datasetData.images);
-			setDirectory(datasetData.source);
+			setName(datasetData.dataset.name);
+			setDirectory(datasetData.dataset.files);
 		}
-	}, [datasetData, setDataset, setImages, setDirectory]);
-
-	useEffect(() => {
-		if (images[selectedImage]) {
-			setCaption(images[selectedImage].caption ?? "");
-		}
-	}, [selectedImage, images]);
-
-	useEffect(() => {
-		if (id) {
-			window.ipc.getDataset(id).then(dataset_ => {
-				setDataset(dataset_.dataset);
-				setImages(dataset_.images);
-				setDirectory(dataset_.dataset.source);
+		// When datasetData is undefined (initial call) we manually get it from IPC
+		// Check if id has is available from query
+		else if (id) {
+			window.ipc.getDataset(id).then(datasetData_ => {
+				setDataset(datasetData_.dataset);
+				setImages(datasetData_.images);
+				setName(datasetData_.dataset.name);
+				setDirectory(datasetData_.dataset.files);
 			});
 		}
-	}, [id, setDataset, setDirectory, setImages]);
+	}, [datasetData, setDataset, setImages, setDirectory, id]);
 
+	// TODO: probably needs adjustment to new mechanism
+	// Track progress of potential captioning progress
+	useEffect(() => {
+		const unsubscribe = window.ipc.on(
+			`${CAPTION}:updated`,
+			({
+				progress: progress_,
+				counter,
+				totalCount,
+				done,
+			}: {
+				progress: number;
+				counter: number;
+				totalCount: number;
+				done: boolean;
+			}) => {
+				setProgress(progress_);
+				setProgressCount(`${counter}/${totalCount}`);
+				if (done) {
+					setCaptionRunning(false);
+				}
+			}
+		);
+		return () => {
+			unsubscribe();
+		};
+	}, [setCaptionRunning]);
+
+	// Set initially selected image to 0
+	useEffect(() => {
+		setSelectedImage(0);
+	}, [setSelectedImage]);
+
+	// Set caption when an image changes
 	useEffect(() => {
 		const image = images[selectedImage];
 		if (image) {
 			setCaption(image.caption ?? "");
 		}
 	}, [selectedImage, images]);
-
-	useEffect(() => {
-		setSelectedImage(0);
-	}, [setSelectedImage]);
-
-	useEffect(() => {
-		if (dataset) {
-			setName(dataset.name);
-		}
-	}, [dataset]);
-
-	useEffect(() => {
-		window.ipc.on("caption-progress", ({ percent, completedCount, totalCount }: any) => {
-			setProgress(percent);
-			setProgressCount(`${completedCount}/${totalCount}`);
-		});
-	}, []);
 
 	return (
 		<>
@@ -241,19 +289,21 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 				open={captionModalOpen && !captionRunning}
 				onStart={() => {
 					setCaptionRunning(true);
+					setProgress(0);
+					setProgressCount(`0/${filteredImages.length}`);
 					window.ipc.fetch(CAPTION_RUNNING, { method: "POST", data: true });
 				}}
 				onDone={async () => {
-					if (dataset) {
-						const content = await window.ipc.getExistingProject(dataset);
-						setImages(content);
-					}
-
-					setCaptionRunning(false);
-					window.ipc.fetch(CAPTION_RUNNING, { method: "POST", data: false });
+					console.log("done");
 				}}
 				onClose={() => {
 					setCaptionModalOpen(false);
+				}}
+			/>
+			<BatchEditModal
+				open={batchModalOpen}
+				onClose={() => {
+					setBatchModalOpen(false);
 				}}
 			/>
 			<Stack sx={{ position: "absolute", inset: 0 }}>
@@ -262,9 +312,11 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 						{dataset && (
 							<Input
 								fullWidth
+								component="label"
 								variant="plain"
 								aria-label={t("common:datasetName")}
 								value={name}
+								startDecorator={<EditIcon />}
 								onChange={event => {
 									setName(event.target.value);
 								}}
@@ -276,59 +328,114 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 							/>
 						)}
 					</Box>
-					<Button
-						startDecorator={<FolderOpenIcon />}
-						onClick={() => {
-							if (dataset) {
-								window.ipc.send(`${FOLDER}:open`, dataset.source);
-							}
-						}}
-					>
-						{t("common:openFolder")}
-					</Button>
-					<Button
-						color="primary"
-						variant="solid"
-						disabled={captionRunning}
-						startDecorator={
-							captionRunning && progress === 0 ? (
-								<CircularProgress />
-							) : (
-								<PhotoFilterIcon />
-							)
+					<Tooltip title={t("common:selectImages")} sx={{ display: { lg: "none" } }}>
+						<Button
+							startDecorator={<ChecklistIcon />}
+							sx={{
+								width: { xs: 36, lg: "auto" },
+								px: 1.5,
+								whiteSpace: "nowrap",
+								justifyContent: "flex-start",
+								overflow: "hidden",
+							}}
+							onClick={() => {
+								setCanSelectImages(previousState => !previousState);
+							}}
+						>
+							{t("common:selectImages")}
+						</Button>
+					</Tooltip>
+					<Tooltip title={t("common:batchEdit")} sx={{ display: { lg: "none" } }}>
+						<Button
+							startDecorator={<EditNoteIcon />}
+							sx={{
+								width: { xs: 36, lg: "auto" },
+								px: 1.5,
+								whiteSpace: "nowrap",
+								justifyContent: "flex-start",
+								overflow: "hidden",
+							}}
+							onClick={() => {
+								setBatchModalOpen(true);
+							}}
+						>
+							{t("common:batchEdit")}
+						</Button>
+					</Tooltip>
+					<Tooltip title={t("common:openFolder")} sx={{ display: { lg: "none" } }}>
+						<Button
+							startDecorator={<FolderOpenIcon />}
+							sx={{
+								width: { xs: 36, lg: "auto" },
+								px: 1.5,
+								whiteSpace: "nowrap",
+								justifyContent: "flex-start",
+								overflow: "hidden",
+							}}
+							onClick={() => {
+								if (dataset) {
+									window.ipc.send(`${FOLDER}:open`, dataset.files);
+								}
+							}}
+						>
+							{t("common:openFolder")}
+						</Button>
+					</Tooltip>
+					<Tooltip
+						sx={{ display: { md: "none" } }}
+						title={
+							captionRunning
+								? progressCount || `0/${filteredImages.length}`
+								: t("common:autoCaption")
 						}
-						sx={{
-							position: "relative",
-							overflow: "hidden",
-							"&.Mui-disabled": {
-								color: captionRunning ? "common.white" : undefined,
-							},
-							".MuiButton-startDecorator": { position: "relative", zIndex: 1 },
-						}}
-						onClick={() => {
-							if (!captionRunning) {
-								setCaptionModalOpen(true);
-							}
-						}}
 					>
-						{captionRunning && (
-							<Box
-								sx={{
-									position: "absolute",
-									inset: 0,
-									zIndex: 0,
-									transformOrigin: "0 0",
-									transform: `scale3d(${progress / 100}, 1, 1)`,
-									bgcolor: "primary.500",
-								}}
-							/>
-						)}
-						<Box sx={{ position: "relative", minWidth: 100 }}>
-							{captionRunning
-								? progressCount || `0/${images.length}`
-								: t("common:autoCaption")}
-						</Box>
-					</Button>
+						<Button
+							color="primary"
+							variant="solid"
+							disabled={captionRunning}
+							startDecorator={
+								captionRunning && progress === 0 ? (
+									<CircularProgress />
+								) : (
+									<PhotoFilterIcon />
+								)
+							}
+							sx={{
+								position: "relative",
+								width: { xs: 36, md: "auto" },
+								px: 1.5,
+								whiteSpace: "nowrap",
+								justifyContent: "flex-start",
+								overflow: "hidden",
+								"&.Mui-disabled": {
+									color: captionRunning ? "common.white" : undefined,
+								},
+								".MuiButton-startDecorator": { position: "relative", zIndex: 1 },
+							}}
+							onClick={() => {
+								if (!captionRunning) {
+									setCaptionModalOpen(true);
+								}
+							}}
+						>
+							{captionRunning && (
+								<Box
+									sx={{
+										position: "absolute",
+										inset: 0,
+										zIndex: 0,
+										transformOrigin: "0 0",
+										transform: `scale3d(${progress}, 1, 1)`,
+										transition: "transform 0.3s linear",
+										bgcolor: "primary.500",
+									}}
+								/>
+							)}
+							<Box sx={{ position: "relative", minWidth: 100 }}>
+								{captionRunning ? progressCount : t("common:autoCaption")}
+							</Box>
+						</Button>
+					</Tooltip>
 				</Sheet>
 				<Grid container spacing={2} columns={{ xs: 1, sm: 2 }} sx={{ flex: 1 }}>
 					<Grid xs={1} sx={{ display: "flex" }}>
@@ -345,13 +452,56 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 										<Textarea
 											minRows={3}
 											value={caption}
-											onChange={event => setCaption(event.target.value)}
+											onChange={event => {
+												setCaption(event.target.value);
+											}}
 											onBlur={async () => {
 												await saveCaptionToFile();
 											}}
 										/>
 									</FormControl>
 								</Box>
+								{canSelectImages && (
+									<Box
+										sx={{
+											display: "flex",
+											justifyContent: "flex-end",
+											gap: 1,
+											pr: 1,
+										}}
+									>
+										<Tooltip title={t("common:selectAll")}>
+											<IconButton
+												aria-label={t("common:selectAll")}
+												onClick={() => {
+													setImages(previousState =>
+														previousState.map(image_ => ({
+															...image_,
+															selected: true,
+														}))
+													);
+												}}
+											>
+												<SelectAllIcon />
+											</IconButton>
+										</Tooltip>
+										<Tooltip title={t("common:deselectAll")}>
+											<IconButton
+												aria-label={t("common:deselectAll")}
+												onClick={() => {
+													setImages(previousState =>
+														previousState.map(image_ => ({
+															...image_,
+															selected: false,
+														}))
+													);
+												}}
+											>
+												<DeselectIcon />
+											</IconButton>
+										</Tooltip>
+									</Box>
+								)}
 								<Box
 									sx={{
 										position: "relative",

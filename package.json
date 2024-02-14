@@ -14,10 +14,12 @@
     "postinstall": "electron-builder install-app-deps",
     "ncu": "npx npm-check-updates@latest -u",
     "ncu:check": "npx npm-check-updates@latest",
-    "prep:win": "resources/python-embeded/python.exe -m pip install -r requirements.txt",
+    "prep:win": "resources/python-embedded/python.exe -m pip install -r requirements.txt",
     "spj": "npx sort-package-json@latest",
     "toc": "npx markdown-toc README.md -i",
-    "tsc:noEmit": "tsc --noEmit"
+    "tsc:noEmit": "tsc --noEmit",
+    "caption:test": "ts-node-esm main/captions/misc.ts",
+    "test:unit": "jest --runInBand --config jest.config.unit.mjs --verbose"
   },
   "dependencies": {
     "electron-dl": "^3.5.1",

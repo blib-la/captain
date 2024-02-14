@@ -1,3 +1,4 @@
+import BrushIcon from "@mui/icons-material/Brush";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CloseIcon from "@mui/icons-material/Close";
 import CollectionsIcon from "@mui/icons-material/Collections";
@@ -47,7 +48,13 @@ function SidebarButton({
 			title={children}
 			sx={{ display: { xs: disabled ? "none" : undefined, xl: "none" } }}
 		>
-			<Box sx={{ width: "100%", display: "flex", "--focus-outline-offset": "-2px" }}>
+			<Box
+				sx={{
+					width: "100%",
+					"--focus-outline-offset": "-2px",
+					display: disabled ? "none" : "flex",
+				}}
+			>
 				{href && !target ? (
 					<Link legacyBehavior passHref href={href_}>
 						<Button
@@ -190,6 +197,9 @@ export function Layout({ children }: { children?: ReactNode }) {
 				</SidebarButton>
 				<SidebarButton disabled href="/training" startDecorator={<FitnessCenterIcon />}>
 					{t("common:training")}
+				</SidebarButton>
+				<SidebarButton disabled href="/livepainting" startDecorator={<BrushIcon />}>
+					{t("common:livePainting")}
 				</SidebarButton>
 				<Box sx={{ flex: 1 }} />
 				<SidebarButton

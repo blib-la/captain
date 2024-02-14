@@ -1,12 +1,26 @@
+
+# IDE
+.idea
+.vscode
+
+# node
 node_modules
 *.log
 .next
 app
 dist
 build
-.idea
+
 .env
-resources/projects
-wd14_tagger_model
+
+# python
+resources/python-embedded/
 resources/python-embeded/
+resources/python/caption/wd14/models/model.onnx
 __pycache__
+.pytest_cache
+
+# live-canvas
+live-canvas-frontend-user-data.png
+live-canvas-generate-image-output.png
+live-canvas-generate-image-output.png.tmp.png
