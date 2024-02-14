@@ -1,9 +1,11 @@
 import ChecklistIcon from "@mui/icons-material/Checklist";
+import DeselectIcon from "@mui/icons-material/Deselect";
 import EditIcon from "@mui/icons-material/Edit";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import ErrorIcon from "@mui/icons-material/Error";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import PhotoFilterIcon from "@mui/icons-material/PhotoFilter";
+import SelectAllIcon from "@mui/icons-material/SelectAll";
 import Badge from "@mui/joy/Badge";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
@@ -12,6 +14,7 @@ import CircularProgress from "@mui/joy/CircularProgress";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Grid from "@mui/joy/Grid";
+import IconButton from "@mui/joy/IconButton";
 import Input from "@mui/joy/Input";
 import Sheet from "@mui/joy/Sheet";
 import Snackbar from "@mui/joy/Snackbar";
@@ -69,34 +72,34 @@ export function ImageGridCell({
 	const image = images[index];
 
 	return (
-		<Box ref={reference} style={style}>
-			{canSelectImages && image && (
-				<Box
-					sx={theme => ({
-						position: "absolute",
-						top: 0,
-						left: 0,
-						zIndex: theme.zIndex.badge + 1,
-					})}
-				>
-					<Checkbox
-						checked={image.selected}
-						onChange={event => {
-							setImages(previousState =>
-								previousState.map(image_ =>
-									image_ === image
-										? {
-												...image_,
-												selected: event.target.checked,
-											}
-										: image_
-								)
-							);
-						}}
-					/>
-				</Box>
-			)}
-			{image && (
+		image && (
+			<Box ref={reference} style={style}>
+				{canSelectImages && image && (
+					<Box
+						sx={theme => ({
+							position: "absolute",
+							top: 0,
+							left: 0,
+							zIndex: theme.zIndex.badge + 1,
+						})}
+					>
+						<Checkbox
+							checked={Boolean(image.selected)}
+							onChange={event => {
+								setImages(previousState =>
+									previousState.map(image_ =>
+										image_ === image
+											? {
+													...image_,
+													selected: event.target.checked,
+												}
+											: image_
+									)
+								);
+							}}
+						/>
+					</Box>
+				)}
 				<Badge
 					color={image.caption ? "success" : "danger"}
 					sx={{ mt: 1.5, mr: 1.5 }}
@@ -126,8 +129,8 @@ export function ImageGridCell({
 						<ScreenReaderOnly>{t("common:pages.dataset.selectImage")}</ScreenReaderOnly>
 					</Button>
 				</Badge>
-			)}
-		</Box>
+			</Box>
+		)
 	);
 }
 
@@ -185,7 +188,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	const [progressCount, setProgressCount] = useState("");
 	const [, setDirectory] = useAtom(directoryAtom);
 	const [captionRunning, setCaptionRunning] = useAtom(captionRunningAtom);
-	const [, setCanSelectImages] = useAtom(canSelectImagesAtom);
+	const [canSelectImages, setCanSelectImages] = useAtom(canSelectImagesAtom);
 
 	const { data: captionRunningData } = useSWR(CAPTION_RUNNING);
 
@@ -458,6 +461,47 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 										/>
 									</FormControl>
 								</Box>
+								{canSelectImages && (
+									<Box
+										sx={{
+											display: "flex",
+											justifyContent: "flex-end",
+											gap: 1,
+											pr: 1,
+										}}
+									>
+										<Tooltip title={t("common:selectAll")}>
+											<IconButton
+												aria-label={t("common:selectAll")}
+												onClick={() => {
+													setImages(previousState =>
+														previousState.map(image_ => ({
+															...image_,
+															selected: true,
+														}))
+													);
+												}}
+											>
+												<SelectAllIcon />
+											</IconButton>
+										</Tooltip>
+										<Tooltip title={t("common:deselectAll")}>
+											<IconButton
+												aria-label={t("common:deselectAll")}
+												onClick={() => {
+													setImages(previousState =>
+														previousState.map(image_ => ({
+															...image_,
+															selected: false,
+														}))
+													);
+												}}
+											>
+												<DeselectIcon />
+											</IconButton>
+										</Tooltip>
+									</Box>
+								)}
 								<Box
 									sx={{
 										position: "relative",

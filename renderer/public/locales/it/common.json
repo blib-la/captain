@@ -111,5 +111,7 @@
   "zoomIn": "Ingrandire",
   "zoomOut": "Rimpicciolire",
   "initialSetup": "Configurazione iniziale",
-  "settingUpApp": "Configurazione dell'app in corso. Potrebbe richiedere del tempo a seconda del server e della velocità di internet."
+  "settingUpApp": "Configurazione dell'app in corso. Potrebbe richiedere del tempo a seconda del server e della velocità di internet.",
+  "selectAll": "Seleziona tutto",
+  "deselectAll": "Deseleziona tutto"
 }

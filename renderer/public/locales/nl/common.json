@@ -111,5 +111,7 @@
   "zoomIn": "Inzoomen",
   "zoomOut": "Uitzoomen",
   "initialSetup": "Eerste instelling",
-  "settingUpApp": "De app wordt ingesteld. Dit kan afhankelijk van de server en internetsnelheid enige tijd duren."
+  "settingUpApp": "De app wordt ingesteld. Dit kan afhankelijk van de server en internetsnelheid enige tijd duren.",
+  "selectAll": "Alles selecteren",
+  "deselectAll": "Alles deselecteren"
 }

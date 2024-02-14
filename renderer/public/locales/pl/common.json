@@ -111,5 +111,7 @@
   "zoomIn": "Powiększenie",
   "zoomOut": "Pomniejszenie",
   "initialSetup": "Początkowa konfiguracja",
-  "settingUpApp": "Konfiguracja aplikacji. Może to zająć trochę czasu, w zależności od serwera i prędkości internetu."
+  "settingUpApp": "Konfiguracja aplikacji. Może to zająć trochę czasu, w zależności od serwera i prędkości internetu.",
+  "selectAll": "Zaznacz wszystko",
+  "deselectAll": "Odznacz wszystko"
 }

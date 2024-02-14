@@ -1,7 +1,6 @@
 import path from "path";
 
-import { app, protocol, shell } from "electron";
-import { Menu } from "electron/main";
+import { app, protocol, shell, Menu } from "electron";
 import serve from "electron-serve";
 
 import i18next from "../next-i18next.config.js";

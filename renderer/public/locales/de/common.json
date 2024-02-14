@@ -111,5 +111,7 @@
   "zoomIn": "Vergrößern",
   "zoomOut": "Verkleinern",
   "initialSetup": "Erstinstallation",
-  "settingUpApp": "Die App wird eingerichtet. Dies kann je nach Server und Internetgeschwindigkeit eine Weile dauern."
+  "settingUpApp": "Die App wird eingerichtet. Dies kann je nach Server und Internetgeschwindigkeit eine Weile dauern.",
+  "selectAll": "Alle auswählen",
+  "deselectAll": "Alle abwählen"
 }
