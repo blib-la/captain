@@ -1,6 +1,7 @@
 import path from "path";
 
 import { app, protocol, shell, Menu } from "electron";
+import contextMenu from "electron-context-menu";
 import serve from "electron-serve";
 
 import i18next from "../next-i18next.config.js";
@@ -14,7 +15,13 @@ import { init } from "./init";
 import { getInstalledVersion } from "./utils/first-launch";
 import "./live-painting";
 import "./datasets";
+
 import "./captions";
+
+contextMenu({
+	showSaveImageAs: true,
+	showSearchWithGoogle: false,
+});
 
 app.commandLine.appendSwitch("enable-smooth-scrolling");
 
