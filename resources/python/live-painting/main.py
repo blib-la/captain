@@ -73,6 +73,7 @@ prompt = None
 seed = None
 strength = None
 guidance_scale = None
+num_inference_steps = None
 input_path = "live-canvas-frontend-user-data.png"
 output_path = "live-canvas-generate-image-output.png"
 
@@ -164,7 +165,7 @@ print("warmup done")
 
 
 def main():
-    global prompt, seed, strength, guidance_scale, input_path, output_path
+    global prompt, seed, strength, guidance_scale, input_path, output_path, num_inference_steps
 
     while True:
         try:
@@ -176,6 +177,7 @@ def main():
                 input_path = parameters.get("input_path", input_path)
                 strength = parameters.get("strength", strength)
                 guidance_scale = parameters.get("guidance_scale", guidance_scale)
+                num_inference_steps = parameters.get("num_inference_steps", num_inference_steps)
                 output_path = parameters.get("output_path", output_path)
                 print(f"Updated parameters {parameters}")
         except queue.Empty:
@@ -195,17 +197,17 @@ def main():
 
             strength_ = float(strength)
             guidance_scale_ = float(guidance_scale)
-            denoise_steps_ = calculate_min_inference_steps(strength_)
+            num_inference_steps_ = int(num_inference_steps)
 
             image = pipe(
                 prompt,
                 image=init_image,
                 height=512,
                 width=512,
-                num_inference_steps=3,
+                num_inference_steps=num_inference_steps_,
                 num_images_per_prompt=1,
                 strength=strength_,
-                guidance_scale=1.5,
+                guidance_scale=guidance_scale_,
             ).images[0]
 
             end_time = time.time()

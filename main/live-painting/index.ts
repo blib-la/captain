@@ -95,7 +95,7 @@ ipcMain.handle("live-painting:start", () => {
 	watchOutputFile();
 });
 
-ipcMain.on("live-painting:update-properties", (event, input) => {
+ipcMain.on("live-painting:update-properties", (_event, input) => {
 	if (!process_) {
 		return;
 	}

@@ -1,4 +1,8 @@
+import Box from "@mui/joy/Box";
+import Stack from "@mui/joy/Stack";
 import { useRef, useEffect } from "react";
+
+import { UpdateProperties } from "@/organisms/live-painting/update-properties";
 
 interface OutputCanvasProperties {
 	width?: number;
@@ -15,8 +19,6 @@ export function OutputCanvas({ width = 512, height = 512 }: OutputCanvasProperti
 
 			canvas.width = width * dpr;
 			canvas.height = height * dpr;
-			canvas.style.width = `${width}px`;
-			canvas.style.height = `${height}px`;
 		}
 	}, [height, width]);
 
@@ -41,7 +43,6 @@ export function OutputCanvas({ width = 512, height = 512 }: OutputCanvasProperti
 				return;
 			}
 
-			console.log("tick");
 			image.src = `${base64Image}`;
 		}
 
@@ -53,5 +54,14 @@ export function OutputCanvas({ width = 512, height = 512 }: OutputCanvasProperti
 		};
 	}, []);
 
-	return <canvas ref={canvasReference} style={{ border: "1px solid #ccc" }} />;
+	return (
+		<Stack spacing={1} sx={{ alignItems: "center" }}>
+			<UpdateProperties />
+			<Box
+				ref={canvasReference}
+				component="canvas"
+				sx={{ bgcolor: "white", mx: "auto", aspectRatio: 1, width: "100%" }}
+			/>
+		</Stack>
+	);
 }

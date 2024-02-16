@@ -1,128 +1,62 @@
-import Recycling from "@mui/icons-material/Recycling";
+import CasinoIcon from "@mui/icons-material/Casino";
+import Box from "@mui/joy/Box";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import IconButton from "@mui/joy/IconButton";
-import Input from "@mui/joy/Input";
-import Stack from "@mui/joy/Stack";
-import type { ChangeEvent } from "react";
-import { useEffect, useState } from "react";
+import Textarea from "@mui/joy/Textarea";
+import { atom } from "jotai";
+import { useAtom } from "jotai";
+
+export const livePaintingOptionsAtom = atom({
+	prompt: "a person, incredible watercolor painting, futuristic ink art",
+	size: { width: 512, height: 512 },
+	seed: 0,
+	strength: 0.95,
+	guidanceScale: 1.5,
+	steps: 3,
+});
 
 export function UpdateProperties() {
-	const [prompt, setPrompt] = useState("");
-	const [seed, setSeed] = useState("0");
-	const [size, setSize] = useState({ width: 512, height: 512 });
-	const [strength, setStrength] = useState("1");
-	const [guidance, setGuidance] = useState("0");
-
-	// Handle input changes
-	function handlePromptChange(event: ChangeEvent<HTMLInputElement>) {
-		setPrompt(event.target.value);
-	}
-
-	function handleSeedChange(event: ChangeEvent<HTMLInputElement>) {
-		setSeed(event.target.value);
-	}
-
-	function handleSizeChange(dimension: "height" | "width", event: ChangeEvent<HTMLInputElement>) {
-		setSize(previousSize => ({
-			...previousSize,
-			[dimension]: Number.parseInt(event.target.value, 10),
-		}));
-	}
-
-	function handleStrengthChange(event: ChangeEvent<HTMLInputElement>) {
-		setStrength(event.target.value);
-	}
-
-	function handleGuidanceChange(event: ChangeEvent<HTMLInputElement>) {
-		setGuidance(event.target.value);
-	}
-
-	function randomSeed() {
-		setSeed(Math.floor(Math.random() * 100_000_000 + 1).toString());
-	}
-
-	// Use effect to send updates
-	useEffect(() => {
-		const properties = {
-			prompt,
-			seed: seed === "" ? 0 : Number.parseInt(seed, 10),
-			size,
-			strength: Number.parseFloat(strength),
-			guidance_scale: Number.parseFloat(guidance),
-		};
-		window.ipc.send("live-painting:update-properties", properties);
-	}, [prompt, seed, size, strength, guidance]);
+	const [, setLivePaintingOptions] = useAtom(livePaintingOptionsAtom);
 
 	return (
-		<Stack direction="row" spacing={2}>
-			<FormControl sx={{ flex: 4 }}>
+		<Box sx={{ display: "flex", gap: 1, width: "100%", alignItems: "center" }}>
+			<IconButton
+				variant="soft"
+				color="neutral"
+				onClick={() => {
+					setLivePaintingOptions(previousState => ({
+						...previousState,
+						seed: Math.floor(Math.random() * 10_000_000_000 + 1),
+					}));
+				}}
+			>
+				<CasinoIcon />
+			</IconButton>
+		</Box>
+	);
+}
+
+export function Prompt() {
+	const [livePaintingOptions, setLivePaintingOptions] = useAtom(livePaintingOptionsAtom);
+
+	return (
+		<Box sx={{ pt: 2 }}>
+			<FormControl sx={{ flex: 1, width: "100%" }}>
 				<FormLabel>Prompt</FormLabel>
-				<Input value={prompt} placeholder="Enter prompt" onChange={handlePromptChange} />
-			</FormControl>
-
-			<FormControl sx={{ flex: 1 }}>
-				<FormLabel>Strength</FormLabel>
-				<Input
-					value={strength}
-					placeholder="Strength"
-					type="number"
-					slotProps={{ input: { min: 0, max: 1, step: 0.1 } }}
+				<Textarea
+					value={livePaintingOptions.prompt}
+					placeholder="Enter prompt"
+					minRows={4}
+					maxRows={4}
 					onChange={event => {
-						handleStrengthChange(event);
+						setLivePaintingOptions(previousState => ({
+							...previousState,
+							prompt: event.target.value,
+						}));
 					}}
 				/>
 			</FormControl>
-
-			{/* <FormControl sx={{ flex: 1 }}>
-				<FormLabel>Guidance</FormLabel>
-				<Input
-					value={guidance}
-					placeholder="Guidance"
-					type="number"
-					slotProps={{ input: { min: 0, max: 2, step: 0.1 } }}
-					onChange={event => {
-						handleGuidanceChange(event);
-					}}
-				/>
-			</FormControl> */}
-
-			<FormControl sx={{ flex: 1 }}>
-				<FormLabel>Seed</FormLabel>
-				<Input
-					value={seed}
-					placeholder="Enter seed"
-					type="number"
-					endDecorator={
-						<IconButton variant="soft" color="neutral" onClick={randomSeed}>
-							<Recycling />
-						</IconButton>
-					}
-					onChange={handleSeedChange}
-				/>
-			</FormControl>
-			<FormControl sx={{ flex: 1, display: "none" }}>
-				<FormLabel>Width</FormLabel>
-				<Input
-					value={size.width}
-					placeholder="Width"
-					type="number"
-					onChange={event => {
-						handleSizeChange("width", event);
-					}}
-				/>
-			</FormControl>
-			<FormControl sx={{ flex: 1, display: "none" }}>
-				<FormLabel>Height</FormLabel>
-				<Input
-					value={size.height}
-					placeholder="Height"
-					type="number"
-					onChange={event => {
-						handleSizeChange("height", event);
-					}}
-				/>
-			</FormControl>
-		</Stack>
+		</Box>
 	);
 }
