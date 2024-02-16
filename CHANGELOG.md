@@ -1,3 +1,12 @@
+# [1.0.0-beta.9](https://github.com/blib-la/captain/compare/v1.0.0-beta.8...v1.0.0-beta.9) (2024-02-16)
+
+
+### Features
+
+* add context menu ([#41](https://github.com/blib-la/captain/issues/41)) ([bb030dd](https://github.com/blib-la/captain/commit/bb030ddffd8c3f29f2cc168d384729449502c59e))
+
+
+
 # [1.0.0-beta.8](https://github.com/blib-la/captain/compare/v1.0.0-beta.7...v1.0.0-beta.8) (2024-02-14)
 
 
