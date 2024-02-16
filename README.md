@@ -1,4 +1,4 @@
-# Captain: Your Local AI Hub
+# Captain: Your Local AI Hub (currently in BETA)
 
 Captain simplifies AI on your desktop. It's a free, open-source application that requires no complex setup — just a single .exe file. It provides a variety of AI tools and features a multi-language UI.
 
