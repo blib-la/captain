@@ -3,6 +3,8 @@ import { css, Global } from "@emotion/react";
 export const globalStyles = (
 	<Global
 		styles={css({
+			"*": { userSelect: "none" },
+			"input, textarea, [contenteditable], select": { userSelect: "unset" },
 			":root": {
 				"--safe-area-inset-top": "env(safe-area-inset-top)",
 				"--safe-area-inset-bottom": "env(safe-area-inset-bottom)",
