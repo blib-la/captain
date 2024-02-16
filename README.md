@@ -17,8 +17,10 @@ Captain currently supports English, German, Spanish, French, Italian, Japanese, 
   </a>
 </p>
 
+## Coming soon: Live Painting with AI, on your Computer
+
 <p align="center">
-    <img src="https://github.com/blib-la/captain/assets/1148334/7fef8f62-f522-44e4-a668-ee66a43ede6e" alt="The captain marketplace" width="900">
+    <a href="https://www.youtube.com/watch?v=EbZMRe1Xgww"><img src="https://github.com/blib-la/captain/assets/1148334/24ffe548-6348-4517-9921-3a234f1e2705" alt="captain promo" /></a>
 </p>
 
 https://github.com/blib-la/captain/assets/1148334/e9f9419e-f6d7-4f35-96a7-667c18b799e2
