@@ -14,7 +14,7 @@ Portuguese, Russian, and Chinese.
 
 <!-- releases -->
 <p align="center">
-  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-beta.9/Captain.Setup.1.0.0-beta.9.exe">
+  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-alpha.1/Captain-Setup-1.0.0-alpha.1.exe">
     <img src="./docs/download.svg" alt="Download Captain" width="300">
   </a>
 </p>
@@ -30,16 +30,15 @@ https://github.com/blib-la/captain/assets/1148334/e9f9419e-f6d7-4f35-96a7-667c18
 
 <!-- toc -->
 
--   [Key Features](#key-features)
--   [Planned Features](#planned-features)
--   [Getting Started](#getting-started)
-    -   [Installation](#installation)
-    -   [Detailed User Guide](#detailed-user-guide)
--   [Important Note: Installation Warning for Unsigned App](#important-note-installation-warning-for-unsigned-app)
--   [Community and Support](#community-and-support)
--   [Contribute to Captain](#contribute-to-captain)
--   [License](#license)
--   [Acknowledgments](#acknowledgments)
+- [Key Features](#key-features)
+- [Getting Started](#getting-started)
+  * [Installation](#installation)
+  * [Detailed User Guide](#detailed-user-guide)
+- [Important Note: Installation Warning for Unsigned App](#important-note-installation-warning-for-unsigned-app)
+- [Community and Support](#community-and-support)
+- [Contribute to Captain](#contribute-to-captain)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
 
 <!-- tocstop -->
 
