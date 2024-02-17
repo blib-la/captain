@@ -15,6 +15,7 @@ publish: null
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
+  artifactName: "${productName}-Setup-${version}.${ext}"
 asar: true
 asarUnpack:
   - "resources/python/**/*"
