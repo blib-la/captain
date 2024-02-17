@@ -12,6 +12,7 @@ import {
 	FEEDBACK,
 	FETCH,
 	GPTV,
+	LLAVA,
 	MARKETPLACE_INDEX,
 	MODEL,
 	MODELS,
@@ -66,6 +67,14 @@ const handler = {
 			exclude: string[];
 		}
 	) => ipcRenderer.invoke(`${WD14}:run`, images, options),
+	handleRunLlava: async (
+		images: string[],
+		options: {
+			batchSize?: number;
+			model: string;
+			prompt: string;
+		}
+	) => ipcRenderer.invoke(`${LLAVA}:run`, images, options),
 	send(channel: string, value?: unknown) {
 		ipcRenderer.send(channel, value);
 	},

@@ -430,7 +430,7 @@ export function WD14CaptionModal({
 			)}
 			<Button
 				fullWidth
-				disabled={!isInstalled}
+				disabled={!isInstalled || filteredImages.length === 0}
 				variant="solid"
 				color="neutral"
 				startDecorator={<StyleIcon />}
@@ -505,6 +505,96 @@ export function WD14CaptionModal({
 	);
 }
 
+export function LlavaCaptionModal({
+	onClose,
+	onStart,
+}: {
+	onClose(): void | Promise<void>;
+	onStart(): void | Promise<void>;
+	onDone(): void | Promise<void>;
+}) {
+	const [options, setOptions] = useState({
+		batchSize: 10,
+		model: "llava-hf/llava-1.5-7b-hf",
+		prompt: `Please caption these images, separate groups by comma, ensure logical groups: "black torn wide pants, red stained sweater" instead of "black, torn, wide pants and red, stained sweater"`,
+	});
+	const { t } = useTranslation(["common"]);
+	const [, setCaptioningError] = useAtom(captioningErrorAtom);
+
+	const filteredImages = useFilteredImages();
+
+	return (
+		<Stack
+			spacing={2}
+			sx={{
+				minHeight: "100%",
+				justifyContent: "center",
+				width: 600,
+				mx: "auto",
+			}}
+		>
+			<Button
+				fullWidth
+				disabled={filteredImages.length === 0}
+				variant="solid"
+				color="neutral"
+				startDecorator={<StyleIcon />}
+				sx={{ flex: 1 }}
+				onClick={async () => {
+					onStart();
+					onClose();
+					try {
+						await window.ipc.handleRunLlava(
+							filteredImages.map(image => image.image),
+							options
+						);
+					} catch (error) {
+						setCaptioningError((error as Error).message);
+					}
+				}}
+			>
+				{t("common:pages.dataset.customCaptionsWithLlava")}
+			</Button>
+
+			<Box sx={{ flex: 1, overflow: "auto", WebkitOverflowScrolling: "touch" }}>
+				<Typography sx={{ my: 1 }}>{t("common:guideline")}</Typography>
+				<Box sx={{ height: 200 }}>
+					<StyledEditor
+						value={options.prompt}
+						options={{
+							mode: "markdown",
+							theme: "material",
+							lineWrapping: true,
+						}}
+						onBeforeChange={(_editor, _data, value) => {
+							setOptions({
+								...options,
+								prompt: value,
+							});
+						}}
+					/>
+				</Box>
+				<Box component="label" sx={{ px: 2, pt: 3, display: "block" }}>
+					<Box>{t("common:batch")}</Box>
+					<Slider
+						min={1}
+						max={filteredImages.length}
+						step={1}
+						valueLabelDisplay="auto"
+						value={options.batchSize}
+						onChange={(_event, value) => {
+							setOptions(previousState => ({
+								...previousState,
+								batchSize: value as number,
+							}));
+						}}
+					/>
+				</Box>
+			</Box>
+		</Stack>
+	);
+}
+
 export function CaptionModal({
 	open,
 	onClose,
@@ -537,6 +627,7 @@ export function CaptionModal({
 				>
 					<TabList>
 						<Tab>WD14</Tab>
+						<Tab>Llava</Tab>
 						<Tab>GPT Vision</Tab>
 					</TabList>
 					<TabPanel
@@ -552,6 +643,17 @@ export function CaptionModal({
 					</TabPanel>
 					<TabPanel
 						value={1}
+						sx={{
+							overflow: "hidden",
+							flex: 1,
+							display: "flex",
+							flexDirection: "column",
+						}}
+					>
+						<LlavaCaptionModal onStart={onStart} onClose={onClose} onDone={onDone} />
+					</TabPanel>
+					<TabPanel
+						value={2}
 						sx={{
 							overflow: "hidden",
 							flex: 1,

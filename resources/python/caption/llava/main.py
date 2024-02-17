@@ -30,12 +30,12 @@ def extract_text(generated_text):
 
 def main(args):
     quantization_config = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_compute_dtype=torch.float16)
-    pipe = load_model(args.model_id, quantization_config)
+    pipe = load_model(args.model_path, quantization_config)
     prompt = f"USER: <image>\n{args.prompt}\nASSISTANT:"
 
     results = []
     for image_path in args.image_paths:
-        print(f"Processing image: {image_path}")
+        # print(f"Processing image: {image_path}")
         generated_text = inference(image_path, prompt, pipe, args.temperature, args.top_p, args.length_penalty, args.repetition_penalty, args.max_length, args.min_length, args.do_sample)
         text = extract_text(generated_text)
         results.append({"filePath": image_path, "output": text})

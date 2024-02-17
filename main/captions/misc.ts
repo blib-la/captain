@@ -107,6 +107,9 @@ export async function wd14(
 				stdout(data: string) {
 					let parsed;
 					try {
+						console.log("-----------------------------------");
+						console.log(data);
+						console.log("---------------------------------");
 						parsed = JSON.parse(data).map((entry: any) => ({
 							...entry,
 							caption: entry.tags
@@ -115,6 +118,51 @@ export async function wd14(
 										!options.exclude.includes(tag) && tag !== "general"
 								)
 								.join(", "),
+						}));
+					} finally {
+						if (Array.isArray(parsed)) {
+							result = parsed;
+						}
+					}
+				},
+			}
+		);
+
+		return result;
+	} catch (error) {
+		console.error(error);
+		throw new Error("Failed to run WD14 script.");
+	}
+}
+
+export async function llava(
+	batch: { base64: string; filePath: string }[],
+	options: { model: string; prompt: string }
+) {
+	const images = batch.map(entry => entry.filePath);
+	const pathToPythonScript = getDirectory("python/caption/llava/main.py");
+	const wd14Path = getUserData("Captain_Data/downloads/caption/llava");
+	const modelPath = path.join(wd14Path, options.model);
+
+	try {
+		let result: { filePath: string; caption: string }[] = [];
+		await python(
+			[
+				pathToPythonScript,
+				"--image_paths",
+				...images,
+				"--model_path",
+				modelPath,
+				"--prompt",
+				options.prompt,
+			],
+			{
+				stdout(data: string) {
+					let parsed;
+					try {
+						parsed = JSON.parse(data).map((entry: any) => ({
+							...entry,
+							caption: entry.output,
 						}));
 					} finally {
 						if (Array.isArray(parsed)) {

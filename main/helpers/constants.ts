@@ -11,6 +11,7 @@ export const MINIFIED_IMAGE_SIZE = 768;
 export const BLIP = "BLIP";
 export const WD14 = "WD14";
 export const GPTV = "GPTV";
+export const LLAVA = "LLAVA";
 export const CAPTION = "CAPTION";
 export const CAPTIONS = "CAPTIONS";
 export const MODEL = "MODEL";
