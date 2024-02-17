@@ -10,12 +10,13 @@ files:
       - package.json
       - app
       - resources/python/**/*
-      - resources/powershell/**/*
+      - resources/python-embedded/**/*
 publish: null
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
+  include: build/installer.nsh
 asar: true
 asarUnpack:
   - "resources/python/**/*"
-  - "resources/powershell/**/*"
+  - "resources/python-embedded/**/*"

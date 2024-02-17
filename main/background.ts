@@ -5,14 +5,11 @@ import contextMenu from "electron-context-menu";
 import serve from "electron-serve";
 
 import i18next from "../next-i18next.config.js";
-import { version } from "../package.json";
 
 import { createWindow } from "./helpers";
-import { APP, CAPTION_RUNNING, DOWNLOADS, INSTALLING_PYTHON, LOCALE } from "./helpers/constants";
+import { CAPTION_RUNNING, DOWNLOADS, INSTALLING_PYTHON, LOCALE } from "./helpers/constants";
 import { store as userStore } from "./helpers/store";
 import { isProduction, protocolName } from "./helpers/utils";
-import { init } from "./init";
-import { getInstalledVersion } from "./utils/first-launch";
 import "./live-painting";
 import "./datasets";
 
@@ -87,15 +84,6 @@ async function main() {
 		const port = process.argv[2];
 		await mainWindow.loadURL(`http://localhost:${port}/${locale}/home`);
 		// MainWindow.webContents.openDevTools();
-	}
-
-	const lastVersion = await getInstalledVersion();
-	if (isProduction && lastVersion !== version) {
-		init(version);
-	}
-
-	if (lastVersion === version) {
-		mainWindow.webContents.send(`${APP}:ready`);
 	}
 }
 
