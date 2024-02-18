@@ -8,6 +8,7 @@ import WarningIcon from "@mui/icons-material/Warning";
 import Alert from "@mui/joy/Alert";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
+import CircularProgress from "@mui/joy/CircularProgress";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Link from "@mui/joy/Link";
@@ -386,8 +387,8 @@ export function WD14CaptionModal({
 	const [options, setOptions] = useState({ batchSize: 10, model: "", exclude: "" });
 	const { t } = useTranslation(["common"]);
 	const [, setCaptioningError] = useAtom(captioningErrorAtom);
-	const { data: loadingModel } = useSWR("SmilingWolf/wd-v1-4-convnextv2-tagger-v2/model");
-	const { data: loadingCSV } = useSWR("SmilingWolf/wd-v1-4-convnextv2-tagger-v2/selected_tags");
+	const storeKey = `${DOWNLOADS}.SmilingWolf/wd-v1-4-convnextv2-tagger-v2`;
+	const { data: loadingModel } = useSWR(storeKey);
 	const { data: checkpointsData } = useSWR(`${CAPTIONS}:wd14`, () =>
 		window.ipc.getModels("captions/wd14")
 	);
@@ -421,13 +422,11 @@ export function WD14CaptionModal({
 					startDecorator={<WarningIcon />}
 					endDecorator={
 						<Button
-							disabled={loadingModel || loadingCSV}
+							disabled={loadingModel}
 							color="warning"
 							variant="solid"
 							startDecorator={<CloudDownloadIcon />}
 							onClick={async () => {
-								const storeKey = `${DOWNLOADS}.SmilingWolf/wd-v1-4-convnextv2-tagger-v2.model.onnx`;
-
 								await window.ipc.downloadModel("wd14", model, {
 									id: "SmilingWolf/wd-v1-4-convnextv2-tagger-v2",
 									storeKey,
@@ -549,6 +548,8 @@ export function LlavaCaptionModal({
 	const [options, setOptions] = useState(llavaDefaultOptions);
 	const { t } = useTranslation(["common"]);
 	const [, setCaptioningError] = useAtom(captioningErrorAtom);
+	const storeKey = `${DOWNLOADS}.llava-hf/llava-1.5-7b-hf`;
+	const { data: loadingModel } = useSWR(storeKey);
 	const { data: checkpointsData } = useSWR(`${CAPTIONS}:llava`, () =>
 		window.ipc.getModels("captions/llava")
 	);
@@ -560,6 +561,9 @@ export function LlavaCaptionModal({
 			setOptions(previousState => ({ ...previousState, model: checkpointsData[0] }));
 		}
 	}, [checkpointsData]);
+
+	console.log("storeKey:", storeKey, { loadingModel });
+
 	return (
 		<Stack
 			spacing={2}
@@ -570,17 +574,27 @@ export function LlavaCaptionModal({
 				mx: "auto",
 			}}
 		>
-			{!isInstalled && (
+			{(!isInstalled || loadingModel) && (
 				<Alert
 					color="warning"
 					startDecorator={<WarningIcon />}
 					endDecorator={
 						<Button
+							disabled={loadingModel}
 							color="warning"
 							variant="solid"
-							startDecorator={<CloudDownloadIcon />}
+							startDecorator={
+								loadingModel ? <CircularProgress /> : <CloudDownloadIcon />
+							}
 							onClick={async () => {
-								await window.ipc.gitCloneLFS("llama", "llava-hf/llava-1.5-13b-hf");
+								await window.ipc.gitCloneLFS(
+									"caption/llava",
+									"llava-hf/llava-1.5-7b-hf",
+									{
+										id: "llava-hf/llava-1.5-7b-hf",
+										storeKey,
+									}
+								);
 							}}
 						>
 							{t("common:download")}
@@ -599,7 +613,7 @@ export function LlavaCaptionModal({
 			)}
 			<Button
 				fullWidth
-				disabled={filteredImages.length === 0}
+				disabled={filteredImages.length === 0 || !isInstalled || loadingModel}
 				variant="solid"
 				color="neutral"
 				startDecorator={<StyleIcon />}
@@ -624,7 +638,7 @@ export function LlavaCaptionModal({
 				<FormControl sx={{ mt: 2 }}>
 					<FormLabel>{t("common:model")}</FormLabel>
 					<Select
-						value={options.model}
+						value={options.model ?? ""}
 						onChange={(_event, value) => {
 							if (value) {
 								setOptions(previousState => ({ ...previousState, model: value }));

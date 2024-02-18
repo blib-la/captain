@@ -108,7 +108,7 @@ ipcMain.handle(
 		console.log({ storeKey });
 		try {
 			let directory = settings[type as keyof typeof settings];
-			if (type === "wd14") {
+			if (type === "caption/wd14") {
 				directory = getUserData("Captain_Data", "downloads", "caption", "wd14", id);
 			}
 

@@ -493,7 +493,7 @@ export function CaptionsSection() {
 						>
 							<ModelCard
 								id={captionModel.id}
-								type="wd14"
+								type={`caption/${captionModel.info.architecture}`}
 								title={captionModel.info.title}
 								author={captionModel.info.author}
 								link={captionModel.info.link}

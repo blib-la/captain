@@ -38,7 +38,7 @@ export const architectureMap = {
 const modelAtoms = {
 	loras: lorasAtom,
 	checkpoints: checkpointsAtom,
-	wd14: captionsAtom,
+	caption: captionsAtom,
 };
 
 // TODO this component has too much business logic.
@@ -49,7 +49,7 @@ export function ModelCard({
 	caption,
 	files,
 	git,
-	type,
+	type: type_,
 	license,
 	architecture,
 	link,
@@ -67,6 +67,7 @@ export function ModelCard({
 	title: string;
 	image?: string;
 }) {
+	const [type, subtype] = type_.split("/");
 	const [isDownloading, setIsDownloading] = useState(false);
 	const { t } = useTranslation(["common"]);
 	const [isDownloadOptionsOpen, setIsDownloadOptionsOpen] = useState(false);
@@ -77,14 +78,14 @@ export function ModelCard({
 
 	const selectedFile = files ? files[selectedIndex] : null;
 	let installed: boolean;
-	if (type === "wd14") {
+	if (type === "caption") {
 		installed = checkpoints.includes(id);
 	} else {
 		installed = selectedFile ? checkpoints.includes(selectedFile?.filename) : false;
 	}
 
 	const hasVersion =
-		type === "wd14"
+		type === "caption"
 			? files?.some(({ filename }) => checkpoints.includes([id, filename].join("/")))
 			: files?.some(({ filename }) => checkpoints.includes(filename));
 
@@ -268,15 +269,15 @@ export function ModelCard({
 													}
 												} else if (selectedFile) {
 													await window.ipc.downloadModel(
-														type,
+														type_,
 														`${link}/resolve/main/${selectedFile.filename}?download=true`,
 														{ id, storeKey }
 													);
 												} else if (git) {
-													await window.ipc.gitCloneLFS(
-														"caption/llama",
-														id
-													);
+													await window.ipc.gitCloneLFS(type_, id, {
+														id,
+														storeKey,
+													});
 												}
 											} catch (error) {
 												console.log(error);

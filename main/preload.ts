@@ -51,8 +51,8 @@ const handler = {
 		ipcRenderer.invoke(`${MARKETPLACE_INDEX}:download`, url),
 	batchEditCaption: (images: DatasetEntry[]) =>
 		ipcRenderer.invoke(`${CAPTIONS}:runBatch`, images),
-	gitCloneLFS: (location: string, repo: string) =>
-		ipcRenderer.invoke(`${GIT}:lfs-clone`, location, repo),
+	gitCloneLFS: (location: string, repo: string, options: { id: string; storeKey: string }) =>
+		ipcRenderer.invoke(`${GIT}:lfs-clone`, location, repo, options),
 	handleRunGPTV: async (
 		images: string[],
 		options: {
