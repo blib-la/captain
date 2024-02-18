@@ -481,7 +481,8 @@ export function WD14CaptionModal({
 				<FormControl sx={{ mt: 2 }}>
 					<FormLabel>{t("common:model")}</FormLabel>
 					<Select
-						value={options.model}
+						disabled={!options.model}
+						value={options.model ?? ""}
 						onChange={(_event, value) => {
 							if (value) {
 								setOptions(previousState => ({ ...previousState, model: value }));
@@ -638,6 +639,7 @@ export function LlavaCaptionModal({
 				<FormControl sx={{ mt: 2 }}>
 					<FormLabel>{t("common:model")}</FormLabel>
 					<Select
+						disabled={!options.model}
 						value={options.model ?? ""}
 						onChange={(_event, value) => {
 							if (value) {
