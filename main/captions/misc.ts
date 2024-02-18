@@ -85,10 +85,8 @@ export async function wd14(
 	const wd14Path = getUserData("Captain_Data/downloads/caption/wd14");
 
 	const modelPath = path.join(wd14Path, options.model);
-	const tagsPath = path.join(
-		wd14Path,
-		options.model.replace(/model\.onnx$/, "selected_tags.csv")
-	);
+	const onnxPath = path.join(modelPath, "model.onnx");
+	const tagsPath = path.join(modelPath, "selected_tags.csv");
 
 	try {
 		let result: { filePath: string; caption: string }[] = [];
@@ -99,7 +97,7 @@ export async function wd14(
 				"--image_paths",
 				...images,
 				"--model_path",
-				modelPath,
+				onnxPath,
 				"--tags_path",
 				tagsPath,
 			],
@@ -137,46 +135,48 @@ export async function wd14(
 
 export async function llava(
 	batch: { base64: string; filePath: string }[],
-	options: { model: string; prompt: string }
+	options: { model: string; prompt: string; temperature: number }
 ) {
 	const images = batch.map(entry => entry.filePath);
 	const pathToPythonScript = getDirectory("python/caption/llava/main.py");
-	const wd14Path = getUserData("Captain_Data/downloads/caption/llava");
-	const modelPath = path.join(wd14Path, options.model);
+	const llavaPath = getUserData("Captain_Data/downloads/caption/llava");
+	const modelPath = path.join(llavaPath, options.model);
+	console.log(options);
+	const arguments_: (string | number)[] = [
+		pathToPythonScript,
+		"--image_paths",
+		...images,
+		"--model_path",
+		modelPath,
+		"--prompt",
+		options.prompt,
+	];
+	if (options.temperature > 0) {
+		arguments_.push("--temperature", options.temperature, "--do_sample");
+	}
 
 	try {
 		let result: { filePath: string; caption: string }[] = [];
-		await python(
-			[
-				pathToPythonScript,
-				"--image_paths",
-				...images,
-				"--model_path",
-				modelPath,
-				"--prompt",
-				options.prompt,
-			],
-			{
-				stdout(data: string) {
-					let parsed;
-					try {
-						parsed = JSON.parse(data).map((entry: any) => ({
-							...entry,
-							caption: entry.output,
-						}));
-					} finally {
-						if (Array.isArray(parsed)) {
-							result = parsed;
-						}
+		await python(arguments_, {
+			stdout(data: string) {
+				let parsed;
+				try {
+					parsed = JSON.parse(data).map((entry: any) => ({
+						...entry,
+						caption: entry.output,
+					}));
+				} finally {
+					if (Array.isArray(parsed)) {
+						result = parsed;
 					}
-				},
-			}
-		);
+				}
+			},
+		});
 
 		return result;
 	} catch (error) {
 		console.error(error);
-		throw new Error("Failed to run WD14 script.");
+		throw new Error("Failed to run Llava script.");
 	}
 }
 

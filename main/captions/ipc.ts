@@ -86,6 +86,7 @@ ipcMain.handle(
 			batchSize?: number;
 			model: string;
 			prompt: string;
+			temperature: number;
 		}
 	) => runCaptions(files, llava, options)
 );

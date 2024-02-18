@@ -11,6 +11,7 @@ import {
 	DOWNLOAD,
 	FEEDBACK,
 	FETCH,
+	GIT,
 	GPTV,
 	LLAVA,
 	MARKETPLACE_INDEX,
@@ -38,8 +39,7 @@ const handler = {
 		ipcRenderer.invoke(`${MODEL}:download`, type, url, options),
 	download: (url: string, directory: string, options: { storeKey: string }) =>
 		ipcRenderer.invoke(`${DOWNLOAD}`, url, directory, options),
-	getModels: (type: "loras" | "checkpoints" | "captions") =>
-		ipcRenderer.invoke(`${MODELS}:get`, type),
+	getModels: (type: string) => ipcRenderer.invoke(`${MODELS}:get`, type),
 	getDatasets: () => ipcRenderer.invoke(`${DATASETS}:get`),
 	createDataset: (directory: string, name: string) =>
 		ipcRenderer.invoke(`${DATASET}:create`, directory, name),
@@ -51,6 +51,8 @@ const handler = {
 		ipcRenderer.invoke(`${MARKETPLACE_INDEX}:download`, url),
 	batchEditCaption: (images: DatasetEntry[]) =>
 		ipcRenderer.invoke(`${CAPTIONS}:runBatch`, images),
+	gitCloneLFS: (location: string, repo: string) =>
+		ipcRenderer.invoke(`${GIT}:lfs-clone`, location, repo),
 	handleRunGPTV: async (
 		images: string[],
 		options: {

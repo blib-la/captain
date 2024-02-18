@@ -16,7 +16,7 @@ def inference(image_path, prompt, pipe, temperature, top_p, length_penalty, repe
                                     "top_p": top_p,
                                     "length_penalty": length_penalty,
                                     "repetition_penalty": repetition_penalty,
-                                    "max_length": max_length,
+                                    "max_length": max_length + int(len(args.prompt) / 3),
                                     "min_length": min_length,
                                     "do_sample": do_sample})
     generated_text = outputs[0]["generated_text"]

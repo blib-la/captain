@@ -48,6 +48,7 @@ export function ModelCard({
 	author,
 	caption,
 	files,
+	git,
 	type,
 	license,
 	architecture,
@@ -58,10 +59,11 @@ export function ModelCard({
 	author: string;
 	license: string;
 	link: string;
-	type: "loras" | "checkpoints" | "wd14";
+	type: string;
+	git?: boolean;
 	caption?: string;
 	architecture: string;
-	files: Array<{ filename: string; variant?: string; required?: boolean }>;
+	files?: Array<{ filename: string; variant?: string; required?: boolean }>;
 	title: string;
 	image?: string;
 }) {
@@ -71,27 +73,31 @@ export function ModelCard({
 
 	const anchorReference = useRef<HTMLDivElement>(null);
 	const [selectedIndex, setSelectedIndex] = useState(0);
-	const [checkpoints] = useAtom(modelAtoms[type]);
+	const [checkpoints] = useAtom(modelAtoms[type as keyof typeof modelAtoms]);
 
-	const selectedFile = files[selectedIndex];
-	const installed =
-		type === "wd14"
-			? Boolean(selectedFile) && checkpoints.includes([id, selectedFile.filename].join("/"))
-			: Boolean(selectedFile) && checkpoints.includes(selectedFile.filename);
+	const selectedFile = files ? files[selectedIndex] : null;
+	let installed: boolean;
+	if (type === "wd14") {
+		installed = checkpoints.includes(id);
+	} else {
+		installed = selectedFile ? checkpoints.includes(selectedFile?.filename) : false;
+	}
 
 	const hasVersion =
 		type === "wd14"
-			? files.some(({ filename }) => checkpoints.includes([id, filename].join("/")))
-			: files.some(({ filename }) => checkpoints.includes(filename));
+			? files?.some(({ filename }) => checkpoints.includes([id, filename].join("/")))
+			: files?.some(({ filename }) => checkpoints.includes(filename));
 
-	const hasMultipleVersions = files.filter(item => !item.required).length > 1;
+	const hasMultipleVersions = files && files.filter(item => !item.required).length > 1;
 
 	function handleMenuItemClick(event: ReactMouseEvent<HTMLElement, MouseEvent>, index: number) {
 		setSelectedIndex(index);
 		setIsDownloadOptionsOpen(false);
 	}
 
-	const storeKey = `${DOWNLOADS}.${id}.${selectedFile.filename}`;
+	const storeKey = selectedFile
+		? `${DOWNLOADS}.${id}.${selectedFile.filename}`
+		: `${DOWNLOADS}.${id}`;
 	const { data } = useSWR(storeKey, fetcher, {
 		refreshInterval: 1000,
 	});
@@ -195,7 +201,7 @@ export function ModelCard({
 									sx={{
 										mt: 1,
 										WebkitLineClamp: 3,
-										height: 48,
+										height: 72,
 										WebkitBoxOrient: "vertical",
 										overflow: "hidden",
 										display: "-webkit-box",
@@ -233,8 +239,10 @@ export function ModelCard({
 									}
 								>
 									<Button
-										disabled={installed || isDownloading || !selectedFile}
 										sx={{ flex: 1 }}
+										disabled={
+											installed || isDownloading || (!selectedFile && !git)
+										}
 										startDecorator={
 											isDownloading ? <CircularProgress /> : <DownloadIcon />
 										}
@@ -246,7 +254,10 @@ export function ModelCard({
 													data: true,
 												});
 
-												if (files.every(file => file.required)) {
+												if (
+													files?.every(file => file.required) &&
+													selectedFile
+												) {
 													console.log("all required");
 													for (const file of files) {
 														await window.ipc.downloadModel(
@@ -255,11 +266,16 @@ export function ModelCard({
 															{ id, storeKey }
 														);
 													}
-												} else {
+												} else if (selectedFile) {
 													await window.ipc.downloadModel(
 														type,
 														`${link}/resolve/main/${selectedFile.filename}?download=true`,
 														{ id, storeKey }
+													);
+												} else if (git) {
+													await window.ipc.gitCloneLFS(
+														"caption/llama",
+														id
 													);
 												}
 											} catch (error) {
@@ -282,24 +298,26 @@ export function ModelCard({
 									</IconButton>
 								)}
 							</ButtonGroup>
-							<Menu
-								open={isDownloadOptionsOpen}
-								anchorEl={anchorReference.current}
-								onClose={() => {
-									setIsDownloadOptionsOpen(false);
-								}}
-							>
-								{files.map((option, index) => (
-									<MenuItem
-										key={option.filename}
-										disabled={index === 2}
-										selected={index === selectedIndex}
-										onClick={event => handleMenuItemClick(event, index)}
-									>
-										{option.filename} ({option.variant})
-									</MenuItem>
-								))}
-							</Menu>
+							{files && (
+								<Menu
+									open={isDownloadOptionsOpen}
+									anchorEl={anchorReference.current}
+									onClose={() => {
+										setIsDownloadOptionsOpen(false);
+									}}
+								>
+									{files.map((option, index) => (
+										<MenuItem
+											key={option.filename}
+											disabled={index === 2}
+											selected={index === selectedIndex}
+											onClick={event => handleMenuItemClick(event, index)}
+										>
+											{option.filename} ({option.variant})
+										</MenuItem>
+									))}
+								</Menu>
+							)}
 						</Box>
 					</ClickAwayListener>
 				</CardContent>

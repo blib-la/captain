@@ -213,7 +213,6 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	useKeyboardControlledImagesNavigation({ onBeforeChange: saveCaptionToFile });
 
 	useEffect(() => {
-		console.log({ captionRunningData });
 		if (typeof captionRunningData === "boolean") {
 			setCaptionRunning(captionRunningData);
 		}

@@ -1,3 +1,4 @@
+import { sliderClasses } from "@mui/joy/Slider";
 import { extendTheme } from "@mui/joy/styles";
 
 import { body, code, display } from "@/ions/fonts";
@@ -255,6 +256,37 @@ export const theme = extendTheme({
 		},
 		JoySlider: {
 			styleOverrides: {
+				root: {
+					[`& [style*="left:0%"], & [style*="left: 0%"]`]: {
+						[`&.${sliderClasses.markLabel}`]: {
+							transform: "none",
+						},
+						[`& .${sliderClasses.valueLabel}`]: {
+							left: "calc(var(--Slider-thumbSize) / 2)",
+							borderBottomLeftRadius: 0,
+							"&::before": {
+								left: 0,
+								transform: "translateY(100%)",
+								borderLeftColor: "currentColor",
+							},
+						},
+					},
+					[`& [style*="left:100%"], & [style*="left: 100%"]`]: {
+						[`&.${sliderClasses.markLabel}`]: {
+							transform: "translateX(-100%)",
+						},
+						[`& .${sliderClasses.valueLabel}`]: {
+							right: "calc(var(--Slider-thumbSize) / 2)",
+							borderBottomRightRadius: 0,
+							"&::before": {
+								left: "initial",
+								right: 0,
+								transform: "translateY(100%)",
+								borderRightColor: "currentColor",
+							},
+						},
+					},
+				},
 				thumb: {
 					"&:focus-within": {
 						outlineOffset: 0,

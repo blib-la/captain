@@ -13,8 +13,9 @@ import { isProduction, protocolName } from "./helpers/utils";
 import { init } from "./init";
 import { getInstalledVersion } from "./utils/first-launch";
 import "./live-painting";
-import "./datasets";
-import "./captions";
+import "./datasets/ipc";
+import "./captions/ipc";
+import "./git/ipc";
 
 app.commandLine.appendSwitch("enable-smooth-scrolling");
 

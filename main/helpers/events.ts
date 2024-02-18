@@ -5,6 +5,7 @@ import path from "path";
 import axios from "axios";
 import { BrowserWindow, ipcMain, shell } from "electron";
 import { download } from "electron-dl";
+import _ from "lodash";
 
 import package_ from "../../package.json";
 
@@ -156,7 +157,7 @@ async function readFilesRecursively(directory: string) {
 
 	for (const item of items) {
 		const fullPath = path.join(directory, item.name);
-		if (item.isDirectory()) {
+		if (item.isDirectory() && !item.name.startsWith(".")) {
 			files = [...files, ...(await readFilesRecursively(fullPath))];
 		} else {
 			files.push(item);
@@ -194,22 +195,24 @@ Version: ${package_.version}
 
 /// ////  NEW SHIT
 
-ipcMain.handle(`${MODELS}:get`, async (_event, type: "loras" | "checkpoints" | "captions") => {
+ipcMain.handle(`${MODELS}:get`, async (_event, type_: string) => {
+	const [type, subtype] = type_.split("/");
 	if (type === "captions") {
-		const directory = getUserData("Captain_Data", "downloads", "caption", "wd14");
+		const directory = getUserData("Captain_Data", "downloads", "caption", subtype);
 		try {
 			const files = await readFilesRecursively(directory);
-			return files
-				.filter(item => item.name.endsWith(".onnx"))
-				.map(item => {
-					const id = path
-						.normalize(item.path)
-						.replaceAll("\\", "/")
-						.split("/")
-						.slice(-2)
-						.join("/");
-					return [id, item.name].join("/");
-				});
+			return _.uniq(
+				files
+					// .filter(item => item.name.endsWith(".onnx"))
+					.map(item =>
+						path
+							.normalize(item.path)
+							.replaceAll("\\", "/")
+							.split("/")
+							.slice(-2)
+							.join("/")
+					)
+			);
 		} catch (error) {
 			console.log(error);
 			return [];

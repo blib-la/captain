@@ -6,7 +6,7 @@ import { BrowserWindow } from "electron";
 import { getDirectory } from "./utils";
 
 export async function python(
-	arguments_: string[],
+	arguments_: (number | string)[],
 	{
 		stdout,
 		stderr,
@@ -26,7 +26,10 @@ export async function python(
 			return;
 		}
 
-		const process = spawn(pathToEmbeddedPython, arguments_);
+		const process = spawn(
+			pathToEmbeddedPython,
+			arguments_.map(argument => argument.toString())
+		);
 
 		process.stdout.on("data", data => {
 			if (stdout) {
