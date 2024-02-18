@@ -1,6 +1,6 @@
 {
   "name": "captain",
-  "version": "1.0.0-beta.8",
+  "version": "1.0.0-beta.9",
   "private": true,
   "description": "The Captain of AI",
   "license": "AGPL 3.0",
@@ -22,10 +22,11 @@
     "test:unit": "jest --runInBand --config jest.config.unit.mjs --verbose"
   },
   "dependencies": {
-    "electron-dl": "^3.5.1",
-    "electron-serve": "^1.3.0",
+    "electron-dl": "3.5.1",
+    "electron-serve": "1.3.0",
     "electron-store": "^8.1.0",
-    "sharp": "^0.33.2"
+    "electron-context-menu": "3.6.1",
+    "sharp": "0.33.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^18.6.0",

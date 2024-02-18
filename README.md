@@ -1,4 +1,4 @@
-# Captain: Your Local AI Hub
+# Captain: Your Local AI Hub (currently in BETA)
 
 Captain simplifies AI on your desktop. It's a free, open-source application that requires no complex setup — just a single .exe file. It provides a variety of AI tools and features a multi-language UI.
 
@@ -13,14 +13,16 @@ Captain currently supports English, German, Spanish, French, Italian, Japanese, 
 
 <!-- releases -->
 <p align="center">
-  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-beta.8/Captain.Setup.1.0.0-beta.8.exe">
+  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-beta.9/Captain.Setup.1.0.0-beta.9.exe">
     <img src="./docs/download.svg" alt="Download Captain" width="300">
   </a>
 </p>
 <!-- releasesstop -->
 
+## Coming soon: Live Painting with AI, on your Computer
+
 <p align="center">
-    <img src="https://github.com/blib-la/captain/assets/1148334/7fef8f62-f522-44e4-a668-ee66a43ede6e" alt="The captain marketplace" width="900">
+    <a href="https://www.youtube.com/watch?v=EbZMRe1Xgww"><img src="https://github.com/blib-la/captain/assets/1148334/24ffe548-6348-4517-9921-3a234f1e2705" alt="captain promo" /></a>
 </p>
 
 https://github.com/blib-la/captain/assets/1148334/e9f9419e-f6d7-4f35-96a7-667c18b799e2
