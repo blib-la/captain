@@ -56,7 +56,7 @@ const handler = {
 	handleRunGPTV: async (
 		images: string[],
 		options: {
-			exampleResponse: string;
+			exampleResponse: string[];
 			guidelines: string;
 			batchSize?: number;
 		}

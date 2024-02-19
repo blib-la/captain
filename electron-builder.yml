@@ -7,10 +7,11 @@ directories:
 files:
   - from: .
     filter:
-      - package.json
-      - app
-      - resources/python/**/*
-      - resources/powershell/**/*
+      - "package.json"
+      - "app"
+      - "resources/python/**/*"
+      - "resources/powershell/**/*"
+      - "resources/git/**/*"
 publish: null
 nsis:
   oneClick: false
@@ -19,3 +20,4 @@ asar: true
 asarUnpack:
   - "resources/python/**/*"
   - "resources/powershell/**/*"
+  - "resources/git/**/*"

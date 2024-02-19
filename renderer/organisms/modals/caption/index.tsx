@@ -43,6 +43,7 @@ import {
 } from "../../../../main/helpers/constants";
 
 import { captioningErrorAtom, imagesAtom, editCaptionScopeAtom } from "@/ions/atoms";
+import { fetcher } from "@/ions/swr/fetcher";
 import { SimpleItemList } from "@/organisms/list/simple-item-list";
 import { PasswordField } from "@/organisms/password-field";
 
@@ -152,8 +153,8 @@ export function GPTVCaptionModal({
 	const [confirmGpt, setConfirmGpt] = useState(false);
 	const { t } = useTranslation(["common"]);
 	const [, setCaptioningError] = useAtom(captioningErrorAtom);
-	const { data: openApiKeyData } = useSWR(OPENAI_API_KEY);
-	const { data: gptVisionData } = useSWR(GPT_VISION_OPTIONS);
+	const { data: openApiKeyData } = useSWR(OPENAI_API_KEY, fetcher, { refreshInterval: 0 });
+	const { data: gptVisionData } = useSWR(GPT_VISION_OPTIONS, fetcher, { refreshInterval: 0 });
 	const filteredImages = useFilteredImages();
 
 	useEffect(() => {
@@ -251,10 +252,8 @@ export function GPTVCaptionModal({
 									filteredImages.map(image => image.image),
 									{
 										...gptVisionOptions,
-										exampleResponse: JSON.stringify(
-											gptVisionOptions.exampleResponse.map(
-												item => item.content
-											)
+										exampleResponse: gptVisionOptions.exampleResponse.map(
+											item => item.content
 										),
 									}
 								);
@@ -388,6 +387,7 @@ export function WD14CaptionModal({
 	const { t } = useTranslation(["common"]);
 	const [, setCaptioningError] = useAtom(captioningErrorAtom);
 	const storeKey = `${DOWNLOADS}.SmilingWolf/wd-v1-4-convnextv2-tagger-v2`;
+	const { data: wd14Data } = useSWR(`${CAPTIONS}:wd14-data`, fetcher, { refreshInterval: 0 });
 	const { data: loadingModel } = useSWR(storeKey);
 	const { data: checkpointsData } = useSWR(`${CAPTIONS}:wd14`, () =>
 		window.ipc.getModels("captions/wd14")
@@ -397,6 +397,7 @@ export function WD14CaptionModal({
 		"https://huggingface.co/SmilingWolf/wd-v1-4-convnextv2-tagger-v2/resolve/main/model.onnx";
 	const csv =
 		"https://huggingface.co/SmilingWolf/wd-v1-4-convnextv2-tagger-v2/resolve/main/selected_tags.csv";
+	const filteredImages = useFilteredImages();
 
 	useEffect(() => {
 		if (checkpointsData) {
@@ -404,7 +405,19 @@ export function WD14CaptionModal({
 		}
 	}, [checkpointsData]);
 
-	const filteredImages = useFilteredImages();
+	useEffect(() => {
+		if (wd14Data) {
+			setOptions(wd14Data as { batchSize: number; model: string; exclude: string });
+		}
+	}, [wd14Data]);
+
+	function setAndSend(newState: { batchSize: number; model: string; exclude: string }) {
+		setOptions(newState);
+		window.ipc.fetch(`${CAPTIONS}:wd14-data`, {
+			method: "POST",
+			data: newState,
+		});
+	}
 
 	return (
 		<Stack
@@ -453,11 +466,13 @@ export function WD14CaptionModal({
 			)}
 			<Button
 				fullWidth
-				disabled={!isInstalled || filteredImages.length === 0}
 				variant="solid"
 				color="neutral"
 				startDecorator={<StyleIcon />}
 				sx={{ flex: 1 }}
+				disabled={
+					!isInstalled || filteredImages.length === 0 || loadingModel || !options.model
+				}
 				onClick={async () => {
 					onStart();
 					onClose();
@@ -481,11 +496,11 @@ export function WD14CaptionModal({
 				<FormControl sx={{ mt: 2 }}>
 					<FormLabel>{t("common:model")}</FormLabel>
 					<Select
-						disabled={!options.model}
+						disabled={!checkpointsData?.length}
 						value={options.model ?? ""}
 						onChange={(_event, value) => {
 							if (value) {
-								setOptions(previousState => ({ ...previousState, model: value }));
+								setAndSend({ ...options, model: value });
 							}
 						}}
 					>
@@ -505,10 +520,16 @@ export function WD14CaptionModal({
 						valueLabelDisplay="auto"
 						value={options.batchSize}
 						onChange={(_event, value) => {
-							setOptions(previousState => ({
-								...previousState,
+							setOptions({
+								...options,
 								batchSize: value as number,
-							}));
+							});
+						}}
+						onChangeCommitted={(_event, value) => {
+							setAndSend({
+								...options,
+								batchSize: value as number,
+							});
 						}}
 					/>
 				</Box>
@@ -517,10 +538,16 @@ export function WD14CaptionModal({
 					<Textarea
 						value={options.exclude}
 						onChange={event => {
-							setOptions(previousState => ({
-								...previousState,
+							setOptions({
+								...options,
 								exclude: event.target.value,
-							}));
+							});
+						}}
+						onBlur={event => {
+							setAndSend({
+								...options,
+								exclude: event.target.value,
+							});
 						}}
 					/>
 				</FormControl>
@@ -550,6 +577,7 @@ export function LlavaCaptionModal({
 	const { t } = useTranslation(["common"]);
 	const [, setCaptioningError] = useAtom(captioningErrorAtom);
 	const storeKey = `${DOWNLOADS}.llava-hf/llava-1.5-7b-hf`;
+	const { data: llavaData } = useSWR(`${CAPTIONS}:llava-data`, fetcher, { refreshInterval: 0 });
 	const { data: loadingModel } = useSWR(storeKey);
 	const { data: checkpointsData } = useSWR(`${CAPTIONS}:llava`, () =>
 		window.ipc.getModels("captions/llava")
@@ -563,7 +591,19 @@ export function LlavaCaptionModal({
 		}
 	}, [checkpointsData]);
 
-	console.log("storeKey:", storeKey, { loadingModel });
+	useEffect(() => {
+		if (llavaData) {
+			setOptions(llavaData as typeof llavaDefaultOptions);
+		}
+	}, [llavaData]);
+
+	function setAndSend(newState: typeof llavaDefaultOptions) {
+		setOptions(newState);
+		window.ipc.fetch(`${CAPTIONS}:llava-data`, {
+			method: "POST",
+			data: newState,
+		});
+	}
 
 	return (
 		<Stack
@@ -614,11 +654,13 @@ export function LlavaCaptionModal({
 			)}
 			<Button
 				fullWidth
-				disabled={filteredImages.length === 0 || !isInstalled || loadingModel}
 				variant="solid"
 				color="neutral"
 				startDecorator={<StyleIcon />}
 				sx={{ flex: 1 }}
+				disabled={
+					filteredImages.length === 0 || !isInstalled || loadingModel || !options.model
+				}
 				onClick={async () => {
 					onStart();
 					onClose();
@@ -639,11 +681,11 @@ export function LlavaCaptionModal({
 				<FormControl sx={{ mt: 2 }}>
 					<FormLabel>{t("common:model")}</FormLabel>
 					<Select
-						disabled={!options.model}
+						disabled={!checkpointsData?.length}
 						value={options.model ?? ""}
 						onChange={(_event, value) => {
 							if (value) {
-								setOptions(previousState => ({ ...previousState, model: value }));
+								setAndSend({ ...options, model: value });
 							}
 						}}
 					>
@@ -668,6 +710,12 @@ export function LlavaCaptionModal({
 								batchSize: value as number,
 							}));
 						}}
+						onChangeCommitted={(_event, value) => {
+							setAndSend({
+								...options,
+								batchSize: value as number,
+							});
+						}}
 					/>
 				</Box>
 				<Box component="label" sx={{ px: 2, pt: 3, display: "block", overflow: "hidden" }}>
@@ -683,6 +731,12 @@ export function LlavaCaptionModal({
 								...previousState,
 								temperature: value as number,
 							}));
+						}}
+						onChangeCommitted={(_event, value) => {
+							setAndSend({
+								...options,
+								temperature: value as number,
+							});
 						}}
 					/>
 				</Box>

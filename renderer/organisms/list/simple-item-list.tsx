@@ -64,7 +64,6 @@ export function SimpleItemList({ items, onAdd, onEdit, onDelete }: SimpleItemLis
 					<ListItem key={item.id}>
 						<ListItemContent component="label">
 							<Textarea
-								autoFocus
 								value={item.content}
 								onBlur={() => {
 									handleEditConfirm(item.id);
@@ -80,7 +79,13 @@ export function SimpleItemList({ items, onAdd, onEdit, onDelete }: SimpleItemLis
 								}}
 							/>
 						</ListItemContent>
-						<IconButton size="sm" color="danger" onClick={() => onDelete(item.id)}>
+						<IconButton
+							size="sm"
+							color="danger"
+							onClick={() => {
+								onDelete(item.id);
+							}}
+						>
 							<DeleteIcon />
 						</IconButton>
 					</ListItem>

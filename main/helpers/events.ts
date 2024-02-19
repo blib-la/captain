@@ -43,9 +43,10 @@ ipcMain.handle(`${LOCALE}:get`, async () => store.get(LOCALE));
 
 ipcMain.handle(`${FETCH}:get`, async (event, key: string) => store.get(key));
 ipcMain.handle(`${FETCH}:delete`, async (event, key: string) => store.delete(key));
-ipcMain.handle(`${FETCH}:post`, async (event, key: string, data: Record<string, unknown>) =>
-	store.set(key, data)
-);
+ipcMain.handle(`${FETCH}:post`, async (event, key: string, data: Record<string, unknown>) => {
+	console.log(key, data);
+	return store.set(key, data);
+});
 
 ipcMain.handle(
 	`${FETCH}:patch`,

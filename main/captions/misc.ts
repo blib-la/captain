@@ -11,6 +11,8 @@ import { python } from "../helpers/python";
 import { store } from "../helpers/store";
 import { getDirectory, getUserData } from "../helpers/utils";
 
+import { resizeImageKeepingAspectRatio } from "./resize";
+
 export interface CaptionOptions {
 	batchSize?: number;
 	parallel?: boolean;
@@ -42,6 +44,7 @@ export async function gpt(
 	{ exampleResponse, instructions }: { instructions: string; exampleResponse: string[] }
 ): Promise<{ filePath: string; caption: string }[]> {
 	const images = batch.map(image => image.base64);
+
 	try {
 		const descriptions = await createImageDescriptions(images, {
 			systemMessage: `You are an expert in captioning images based on given guidelines.
@@ -68,9 +71,10 @@ code block will cause errors.
 		const error_ = error as AxiosError;
 		if (error_.code === "invalid_api_key") {
 			console.log("API key issue");
-			store.set(CAPTION_RUNNING, false);
 			throw error;
 		}
+
+		store.set(CAPTION_RUNNING, false);
 
 		return [];
 	}
@@ -255,33 +259,14 @@ export async function createImageCache(
 		// Load the image to get its dimensions
 		const metadata = await sharp(filePath).metadata();
 
-		const originalWidth = metadata.width;
-		const originalHeight = metadata.height;
-
-		if (!originalWidth || !originalHeight) {
-			error = new Error("Unable to retrieve image dimensions.");
-			console.log(error.message);
-			return { filePath, cachePath, success, error };
-		}
-
-		// Calculate the scaling factor to fit the image within the maximum area, maintaining aspect ratio
-		const maxArea = width * height; // Maximum area (height * width)
-		const originalArea = originalWidth * originalHeight;
-		let scaleFactor = Math.sqrt(maxArea / originalArea);
-
-		// Calculate new dimensions based on the scaling factor
-		let newWidth = Math.floor(originalWidth * scaleFactor);
-		let newHeight = Math.floor(originalHeight * scaleFactor);
-
-		// Ensure new dimensions do not exceed max dimensions
-		if (newWidth > width || newHeight > height) {
-			scaleFactor = newWidth > newHeight ? width / originalWidth : height / originalHeight;
-			newWidth = Math.floor(originalWidth * scaleFactor);
-			newHeight = Math.floor(originalHeight * scaleFactor);
-		}
+		const result = resizeImageKeepingAspectRatio(
+			metadata.height!,
+			metadata.width!,
+			width * height
+		);
 
 		// Use sharp to resize the image to the new dimensions
-		const image = sharp(filePath).resize(newWidth, newHeight, {
+		const image = sharp(filePath).resize(result.width, result.height, {
 			fit: sharp.fit.fill, // Use 'fill' to ensure the exact dimensions are used
 			withoutEnlargement: true,
 		});

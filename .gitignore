@@ -21,3 +21,6 @@ __pycache__
 
 # live-canvas
 live-canvas-*.png
+
+# tests
+coverage
