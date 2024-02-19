@@ -1,0 +1,173 @@
+{
+  "language": {
+    "type": "string",
+    "default": "en-US"
+  },
+  "theme": {
+    "type": "string",
+    "enum": ["light", "dark", "system"],
+    "default": "system"
+  },
+  "privacySettings": {
+    "type": "object",
+    "properties": {
+      "analyticsConsent": {
+        "type": "boolean",
+        "default": false
+      },
+      "thirdPartyDataSharingConsent": {
+        "type": "boolean",
+        "default": false
+      }
+    },
+    "required": ["analyticsConsent", "thirdPartyDataSharingConsent"]
+  },
+  "accessibilityOptions": {
+    "type": "object",
+    "properties": {
+      "fontSize": {
+        "type": "number",
+        "minimum": 10,
+        "maximum": 24,
+        "default": 16
+      },
+      "highContrast": {
+        "type": "boolean",
+        "default": false
+      },
+      "reducedMotion": {
+        "type": "boolean",
+        "default": false
+      }
+    },
+    "required": ["fontSize", "highContrast", "reducedMotion"]
+  },
+  "notifications": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "default": true
+      },
+      "sound": {
+        "type": "boolean",
+        "default": true
+      },
+      "frequency": {
+        "type": "string",
+        "enum": ["real-time", "daily", "never"],
+        "default": "real-time"
+      }
+    },
+    "required": ["enabled", "sound", "frequency"]
+  },
+  "updatePreferences": {
+    "type": "object",
+    "properties": {
+      "autoUpdate": {
+        "type": "boolean",
+        "default": true
+      },
+      "updateNotifications": {
+        "type": "boolean",
+        "default": true
+      }
+    },
+    "required": ["autoUpdate", "updateNotifications"]
+  },
+  "security": {
+    "type": "object",
+    "properties": {
+      "autoLockTimeout": {
+        "type": "number",
+        "minimum": 1,
+        "maximum": 60,
+        "default": 5
+      },
+      "dataEncryption": {
+        "type": "boolean",
+        "default": true
+      }
+    },
+    "required": ["autoLockTimeout", "dataEncryption"]
+  },
+  "offline": {
+    "type": "boolean",
+    "default": false
+  },
+  "cloudSync": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "default": false
+      },
+      "frequency": {
+        "type": "string",
+        "enum": ["daily", "weekly", "manual"],
+        "default": "manual"
+      }
+    },
+    "required": ["enabled", "frequency"]
+  },
+  "uiCustomization": {
+    "type": "object",
+    "properties": {
+      "layout": {
+        "type": "string",
+        "enum": ["default", "compact", "spacious"],
+        "default": "default"
+      },
+      "colorScheme": {
+        "type": "object",
+        "patternProperties": {
+          "^[a-zA-Z]+$": {
+            "type": "string",
+            "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$"
+          }
+        },
+        "default": { "primary": "#007bff", "background": "#ffffff" }
+      }
+    },
+    "required": ["layout", "colorScheme"]
+  },
+  "startupBehavior": {
+    "type": "object",
+    "properties": {
+      "launchOnStartup": {
+        "type": "boolean",
+        "default": false
+      },
+      "startMinimized": {
+        "type": "boolean",
+        "default": false
+      },
+      "restoreLastSession": {
+        "type": "boolean",
+        "default": false
+      }
+    },
+    "required": ["launchOnStartup", "startMinimized", "restoreLastSession"]
+  },
+  "contentFilters": {
+    "type": "object",
+    "patternProperties": {
+      "^[a-zA-Z]+$": { "type": ["boolean", "string"] },
+      "additionalProperties": false
+    },
+    "shortcuts": {
+      "type": "object",
+      "patternProperties": {
+        "^\\w+$": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "shortcuts": {
+    "type": "object",
+    "patternProperties": {
+      ".*": { "type": "string" }
+    },
+    "additionalProperties": false
+  }
+}

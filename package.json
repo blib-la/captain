@@ -100,6 +100,7 @@
     "next-i18next": "15.2.0",
     "next-transpile-modules": "10.0.1",
     "nextron": "^8.12.0",
+    "node-loader": "^2.0.0",
     "openai": "^4.26.0",
     "prettier": "^3.2.4",
     "react": "^18.2.0",
@@ -116,10 +117,13 @@
     "semver": "^7.5.4",
     "swr": "^2.2.4",
     "ts-jest": "^29.1.2",
+    "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
+    "tsconfig-paths-webpack-plugin": "^4.1.0",
     "tslib": "2.6.2",
     "type-fest": "4.10.2",
     "typescript": "^5.3.3",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "webpack": "^5.90.3"
   }
 }
