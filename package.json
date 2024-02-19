@@ -1,6 +1,6 @@
 {
   "name": "captain",
-  "version": "0.1.0",
+  "version": "1.0.0-alpha.1",
   "private": true,
   "description": "The Captain of AI",
   "license": "AGPL 3.0",
@@ -23,10 +23,10 @@
     "test:unit": "jest --runInBand --config jest.config.unit.mjs --verbose"
   },
   "dependencies": {
+    "electron-context-menu": "3.6.1",
     "electron-dl": "3.5.1",
     "electron-serve": "1.3.0",
     "electron-store": "^8.1.0",
-    "electron-context-menu": "3.6.1",
     "sharp": "0.33.2"
   },
   "devDependencies": {
@@ -42,6 +42,10 @@
     "@mui/joy": "5.0.0-beta.24",
     "@mui/material": "5.15.6",
     "@next/mdx": "14.1.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^9.2.6",
     "@swc/cli": "^0.3.5",
     "@swc/core": "^1.3.107",
     "@swc/jest": "^0.2.31",
@@ -110,6 +114,7 @@
     "react-window": "^1.8.10",
     "react-zoom-pan-pinch": "^3.3.0",
     "remark-gfm": "4.0.0",
+    "semantic-release": "^22.0.12",
     "semver": "^7.5.4",
     "sort-json": "^2.0.1",
     "swr": "^2.2.4",
