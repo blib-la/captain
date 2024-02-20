@@ -32,6 +32,4 @@ describe("parseJsonFromString", () => {
 		const parsed = parseJsonFromString(jsonStringWithMultipleCodeBlocks);
 		expect(parsed).toEqual({ key: "value1" });
 	});
-
-	// Add more test cases as needed to cover the expected functionalities
 });

@@ -89,6 +89,4 @@ describe("Electron Window Utilities", () => {
 
 		expect(newState).toEqual(windowState);
 	});
-
-	// Additional tests as necessary...
 });
