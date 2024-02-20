@@ -110,6 +110,14 @@ export function getUserData(...subpath: string[]): string {
 	return path.join(app.getPath("userData"), ...subpath);
 }
 
+export function getCaptainData(...subpath: string[]): string {
+	return getUserData("Captain_Data", ...subpath);
+}
+
+export function getCaptainDownloads(...subpath: string[]): string {
+	return getCaptainData("downloads", ...subpath);
+}
+
 /**
  * Synchronously get a list of image files from a directory.
  * @param {string} directoryPath - The path of the directory to scan.
