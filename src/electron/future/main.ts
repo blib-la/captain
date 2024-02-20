@@ -4,13 +4,13 @@ import { app, ipcMain, Menu, screen } from "electron";
 
 import { version } from "../../../package.json";
 
-import { createWindow } from "./create-window";
 import { appSettingsStore } from "./stores";
-import { loadURL } from "./utils";
 
 import { buildKey } from "#/build-key";
 import { DownloadState, ID } from "#/enums";
 import { isProduction } from "#/flags";
+import { createWindow } from "@/utils/create-window";
+import { loadURL } from "@/utils/load-window";
 
 /**
  * Creates and displays the installer window with predefined dimensions.

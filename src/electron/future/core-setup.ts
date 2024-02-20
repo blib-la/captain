@@ -5,8 +5,6 @@ import serve from "electron-serve";
 import { LOCAL_PROTOCOL } from "#/constants";
 import { isProduction } from "#/flags";
 
-import "./core-setup";
-
 if (isProduction) {
 	serve({ directory: "app" });
 } else {

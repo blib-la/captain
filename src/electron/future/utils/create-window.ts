@@ -5,7 +5,7 @@ import Store from "electron-store";
 import { buildKey } from "#/build-key";
 import { LOCAL_PROTOCOL } from "#/constants";
 import { ID } from "#/enums";
-import { ensureVisibleOnSomeDisplay, getCurrentPosition } from "@/old-utils";
+import { ensureVisibleOnSomeDisplay, getCurrentPosition } from "@/utils/window";
 
 /**
  * Creates a new Electron BrowserWindow with specified options.

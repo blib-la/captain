@@ -3,8 +3,8 @@ import { download } from "electron-dl";
 
 import { buildKey } from "#/build-key";
 import { DownloadState, ID } from "#/enums";
-import { getCaptainData, getCaptainDownloads, getDirectory } from "@/old-utils";
 import { appSettingsStore, userStore } from "@/stores";
+import { getCaptainData, getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
 import { unpack } from "@/utils/unpack";
 
 ipcMain.on(buildKey([ID.WINDOW], { suffix: ":close" }), () => {
