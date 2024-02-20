@@ -12,6 +12,7 @@ import { DownloadState, ID } from "#/enums";
 import { I18nLink } from "@/atoms/i18n-link";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 import { Illustration } from "@/organisms/illustration";
+import { QuoteLoop } from "@/organisms/quote-loop";
 
 function useInstallProgress() {
 	const [status, setStatus] = useState(DownloadState.IDLE);
@@ -55,31 +56,41 @@ function useInstallProgress() {
 				window.ipc.send(buildKey([ID.APP], { suffix: ":ready" }), true);
 			}
 		);
+		const unsubscribeUnpacking = window.ipc.on(
+			buildKey([ID.INSTALL], { suffix: ":unpacking" }),
+			() => {
+				setStatus(DownloadState.UNPACKING);
+			}
+		);
 
 		return () => {
 			unsubscribeStarted();
 			unsubscribeProgress();
 			unsubscribeCancelled();
 			unsubscribeCompleted();
+			unsubscribeUnpacking();
 		};
 	}, []);
 	return { status, progress, reset };
 }
 
 export function InstallScreen({ percent, status }: { percent: number; status: DownloadState }) {
-	const { t } = useTranslation(["installer"]);
+	const { t } = useTranslation(["installer", "labels", "texts"]);
+	let illustration = "/illustrations/minimalistic/meditation.svg";
+	let heading = t("installer:install");
+	if (status === DownloadState.ACTIVE) {
+		illustration = "/illustrations/minimalistic/cloud-computing.svg";
+		heading = t("labels:downloading");
+	} else if (status === DownloadState.UNPACKING) {
+		illustration = "/illustrations/minimalistic/discovery.svg";
+		heading = t("labels:unpacking");
+	}
+
 	return (
 		<>
-			<Illustration
-				height={200}
-				path={
-					status === DownloadState.IDLE
-						? "/illustrations/minimalistic/success.svg"
-						: "/illustrations/minimalistic/meditation.svg"
-				}
-			/>
+			<Illustration height={200} path={illustration} />
 			<Typography level="h1" sx={{ my: 2, textAlign: "center" }}>
-				{t("installer:install")}
+				{heading}
 			</Typography>
 			<Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
 				{status === DownloadState.IDLE ? (
@@ -87,15 +98,26 @@ export function InstallScreen({ percent, status }: { percent: number; status: Do
 						{t("installer:installerIntro")}
 					</Typography>
 				) : (
-					<LinearProgress
-						determinate
-						color="primary"
-						value={percent * 100}
-						sx={{
-							"--LinearProgress-radius": "0px",
-							"--LinearProgress-thickness": "96px",
-						}}
-					/>
+					<Box sx={{ width: "100%" }}>
+						{status === DownloadState.ACTIVE ? (
+							<>
+								<QuoteLoop />
+								<LinearProgress
+									determinate
+									color="primary"
+									value={percent * 100}
+									sx={{
+										"--LinearProgress-radius": "0px",
+										"--LinearProgress-thickness": "48px",
+									}}
+								/>
+							</>
+						) : (
+							<Typography level="body-lg" sx={{ my: 2, textAlign: "center" }}>
+								{t("texts:downloadSuccessUnpacking")}
+							</Typography>
+						)}
+					</Box>
 				)}
 			</Box>
 		</>
@@ -132,6 +154,6 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	);
 }
 
-export const getStaticProps = makeStaticProperties(["common", "installer"]);
+export const getStaticProps = makeStaticProperties(["common", "installer", "texts", "labels"]);
 
 export { getStaticPaths } from "@/ions/i18n/get-static";

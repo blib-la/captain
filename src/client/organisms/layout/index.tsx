@@ -18,7 +18,7 @@ import { SidebarButton } from "@/organisms/sidebar-button";
 import { TitleBar } from "@/organisms/title-bar";
 
 export function Layout({ children }: { children?: ReactNode }) {
-	const { t } = useTranslation(["common"]);
+	const { t } = useTranslation(["common", "labels"]);
 
 	return (
 		<Box
@@ -36,7 +36,7 @@ export function Layout({ children }: { children?: ReactNode }) {
 			<TitleBar />
 			<Stack sx={{ overflow: "hidden" }}>
 				<SidebarButton href="/dashboard" startDecorator={<DashboardIcon />}>
-					{t("common:dashboard")}
+					{t("labels:dashboard")}
 				</SidebarButton>
 				<SidebarButton disabled href="/home" startDecorator={<CollectionsIcon />}>
 					{t("common:datasets")}

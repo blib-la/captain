@@ -10,7 +10,7 @@ import { makeStaticProperties } from "@/ions/i18n/get-static";
 import { Lottie } from "@/organisms/lottie";
 
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
-	const { t } = useTranslation(["common"]);
+	const { t } = useTranslation(["common", "labels"]);
 	return (
 		<>
 			<Head>
@@ -30,7 +30,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 					}}
 				>
 					<Typography level="h4" component="h1">
-						{t("common:dashboard")}
+						{t("labels:dashboard")}
 					</Typography>
 				</Sheet>
 				<Box
@@ -44,7 +44,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 					<Box>
 						<Lottie path="/lottie/minimalistic/tech-discovery.json" height={400} />
 						<Typography level="h2" sx={{ textAlign: "center" }}>
-							{t("common:dashboard")}
+							{t("labels:dashboard")}
 						</Typography>
 					</Box>
 				</Box>
@@ -53,6 +53,6 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	);
 }
 
-export const getStaticProps = makeStaticProperties(["common"]);
+export const getStaticProps = makeStaticProperties(["common", "texts", "labels"]);
 
 export { getStaticPaths } from "@/ions/i18n/get-static";

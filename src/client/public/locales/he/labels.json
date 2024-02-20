@@ -2,8 +2,10 @@
   "accessibility": "נגישות",
   "back": "חזרה",
   "dashboard": "לוח בקרה",
+  "downloading": "מוריד",
   "maximize": "הגדל",
   "minimize": "מזער",
   "privacy": "פרטיות",
-  "security": "ביטחון"
+  "security": "ביטחון",
+  "unpacking": "פותח"
 }

@@ -2,8 +2,10 @@
   "accessibility": "可访问性",
   "back": "返回",
   "dashboard": "仪表板",
+  "downloading": "下载中",
   "maximize": "最大化",
   "minimize": "最小化",
   "privacy": "隐私",
-  "security": "安全"
+  "security": "安全",
+  "unpacking": "解压中"
 }

@@ -2,8 +2,10 @@
   "accessibility": "Acessibilidade",
   "back": "Voltar",
   "dashboard": "Painel de Controle",
+  "downloading": "Baixando",
   "maximize": "Maximizar",
   "minimize": "Minimizar",
   "privacy": "Privacidade",
-  "security": "Segurança"
+  "security": "Segurança",
+  "unpacking": "Desembalando"
 }

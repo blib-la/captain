@@ -45,4 +45,9 @@ export enum DownloadState {
 	 * The download has been cancelled by rhe user and did not complete.
 	 */
 	CANCELLED = "CANCELLED",
+
+	/**
+	 * The download is being unpacked.
+	 */
+	UNPACKING = "UNPACKING",
 }

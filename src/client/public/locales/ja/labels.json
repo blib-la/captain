@@ -2,8 +2,10 @@
   "accessibility": "アクセシビリティ",
   "back": "戻る",
   "dashboard": "ダッシュボード",
+  "downloading": "ダウンロード中",
   "maximize": "最大化",
   "minimize": "最小化",
   "privacy": "プライバシー",
-  "security": "セキュリティ"
+  "security": "セキュリティ",
+  "unpacking": "解凍中"
 }

@@ -2,8 +2,10 @@
   "accessibility": "Доступность",
   "back": "Назад",
   "dashboard": "Панель управления",
+  "downloading": "Загрузка",
   "maximize": "Развернуть",
   "minimize": "Свернуть",
   "privacy": "Конфиденциальность",
-  "security": "Безопасность"
+  "security": "Безопасность",
+  "unpacking": "Распаковка"
 }

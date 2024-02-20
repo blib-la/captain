@@ -2,8 +2,10 @@
   "accessibility": "Accesibilidad",
   "back": "Atrás",
   "dashboard": "Tablero",
+  "downloading": "Descargando",
   "maximize": "Maximizar",
   "minimize": "Minimizar",
   "privacy": "Privacidad",
-  "security": "Seguridad"
+  "security": "Seguridad",
+  "unpacking": "Desempaquetando"
 }

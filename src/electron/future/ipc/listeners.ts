@@ -60,6 +60,7 @@ ipcMain.on(buildKey([ID.INSTALL], { suffix: "start" }), async () => {
 			},
 			async onCompleted(item) {
 				window_.webContents.send(buildKey([ID.INSTALL], { suffix: ":unpacking" }), true);
+				appSettingsStore.set("status", DownloadState.UNPACKING);
 
 				const targetPath = getCaptainData("python-embedded");
 				await unpack(getDirectory("7zip", "win", "7za.exe"), item.path, targetPath);
