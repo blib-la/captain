@@ -38,7 +38,7 @@ async function createInstallerWindow() {
 		},
 	});
 
-	await loadURL(installerWindow, "installer");
+	await loadURL(installerWindow, "installer/00");
 	return installerWindow;
 }
 

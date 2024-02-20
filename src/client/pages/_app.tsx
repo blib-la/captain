@@ -14,6 +14,7 @@ import { theme } from "@/ions/theme";
 import { CSS_VARIABLE_PREFIX } from "@/ions/theme/constants";
 import { Layout } from "@/organisms/layout";
 import "@/ions/date";
+import { SimpleLayout } from "@/organisms/layout/simple";
 
 function App({ Component, pageProps }: AppProps) {
 	const { pathname } = useRouter();
@@ -59,7 +60,9 @@ function App({ Component, pageProps }: AppProps) {
 				}}
 			>
 				{isInstaller ? (
-					<Component {...pageProps} />
+					<SimpleLayout>
+						<Component {...pageProps} />
+					</SimpleLayout>
 				) : (
 					<Layout>
 						<Component {...pageProps} />
