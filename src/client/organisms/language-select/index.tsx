@@ -1,3 +1,8 @@
+import List from "@mui/joy/List";
+import ListItem from "@mui/joy/ListItem";
+import ListItemButton from "@mui/joy/ListItemButton";
+import ListItemContent from "@mui/joy/ListItemContent";
+import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import Option from "@mui/joy/Option";
 import Select from "@mui/joy/Select";
 import { useRouter } from "next/router";
@@ -24,7 +29,7 @@ import { StyledFlagWrapper, StyledValueWrapper } from "@/organisms/language-sele
 
 export const localeNames: Record<string, string> = {
 	de: "Deutsch",
-	en: "English",
+	en: "English (US)",
 	es: "Español",
 	fr: "Français",
 	he: "עברית",
@@ -36,6 +41,7 @@ export const localeNames: Record<string, string> = {
 	ru: "Русский",
 	zh: "中文",
 };
+
 export const localeFlags: Record<string, ReactElement> = {
 	de: <FlagDe />,
 	en: <FlagUs />,
@@ -102,5 +108,41 @@ export function LanguageSelect() {
 				</Option>
 			))}
 		</Select>
+	);
+}
+
+export function LanguageSelectList() {
+	const { asPath = [], push } = useRouter();
+	const {
+		i18n: { language: locale },
+	} = useTranslation(["common"]);
+	const { locales } = index18Next.i18n;
+	// Const locale = "en";
+	const localeRegex = new RegExp(`/(${locales.join("|")})/`);
+	const asPath_ = (asPath as string).replace(localeRegex, "/");
+
+	return (
+		<List data-testid="language-selector-list" variant="soft" color="neutral">
+			{locales.map(locale_ => (
+				<ListItem key={locale_} value={locale_}>
+					<ListItemButton
+						selected={locale === locale_}
+						color="primary"
+						onClick={async () => {
+							await window.ipc.send(
+								buildKey([ID.USER], { suffix: ":language" }),
+								locale_
+							);
+							await push(`/${locale_}${asPath_}`, undefined);
+						}}
+					>
+						<ListItemDecorator>
+							<StyledFlagWrapper>{localeFlags[locale_]}</StyledFlagWrapper>
+						</ListItemDecorator>
+						<ListItemContent>{localeNames[locale_]}</ListItemContent>
+					</ListItemButton>
+				</ListItem>
+			))}
+		</List>
 	);
 }

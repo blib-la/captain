@@ -4,8 +4,8 @@ import dayjs from "dayjs";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { appWithTranslation } from "next-i18next";
-import { useMemo } from "react";
+import { appWithTranslation, useTranslation } from "next-i18next";
+import { useEffect, useMemo } from "react";
 import { SWRConfig } from "swr";
 
 import { globalStyles } from "@/ions/styles";
@@ -16,16 +16,21 @@ import { Layout } from "@/organisms/layout";
 import "@/ions/date";
 
 function App({ Component, pageProps }: AppProps) {
-	const { locale, pathname } = useRouter();
+	const { pathname } = useRouter();
+	const {
+		i18n: { language },
+	} = useTranslation();
+	const isInstaller = pathname.includes("[locale]/installer");
 
 	// Intended abuse of useMemo to allow changes on server and client mount
 	useMemo(() => {
 		// We need to set is before the render to tell dayjs to change the locale
-		dayjs.locale(locale!);
-	}, [locale]);
+		dayjs.locale(language!);
+	}, [language]);
 
-	const isInstaller = pathname.includes("[locale]/installer");
-	console.log(pathname);
+	useEffect(() => {
+		document.documentElement.lang = language!;
+	}, [language]);
 
 	return (
 		<CssVarsProvider

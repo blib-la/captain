@@ -20,6 +20,10 @@ import { isProduction } from "#/flags";
  */
 export function getLocale() {
 	let locale = userStore.get("language");
+	if (locale) {
+		return locale;
+	}
+
 	const systemLocale = app.getLocale();
 	const [simpleLocale] = systemLocale.split("-");
 	if (i18next.i18n.locales.includes(simpleLocale)) {

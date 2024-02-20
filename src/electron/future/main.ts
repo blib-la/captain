@@ -22,7 +22,7 @@ import { isProduction } from "#/flags";
 async function createInstallerWindow() {
 	const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 	const windowWidth = Math.min(600, width);
-	const windowHeight = Math.min(400, height);
+	const windowHeight = Math.min(700, height);
 	const installerWindow = await createWindow("installer", {
 		width: windowWidth,
 		height: windowHeight,
