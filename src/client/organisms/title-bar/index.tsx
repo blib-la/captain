@@ -26,11 +26,11 @@ export function close() {
 }
 
 export function WindowControls({ disableMaximize = true }) {
-	const { t } = useTranslation(["common"]);
+	const { t } = useTranslation(["labels"]);
 	return (
 		<Box sx={{ WebkitAppRegion: "no-drag", "--focus-outline-offset": "-2px" }}>
 			<IconButton
-				aria-label={t("common:minimize")}
+				aria-label={t("labels:minimize")}
 				sx={{ cursor: "default" }}
 				onClick={minimize}
 			>
@@ -38,7 +38,7 @@ export function WindowControls({ disableMaximize = true }) {
 			</IconButton>
 			<IconButton
 				disabled={disableMaximize}
-				aria-label={t("common:maximize")}
+				aria-label={t("labels:maximize")}
 				sx={{ cursor: "default" }}
 				onClick={maximize}
 			>
@@ -47,7 +47,7 @@ export function WindowControls({ disableMaximize = true }) {
 			<IconButton
 				color="danger"
 				variant="solid"
-				aria-label={t("common:close")}
+				aria-label={t("labels:close")}
 				sx={{
 					cursor: "default",
 					bgcolor: "transparent",
