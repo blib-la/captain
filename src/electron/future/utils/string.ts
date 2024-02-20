@@ -2,7 +2,7 @@ import JSON5 from "json5";
 
 export function parseJsonFromString(inputString: string) {
 	// Regular expression to match code blocks with or without language specifier
-	const codeBlockRegex = /^```\w*\n?([\S\s]*?)```$/;
+	const codeBlockRegex = /```(?:\w*\n)?([\S\s]*?)```/;
 
 	// Check for and remove code blocks if they exist
 	const match = inputString.match(codeBlockRegex);
@@ -17,7 +17,7 @@ export function parseJsonFromString(inputString: string) {
 	try {
 		return JSON5.parse(inputString);
 	} catch (error) {
-		console.error("Error parsing JSON:", error);
+		console.log("Error parsing JSON:", error);
 		return null;
 	}
 }
