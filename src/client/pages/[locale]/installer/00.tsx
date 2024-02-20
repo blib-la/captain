@@ -15,7 +15,7 @@ export function LanguageSettings() {
 	const { t } = useTranslation(["common", "installer"]);
 	return (
 		<>
-			<Illustration path="/illustrations/minimalistic/public-speaker.svg" height={200} />
+			<Illustration path="/illustrations/minimalistic/international.svg" height={200} />
 			<Typography level="h1" sx={{ my: 2, textAlign: "center" }}>
 				{t("common:language")}
 			</Typography>
