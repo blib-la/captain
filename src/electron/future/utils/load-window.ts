@@ -16,7 +16,7 @@ import { getLocale } from "@/utils/locale";
  */
 export async function loadURL(window_: BrowserWindow, pathname: string) {
 	const locale = getLocale();
-	console.log({ locale });
+
 	if (isProduction) {
 		await window_.loadURL(`app://./${locale}/${pathname}`);
 	} else {
