@@ -5,6 +5,7 @@ import Typography from "@mui/joy/Typography";
 import type { Progress } from "electron-dl";
 import type { InferGetStaticPropsType } from "next";
 import { useTranslation } from "next-i18next";
+import type { ReactNode } from "react";
 import { useCallback, useEffect, useState } from "react";
 
 import { buildKey } from "#/build-key";
@@ -74,54 +75,92 @@ function useInstallProgress() {
 	return { status, progress, reset };
 }
 
-export function InstallScreen({ percent, status }: { percent: number; status: DownloadState }) {
-	const { t } = useTranslation(["installer", "labels", "texts"]);
-	let illustration = "/illustrations/minimalistic/meditation.svg";
-	let heading = t("installer:install");
-	if (status === DownloadState.ACTIVE) {
-		illustration = "/illustrations/minimalistic/cloud-computing.svg";
-		heading = t("labels:downloading");
-	} else if (status === DownloadState.UNPACKING) {
-		illustration = "/illustrations/minimalistic/discovery.svg";
-		heading = t("labels:unpacking");
-	}
-
+function InstallStep({
+	illustration,
+	heading,
+	children,
+}: {
+	illustration: string;
+	heading: string;
+	children?: ReactNode;
+}) {
 	return (
 		<>
 			<Illustration height={200} path={illustration} />
 			<Typography level="h1" sx={{ my: 2, textAlign: "center" }}>
 				{heading}
 			</Typography>
-			<Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
-				{status === DownloadState.IDLE ? (
-					<Typography level="body-lg" sx={{ my: 2, textAlign: "center" }}>
-						{t("installer:installerIntro")}
-					</Typography>
-				) : (
-					<Box sx={{ width: "100%" }}>
-						{status === DownloadState.ACTIVE ? (
-							<>
-								<QuoteLoop />
-								<LinearProgress
-									determinate
-									color="primary"
-									value={percent * 100}
-									sx={{
-										"--LinearProgress-radius": "0px",
-										"--LinearProgress-thickness": "48px",
-									}}
-								/>
-							</>
-						) : (
-							<Typography level="body-lg" sx={{ my: 2, textAlign: "center" }}>
-								{t("texts:downloadSuccessUnpacking")}
-							</Typography>
-						)}
-					</Box>
-				)}
+			<Box
+				sx={{
+					flex: 1,
+					display: "flex",
+					flexDirection: "column",
+					justifyContent: "center",
+				}}
+			>
+				{children}
 			</Box>
 		</>
 	);
+}
+
+export function InstallScreen({ percent, status }: { percent: number; status: DownloadState }) {
+	const { t } = useTranslation(["installer", "labels", "texts"]);
+
+	switch (status) {
+		case DownloadState.IDLE: {
+			return (
+				<InstallStep
+					heading={t("installer:install")}
+					illustration="/illustrations/minimalistic/meditation.svg"
+				>
+					<Typography level="body-lg" sx={{ my: 2, textAlign: "center" }}>
+						{t("installer:installerIntro")}
+					</Typography>
+				</InstallStep>
+			);
+		}
+
+		case DownloadState.ACTIVE: {
+			return (
+				<InstallStep
+					heading={t("labels:downloading")}
+					illustration="/illustrations/minimalistic/cloud-computing.svg"
+				>
+					<Box sx={{ flex: 1, position: "relative" }}>
+						<QuoteLoop />
+					</Box>
+					<LinearProgress
+						determinate
+						color="primary"
+						value={percent * 100}
+						sx={{
+							flexGrow: 0,
+							"--LinearProgress-radius": "0px",
+							"--LinearProgress-thickness": "48px",
+						}}
+					/>
+				</InstallStep>
+			);
+		}
+
+		case DownloadState.UNPACKING: {
+			return (
+				<InstallStep
+					heading={t("labels:unpacking")}
+					illustration="/illustrations/minimalistic/discovery.svg"
+				>
+					<Typography level="body-lg" sx={{ my: 2, textAlign: "center" }}>
+						{t("texts:downloadSuccessUnpacking")}
+					</Typography>
+				</InstallStep>
+			);
+		}
+
+		default: {
+			return null;
+		}
+	}
 }
 
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {

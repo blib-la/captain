@@ -1,30 +1,28 @@
-import Box from "@mui/joy/Box";
 import { styled } from "@mui/joy/styles";
 import Typography from "@mui/joy/Typography";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "next-i18next";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 
 export const StyledMotionDiv = styled(motion.div)({
 	position: "absolute",
-	top: "50%",
-	left: "50%",
-	transform: "translate(-50%,-50%)",
-	width: "100%",
+	inset: 0,
+	display: "flex",
+	alignItems: "center",
 });
 
-export function FadeBox({ children, isVisible }: { children: ReactNode; isVisible?: boolean }) {
+export function FadeBox({ children, id }: { children: ReactNode; id: string }) {
 	return (
-		<AnimatePresence>
-			{isVisible && (
-				<StyledMotionDiv
-					initial={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
-					exit={{ opacity: 0 }}
-				>
-					{children}
-				</StyledMotionDiv>
-			)}
+		<AnimatePresence mode="wait">
+			<StyledMotionDiv
+				key={id}
+				initial={{ y: 10, opacity: 0 }}
+				animate={{ y: 0, opacity: 1 }}
+				exit={{ y: -10, opacity: 0 }}
+				transition={{ duration: 0.2 }}
+			>
+				{children}
+			</StyledMotionDiv>
 		</AnimatePresence>
 	);
 }
@@ -93,35 +91,21 @@ export function useNumberRotation(end: number, { interval = 1000, loop = false }
 
 export function QuoteLoop() {
 	const { t } = useTranslation(["texts"]);
-	const count = useNumberRotation(4, { interval: 10_000, loop: true });
+	const texts = useMemo(
+		() => [
+			t("texts:quote1"),
+			t("texts:quote2"),
+			t("texts:quote3"),
+			t("texts:quote4"),
+			t("texts:quote5"),
+		],
+		[t]
+	);
+	const count = useNumberRotation(texts.length - 1, { interval: 15_000, loop: true });
 
 	return (
-		<Box sx={{ position: "relative", width: "100%", height: 200 }}>
-			<FadeBox isVisible={count === 0}>
-				<Typography sx={{ textAlign: "center", width: "100%" }}>
-					{t("texts:quote1")}
-				</Typography>
-			</FadeBox>
-			<FadeBox isVisible={count === 1}>
-				<Typography sx={{ textAlign: "center", width: "100%" }}>
-					{t("texts:quote2")}
-				</Typography>
-			</FadeBox>
-			<FadeBox isVisible={count === 2}>
-				<Typography sx={{ textAlign: "center", width: "100%" }}>
-					{t("texts:quote3")}
-				</Typography>
-			</FadeBox>
-			<FadeBox isVisible={count === 3}>
-				<Typography sx={{ textAlign: "center", width: "100%" }}>
-					{t("texts:quote4")}
-				</Typography>
-			</FadeBox>
-			<FadeBox isVisible={count === 4}>
-				<Typography sx={{ textAlign: "center", width: "100%" }}>
-					{t("texts:quote5")}
-				</Typography>
-			</FadeBox>
-		</Box>
+		<FadeBox id={count.toString()}>
+			<Typography sx={{ textAlign: "center", width: "100%" }}>{texts[count]}</Typography>
+		</FadeBox>
 	);
 }
