@@ -15,7 +15,7 @@ build
 
 # python
 resources/python-embedded/
-resources/python-embeded/
+resources/git/
 resources/python/caption/wd14/models/model.onnx
 __pycache__
 .pytest_cache
@@ -24,3 +24,6 @@ __pycache__
 live-canvas-frontend-user-data.png
 live-canvas-generate-image-output.png
 live-canvas-generate-image-output.png.tmp.png
+
+# test
+coverage

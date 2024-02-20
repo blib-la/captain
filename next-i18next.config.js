@@ -7,19 +7,20 @@ module.exports = {
 			"en", // English
 			"es", // Spanish
 			"fr", // French
+			// "he", // Hebrew
 			"it", // Italian
 			"ja", // Japanese
 			"nl", // Dutch
-			"zh", // Chinese
-			"ru", // Russian
-			"pt", // Portuguese
 			"pl", // Polish
+			"pt", // Portuguese
+			"ru", // Russian
+			"zh", // Chinese
 		],
 	},
 	debug: process.env.NODE_ENV === "development",
 	reloadOnPrerender: process.env.NODE_ENV === "development",
 	localePath:
 		typeof window === "undefined"
-			? require("path").resolve("./renderer/public/locales")
+			? require("path").resolve("./src/client/public/locales")
 			: "/locales",
 };
