@@ -8,6 +8,9 @@ jest.mock("electron", () => ({
 	BrowserWindow: jest.fn().mockImplementation(() => ({
 		loadURL: jest.fn().mockResolvedValue(null),
 	})),
+	app: {
+		getPath: jest.fn(),
+	},
 }));
 
 jest.mock("@/utils/locale", () => ({
