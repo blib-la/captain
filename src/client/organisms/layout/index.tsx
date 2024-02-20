@@ -67,7 +67,7 @@ export function Layout({ children }: { children?: ReactNode }) {
 				<SidebarButton disabled href="/feedback" startDecorator={<RateReviewIcon />}>
 					{t("common:feedback")}
 				</SidebarButton>
-				<SidebarButton disabled href="/settings" startDecorator={<SettingsIcon />}>
+				<SidebarButton href="/settings" startDecorator={<SettingsIcon />}>
 					{t("common:settings")}
 				</SidebarButton>
 			</Stack>

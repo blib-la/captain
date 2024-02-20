@@ -12,10 +12,7 @@ import Typography from "@mui/joy/Typography";
 import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
-import { useEffect, useState } from "react";
-import useSWR from "swr";
-
-import { OPENAI_API_KEY, STABLE_DIFFUSION_SETTINGS } from "../../../main/helpers/constants";
+import { useState } from "react";
 
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 import { ColorModeSelector } from "@/organisms/color-mode-selector";
@@ -65,15 +62,6 @@ export function UserPreferences() {
 
 export function OpenAISettings() {
 	const { t } = useTranslation(["common"]);
-	const [openAiApiKey, setOpenAiApiKey] = useState("");
-
-	const { data } = useSWR(OPENAI_API_KEY);
-
-	useEffect(() => {
-		if (data) {
-			setOpenAiApiKey(data);
-		}
-	}, [data]);
 
 	return (
 		<Card variant="soft">
@@ -91,6 +79,7 @@ export function OpenAISettings() {
 							<PasswordField
 								fullWidth
 								aria-label={t("common:openAiApiKey")}
+								/* //
 								value={openAiApiKey}
 								onChange={event => {
 									setOpenAiApiKey(event.target.value);
@@ -100,7 +89,7 @@ export function OpenAISettings() {
 										method: "POST",
 										data: event.target.value,
 									});
-								}}
+								}} */
 							/>
 						</ListItemDecorator>
 					</ListItem>
@@ -113,14 +102,6 @@ export function OpenAISettings() {
 export function StableDiffusionSettings() {
 	const { t } = useTranslation(["common"]);
 	const [sdSettings, setSdSettings] = useState({ checkpoints: "", loras: "" });
-
-	const { data } = useSWR(STABLE_DIFFUSION_SETTINGS);
-
-	useEffect(() => {
-		if (data) {
-			setSdSettings(data);
-		}
-	}, [data]);
 
 	return (
 		<Card variant="soft">
@@ -147,6 +128,7 @@ export function StableDiffusionSettings() {
 										checkpoints: event.target.value,
 									}));
 								}}
+								/* //
 								onSelect={async value => {
 									await window.ipc.fetch(STABLE_DIFFUSION_SETTINGS, {
 										method: "PATCH",
@@ -162,7 +144,7 @@ export function StableDiffusionSettings() {
 										method: "PATCH",
 										data: { checkpoints: event.target.value },
 									});
-								}}
+								}} */
 							/>
 						</ListItemDecorator>
 					</ListItem>
@@ -186,6 +168,7 @@ export function StableDiffusionSettings() {
 										loras: event.target.value,
 									}));
 								}}
+								/* //
 								onSelect={async value => {
 									await window.ipc.fetch(STABLE_DIFFUSION_SETTINGS, {
 										method: "PATCH",
@@ -201,7 +184,7 @@ export function StableDiffusionSettings() {
 										method: "PATCH",
 										data: { loras: event.target.value },
 									});
-								}}
+								}} */
 							/>
 						</ListItemDecorator>
 					</ListItem>
@@ -266,9 +249,9 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 						<Container sx={{ py: 2 }}>
 							<Stack spacing={4}>
 								<UserPreferences />
-								<OpenAISettings />
+								{/* <OpenAISettings />
 								<RunPodSettings />
-								<StableDiffusionSettings />
+								<StableDiffusionSettings /> */}
 							</Stack>
 						</Container>
 					</CustomScrollbars>
