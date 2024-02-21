@@ -1,0 +1,23 @@
+name: Set PR Title to First Commit Message
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  set-pr-title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get first commit message
+        run: echo "FIRST_COMMIT_MESSAGE=$(git log --format=%B -n 1 $(git rev-list --max-parents=0 HEAD))" >> $GITHUB_ENV
+
+      - name: Update PR title
+        run: |
+          gh pr edit "$PR_NUMBER" --title "$FIRST_COMMIT_MESSAGE"
+        env:
+          FIRST_COMMIT_MESSAGE: ${{ env.FIRST_COMMIT_MESSAGE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
