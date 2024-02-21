@@ -1,5 +1,3 @@
-import process from "process";
-
 import type { ElectronApplication, Page } from "@playwright/test";
 import { test, expect } from "@playwright/test";
 import { _electron as electron } from "playwright";
@@ -11,10 +9,6 @@ test.beforeAll(async () => {
 	// Use  package.main
 	electronApp = await electron.launch({
 		args: ["."],
-		env: {
-			...process.env,
-			NODE_ENV: "development",
-		},
 	});
 	const isPackaged = await electronApp.evaluate(async ({ app }) => app.isPackaged);
 
