@@ -3,15 +3,13 @@ import Seven from "node-7z";
 import { unpack } from "@/utils/unpack";
 
 jest.mock("node-7z", () => ({
-	extractFull: jest.fn().mockReturnValue({
+	extractFull: jest.fn().mockImplementation(() => ({
 		on: jest.fn().mockImplementation((event, handler) => {
 			if (event === "end") {
 				process.nextTick(handler);
 			}
-
-			return this;
 		}),
-	}),
+	})),
 }));
 
 describe("electron/utils/unpack.ts", () => {

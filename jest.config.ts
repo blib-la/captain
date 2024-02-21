@@ -24,6 +24,7 @@ const jestConfig = {
 	},
 	transformIgnorePatterns: ["/node_modules/"],
 	extensionsToTreatAsEsm: [".ts", ".tsx"],
+	setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
 };
 
 export default jestConfig;
