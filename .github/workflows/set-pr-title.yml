@@ -19,4 +19,5 @@ jobs:
           gh pr edit "$PR_NUMBER" --title "$FIRST_COMMIT_MESSAGE"
         env:
           FIRST_COMMIT_MESSAGE: ${{ env.FIRST_COMMIT_MESSAGE }}
+          GITHUB_TOKEN: ${{ secrets.PIXELASS_PAT_BLIBLA }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
