@@ -7,10 +7,22 @@ const jestConfig = {
 	testMatch: ["**/?(*.)test.ts?(x)"],
 	testPathIgnorePatterns: [".e2e."],
 	transform: {
-		"^.+\\.(t|j)sx?$": "@swc/jest",
+		"^.+\\.(t|j)sx?$": [
+			"@swc/jest",
+			{
+				jsc: {
+					transform: {
+						react: {
+							runtime: "automatic",
+						},
+					},
+				},
+			},
+		],
 	},
 	moduleNameMapper: {
-		"@/(.*)": "<rootDir>/src/electron/future/$1",
+		"@/(.*)": "<rootDir>/src/client/$1",
+		"$/(.*)": "<rootDir>/src/electron/future/$1",
 		"#/(.*)": "<rootDir>/src/shared/$1",
 	},
 	collectCoverage: true,
@@ -22,6 +34,7 @@ const jestConfig = {
 			lines: 80,
 		},
 	},
+	testEnvironment: "jsdom",
 	transformIgnorePatterns: ["/node_modules/"],
 	extensionsToTreatAsEsm: [".ts", ".tsx"],
 	setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
