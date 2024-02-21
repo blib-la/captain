@@ -1,11 +1,4 @@
 jest.mock("electron", () => {
-	const mockBrowserWindow = jest.fn().mockImplementation(() => ({
-		loadURL: jest.fn(),
-		on: jest.fn(),
-		once: jest.fn(),
-		close: jest.fn(),
-	}));
-
 	const mockWebContents = {
 		send: jest.fn(),
 	};
@@ -17,8 +10,13 @@ jest.mock("electron", () => {
 		close: jest.fn(),
 		webContents: mockWebContents,
 	};
-
-	mockBrowserWindow.getFocusedWindow = jest.fn(() => mockFocusedWindow);
+	const mockBrowserWindow = jest.fn().mockImplementation(() => ({
+		loadURL: jest.fn(),
+		on: jest.fn(),
+		once: jest.fn(),
+		close: jest.fn(),
+		getFocusedWindow: jest.fn(() => mockFocusedWindow),
+	}));
 
 	return {
 		BrowserWindow: mockBrowserWindow,

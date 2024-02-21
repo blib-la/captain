@@ -7,7 +7,9 @@ let page: Page;
 
 test.beforeAll(async () => {
 	// Use  package.main
-	electronApp = await electron.launch({ args: ["."] });
+	electronApp = await electron.launch({
+		args: ["."],
+	});
 	const isPackaged = await electronApp.evaluate(async ({ app }) => app.isPackaged);
 
 	expect(isPackaged).toBe(false);

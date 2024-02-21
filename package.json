@@ -21,9 +21,11 @@
     "toc": "npx markdown-toc README.md -i",
     "tsc:noEmit": "tsc --noEmit",
     "caption:test": "ts-node-esm main/captions/misc.ts",
-    "test:unit": "jest --runInBand --config jest.config.ts --verbose",
+    "test:electron": "jest --runInBand --config jest.config.electron.ts --verbose",
+    "test:client": "jest --runInBand --config jest.config.client.ts --verbose",
     "pretest:e2e": "nextron build --no-pack",
-    "test:e2e": "npx playwright test"
+    "test:e2e:local": "npx playwright test",
+    "test:e2e": "xvfb-run --auto-servernum --server-args=\"-screen 0 1280x960x24\" -- npx playwright test"
   },
   "dependencies": {
     "electron-context-menu": "3.6.1",
