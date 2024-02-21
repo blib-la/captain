@@ -6,7 +6,6 @@ const jestConfig = {
 	...defaults,
 	roots: ["<rootDir>/src/electron"],
 	testMatch: ["**/?(*.)test.ts"],
-	testPathIgnorePatterns: [".e2e."],
 	transform: {
 		"^.+\\.ts$": ["@swc/jest"],
 	},
