@@ -15,6 +15,7 @@ export enum ID {
 	STORE = "STORE",
 	USER = "USER",
 	WINDOW = "WINDOW",
+	LIVE_PAINT = "LIVE_PAINT",
 }
 
 /**

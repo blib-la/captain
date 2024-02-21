@@ -11,6 +11,8 @@ import { useTranslation } from "next-i18next";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 
+import { buildKey } from "#/build-key";
+import { ID } from "#/enums";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 
 export type ViewType = "side-by-side" | "overlay";
@@ -55,6 +57,7 @@ function DrawingArea() {
 			context.current?.stroke();
 			const dataUrl = canvas.current.toDataURL();
 			setImage(dataUrl);
+			window.ipc.send(buildKey([ID.LIVE_PAINT], { suffix: ":dataUrl" }), dataUrl);
 		}
 
 		function handleMouseUp() {
@@ -184,6 +187,23 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 					<Typography level="h4" component="h1">
 						{t("labels:livePainting")}
 					</Typography>
+					<Box sx={{ flex: 1 }} />
+					<Box sx={{ display: "flex", gap: 1 }}>
+						<Button
+							onClick={() => {
+								window.ipc.send(buildKey([ID.LIVE_PAINT], { suffix: ":start" }));
+							}}
+						>
+							Start
+						</Button>
+						<Button
+							onClick={() => {
+								window.ipc.send(buildKey([ID.LIVE_PAINT], { suffix: ":stop" }));
+							}}
+						>
+							Stop
+						</Button>
+					</Box>
 				</Sheet>
 				<Box
 					sx={{

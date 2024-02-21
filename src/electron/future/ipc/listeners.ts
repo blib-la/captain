@@ -1,5 +1,7 @@
 import { BrowserWindow, ipcMain } from "electron";
 import { download } from "electron-dl";
+import type { ExecaChildProcess } from "execa";
+import { execa } from "execa";
 
 import { buildKey } from "#/build-key";
 import { DownloadState, ID } from "#/enums";
@@ -79,4 +81,26 @@ ipcMain.on(buildKey([ID.INSTALL], { suffix: "start" }), async () => {
 
 ipcMain.on(buildKey([ID.USER], { suffix: ":language" }), (_event, language) => {
 	userStore.set("language", language);
+});
+
+let process: ExecaChildProcess<string>;
+
+ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":dataUrl" }), (_event, dataUrl) => {
+	console.log("image input");
+});
+
+ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":start" }), () => {
+	if (!process) {
+		process = execa("echo", ["hello", "world", "!"], { stdout: "inherit" });
+		console.log("alive");
+	}
+});
+
+ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":stop" }), () => {
+	if (!process.killed) {
+		const result = process.kill();
+		console.log("killed", result);
+	}
+
+	console.log(process.pid);
 });
