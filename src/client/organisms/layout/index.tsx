@@ -50,8 +50,8 @@ export function Layout({ children }: { children?: ReactNode }) {
 				<SidebarButton disabled href="/training" startDecorator={<FitnessCenterIcon />}>
 					{t("common:training")}
 				</SidebarButton>
-				<SidebarButton disabled href="/livepainting" startDecorator={<BrushIcon />}>
-					{t("common:livePainting")}
+				<SidebarButton href="/live-painting" startDecorator={<BrushIcon />}>
+					{t("labels:livePainting")}
 				</SidebarButton>
 				<Box sx={{ flex: 1 }} />
 				<SidebarButton
