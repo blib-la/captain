@@ -11,7 +11,7 @@
     "build": "nextron build",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "dev": "nextron",
-    "eslint": "eslint \"{renderer,main}/{**/*,*}{.,.config.,.test.,.e2e.}{js,mjs,ts,tsx}\"",
+    "eslint": "eslint \"src/{**/*,*}.{ts,tsx}\"",
     "postinstall": "electron-builder install-app-deps",
     "ncu": "npx npm-check-updates@latest -u",
     "ncu:check": "npx npm-check-updates@latest",
@@ -21,7 +21,9 @@
     "toc": "npx markdown-toc README.md -i",
     "tsc:noEmit": "tsc --noEmit",
     "caption:test": "ts-node-esm main/captions/misc.ts",
-    "test:unit": "jest --runInBand --config jest.config.unit.mjs --verbose"
+    "test:unit": "jest --runInBand --config jest.config.unit.mjs --verbose",
+    "pretest:e2e": "nextron build --no-pack",
+    "test:e2e": "npx playwright test"
   },
   "dependencies": {
     "electron-context-menu": "3.6.1",
@@ -43,6 +45,7 @@
     "@mui/joy": "5.0.0-beta.24",
     "@mui/material": "5.15.6",
     "@next/mdx": "14.1.0",
+    "@playwright/test": "^1.41.2",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
