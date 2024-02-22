@@ -1,3 +1,12 @@
+# [1.0.0-alpha.2](https://github.com/blib-la/captain/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2024-02-22)
+
+
+### Features
+
+* added tests for createWindow and unpack, moved jest.setup.ts to the root, installed jest-mock-extended ([#51](https://github.com/blib-la/captain/issues/51)) ([760f3ee](https://github.com/blib-la/captain/commit/760f3ee3c2a538cf15801323950beb28b64c8953))
+* live painting ([#49](https://github.com/blib-la/captain/issues/49)) ([416d0aa](https://github.com/blib-la/captain/commit/416d0aa9706bd766e9fea8cc43b11d28dafa3f45))
+* live painting config ([#54](https://github.com/blib-la/captain/issues/54)) ([d9f311d](https://github.com/blib-la/captain/commit/d9f311dc8f88856df8b7578c01c1276e600a2045))
+
 # 1.0.0-alpha.1 (2024-02-17)
 
 

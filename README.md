@@ -14,7 +14,7 @@ Portuguese, Russian, and Chinese.
 
 <!-- releases -->
 <p align="center">
-  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-alpha.1/Captain-Setup-1.0.0-alpha.1.exe">
+  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-alpha.2/Captain-Setup-1.0.0-alpha.2.exe">
     <img src="./docs/download.svg" alt="Download Captain" width="300">
   </a>
 </p>
