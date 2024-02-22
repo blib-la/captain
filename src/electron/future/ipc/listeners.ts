@@ -8,7 +8,12 @@ import { execa } from "execa";
 import { buildKey } from "#/build-key";
 import { DownloadState, ID } from "#/enums";
 import { appSettingsStore, userStore } from "@/stores";
-import { getCaptainData, getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
+import {
+	getCaptainData,
+	getCaptainDownloads,
+	getCaptainTemporary,
+	getDirectory,
+} from "@/utils/path-helpers";
 import { unpack } from "@/utils/unpack";
 
 ipcMain.on(buildKey([ID.WINDOW], { suffix: ":close" }), () => {
@@ -107,15 +112,15 @@ ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":start" }), () => {
 		const scriptPath = getDirectory("python/live-painting/main.py");
 		const scriptArguments = [
 			"--model_path",
-			getCaptainData("downloads/stable-diffusion/checkpoint/sd-turbo/"),
+			getCaptainDownloads("stable-diffusion/checkpoints/stabilityai/sd-turbo"),
 			"--vae_path",
-			getCaptainData("downloads/stable-diffusion/vae/taesd/"),
+			getCaptainDownloads("stable-diffusion/vae/madebyollin/taesd"),
 			"--input_image_path",
-			getCaptainData("temp/live-painting/input.png"),
+			getCaptainTemporary("live-painting/input.png"),
 			"--output_image_path",
-			getCaptainData("temp/live-painting/output.png"),
+			getCaptainTemporary("live-painting/output.png"),
 			"--disable_stablefast",
-			// "--debug",
+			"--debug",
 		];
 
 		process = execa(pythonBinaryPath, ["-u", scriptPath, ...scriptArguments]);
