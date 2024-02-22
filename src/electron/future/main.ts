@@ -92,8 +92,8 @@ export async function main() {
 	const lastAppVersion = appSettingsStore.get("version");
 	const appStatus = appSettingsStore.get("status");
 
-	const isUpToDate = version === lastAppVersion;
-	const isReady = appStatus === DownloadState.DONE;
+	const isUpToDate = version === lastAppVersion || process.env.TEST_VERSION === "upToDate";
+	const isReady = appStatus === DownloadState.DONE || process.env.TEST_APP_STATUS === "DONE";
 
 	// Remove the default application menu in production
 	if (isProduction) {

@@ -35,19 +35,43 @@ export function Layout({ children }: { children?: ReactNode }) {
 		>
 			<TitleBar />
 			<Stack sx={{ overflow: "hidden" }}>
-				<SidebarButton href="/dashboard" startDecorator={<DashboardIcon />}>
+				<SidebarButton
+					href="/dashboard"
+					startDecorator={<DashboardIcon />}
+					data-testid="sidebar-dashboard"
+				>
 					{t("labels:dashboard")}
 				</SidebarButton>
-				<SidebarButton disabled href="/home" startDecorator={<CollectionsIcon />}>
+				<SidebarButton
+					disabled
+					href="/home"
+					startDecorator={<CollectionsIcon />}
+					data-testid="sidebar-datasets"
+				>
 					{t("common:datasets")}
 				</SidebarButton>
-				<SidebarButton disabled href="/marketplace" startDecorator={<StorefrontIcon />}>
+				<SidebarButton
+					disabled
+					href="/marketplace"
+					startDecorator={<StorefrontIcon />}
+					data-testid="sidebar-marketplace"
+				>
 					{t("common:marketplace")}
 				</SidebarButton>
-				<SidebarButton disabled href="/inventory" startDecorator={<InventoryIcon />}>
+				<SidebarButton
+					disabled
+					href="/inventory"
+					startDecorator={<InventoryIcon />}
+					data-testid="sidebar-inventory"
+				>
 					{t("common:inventory")}
 				</SidebarButton>
-				<SidebarButton disabled href="/training" startDecorator={<FitnessCenterIcon />}>
+				<SidebarButton
+					disabled
+					href="/training"
+					startDecorator={<FitnessCenterIcon />}
+					data-testid="sidebar-training"
+				>
 					{t("common:training")}
 				</SidebarButton>
 				<SidebarButton
@@ -71,7 +95,11 @@ export function Layout({ children }: { children?: ReactNode }) {
 				<SidebarButton disabled href="/feedback" startDecorator={<RateReviewIcon />}>
 					{t("common:feedback")}
 				</SidebarButton>
-				<SidebarButton href="/settings" startDecorator={<SettingsIcon />}>
+				<SidebarButton
+					href="/settings"
+					startDecorator={<SettingsIcon />}
+					data-testid="sidebar-settings"
+				>
 					{t("common:settings")}
 				</SidebarButton>
 			</Stack>
