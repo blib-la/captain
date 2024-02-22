@@ -1,3 +1,5 @@
+import fsp from "node:fs/promises";
+
 import { BrowserWindow, ipcMain } from "electron";
 import { download } from "electron-dl";
 import type { ExecaChildProcess } from "execa";
@@ -83,24 +85,127 @@ ipcMain.on(buildKey([ID.USER], { suffix: ":language" }), (_event, language) => {
 	userStore.set("language", language);
 });
 
-let process: ExecaChildProcess<string>;
+let process: ExecaChildProcess<string> | undefined;
+let cache = "";
 
-ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":dataUrl" }), (_event, dataUrl) => {
-	console.log("image input");
+ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":dataUrl" }), async (_event, dataUrl) => {
+	const dataString = dataUrl.toString();
+	const base64Data = dataString.replace(/^data:image\/png;base64,/, "");
+	const decodedImageData = Buffer.from(base64Data, "base64");
+
+	await fsp.writeFile(getCaptainData("temp/live-painting/input.png"), decodedImageData);
 });
 
 ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":start" }), () => {
+	const window_ = BrowserWindow.getFocusedWindow();
+	if (!window_) {
+		return;
+	}
+
 	if (!process) {
-		process = execa("echo", ["hello", "world", "!"], { stdout: "inherit" });
-		console.log("alive");
+		const pythonBinaryPath = getCaptainData("python-embedded/python.exe");
+		const scriptPath = getDirectory("python/live-painting/main.py");
+		const scriptArguments = [
+			"--model_path",
+			getCaptainData("downloads/stable-diffusion/checkpoint/sd-turbo/"),
+			"--vae_path",
+			getCaptainData("downloads/stable-diffusion/vae/taesd/"),
+			"--input_image_path",
+			getCaptainData("temp/live-painting/input.png"),
+			"--output_image_path",
+			getCaptainData("temp/live-painting/output.png"),
+			"--disable_stablefast",
+			// "--debug",
+		];
+
+		process = execa(pythonBinaryPath, ["-u", scriptPath, ...scriptArguments]);
+
+		if (process.stdout && process.stderr) {
+			process.stdout.on("data", async data => {
+				const dataString = data.toString();
+
+				try {
+					const jsonData = JSON.parse(dataString);
+
+					console.log(`live-painting: ${JSON.stringify(jsonData)}`);
+
+					if (process && jsonData.status === "starting") {
+						window_.webContents.send(
+							buildKey([ID.LIVE_PAINT], { suffix: ":starting" }),
+							true
+						);
+					}
+
+					if (process && jsonData.status === "started") {
+						window_.webContents.send(
+							buildKey([ID.LIVE_PAINT], { suffix: ":started" }),
+							true
+						);
+					}
+
+					if (
+						process &&
+						(jsonData.status === "shutdown" || jsonData.status === "stopped")
+					) {
+						if (process) {
+							if (process.stdout) {
+								process.stdout.removeAllListeners("data");
+							}
+
+							if (process.stderr) {
+								process.stderr.removeAllListeners("data");
+							}
+
+							if (process && !process.killed) {
+								process.kill();
+							}
+						}
+
+						process = undefined;
+
+						window_.webContents.send(
+							buildKey([ID.LIVE_PAINT], { suffix: ":stopped" }),
+							true
+						);
+					}
+
+					if (jsonData.status === "image_generated") {
+						const imageData = await fsp.readFile(
+							getCaptainData("temp/live-painting/output.png")
+						);
+						const base64Image = imageData.toString("base64");
+
+						if (!base64Image.trim()) {
+							return;
+						}
+
+						if (base64Image.trim() === cache) {
+							return;
+						}
+
+						cache = base64Image;
+
+						window_.webContents.send(
+							buildKey([ID.LIVE_PAINT], { suffix: ":generated" }),
+							`data:image/png;base64,${base64Image}`
+						);
+					}
+				} catch {
+					console.log("Received non-JSON data:", dataString);
+				}
+			});
+
+			process.stderr.on("data", data => {
+				console.error(`error: ${data}`);
+
+				window_.webContents.send(buildKey([ID.LIVE_PAINT], { suffix: ":error" }), data);
+			});
+		}
 	}
 });
 
 ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":stop" }), () => {
-	if (!process.killed) {
-		const result = process.kill();
-		console.log("killed", result);
+	if (process && process.stdin) {
+		process.stdin.write(JSON.stringify({ command: "shutdown" }) + "\n");
 	}
-
-	console.log(process.pid);
 });

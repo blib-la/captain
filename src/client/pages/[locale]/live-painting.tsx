@@ -103,7 +103,20 @@ function DrawingArea() {
 }
 
 function RenderingArea() {
-	const [image] = useAtom(imageAtom);
+	const [image, setImage] = useState("");
+
+	useEffect(() => {
+		const unsubscribe = window.ipc.on(
+			buildKey([ID.LIVE_PAINT], { suffix: ":generated" }),
+			(dataUrl: string) => {
+				setImage(dataUrl);
+			}
+		);
+
+		return () => {
+			unsubscribe();
+		};
+	}, []);
 	return (
 		<Box sx={{ bgcolor: "background.body", width: 512, height: 512, display: "flex" }}>
 			<img height={512} width={512} src={image} alt="" />
@@ -190,6 +203,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 					<Box sx={{ flex: 1 }} />
 					<Box sx={{ display: "flex", gap: 1 }}>
 						<Button
+							data-testid="live-painting-start"
 							onClick={() => {
 								window.ipc.send(buildKey([ID.LIVE_PAINT], { suffix: ":start" }));
 							}}
