@@ -19,7 +19,7 @@ test.afterAll(async () => {
 	await electronApp.close();
 });
 
-test("Renders the first page", async () => {
+test("Renders the installer page", async () => {
 	page = await electronApp.firstWindow();
 	const title = await page.title();
 	expect(title).toBe("Blibla");
