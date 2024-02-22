@@ -234,7 +234,7 @@ def warmup(pipe, input_image_path):
 
 def main(pipe, input_image_path, output_image_path, shutdown_event):
     # Initial/default values for parameters
-    prompt = "realistic face, 4k"
+    prompt = "a person, incredible watercolor paining"
     seed = 1
     strength = 0.99
     guidance_scale = None

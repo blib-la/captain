@@ -35,3 +35,7 @@ export function getCaptainData(...subpath: string[]): string {
 export function getCaptainDownloads(...subpath: string[]): string {
 	return getCaptainData("downloads", ...subpath);
 }
+
+export function getCaptainTemporary(...subpath: string[]): string {
+	return getCaptainData("temp", ...subpath);
+}
