@@ -1,13 +1,20 @@
 {
   "accessibility": "Accessibility",
   "back": "Back",
+  "brushSize": "Brush Size",
+  "clear": "Clear",
   "close": "Close",
+  "color": "Color",
   "dashboard": "Dashboard",
   "downloading": "Downloading",
   "livePainting": "Live Painting",
   "maximize": "Maximize",
   "minimize": "Minimize",
+  "overlay": "Overlay",
   "privacy": "Privacy",
   "security": "Security",
+  "sideBySide": "Side by Side",
+  "start": "Start",
+  "stop": "Stop",
   "unpacking": "Unpacking"
 }

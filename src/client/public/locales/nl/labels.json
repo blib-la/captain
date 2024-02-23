@@ -1,13 +1,20 @@
 {
   "accessibility": "Toegankelijkheid",
   "back": "Terug",
+  "brushSize": "Penseelgrootte",
+  "clear": "Wissen",
   "close": "Sluiten",
+  "color": "Kleur",
   "dashboard": "Dashboard",
   "downloading": "Downloaden",
   "livePainting": "Live Schilderen",
   "maximize": "Maximaliseren",
   "minimize": "Minimaliseren",
+  "overlay": "Overlay",
   "privacy": "Privacy",
   "security": "Beveiliging",
+  "sideBySide": "Zij aan Zij",
+  "start": "Start",
+  "stop": "Stop",
   "unpacking": "Uitpakken"
 }

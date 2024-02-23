@@ -87,13 +87,19 @@ export function TitleBar({ disableMaximize = true }) {
 						p: 1,
 						display: "flex",
 						alignItems: "center",
+						justifyContent: "center",
+						width: 44,
+						bgcolor: "primary.500",
+						"--Icon-color": "common.white",
 					}}
 				>
 					<Logo sx={{ height: 20, width: 20 }} />
 				</Box>
 			</Box>
 
-			<Typography level="body-xs">v{package_.version}</Typography>
+			<Typography level="body-xs" sx={{ pl: 1 }}>
+				v{package_.version}
+			</Typography>
 			<Box sx={{ flex: 1 }} />
 			<WindowControls disableMaximize={disableMaximize} />
 		</Sheet>

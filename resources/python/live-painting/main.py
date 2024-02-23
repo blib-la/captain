@@ -149,9 +149,9 @@ def load_image_with_retry(file_path, max_retries=25, delay=0.003):
     return None
 
 
-def calculate_min_inference_steps(strength):
+def calculate_min_inference_steps(steps, strength):
     # Calculate the minimal number of inference steps
-    return math.ceil(1.0 / strength)
+    return math.ceil(steps / strength)
 
 
 def prepare_pipeline(model_path, vae_path, disable_stablefast=False):
@@ -234,10 +234,11 @@ def warmup(pipe, input_image_path):
 
 def main(pipe, input_image_path, output_image_path, shutdown_event):
     # Initial/default values for parameters
-    prompt = "a person, incredible watercolor paining"
+    prompt = "a person, incredible watercolor painting, high quality"
     seed = 1
-    strength = 0.99
-    guidance_scale = None
+    strength = 0.95
+    steps = 3
+    guidance_scale = 1.5
 
     # When was the input image last modified
     last_modified_time = None
@@ -260,6 +261,8 @@ def main(pipe, input_image_path, output_image_path, shutdown_event):
                 seed = parameters.get("seed", seed)
                 strength = parameters.get("strength", strength)
                 guidance_scale = parameters.get("guidance_scale", guidance_scale)
+                steps = parameters.get("steps", steps)
+                print(f"Updated parameters {parameters}")
         except queue.Empty:
             pass  # No new parameters, proceed with the existing ones
 
@@ -283,18 +286,18 @@ def main(pipe, input_image_path, output_image_path, shutdown_event):
                 continue
 
             strength_ = float(strength)
-            # guidance_scale_ = float(guidance_scale)
-            # denoise_steps_ = calculate_min_inference_steps(strength_)
+            guidance_scale_ = float(guidance_scale)
+            denoise_steps_ = calculate_min_inference_steps(steps, strength_)
 
             image = pipe(
                 prompt,
                 image=init_image,
                 height=512,
                 width=512,
-                num_inference_steps=3,
+                num_inference_steps=denoise_steps_,
                 num_images_per_prompt=1,
                 strength=strength_,
-                guidance_scale=1.5,
+                guidance_scale=guidance_scale_,
             ).images[0]
 
             # Save file

@@ -27,7 +27,7 @@ export function Layout({ children }: { children?: ReactNode }) {
 				overflow: "hidden",
 				display: "grid",
 				gridTemplateColumns: {
-					xs: "36px 1fr",
+					xs: "44px 1fr",
 					xl: "228px 1fr",
 				},
 				gridTemplateRows: "36px 1fr",

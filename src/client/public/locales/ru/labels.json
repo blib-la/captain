@@ -1,13 +1,20 @@
 {
   "accessibility": "Доступность",
   "back": "Назад",
+  "brushSize": "Размер Кисти",
+  "clear": "Очистить",
   "close": "Закрыть",
+  "color": "Цвет",
   "dashboard": "Панель управления",
   "downloading": "Загрузка",
   "livePainting": "Живая Живопись",
   "maximize": "Развернуть",
   "minimize": "Свернуть",
+  "overlay": "Наложение",
   "privacy": "Конфиденциальность",
   "security": "Безопасность",
+  "sideBySide": "Бок о Бок",
+  "start": "Старт",
+  "stop": "Стоп",
   "unpacking": "Распаковка"
 }

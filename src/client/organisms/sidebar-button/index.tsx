@@ -42,6 +42,9 @@ export function SidebarButton({
 							size="lg"
 							component="a"
 							color={isActive ? "primary" : "neutral"}
+							slotProps={{
+								startDecorator: { sx: { "--Icon-margin": "0 0 0 -2px" } },
+							}}
 							sx={{
 								justifyContent: "flex-start",
 								pl: 1.5,
@@ -61,12 +64,18 @@ export function SidebarButton({
 						component={href ? "a" : "button"}
 						href={href}
 						target={target}
+						slotProps={{
+							startDecorator: { sx: { "--Icon-margin": "0 0 0 -2px" } },
+						}}
 						sx={{
 							justifyContent: "flex-start",
 							pl: 1.5,
 							flex: 1,
 							whiteSpace: "nowrap",
 							overflow: "hidden",
+							".JoyButton-startDecorator": {
+								"--Icon-margin": "0 0 0 -1px",
+							},
 						}}
 					>
 						{children}
