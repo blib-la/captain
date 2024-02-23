@@ -1,3 +1,10 @@
+# [1.0.0-alpha.6](https://github.com/blib-la/captain/compare/v1.0.0-alpha.5...v1.0.0-alpha.6) (2024-02-23)
+
+
+### Features
+
+* story streaming ([#62](https://github.com/blib-la/captain/issues/62)) ([5463eaf](https://github.com/blib-la/captain/commit/5463eaf1e98747b715cfbda412c222ac2128120f))
+
 # [1.0.0-alpha.5](https://github.com/blib-la/captain/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2024-02-23)
 
 
