@@ -4,24 +4,41 @@ import type { ChatCompletionContentPart } from "openai/resources";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
-
-const openai = new OpenAI({
-	apiKey: "",
-});
+import { keyStore } from "@/stores";
 
 ipcMain.on(
 	buildKey([ID.STORY], { suffix: ":describe" }),
-	async (_event, { images, prompt, maxTokens = 2000 }) => {
+	async (
+		_event,
+		{
+			images,
+			prompt,
+			maxTokens = 2000,
+		}: { images: string[]; prompt: string; maxTokens?: number }
+	) => {
 		const window_ = BrowserWindow.getFocusedWindow();
 		if (!window_) {
 			return;
 		}
 
-		const systemPromptVision = `You analyze the provided images with a maximum level of precision and every detail. 
+		const apiKey = keyStore.get("openAiApiKey");
+		if (!apiKey) {
+			window_.webContents.send(
+				buildKey([ID.STORY], { suffix: ":error" }),
+				`Missing OpenAI API Key`
+			);
+			return;
+		}
+
+		const openai = new OpenAI({
+			apiKey,
+		});
+
+		const systemPromptVision = `You analyze the provided images with a maximum level of precision and every detail.
 You only describe the image, you don't interact with the user.
 Each image is separated from the next image by using a headline "## image 1", then "## image 2" and so on.`;
 
-		const imageContents: ChatCompletionContentPart[] = images.map((image: any) => ({
+		const imageContents: ChatCompletionContentPart[] = images.map(image => ({
 			type: "image_url",
 			image_url: { url: image },
 		}));
@@ -52,12 +69,17 @@ Each image is separated from the next image by using a headline "## image 1", th
 		}
 
 		if (!imageDescriptions) {
+			window_.webContents.send(
+				buildKey([ID.STORY], { suffix: ":error" }),
+				`Couldn't generate the story: missing descriptions`
+			);
 			return;
 		}
 
 		try {
 			const userPromptStory = `# Images
-			${imageDescriptions}`;
+${imageDescriptions}
+`;
 
 			const responseStory = await openai.chat.completions.create({
 				model: "gpt-4-turbo-preview",
