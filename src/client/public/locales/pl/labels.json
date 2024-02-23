@@ -1,13 +1,20 @@
 {
   "accessibility": "Dostępność",
   "back": "Wstecz",
+  "brushSize": "Rozmiar Pędzla",
+  "clear": "Wyczyść",
   "close": "Zamknij",
+  "color": "Kolor",
   "dashboard": "Pulpit",
   "downloading": "Pobieranie",
   "livePainting": "Malowanie na Żywo",
   "maximize": "Zmaksymalizuj",
   "minimize": "Zminimalizuj",
+  "overlay": "Nakładka",
   "privacy": "Prywatność",
   "security": "Bezpieczeństwo",
+  "sideBySide": "Obok Siebie",
+  "start": "Start",
+  "stop": "Stop",
   "unpacking": "Rozpakowywanie"
 }

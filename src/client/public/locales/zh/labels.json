@@ -1,13 +1,20 @@
 {
   "accessibility": "可访问性",
   "back": "返回",
+  "brushSize": "笔刷大小",
+  "clear": "清除",
   "close": "关闭",
+  "color": "颜色",
   "dashboard": "仪表板",
   "downloading": "下载中",
   "livePainting": "实时绘画",
   "maximize": "最大化",
   "minimize": "最小化",
+  "overlay": "叠加",
   "privacy": "隐私",
   "security": "安全",
+  "sideBySide": "并排",
+  "start": "开始",
+  "stop": "停止",
   "unpacking": "解压中"
 }

@@ -1,13 +1,20 @@
 {
   "accessibility": "Barrierefreiheit",
   "back": "Zurück",
+  "brushSize": "Pinselgröße",
+  "clear": "Löschen",
   "close": "Schließen",
+  "color": "Farbe",
   "dashboard": "Dashboard",
   "downloading": "Herunterladen",
   "livePainting": "Live-Malerei",
   "maximize": "Maximieren",
   "minimize": "Minimieren",
+  "overlay": "Überlagerung",
   "privacy": "Datenschutz",
   "security": "Sicherheit",
+  "sideBySide": "Nebeneinander",
+  "start": "Start",
+  "stop": "Stopp",
   "unpacking": "Entpacken"
 }
