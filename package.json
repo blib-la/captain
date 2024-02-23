@@ -113,7 +113,7 @@
     "nextron": "^8.12.0",
     "node-7z": "^3.0.0",
     "node-loader": "^2.0.0",
-    "openai": "^4.26.0",
+    "openai": "^4.28.0",
     "prettier": "^3.2.4",
     "react": "^18.2.0",
     "react-codemirror2": "^7.3.0",

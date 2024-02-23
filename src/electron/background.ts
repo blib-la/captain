@@ -4,6 +4,7 @@ import { main } from "@/main";
 
 import "@/core-setup";
 import "@/ipc/listeners";
+import "@/ipc/story";
 
 main().then(() => {
 	console.log("started");
