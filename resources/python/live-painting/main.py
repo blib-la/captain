@@ -240,6 +240,9 @@ def main(pipe, input_image_path, output_image_path, shutdown_event):
     steps = 3
     guidance_scale = 1.5
 
+    # When was the input image last modified
+    last_modified_time = None
+
     # Queue to hold parameters received from stdin
     params_queue = queue.Queue()
 
@@ -262,6 +265,15 @@ def main(pipe, input_image_path, output_image_path, shutdown_event):
                 print(f"Updated parameters {parameters}")
         except queue.Empty:
             pass  # No new parameters, proceed with the existing ones
+
+        # Get the current modified time of the input image
+        current_modified_time = os.path.getmtime(input_image_path)
+
+        if current_modified_time != last_modified_time:
+            last_modified_time = current_modified_time
+        else:
+            # Skip this iteration since the input image has not changed
+            continue
 
         # Only generate an image if the prompt is not empty
         if prompt is not None and prompt.strip():
