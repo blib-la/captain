@@ -16,5 +16,7 @@
   "sideBySide": "צד לצד",
   "start": "התחל",
   "stop": "עצור",
-  "unpacking": "פותח"
+  "unpacking": "פותח",
+  "createStory": "צור סיפור",
+  "readStory": "קרא סיפור"
 }

@@ -16,5 +16,7 @@
   "sideBySide": "Side by Side",
   "start": "Start",
   "stop": "Stop",
-  "unpacking": "Unpacking"
+  "unpacking": "Unpacking",
+  "createStory": "Create Story",
+  "readStory": "Read Story"
 }

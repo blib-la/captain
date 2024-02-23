@@ -16,5 +16,7 @@
   "sideBySide": "Nebeneinander",
   "start": "Start",
   "stop": "Stopp",
-  "unpacking": "Entpacken"
+  "unpacking": "Entpacken",
+  "createStory": "Erzählung erstellen",
+  "readStory": "Erzählung lesen"
 }

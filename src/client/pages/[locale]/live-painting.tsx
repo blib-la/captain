@@ -1,12 +1,18 @@
 import { ClickAwayListener } from "@mui/base";
 import BrushIcon from "@mui/icons-material/Brush";
 import ClearIcon from "@mui/icons-material/Clear";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import MmsIcon from "@mui/icons-material/Mms";
 import PaletteIcon from "@mui/icons-material/Palette";
 import PhotoFilterIcon from "@mui/icons-material/PhotoFilter";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
 import Box from "@mui/joy/Box";
+import CircularProgress from "@mui/joy/CircularProgress";
 import IconButton from "@mui/joy/IconButton";
+import Modal from "@mui/joy/Modal";
+import ModalClose from "@mui/joy/ModalClose";
+import ModalDialog from "@mui/joy/ModalDialog";
 import Sheet from "@mui/joy/Sheet";
 import Slider from "@mui/joy/Slider";
 import Stack from "@mui/joy/Stack";
@@ -194,10 +200,12 @@ function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 	);
 }
 
+const imageAtom = atom(
+	"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGP4//8/AAX+Av4N70a4AAAAAElFTkSuQmCC"
+);
+
 function RenderingArea() {
-	const [image, setImage] = useState(
-		"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGP4//8/AAX+Av4N70a4AAAAAElFTkSuQmCC"
-	);
+	const [image, setImage] = useAtom(imageAtom);
 
 	useEffect(() => {
 		const unsubscribe = window.ipc.on(
@@ -210,7 +218,7 @@ function RenderingArea() {
 		return () => {
 			unsubscribe();
 		};
-	}, []);
+	}, [setImage]);
 	return (
 		<Box sx={{ bgcolor: "background.body", width: 512, height: 512, display: "flex" }}>
 			<img height={512} width={512} src={image} alt="" />
@@ -235,16 +243,73 @@ export function OverlayEditIcon() {
 }
 
 export function LivePainting() {
-	const { t } = useTranslation(["common", "labels"]);
+	const {
+		t,
+		i18n: { language: locale },
+	} = useTranslation(["common", "labels"]);
 	const [value, setValue] = useState<ViewType>("side-by-side");
 	const [livePaintingOptions, setLivePaintingOptions] = useAtom(livePaintingOptionsAtom);
 	const [, setClearCounter] = useAtom(clearCounterAtom);
+	const [image] = useAtom(imageAtom);
 	const [brushSizeOpen, setBrushSizeOpen] = useState(false);
-
+	const [generatingStory, setGeneratingStory] = useState(false);
+	const [story, setStory] = useState("");
+	const [storyModalOpen, setStoryModalOpen] = useState(false);
+	const [storyTooltipOpen, setStoryTooltipOpen] = useState(false);
 	const isOverlay = value === "overlay";
 
+	const [openAiApiKey, setOpenAiApiKey] = useState("");
+
+	useEffect(() => {
+		window.ipc.send(buildKey([ID.KEYS], { suffix: ":get-openAiApiKey" }));
+		const unsubscribeApiKey = window.ipc.on(
+			buildKey([ID.KEYS], { suffix: ":openAiApiKey" }),
+			(openAiApiKey_: string) => {
+				setOpenAiApiKey(openAiApiKey_);
+			}
+		);
+		const unsubscribeStoryGenerated = window.ipc.on(
+			buildKey([ID.STORY], { suffix: ":generated" }),
+			(story_: string) => {
+				setStory(story_);
+				setStoryModalOpen(true);
+				setGeneratingStory(false);
+			}
+		);
+		return () => {
+			unsubscribeStoryGenerated();
+			unsubscribeApiKey();
+		};
+	}, []);
 	return (
 		<Box sx={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column" }}>
+			<Modal
+				open={storyModalOpen}
+				onClose={() => {
+					setStoryModalOpen(false);
+				}}
+			>
+				<ModalDialog sx={{ width: "80%", maxWidth: 1440 }}>
+					<ModalClose aria-label={t("labels:close")} />
+					<Box sx={{ mt: 4, width: "100%", overflow: "auto" }}>
+						<Box
+							component="img"
+							src={image}
+							sx={{
+								my: 2,
+								mr: 2,
+								float: "left",
+								width: "50%",
+								maxWidth: 512,
+								height: "auto",
+							}}
+						/>
+						<Typography sx={{ whiteSpace: "pre-wrap", width: "100%" }}>
+							{story}
+						</Typography>
+					</Box>
+				</ModalDialog>
+			</Modal>
 			<Sheet
 				sx={{
 					position: "relative",
@@ -374,6 +439,49 @@ export function LivePainting() {
 						}}
 					>
 						<ClearIcon />
+					</IconButton>
+				</Tooltip>
+				<Box sx={{ flex: 1 }} />
+				<Tooltip open={storyTooltipOpen} title={t("labels:createStory")}>
+					<IconButton
+						disabled={generatingStory || !openAiApiKey}
+						size="lg"
+						variant="soft"
+						aria-label={t("labels:createStory")}
+						onFocus={() => {
+							setStoryTooltipOpen(true);
+						}}
+						onBlur={() => {
+							setStoryTooltipOpen(false);
+						}}
+						onMouseEnter={() => {
+							setStoryTooltipOpen(true);
+						}}
+						onMouseLeave={() => {
+							setStoryTooltipOpen(false);
+						}}
+						onClick={() => {
+							setGeneratingStory(true);
+							setStoryTooltipOpen(false);
+							window.ipc.send(buildKey([ID.STORY], { suffix: ":describe" }), {
+								images: [image],
+								prompt: `{"lang": "${locale}"}`,
+							});
+						}}
+					>
+						{generatingStory ? <CircularProgress /> : <MmsIcon />}
+					</IconButton>
+				</Tooltip>
+				<Tooltip title={t("labels:readStory")}>
+					<IconButton
+						size="lg"
+						variant="soft"
+						aria-label={t("labels:readStory")}
+						onClick={() => {
+							setStoryModalOpen(true);
+						}}
+					>
+						<MenuBookIcon />
 					</IconButton>
 				</Tooltip>
 			</Sheet>

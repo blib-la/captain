@@ -16,5 +16,7 @@
   "sideBySide": "Бок о Бок",
   "start": "Старт",
   "stop": "Стоп",
-  "unpacking": "Распаковка"
+  "unpacking": "Распаковка",
+  "createStory": "Создать Историю",
+  "readStory": "Читать Историю"
 }

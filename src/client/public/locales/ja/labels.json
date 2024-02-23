@@ -16,5 +16,7 @@
   "sideBySide": "並列",
   "start": "開始",
   "stop": "停止",
-  "unpacking": "解凍中"
+  "unpacking": "解凍中",
+  "createStory": "ストーリー作成",
+  "readStory": "ストーリー閲覧"
 }

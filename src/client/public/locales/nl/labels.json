@@ -16,5 +16,7 @@
   "sideBySide": "Zij aan Zij",
   "start": "Start",
   "stop": "Stop",
-  "unpacking": "Uitpakken"
+  "unpacking": "Uitpakken",
+  "createStory": "Verhaal Maken",
+  "readStory": "Verhaal Lezen"
 }

@@ -16,5 +16,7 @@
   "sideBySide": "并排",
   "start": "开始",
   "stop": "停止",
-  "unpacking": "解压中"
+  "unpacking": "解压中",
+  "createStory": "创建故事",
+  "readStory": "阅读故事"
 }

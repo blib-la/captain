@@ -16,5 +16,7 @@
   "sideBySide": "Fianco a Fianco",
   "start": "Avvia",
   "stop": "Ferma",
-  "unpacking": "Estrazione"
+  "unpacking": "Estrazione",
+  "createStory": "Crea Storia",
+  "readStory": "Leggi Storia"
 }
