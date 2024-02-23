@@ -100,18 +100,22 @@ Each image is separated from the next image by using a headline "## image 1", th
 ${imageDescriptions}
 `;
 
-			const responseStory = await openai.chat.completions.create({
+			const streamStory = await openai.chat.completions.create({
 				model: "gpt-4-turbo-preview",
 				messages: [
 					{ role: "system", content: systemPrompt },
 					{ role: "user", content: userPromptStory },
 				],
+				stream: true,
 			});
 
-			console.log(responseStory.choices[0].message.content);
+			let story = "";
 
-			const story = responseStory.choices[0].message.content;
-			window_.webContents.send(buildKey([ID.STORY], { suffix: ":generated" }), story);
+			for await (const chunk of streamStory) {
+				story += chunk.choices[0]?.delta?.content || "";
+
+				window_.webContents.send(buildKey([ID.STORY], { suffix: ":generated" }), story);
+			}
 		} catch (error) {
 			window_.webContents.send(
 				buildKey([ID.STORY], { suffix: ":error" }),
