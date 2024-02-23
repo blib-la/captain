@@ -1,3 +1,10 @@
+# [1.0.0-alpha.5](https://github.com/blib-la/captain/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2024-02-23)
+
+
+### Features
+
+* storytelling with OpenAI GPT-4-vision ([#57](https://github.com/blib-la/captain/issues/57)) ([90a1648](https://github.com/blib-la/captain/commit/90a164837eabe94822be72eedaedef236d6a9499))
+
 # [1.0.0-alpha.4](https://github.com/blib-la/captain/compare/v1.0.0-alpha.3...v1.0.0-alpha.4) (2024-02-23)
 
 
