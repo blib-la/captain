@@ -1,13 +1,20 @@
 {
   "accessibility": "Accessibilité",
   "back": "Retour",
+  "brushSize": "Taille Pinceau",
+  "clear": "Effacer",
   "close": "Fermer",
+  "color": "Couleur",
   "dashboard": "Tableau de bord",
   "downloading": "Téléchargement",
   "livePainting": "Peinture en Direct",
   "maximize": "Maximiser",
   "minimize": "Minimiser",
+  "overlay": "Superposition",
   "privacy": "Confidentialité",
   "security": "Sécurité",
+  "sideBySide": "Côte à Côte",
+  "start": "Démarrer",
+  "stop": "Arrêter",
   "unpacking": "Déballage"
 }

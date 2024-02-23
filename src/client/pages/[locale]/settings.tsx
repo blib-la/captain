@@ -80,7 +80,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 						display: "flex",
 						alignItems: "center",
 						height: 44,
-						px: 2,
+						px: 1,
 						zIndex: 1,
 					}}
 				>

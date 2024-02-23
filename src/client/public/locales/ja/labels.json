@@ -1,13 +1,20 @@
 {
   "accessibility": "アクセシビリティ",
   "back": "戻る",
+  "brushSize": "ブラシサイズ",
+  "clear": "クリア",
   "close": "閉じる",
+  "color": "色",
   "dashboard": "ダッシュボード",
   "downloading": "ダウンロード中",
   "livePainting": "ライブペインティング",
   "maximize": "最大化",
   "minimize": "最小化",
+  "overlay": "オーバーレイ",
   "privacy": "プライバシー",
   "security": "セキュリティ",
+  "sideBySide": "並列",
+  "start": "開始",
+  "stop": "停止",
   "unpacking": "解凍中"
 }

@@ -1,13 +1,20 @@
 {
   "accessibility": "נגישות",
   "back": "חזרה",
+  "brushSize": "גודל מברשת",
+  "clear": "נקה",
   "close": "סגור",
+  "color": "צבע",
   "dashboard": "לוח בקרה",
   "downloading": "מוריד",
   "livePainting": "ציור חי",
   "maximize": "הגדל",
   "minimize": "מזער",
+  "overlay": "שכבה",
   "privacy": "פרטיות",
   "security": "ביטחון",
+  "sideBySide": "צד לצד",
+  "start": "התחל",
+  "stop": "עצור",
   "unpacking": "פותח"
 }

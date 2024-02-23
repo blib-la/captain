@@ -90,7 +90,7 @@ ipcMain.on(buildKey([ID.USER], { suffix: ":language" }), (_event, language) => {
 	userStore.set("language", language);
 });
 
-let process: ExecaChildProcess<string> | undefined;
+let process_: ExecaChildProcess<string> | undefined;
 let cache = "";
 
 ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":dataUrl" }), async (_event, dataUrl) => {
@@ -107,7 +107,7 @@ ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":start" }), () => {
 		return;
 	}
 
-	if (!process) {
+	if (!process_) {
 		const pythonBinaryPath = getCaptainData("python-embedded/python.exe");
 		const scriptPath = getDirectory("python/live-painting/main.py");
 		const scriptArguments = [
@@ -123,10 +123,10 @@ ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":start" }), () => {
 			"--debug",
 		];
 
-		process = execa(pythonBinaryPath, ["-u", scriptPath, ...scriptArguments]);
+		process_ = execa(pythonBinaryPath, ["-u", scriptPath, ...scriptArguments]);
 
-		if (process.stdout && process.stderr) {
-			process.stdout.on("data", async data => {
+		if (process_.stdout && process_.stderr) {
+			process_.stdout.on("data", async data => {
 				const dataString = data.toString();
 
 				try {
@@ -134,14 +134,14 @@ ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":start" }), () => {
 
 					console.log(`live-painting: ${JSON.stringify(jsonData)}`);
 
-					if (process && jsonData.status === "starting") {
+					if (process_ && jsonData.status === "starting") {
 						window_.webContents.send(
 							buildKey([ID.LIVE_PAINT], { suffix: ":starting" }),
 							true
 						);
 					}
 
-					if (process && jsonData.status === "started") {
+					if (process_ && jsonData.status === "started") {
 						window_.webContents.send(
 							buildKey([ID.LIVE_PAINT], { suffix: ":started" }),
 							true
@@ -149,24 +149,24 @@ ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":start" }), () => {
 					}
 
 					if (
-						process &&
+						process_ &&
 						(jsonData.status === "shutdown" || jsonData.status === "stopped")
 					) {
-						if (process) {
-							if (process.stdout) {
-								process.stdout.removeAllListeners("data");
+						if (process_) {
+							if (process_.stdout) {
+								process_.stdout.removeAllListeners("data");
 							}
 
-							if (process.stderr) {
-								process.stderr.removeAllListeners("data");
+							if (process_.stderr) {
+								process_.stderr.removeAllListeners("data");
 							}
 
-							if (process && !process.killed) {
-								process.kill();
+							if (process_ && !process_.killed) {
+								process_.kill();
 							}
 						}
 
-						process = undefined;
+						process_ = undefined;
 
 						window_.webContents.send(
 							buildKey([ID.LIVE_PAINT], { suffix: ":stopped" }),
@@ -200,7 +200,7 @@ ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":start" }), () => {
 				}
 			});
 
-			process.stderr.on("data", data => {
+			process_.stderr.on("data", data => {
 				console.error(`error: ${data}`);
 
 				window_.webContents.send(buildKey([ID.LIVE_PAINT], { suffix: ":error" }), data);
@@ -210,7 +210,13 @@ ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":start" }), () => {
 });
 
 ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":stop" }), () => {
-	if (process && process.stdin) {
-		process.stdin.write(JSON.stringify({ command: "shutdown" }) + "\n");
+	if (process_ && process_.stdin) {
+		process_.stdin.write(JSON.stringify({ command: "shutdown" }) + "\n");
+	}
+});
+
+ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":settings" }), (_event, data) => {
+	if (process_ && process_.stdin) {
+		process_.stdin.write(JSON.stringify(data) + "\n");
 	}
 });
