@@ -1,3 +1,10 @@
+# [1.0.0-alpha.4](https://github.com/blib-la/captain/compare/v1.0.0-alpha.3...v1.0.0-alpha.4) (2024-02-23)
+
+
+### Features
+
+* add basic live painting UI ([#58](https://github.com/blib-la/captain/issues/58)) ([e1b2460](https://github.com/blib-la/captain/commit/e1b24605b3df32a55f69400cf446c279b71d7b49))
+
 # [1.0.0-alpha.3](https://github.com/blib-la/captain/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2024-02-23)
 
 
