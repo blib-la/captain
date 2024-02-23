@@ -1,3 +1,10 @@
+# [1.0.0-alpha.3](https://github.com/blib-la/captain/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2024-02-23)
+
+
+### Features
+
+* only generate output image when input was changed ([#55](https://github.com/blib-la/captain/issues/55)) ([fe4b4c0](https://github.com/blib-la/captain/commit/fe4b4c0acdfdd367bfb41019218233ae7cdbd794))
+
 # [1.0.0-alpha.2](https://github.com/blib-la/captain/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2024-02-22)
 
 
