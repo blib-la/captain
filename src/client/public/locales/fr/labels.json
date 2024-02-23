@@ -16,5 +16,7 @@
   "sideBySide": "Côte à Côte",
   "start": "Démarrer",
   "stop": "Arrêter",
-  "unpacking": "Déballage"
+  "unpacking": "Déballage",
+  "createStory": "Créer Histoire",
+  "readStory": "Lire Histoire"
 }

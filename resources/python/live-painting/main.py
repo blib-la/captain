@@ -234,7 +234,7 @@ def warmup(pipe, input_image_path):
 
 def main(pipe, input_image_path, output_image_path, shutdown_event):
     # Initial/default values for parameters
-    prompt = "a person, incredible watercolor painting, high quality"
+    prompt = "a whimsical scene, with imaginative elements, highly creative and unique, high quality narrative illustration, incredible detail, flowers, nature and creatures"
     seed = 1
     strength = 0.95
     steps = 3

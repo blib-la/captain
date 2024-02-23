@@ -16,5 +16,7 @@
   "sideBySide": "Obok Siebie",
   "start": "Start",
   "stop": "Stop",
-  "unpacking": "Rozpakowywanie"
+  "unpacking": "Rozpakowywanie",
+  "createStory": "Stwórz Historię",
+  "readStory": "Czytaj Historię"
 }
