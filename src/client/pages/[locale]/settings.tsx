@@ -12,11 +12,15 @@ import Typography from "@mui/joy/Typography";
 import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
+import { useEffect, useState } from "react";
 
+import { buildKey } from "#/build-key";
+import { ID } from "#/enums";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 import { ColorModeSelector } from "@/organisms/color-mode-selector";
 import { CustomScrollbars } from "@/organisms/custom-scrollbars";
 import { LanguageSelect } from "@/organisms/language-select";
+import { PasswordField } from "@/organisms/password-field";
 
 export function UserPreferences() {
 	const { t } = useTranslation(["common"]);
@@ -49,6 +53,58 @@ export function UserPreferences() {
 						</ListItemContent>
 						<ListItemDecorator sx={{ width: 172, flexShrink: 0 }}>
 							<LanguageSelect />
+						</ListItemDecorator>
+					</ListItem>
+				</List>
+			</CardContent>
+		</Card>
+	);
+}
+
+export function OpenAISettings() {
+	const { t } = useTranslation(["common"]);
+	const [openAiApiKey, setOpenAiApiKey] = useState("");
+
+	useEffect(() => {
+		window.ipc.send(buildKey([ID.KEYS], { suffix: ":get-openAiApiKey" }));
+		const unsubscribe = window.ipc.on(
+			buildKey([ID.KEYS], { suffix: ":openAiApiKey" }),
+			(openAiApiKey_: string) => {
+				setOpenAiApiKey(openAiApiKey_);
+			}
+		);
+		return () => {
+			unsubscribe();
+		};
+	}, []);
+
+	return (
+		<Card variant="soft">
+			<Typography>{t("common:pages.settings.openAiSettings")}</Typography>
+			<CardContent>
+				<List>
+					<ListItem>
+						<ListItemContent>
+							<Typography level="title-sm">{t("common:openAiApiKey")}</Typography>
+							<Typography level="body-sm">
+								{t("common:pages.settings.openAiApiKeyDescription")}
+							</Typography>
+						</ListItemContent>
+						<ListItemDecorator sx={{ width: 288, flexShrink: 0 }}>
+							<PasswordField
+								fullWidth
+								aria-label={t("common:openAiApiKey")}
+								value={openAiApiKey}
+								onBlur={event => {
+									window.ipc.send(
+										buildKey([ID.KEYS], { suffix: ":set-openAiApiKey" }),
+										event.target.value
+									);
+								}}
+								onChange={event => {
+									setOpenAiApiKey(event.target.value);
+								}}
+							/>
 						</ListItemDecorator>
 					</ListItem>
 				</List>
@@ -94,8 +150,8 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 						<Container sx={{ py: 2 }}>
 							<Stack spacing={4}>
 								<UserPreferences />
-								{/* <OpenAISettings />
-								<RunPodSettings />
+								<OpenAISettings />
+								{/* 	<RunPodSettings />
 								<StableDiffusionSettings /> */}
 							</Stack>
 						</Container>

@@ -7,7 +7,7 @@ import { execa } from "execa";
 
 import { buildKey } from "#/build-key";
 import { DownloadState, ID } from "#/enums";
-import { appSettingsStore, userStore } from "@/stores";
+import { appSettingsStore, keyStore, userStore } from "@/stores";
 import {
 	getCaptainData,
 	getCaptainDownloads,
@@ -219,4 +219,13 @@ ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":settings" }), (_event, data) =>
 	if (process_ && process_.stdin) {
 		process_.stdin.write(JSON.stringify(data) + "\n");
 	}
+});
+
+ipcMain.on(buildKey([ID.KEYS], { suffix: ":set-openAiApiKey" }), (_event, openAiApiKey) => {
+	keyStore.set("openAiApiKey", openAiApiKey);
+});
+
+ipcMain.on(buildKey([ID.KEYS], { suffix: ":get-openAiApiKey" }), event => {
+	const openAiApiKey = keyStore.get("openAiApiKey");
+	event.sender.send(buildKey([ID.KEYS], { suffix: ":openAiApiKey" }), openAiApiKey);
 });

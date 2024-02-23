@@ -255,10 +255,20 @@ export function LivePainting() {
 	const [generatingStory, setGeneratingStory] = useState(false);
 	const [story, setStory] = useState("");
 	const [storyModalOpen, setStoryModalOpen] = useState(false);
+	const [storyTooltipOpen, setStoryTooltipOpen] = useState(false);
 	const isOverlay = value === "overlay";
 
+	const [openAiApiKey, setOpenAiApiKey] = useState("");
+
 	useEffect(() => {
-		const unsubscribe = window.ipc.on(
+		window.ipc.send(buildKey([ID.KEYS], { suffix: ":get-openAiApiKey" }));
+		const unsubscribeApiKey = window.ipc.on(
+			buildKey([ID.KEYS], { suffix: ":openAiApiKey" }),
+			(openAiApiKey_: string) => {
+				setOpenAiApiKey(openAiApiKey_);
+			}
+		);
+		const unsubscribeStoryGenerated = window.ipc.on(
 			buildKey([ID.STORY], { suffix: ":generated" }),
 			(story_: string) => {
 				setStory(story_);
@@ -267,7 +277,8 @@ export function LivePainting() {
 			}
 		);
 		return () => {
-			unsubscribe();
+			unsubscribeStoryGenerated();
+			unsubscribeApiKey();
 		};
 	}, []);
 	return (
@@ -431,14 +442,27 @@ export function LivePainting() {
 					</IconButton>
 				</Tooltip>
 				<Box sx={{ flex: 1 }} />
-				<Tooltip title={t("labels:createStory")}>
+				<Tooltip open={storyTooltipOpen} title={t("labels:createStory")}>
 					<IconButton
-						disabled={generatingStory}
+						disabled={generatingStory || !openAiApiKey}
 						size="lg"
 						variant="soft"
 						aria-label={t("labels:createStory")}
+						onFocus={() => {
+							setStoryTooltipOpen(true);
+						}}
+						onBlur={() => {
+							setStoryTooltipOpen(false);
+						}}
+						onMouseEnter={() => {
+							setStoryTooltipOpen(true);
+						}}
+						onMouseLeave={() => {
+							setStoryTooltipOpen(false);
+						}}
 						onClick={() => {
 							setGeneratingStory(true);
+							setStoryTooltipOpen(false);
 							window.ipc.send(buildKey([ID.STORY], { suffix: ":describe" }), {
 								images: [image],
 								prompt: `{"lang": "${locale}"}`,
