@@ -1,3 +1,10 @@
+# [1.0.0-alpha.7](https://github.com/blib-la/captain/compare/v1.0.0-alpha.6...v1.0.0-alpha.7) (2024-02-24)
+
+
+### Features
+
+* add prompt and seed ([#63](https://github.com/blib-la/captain/issues/63)) ([a0df807](https://github.com/blib-la/captain/commit/a0df8073b481a4d85c6e8e53253e0570a682d13a))
+
 # [1.0.0-alpha.6](https://github.com/blib-la/captain/compare/v1.0.0-alpha.5...v1.0.0-alpha.6) (2024-02-23)
 
 
