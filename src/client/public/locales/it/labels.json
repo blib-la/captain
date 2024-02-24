@@ -18,5 +18,7 @@
   "stop": "Ferma",
   "unpacking": "Estrazione",
   "createStory": "Crea Storia",
-  "readStory": "Leggi Storia"
+  "readStory": "Leggi Storia",
+  "prompt": "Prompt",
+  "randomize": "Randomizza"
 }

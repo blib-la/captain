@@ -18,5 +18,7 @@
   "stop": "停止",
   "unpacking": "解凍中",
   "createStory": "ストーリー作成",
-  "readStory": "ストーリー閲覧"
+  "readStory": "ストーリー閲覧",
+  "prompt": "プロンプト",
+  "randomize": "ランダム化"
 }

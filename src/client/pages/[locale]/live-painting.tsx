@@ -1,5 +1,6 @@
 import { ClickAwayListener } from "@mui/base";
 import BrushIcon from "@mui/icons-material/Brush";
+import CasinoIcon from "@mui/icons-material/Casino";
 import ClearIcon from "@mui/icons-material/Clear";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import MmsIcon from "@mui/icons-material/Mms";
@@ -9,6 +10,8 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
 import Box from "@mui/joy/Box";
 import CircularProgress from "@mui/joy/CircularProgress";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
 import IconButton from "@mui/joy/IconButton";
 import Modal from "@mui/joy/Modal";
 import ModalClose from "@mui/joy/ModalClose";
@@ -17,6 +20,7 @@ import Sheet from "@mui/joy/Sheet";
 import Slider from "@mui/joy/Slider";
 import Stack from "@mui/joy/Stack";
 import SvgIcon from "@mui/joy/SvgIcon";
+import Textarea from "@mui/joy/Textarea";
 import ToggleButtonGroup from "@mui/joy/ToggleButtonGroup";
 import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
@@ -31,6 +35,7 @@ import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 import { getContrastColor } from "@/ions/utils/color";
+import { CustomScrollbars } from "@/organisms/custom-scrollbars";
 export type ViewType = "side-by-side" | "overlay";
 const livePaintingOptionsAtom = atom({
 	brushSize: 10,
@@ -242,7 +247,11 @@ export function OverlayEditIcon() {
 	);
 }
 
-export function LivePainting() {
+function randomSeed() {
+	return Math.ceil(Math.random() * 1_000_000_000) + 1;
+}
+
+export function LivePainting({ running }: { running?: boolean }) {
 	const {
 		t,
 		i18n: { language: locale },
@@ -254,8 +263,10 @@ export function LivePainting() {
 	const [brushSizeOpen, setBrushSizeOpen] = useState(false);
 	const [generatingStory, setGeneratingStory] = useState(false);
 	const [story, setStory] = useState("");
+	const [prompt, setPrompt] = useState("a captain with white beard, teal hat and uniform");
 	const [storyModalOpen, setStoryModalOpen] = useState(false);
 	const [storyTooltipOpen, setStoryTooltipOpen] = useState(false);
+	const [seed, setSeed] = useState(randomSeed());
 	const isOverlay = value === "overlay";
 
 	const [openAiApiKey, setOpenAiApiKey] = useState("");
@@ -281,6 +292,13 @@ export function LivePainting() {
 			unsubscribeApiKey();
 		};
 	}, []);
+
+	useEffect(() => {
+		if (running) {
+			window.ipc.send(buildKey([ID.LIVE_PAINT], { suffix: ":settings" }), { prompt, seed });
+		}
+	}, [prompt, seed, running]);
+
 	return (
 		<Box sx={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column" }}>
 			<Modal
@@ -315,6 +333,8 @@ export function LivePainting() {
 					position: "relative",
 					zIndex: 2,
 					display: "flex",
+					alignItems: "center",
+					flexShrink: 0,
 					height: 44,
 					px: 1,
 					gap: 1,
@@ -324,7 +344,7 @@ export function LivePainting() {
 					value={value}
 					color="neutral"
 					variant="plain"
-					size="lg"
+					size="md"
 					onChange={(event, newValue) => {
 						if (newValue) {
 							setValue(newValue);
@@ -347,7 +367,7 @@ export function LivePainting() {
 				<Tooltip title={t("labels:color")}>
 					<IconButton
 						component="label"
-						size="lg"
+						size="md"
 						tabIndex={-1}
 						aria-label={t("labels:color")}
 						sx={{
@@ -417,7 +437,7 @@ export function LivePainting() {
 				>
 					<Tooltip title={t("labels:brushSize")} sx={{ py: 0.5, px: 0.75 }}>
 						<IconButton
-							size="lg"
+							size="md"
 							variant="soft"
 							aria-label={t("labels:brushSize")}
 							onClick={() => {
@@ -431,7 +451,7 @@ export function LivePainting() {
 				<Box sx={{ width: 8 }} />
 				<Tooltip title={t("labels:clear")}>
 					<IconButton
-						size="lg"
+						size="md"
 						variant="soft"
 						aria-label={t("labels:clear")}
 						onClick={() => {
@@ -442,10 +462,22 @@ export function LivePainting() {
 					</IconButton>
 				</Tooltip>
 				<Box sx={{ flex: 1 }} />
+				<Tooltip title={t("labels:randomize")}>
+					<IconButton
+						size="md"
+						variant="soft"
+						aria-label={t("labels:randomize")}
+						onClick={() => {
+							setSeed(randomSeed());
+						}}
+					>
+						<CasinoIcon />
+					</IconButton>
+				</Tooltip>
 				<Tooltip open={storyTooltipOpen} title={t("labels:createStory")}>
 					<IconButton
 						disabled={generatingStory || !openAiApiKey}
-						size="lg"
+						size="md"
 						variant="soft"
 						aria-label={t("labels:createStory")}
 						onFocus={() => {
@@ -474,7 +506,7 @@ export function LivePainting() {
 				</Tooltip>
 				<Tooltip title={t("labels:readStory")}>
 					<IconButton
-						size="lg"
+						size="md"
 						variant="soft"
 						aria-label={t("labels:readStory")}
 						onClick={() => {
@@ -485,10 +517,15 @@ export function LivePainting() {
 					</IconButton>
 				</Tooltip>
 			</Sheet>
-			<Box sx={{ flex: 1, display: "flex", position: "relative" }}>
+			<Box
+				sx={{ flex: 1, rowGap: 2, display: "flex", flexWrap: "wrap", position: "relative" }}
+			>
 				<Box
 					sx={{
-						width: isOverlay ? "100%" : "50%",
+						width: {
+							xs: "100%",
+							md: isOverlay ? "100%" : "50%",
+						},
 						position: isOverlay ? "absolute" : "relative",
 						inset: 0,
 						zIndex: 1,
@@ -501,7 +538,10 @@ export function LivePainting() {
 				</Box>
 				<Box
 					sx={{
-						width: isOverlay ? "100%" : "50%",
+						width: {
+							xs: "100%",
+							md: isOverlay ? "100%" : "50%",
+						},
 						position: "relative",
 						flex: isOverlay ? 1 : undefined,
 						zIndex: 0,
@@ -513,6 +553,19 @@ export function LivePainting() {
 					<RenderingArea />
 				</Box>
 			</Box>
+			<Sheet sx={{ px: 1, py: 2 }}>
+				<FormControl>
+					<FormLabel>{t("labels:prompt")}</FormLabel>
+					<Textarea
+						minRows={3}
+						maxRows={3}
+						value={prompt}
+						onChange={event => {
+							setPrompt(event.target.value);
+						}}
+					/>
+				</FormControl>
+			</Sheet>
 		</Box>
 	);
 }
@@ -595,7 +648,9 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 						position: "relative",
 					}}
 				>
-					<LivePainting />
+					<CustomScrollbars>
+						<LivePainting running={running} />
+					</CustomScrollbars>
 				</Box>
 			</Stack>
 		</>
