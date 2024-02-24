@@ -18,5 +18,7 @@
   "stop": "停止",
   "unpacking": "解压中",
   "createStory": "创建故事",
-  "readStory": "阅读故事"
+  "readStory": "阅读故事",
+  "prompt": "提示",
+  "randomize": "随机化"
 }

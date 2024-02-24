@@ -234,14 +234,15 @@ def warmup(pipe, input_image_path):
 
 def main(pipe, input_image_path, output_image_path, shutdown_event):
     # Initial/default values for parameters
-    prompt = "a whimsical scene, with imaginative elements, highly creative and unique, high quality narrative illustration, incredible detail, flowers, nature and creatures"
+    prompt = "a captain with white beard, teal hat and uniform"
     seed = 1
     strength = 0.95
     steps = 3
     guidance_scale = 1.5
 
-    # When was the input image last modified
-    last_modified_time = None
+    last_prompt = None
+    last_seed = None
+    last_input_image = None
 
     # Queue to hold parameters received from stdin
     params_queue = queue.Queue()
@@ -267,49 +268,59 @@ def main(pipe, input_image_path, output_image_path, shutdown_event):
             pass  # No new parameters, proceed with the existing ones
 
         # Get the current modified time of the input image
-        current_modified_time = os.path.getmtime(input_image_path)
+        current_input_image = os.path.getmtime(input_image_path)
 
-        if current_modified_time != last_modified_time:
-            last_modified_time = current_modified_time
-        else:
-            # Skip this iteration since the input image has not changed
-            continue
+        # Determine if image generation should be triggered
+        trigger_generation = (
+            prompt != last_prompt
+            or seed != last_seed
+            or current_input_image != last_input_image
+        )
 
-        # Only generate an image if the prompt is not empty
-        if prompt is not None and prompt.strip():
-            torch.manual_seed(seed)
+        if trigger_generation:
+            last_prompt = prompt
+            last_seed = seed
+            last_input_image = current_input_image
 
-            init_image = load_image_with_retry(input_image_path)
+            # Only generate an image if the prompt is not empty
+            if prompt is not None and prompt.strip():
+                torch.manual_seed(seed)
 
-            # Image couldn't be loaded, skip this iteration
-            if init_image is None:
-                continue
+                init_image = load_image_with_retry(input_image_path)
 
-            strength_ = float(strength)
-            guidance_scale_ = float(guidance_scale)
-            denoise_steps_ = calculate_min_inference_steps(steps, strength_)
+                # Image couldn't be loaded, skip this iteration
+                if init_image is None:
+                    continue
 
-            image = pipe(
-                prompt,
-                image=init_image,
-                height=512,
-                width=512,
-                num_inference_steps=denoise_steps_,
-                num_images_per_prompt=1,
-                strength=strength_,
-                guidance_scale=guidance_scale_,
-            ).images[0]
+                strength_ = float(strength)
+                guidance_scale_ = float(guidance_scale)
+                denoise_steps_ = calculate_min_inference_steps(steps, strength_)
 
-            # Save file
-            image.save(f"{output_image_path}.tmp.png")
-            safe_rename_with_retries(f"{output_image_path}.tmp.png", output_image_path)
+                image = pipe(
+                    prompt,
+                    image=init_image,
+                    height=512,
+                    width=512,
+                    num_inference_steps=denoise_steps_,
+                    num_images_per_prompt=1,
+                    strength=strength_,
+                    guidance_scale=guidance_scale_,
+                ).images[0]
 
-            print(json.dumps({"status": "image_generated"}))
+                # Save file
+                image.save(f"{output_image_path}.tmp.png")
+                safe_rename_with_retries(
+                    f"{output_image_path}.tmp.png", output_image_path
+                )
 
-        else:
-            image = Image.new("RGB", (512, 512), color="white")
-            image.save(f"{output_image_path}.tmp.png")
-            safe_rename_with_retries(f"{output_image_path}.tmp.png", output_image_path)
+                print(json.dumps({"status": "image_generated"}))
+
+            else:
+                image = Image.new("RGB", (512, 512), color="white")
+                image.save(f"{output_image_path}.tmp.png")
+                safe_rename_with_retries(
+                    f"{output_image_path}.tmp.png", output_image_path
+                )
 
 
 if __name__ == "__main__":

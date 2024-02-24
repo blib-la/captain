@@ -18,5 +18,7 @@
   "stop": "Stopp",
   "unpacking": "Entpacken",
   "createStory": "Erzählung erstellen",
-  "readStory": "Erzählung lesen"
+  "readStory": "Erzählung lesen",
+  "prompt": "Prompt",
+  "randomize": "Zufällig"
 }

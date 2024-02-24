@@ -18,5 +18,7 @@
   "stop": "Detener",
   "unpacking": "Desempaquetando",
   "createStory": "Crear Historia",
-  "readStory": "Leer Historia"
+  "readStory": "Leer Historia",
+  "prompt": "Prompt",
+  "randomize": "Aleatorizar"
 }

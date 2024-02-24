@@ -18,5 +18,7 @@
   "stop": "עצור",
   "unpacking": "פותח",
   "createStory": "צור סיפור",
-  "readStory": "קרא סיפור"
+  "readStory": "קרא סיפור",
+  "prompt": "בקשה",
+  "randomize": "הפוך לאקראי"
 }

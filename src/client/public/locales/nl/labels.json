@@ -18,5 +18,7 @@
   "stop": "Stop",
   "unpacking": "Uitpakken",
   "createStory": "Verhaal Maken",
-  "readStory": "Verhaal Lezen"
+  "readStory": "Verhaal Lezen",
+  "prompt": "Prompt",
+  "randomize": "Willekeurig"
 }
