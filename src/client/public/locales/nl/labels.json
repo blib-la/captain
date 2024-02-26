@@ -1,24 +1,73 @@
 {
   "accessibility": "Toegankelijkheid",
+  "artStyle": "Kunststijl",
   "back": "Terug",
   "brushSize": "Penseelgrootte",
   "clear": "Wissen",
   "close": "Sluiten",
   "color": "Kleur",
+  "createStory": "Verhaal Maken",
   "dashboard": "Dashboard",
+  "delete": "Verwijderen",
+  "deleted": "Verwijderd",
   "downloading": "Downloaden",
+  "formLabel": {
+    "characters": "Personages",
+    "customStyle": "Aangepaste Stijl",
+    "length": "Lengte",
+    "mood": "Stemming",
+    "styleTheme": "Stijl & Thema"
+  },
+  "illustrationStyles": {
+    "childrensBook": "Kinderboek",
+    "custom": "Aangepast",
+    "customInfo": "Voeg de gewenste stijl toe aan de prompt",
+    "fantasyArt": "Fantasiekunst",
+    "graphicNovel": "Striproman",
+    "manga": "Manga",
+    "realism": "Realisme"
+  },
+  "length": {
+    "long": "Lang",
+    "medium": "Middel",
+    "short": "Kort"
+  },
   "livePainting": "Live Schilderen",
   "maximize": "Maximaliseren",
   "minimize": "Minimaliseren",
+  "mood": {
+    "exciting": "Opwindend",
+    "joyful": "Vrolijk",
+    "relaxing": "Ontspannend",
+    "sad": "Droevig",
+    "suspenseful": "Spannend"
+  },
   "overlay": "Overlay",
+  "placeholder": {
+    "characters": "De naam van de jongen is Erin en de naam van zijn hond is Ruffy",
+    "customStyle": "Het verhaal moet eigenzinnig en erg grappig zijn, inclusief een mysterie zonder afsluiting"
+  },
   "privacy": "Privacy",
+  "prompt": "Prompt",
+  "promptInfo": "De prompt moet in het Engels geschreven zijn.",
+  "randomize": "Willekeurig",
+  "readStory": "Verhaal Lezen",
+  "removeAllImages": "Alle afbeeldingen verwijderen",
+  "save": "Opslaan",
+  "saved": "Opgeslagen",
+  "saveImage": "Afbeelding opslaan",
   "security": "Beveiliging",
   "sideBySide": "Zij aan Zij",
   "start": "Start",
   "stop": "Stop",
-  "unpacking": "Uitpakken",
-  "createStory": "Verhaal Maken",
-  "readStory": "Verhaal Lezen",
-  "prompt": "Prompt",
-  "randomize": "Willekeurig"
+  "storyFormIntroduction": "Welkom bij ons verhaal-aanpassingstool! Na het tot leven brengen van je visies met onze door AI aangedreven schildertool, is het tijd om verhalen rond je creaties te weven. Selecteer hieronder je voorkeuren om het verhaal vorm te geven dat het beste bij je meesterwerk past. Of je nu een kort en zoet verhaal wenst, een middellange reis naar het fantastische, of een diepe duik in de rijken van het onbekende, we zijn hier om jouw verhaal tot leven te brengen. Kies je verhaalstijl, stel de emotionele toon in, en laten we samen een magisch verhaal creëren.",
+  "style": {
+    "adventure": "Avontuur",
+    "custom": "Aangepast",
+    "historical": "Historisch",
+    "magicalMystery": "Magisch & Mysterieus",
+    "sciFi": "Sciencefiction"
+  },
+  "submitButtonText": "Indienen",
+  "unpacking": "Uitpakken"
 }

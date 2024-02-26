@@ -1,24 +1,73 @@
 {
   "accessibility": "Accessibilité",
+  "artStyle": "Style artistique",
   "back": "Retour",
   "brushSize": "Taille Pinceau",
   "clear": "Effacer",
   "close": "Fermer",
   "color": "Couleur",
+  "createStory": "Créer Histoire",
   "dashboard": "Tableau de bord",
+  "delete": "Supprimer",
+  "deleted": "Supprimé",
   "downloading": "Téléchargement",
+  "formLabel": {
+    "characters": "Personnages",
+    "customStyle": "Style personnalisé",
+    "length": "Longueur",
+    "mood": "Humeur",
+    "styleTheme": "Style & Thème"
+  },
+  "illustrationStyles": {
+    "childrensBook": "Livre pour enfants",
+    "custom": "Personnalisé",
+    "customInfo": "Inclure le style désiré dans le prompt",
+    "fantasyArt": "Art fantastique",
+    "graphicNovel": "Roman graphique",
+    "manga": "Manga",
+    "realism": "Réalisme"
+  },
+  "length": {
+    "long": "Long",
+    "medium": "Moyen",
+    "short": "Court"
+  },
   "livePainting": "Peinture en Direct",
   "maximize": "Maximiser",
   "minimize": "Minimiser",
+  "mood": {
+    "exciting": "Excitant",
+    "joyful": "Joyeux",
+    "relaxing": "Relaxant",
+    "sad": "Triste",
+    "suspenseful": "Suspense"
+  },
   "overlay": "Superposition",
+  "placeholder": {
+    "characters": "Le nom du garçon est Erin et celui de son chien est Ruffy",
+    "customStyle": "L'histoire doit être excentrique et très drôle, inclure un mystère sans clôture"
+  },
   "privacy": "Confidentialité",
+  "prompt": "Prompt",
+  "promptInfo": "Le prompt doit être rédigé en anglais.",
+  "randomize": "Aléatoire",
+  "readStory": "Lire Histoire",
+  "removeAllImages": "Supprimer toutes les images",
+  "save": "Sauvegarder",
+  "saved": "Sauvegardé",
+  "saveImage": "Sauvegarder l'image",
   "security": "Sécurité",
   "sideBySide": "Côte à Côte",
   "start": "Démarrer",
   "stop": "Arrêter",
-  "unpacking": "Déballage",
-  "createStory": "Créer Histoire",
-  "readStory": "Lire Histoire",
-  "prompt": "Prompt",
-  "randomize": "Aléatoire"
+  "storyFormIntroduction": "Bienvenue dans notre outil de personnalisation d'histoires ! Après avoir donné vie à vos visions avec notre outil de peinture alimenté par IA, il est temps de tisser des récits autour de vos créations. Sélectionnez vos préférences ci-dessous pour façonner l'histoire qui convient le mieux à votre chef-d'œuvre. Que vous désiriez une histoire courte et douce, un voyage de longueur moyenne vers le fantastique, ou une plongée profonde dans les royaumes de l'inconnu, nous sommes ici pour donner vie à votre histoire. Choisissez votre style narratif, définissez le ton émotionnel, et créons ensemble une histoire magique.",
+  "style": {
+    "adventure": "Aventure",
+    "custom": "Personnalisé",
+    "historical": "Historique",
+    "magicalMystery": "Magique & Mystère",
+    "sciFi": "Science-Fiction"
+  },
+  "submitButtonText": "Soumettre",
+  "unpacking": "Déballage"
 }

@@ -1,24 +1,73 @@
 {
   "accessibility": "נגישות",
+  "artStyle": "סגנון אומנותי",
   "back": "חזרה",
   "brushSize": "גודל מברשת",
   "clear": "נקה",
   "close": "סגור",
   "color": "צבע",
+  "createStory": "צור סיפור",
   "dashboard": "לוח בקרה",
+  "delete": "מחק",
+  "deleted": "נמחק",
   "downloading": "מוריד",
+  "formLabel": {
+    "characters": "דמויות",
+    "customStyle": "סגנון מותאם אישית",
+    "length": "אורך",
+    "mood": "מצב רוח",
+    "styleTheme": "סגנון ונושא"
+  },
+  "illustrationStyles": {
+    "childrensBook": "ספר ילדים",
+    "custom": "מותאם אישית",
+    "customInfo": "כלול את הסגנון הרצוי בהקלדה",
+    "fantasyArt": "אמנות פנטזיה",
+    "graphicNovel": "רומן גרפי",
+    "manga": "מנגה",
+    "realism": "ריאליזם"
+  },
+  "length": {
+    "long": "ארוך",
+    "medium": "בינוני",
+    "short": "קצר"
+  },
   "livePainting": "ציור חי",
   "maximize": "הגדל",
   "minimize": "מזער",
+  "mood": {
+    "exciting": "מרגש",
+    "joyful": "שמח",
+    "relaxing": "מרגיע",
+    "sad": "עצוב",
+    "suspenseful": "מתח"
+  },
   "overlay": "שכבה",
+  "placeholder": {
+    "characters": "שם הילד הוא ארין ושם הכלב שלו הוא ראפי",
+    "customStyle": "הסיפור צריך להיות מוזר ומאוד מצחיק, לכלול מסתורין ללא סגירה"
+  },
   "privacy": "פרטיות",
+  "prompt": "בקשה",
+  "promptInfo": "ההקלדה צריכה להיות באנגלית.",
+  "randomize": "הפוך לאקראי",
+  "readStory": "קרא סיפור",
+  "removeAllImages": "הסר את כל התמונות",
+  "save": "שמור",
+  "saved": "נשמר",
+  "saveImage": "שמור תמונה",
   "security": "ביטחון",
   "sideBySide": "צד לצד",
   "start": "התחל",
   "stop": "עצור",
-  "unpacking": "פותח",
-  "createStory": "צור סיפור",
-  "readStory": "קרא סיפור",
-  "prompt": "בקשה",
-  "randomize": "הפוך לאקראי"
+  "storyFormIntroduction": "ברוך הבא לכלי ההתאמה האישית שלנו לסיפורים! לאחר שהענקת חיים לחזיונות שלך באמצעות הכלי שלנו לציור מופעל על ידי AI, הגיע הזמן לרקום סיפורים סביב היצירות שלך. בחר את העדפותיך למטה כדי לעצב את הסיפור שמתאים בצורה הטובה ביותר ליצירת המופת שלך. בין אם אתה מעוניין בסיפור קצר ומתוק, במסע בינוני האורך לעולם הפנטסטי, או בצלילה עמוקה לעולמות הלא נודע, אנו כאן כדי להפוך את הסיפור שלך למציאות. בחר את סגנון הסיפור שלך, קבע את הטון הרגשי, ובוא ניצור יחד סיפור קסום.",
+  "style": {
+    "adventure": "הרפתקה",
+    "custom": "מותאם אישית",
+    "historical": "היסטורי",
+    "magicalMystery": "קסם ומסתורין",
+    "sciFi": "מדע בדיוני"
+  },
+  "submitButtonText": "שלח",
+  "unpacking": "פותח"
 }

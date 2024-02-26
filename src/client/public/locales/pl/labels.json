@@ -1,24 +1,73 @@
 {
   "accessibility": "Dostępność",
+  "artStyle": "Styl artystyczny",
   "back": "Wstecz",
   "brushSize": "Rozmiar Pędzla",
   "clear": "Wyczyść",
   "close": "Zamknij",
   "color": "Kolor",
+  "createStory": "Stwórz Historię",
   "dashboard": "Pulpit",
+  "delete": "Usuń",
+  "deleted": "Usunięto",
   "downloading": "Pobieranie",
+  "formLabel": {
+    "characters": "Postacie",
+    "customStyle": "Styl własny",
+    "length": "Długość",
+    "mood": "Nastrój",
+    "styleTheme": "Styl & Temat"
+  },
+  "illustrationStyles": {
+    "childrensBook": "Książka dla dzieci",
+    "custom": "Własny",
+    "customInfo": "Dołącz preferowany styl do promptu",
+    "fantasyArt": "Sztuka fantasy",
+    "graphicNovel": "Novel graficzna",
+    "manga": "Manga",
+    "realism": "Realizm"
+  },
+  "length": {
+    "long": "Długa",
+    "medium": "Średnia",
+    "short": "Krótka"
+  },
   "livePainting": "Malowanie na Żywo",
   "maximize": "Zmaksymalizuj",
   "minimize": "Zminimalizuj",
+  "mood": {
+    "exciting": "Ekscytujący",
+    "joyful": "Radosny",
+    "relaxing": "Relaksujący",
+    "sad": "Smutny",
+    "suspenseful": "Pełen napięcia"
+  },
   "overlay": "Nakładka",
+  "placeholder": {
+    "characters": "Imię chłopca to Erin, a jego psa to Ruffy",
+    "customStyle": "Historia powinna być osobliwa i bardzo zabawna, zawierać tajemnicę bez zakończenia"
+  },
   "privacy": "Prywatność",
+  "prompt": "Prompt",
+  "promptInfo": "Prompt powinien być napisany po angielsku.",
+  "randomize": "Losuj",
+  "readStory": "Czytaj Historię",
+  "removeAllImages": "Usuń wszystkie obrazy",
+  "save": "Zapisz",
+  "saved": "Zapisano",
+  "saveImage": "Zapisz obraz",
   "security": "Bezpieczeństwo",
   "sideBySide": "Obok Siebie",
   "start": "Start",
   "stop": "Stop",
-  "unpacking": "Rozpakowywanie",
-  "createStory": "Stwórz Historię",
-  "readStory": "Czytaj Historię",
-  "prompt": "Prompt",
-  "randomize": "Losuj"
+  "storyFormIntroduction": "Witaj w naszym narzędziu do personalizacji opowieści! Po ożywieniu twoich wizji za pomocą naszego narzędzia do malowania wspieranego przez AI, nadszedł czas, aby utkać narracje wokół twoich kreacji. Wybierz swoje preferencje poniżej, aby ukształtować historię, która najlepiej pasuje do twojego dzieła. Niezależnie od tego, czy pragniesz krótkiej i słodkiej opowieści, średniej długości podróży do fantastycznego świata, czy głębokiego zanurzenia w krainy nieznanego, jesteśmy tutaj, aby Twoja historia ożyła. Wybierz swój styl narracyjny, ustal emocjonalny ton i stwórzmy razem magiczną historię.",
+  "style": {
+    "adventure": "Przygoda",
+    "custom": "Niestandardowe",
+    "historical": "Historyczne",
+    "magicalMystery": "Magiczne & Tajemnicze",
+    "sciFi": "Science Fiction"
+  },
+  "submitButtonText": "Prześlij",
+  "unpacking": "Rozpakowywanie"
 }

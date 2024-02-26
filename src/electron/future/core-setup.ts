@@ -11,7 +11,9 @@ if (isProduction) {
 	app.setPath("userData", `${app.getPath("userData")}__development__`);
 }
 
-protocol.registerSchemesAsPrivileged([{ scheme: LOCAL_PROTOCOL, privileges: { bypassCSP: true } }]);
+protocol.registerSchemesAsPrivileged([
+	{ scheme: LOCAL_PROTOCOL, privileges: { secure: true, standard: true, bypassCSP: true } },
+]);
 
 contextMenu({
 	showSaveImageAs: true,
