@@ -1,3 +1,10 @@
+# [1.0.0-alpha.8](https://github.com/blib-la/captain/compare/v1.0.0-alpha.7...v1.0.0-alpha.8) (2024-02-26)
+
+
+### Features
+
+* extended story options ([#65](https://github.com/blib-la/captain/issues/65)) ([39f2595](https://github.com/blib-la/captain/commit/39f2595e2c714b24265ad2c13fde8bab3f03d03c))
+
 # [1.0.0-alpha.7](https://github.com/blib-la/captain/compare/v1.0.0-alpha.6...v1.0.0-alpha.7) (2024-02-24)
 
 
