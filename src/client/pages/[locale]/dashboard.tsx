@@ -1,7 +1,8 @@
-import { CardActions, Grid } from "@mui/joy";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import Card from "@mui/joy/Card";
+import CardActions from "@mui/joy/CardActions";
+import Grid from "@mui/joy/Grid";
 import Modal from "@mui/joy/Modal";
 import ModalClose from "@mui/joy/ModalClose";
 import ModalDialog from "@mui/joy/ModalDialog";
