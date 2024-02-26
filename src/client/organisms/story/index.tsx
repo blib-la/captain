@@ -19,7 +19,7 @@ export function StoryForm({ onSubmit }: { onSubmit?(): void }) {
 	const {
 		t,
 		i18n: { language: locale },
-	} = useTranslation(["labels"]);
+	} = useTranslation(["labels", "texts"]);
 	const [images] = useAtom(imagesAtom);
 	const { handleSubmit, register, control, watch } = useForm<FormInput>({
 		defaultValues: {
@@ -49,7 +49,7 @@ export function StoryForm({ onSubmit }: { onSubmit?(): void }) {
 				});
 			})}
 		>
-			<Typography>{t("labels:storyFormIntroduction")}</Typography>
+			<Typography>{t("texts:storyFormIntroduction")}</Typography>
 			<FormControl required>
 				<FormLabel>{t("labels:formLabel.length")}</FormLabel>
 				<Controller
