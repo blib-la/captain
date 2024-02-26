@@ -1,7 +1,16 @@
 import type { IpcRendererEvent } from "electron";
 import { contextBridge, ipcRenderer } from "electron";
 
+import { buildKey } from "#/build-key";
+import { ID } from "#/enums";
+
 const handler = {
+	saveFile(name: string, content: string, options: { encoding?: BufferEncoding } = {}) {
+		return ipcRenderer.invoke(buildKey([ID.FILE], { suffix: ":save" }), name, content, options);
+	},
+	readFile(name: string) {
+		return ipcRenderer.invoke(buildKey([ID.FILE], { suffix: ":read" }), name);
+	},
 	send(channel: string, value?: unknown) {
 		ipcRenderer.send(channel, value);
 	},

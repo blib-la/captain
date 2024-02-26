@@ -1,4 +1,5 @@
 import fsp from "node:fs/promises";
+import path from "node:path";
 
 import { BrowserWindow, ipcMain } from "electron";
 import { download } from "electron-dl";
@@ -7,6 +8,7 @@ import { execa } from "execa";
 
 import { buildKey } from "#/build-key";
 import { DownloadState, ID } from "#/enums";
+import { readFilesRecursively } from "@/main";
 import { appSettingsStore, keyStore, userStore } from "@/stores";
 import {
 	getCaptainData,
@@ -229,3 +231,52 @@ ipcMain.on(buildKey([ID.KEYS], { suffix: ":get-openAiApiKey" }), event => {
 	const openAiApiKey = keyStore.get("openAiApiKey");
 	event.sender.send(buildKey([ID.KEYS], { suffix: ":openAiApiKey" }), openAiApiKey);
 });
+
+ipcMain.on(
+	buildKey([ID.STORY], { suffix: ":get-all" }),
+	async (event, { fileTypes }: { fileTypes?: string[] }) => {
+		const files = await readFilesRecursively(getCaptainData("files/stories"), { fileTypes });
+		const fileContents = await Promise.all(
+			files.map(async file => ({
+				content: await fsp.readFile(path.join(file.path, file.name), { encoding: "utf8" }),
+				path: file.path,
+				name: file.name,
+			}))
+		);
+		const parsedFiles = fileContents
+			.map(({ content, path: path_, name }) => {
+				const json = JSON.parse(content);
+				console.log(json);
+				return {
+					json,
+					path: path_,
+					name,
+				};
+			})
+			.map(({ json: { id, locale, title, createdAt, updatedAt }, path: path_, name }) => ({
+				id,
+				locale,
+				title,
+				createdAt,
+				updatedAt,
+				path: path.join(path_, name),
+				cover: path.join(path_, "1.png"),
+			}));
+		event.sender.send(buildKey([ID.STORY], { suffix: ":all" }), parsedFiles);
+	}
+);
+
+ipcMain.handle(
+	buildKey([ID.FILE], { suffix: ":save" }),
+	async (_event, name: string, content: string, { encoding }: { encoding?: BufferEncoding }) => {
+		const filePath = getCaptainData("files", name);
+		const directory = path.parse(filePath).dir;
+		await fsp.mkdir(directory, { recursive: true });
+		await fsp.writeFile(filePath, content, { encoding });
+		return filePath;
+	}
+);
+
+ipcMain.handle(buildKey([ID.FILE], { suffix: ":read" }), async (_event, name: string) =>
+	fsp.readFile(name, { encoding: "utf8" })
+);

@@ -64,7 +64,7 @@ export function WindowControls({ disableMaximize = true }) {
 	);
 }
 
-export function TitleBar({ disableMaximize = true }) {
+export function TitleBar({ disableMaximize = false }) {
 	return (
 		<Sheet
 			sx={{

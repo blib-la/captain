@@ -1,24 +1,72 @@
 {
   "accessibility": "Toegankelijkheid",
+  "artStyle": "Kunststijl",
   "back": "Terug",
   "brushSize": "Penseelgrootte",
   "clear": "Wissen",
   "close": "Sluiten",
   "color": "Kleur",
+  "createStory": "Verhaal Maken",
   "dashboard": "Dashboard",
+  "delete": "Verwijderen",
+  "deleted": "Verwijderd",
   "downloading": "Downloaden",
+  "formLabel": {
+    "characters": "Personages",
+    "customStyle": "Aangepaste Stijl",
+    "length": "Lengte",
+    "mood": "Stemming",
+    "styleTheme": "Stijl & Thema"
+  },
+  "illustrationStyles": {
+    "childrensBook": "Kinderboek",
+    "custom": "Aangepast",
+    "customInfo": "Voeg de gewenste stijl toe aan de prompt",
+    "fantasyArt": "Fantasiekunst",
+    "graphicNovel": "Striproman",
+    "manga": "Manga",
+    "realism": "Realisme"
+  },
+  "length": {
+    "long": "Lang",
+    "medium": "Middel",
+    "short": "Kort"
+  },
   "livePainting": "Live Schilderen",
   "maximize": "Maximaliseren",
   "minimize": "Minimaliseren",
+  "mood": {
+    "exciting": "Opwindend",
+    "joyful": "Vrolijk",
+    "relaxing": "Ontspannend",
+    "sad": "Droevig",
+    "suspenseful": "Spannend"
+  },
   "overlay": "Overlay",
+  "placeholder": {
+    "characters": "De naam van de jongen is Erin en de naam van zijn hond is Ruffy",
+    "customStyle": "Het verhaal moet eigenzinnig en erg grappig zijn, inclusief een mysterie zonder afsluiting"
+  },
   "privacy": "Privacy",
+  "prompt": "Prompt",
+  "promptInfo": "De prompt moet in het Engels geschreven zijn.",
+  "randomize": "Willekeurig",
+  "readStory": "Verhaal Lezen",
+  "removeAllImages": "Alle afbeeldingen verwijderen",
+  "save": "Opslaan",
+  "saved": "Opgeslagen",
+  "saveImage": "Afbeelding opslaan",
   "security": "Beveiliging",
   "sideBySide": "Zij aan Zij",
   "start": "Start",
   "stop": "Stop",
-  "unpacking": "Uitpakken",
-  "createStory": "Verhaal Maken",
-  "readStory": "Verhaal Lezen",
-  "prompt": "Prompt",
-  "randomize": "Willekeurig"
+  "style": {
+    "adventure": "Avontuur",
+    "custom": "Aangepast",
+    "historical": "Historisch",
+    "magicalMystery": "Magisch & Mysterieus",
+    "sciFi": "Sciencefiction"
+  },
+  "submitButtonText": "Indienen",
+  "unpacking": "Uitpakken"
 }

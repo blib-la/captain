@@ -1,24 +1,72 @@
 {
   "accessibility": "可访问性",
+  "artStyle": "艺术风格",
   "back": "返回",
   "brushSize": "笔刷大小",
   "clear": "清除",
   "close": "关闭",
   "color": "颜色",
+  "createStory": "创建故事",
   "dashboard": "仪表板",
+  "delete": "删除",
+  "deleted": "已删除",
   "downloading": "下载中",
+  "formLabel": {
+    "characters": "角色",
+    "customStyle": "自定义风格",
+    "length": "长度",
+    "mood": "情绪",
+    "styleTheme": "风格与主题"
+  },
+  "illustrationStyles": {
+    "childrensBook": "儿童书籍",
+    "custom": "自定义",
+    "customInfo": "在提示中包含所需的风格",
+    "fantasyArt": "幻想艺术",
+    "graphicNovel": "图形小说",
+    "manga": "漫画",
+    "realism": "现实主义"
+  },
+  "length": {
+    "long": "长",
+    "medium": "中",
+    "short": "短"
+  },
   "livePainting": "实时绘画",
   "maximize": "最大化",
   "minimize": "最小化",
+  "mood": {
+    "exciting": "刺激",
+    "joyful": "快乐",
+    "relaxing": "放松",
+    "sad": "悲伤",
+    "suspenseful": "悬疑"
+  },
   "overlay": "叠加",
+  "placeholder": {
+    "characters": "男孩的名字是Erin，他的狗的名字是Ruffy",
+    "customStyle": "故事应该是古怪且非常有趣的，包括一个没有结局的谜团"
+  },
   "privacy": "隐私",
+  "prompt": "提示",
+  "promptInfo": "提示应该用英文书写。",
+  "randomize": "随机化",
+  "readStory": "阅读故事",
+  "removeAllImages": "移除所有图片",
+  "save": "保存",
+  "saved": "已保存",
+  "saveImage": "保存图片",
   "security": "安全",
   "sideBySide": "并排",
   "start": "开始",
   "stop": "停止",
-  "unpacking": "解压中",
-  "createStory": "创建故事",
-  "readStory": "阅读故事",
-  "prompt": "提示",
-  "randomize": "随机化"
+  "style": {
+    "adventure": "冒险",
+    "custom": "自定义",
+    "historical": "历史",
+    "magicalMystery": "魔幻与神秘",
+    "sciFi": "科幻"
+  },
+  "submitButtonText": "提交",
+  "unpacking": "解压中"
 }

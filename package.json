@@ -9,6 +9,7 @@
   "scripts": {
     "prebuild": "npm run eslint -- --fix",
     "build": "nextron build",
+    "caption:test": "ts-node-esm main/captions/misc.ts",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "dev": "nextron",
     "eslint": "eslint \"src/{**/*,*}.{ts,tsx}\"",
@@ -18,14 +19,14 @@
     "prep:win": "resources/python-embedded/python.exe -m pip install -r requirements.txt",
     "sort-json": "node scripts/sort-json.mjs",
     "spj": "npx sort-package-json@latest",
-    "toc": "npx markdown-toc README.md -i",
-    "tsc:noEmit": "tsc --noEmit",
-    "caption:test": "ts-node-esm main/captions/misc.ts",
-    "test:electron": "jest --runInBand --config jest.config.electron.ts --verbose",
     "test:client": "jest --runInBand --config jest.config.client.ts --verbose",
     "pretest:e2e": "nextron build --no-pack",
+    "test:e2e": "xvfb-run --auto-servernum --server-args=\"-screen 0 1280x960x24\" -- npx playwright test",
     "test:e2e:local": "npx playwright test",
-    "test:e2e": "xvfb-run --auto-servernum --server-args=\"-screen 0 1280x960x24\" -- npx playwright test"
+    "test:electron": "jest --runInBand --config jest.config.electron.ts --verbose",
+    "test:shared": "jest --runInBand --config jest.config.shared.ts --verbose",
+    "toc": "npx markdown-toc README.md -i",
+    "tsc:noEmit": "tsc --noEmit"
   },
   "dependencies": {
     "electron-context-menu": "3.6.1",
@@ -121,6 +122,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.49.3",
     "react-i18next": "14.0.1",
+    "react-markdown": "^9.0.1",
     "react-virtualized-auto-sizer": "^1.0.21",
     "react-window": "^1.8.10",
     "react-zoom-pan-pinch": "^3.3.0",
