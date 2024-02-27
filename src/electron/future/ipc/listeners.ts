@@ -8,6 +8,7 @@ import { execa } from "execa";
 import { buildKey } from "#/build-key";
 import { DownloadState, ID } from "#/enums";
 import { appSettingsStore, keyStore, userStore } from "@/stores";
+import { clone } from "@/utils/git";
 import {
 	getCaptainData,
 	getCaptainDownloads,
@@ -228,4 +229,21 @@ ipcMain.on(buildKey([ID.KEYS], { suffix: ":set-openAiApiKey" }), (_event, openAi
 ipcMain.on(buildKey([ID.KEYS], { suffix: ":get-openAiApiKey" }), event => {
 	const openAiApiKey = keyStore.get("openAiApiKey");
 	event.sender.send(buildKey([ID.KEYS], { suffix: ":openAiApiKey" }), openAiApiKey);
+});
+
+ipcMain.on(buildKey([ID.DOWNLOADS], { suffix: ":clone" }), async (_event, data) => {
+	const { repository, destination } = data;
+
+	try {
+		await clone(repository, destination, {
+			onProgress(progress) {
+				_event.sender.send(buildKey([ID.DOWNLOADS], { suffix: ":progress" }), progress);
+			},
+			onCompleted(completed) {
+				_event.sender.send(buildKey([ID.DOWNLOADS], { suffix: ":cloned" }), completed);
+			},
+		});
+	} catch (error) {
+		_event.sender.send(buildKey([ID.DOWNLOADS], { suffix: ":error" }), error);
+	}
 });

@@ -2,6 +2,7 @@
 // If in development mode, it sets the resources directory relative to the current working directory.
 // In production, it uses Electron's app.getPath to get the executable path and sets the resources directory
 // accordingly.
+import { mkdirSync, existsSync } from "node:fs";
 import path from "path";
 
 import { app } from "electron";
@@ -25,7 +26,13 @@ export function getDirectory(...subpath: string[]): string {
 }
 
 export function getUserData(...subpath: string[]): string {
-	return path.join(app.getPath("userData"), ...subpath);
+	const finalPath = path.join(app.getPath("userData"), ...subpath);
+
+	if (!existsSync(finalPath)) {
+		mkdirSync(finalPath, { recursive: true });
+	}
+
+	return finalPath;
 }
 
 export function getCaptainData(...subpath: string[]): string {
