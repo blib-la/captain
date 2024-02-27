@@ -41,7 +41,7 @@ import {
 	captionRunningAtom,
 	directoryAtom,
 	imagesAtom,
-	projectAtom,
+	datasetAtom,
 	selectedImageAtom,
 } from "@/ions/atoms";
 import { useColumns } from "@/ions/hooks/columns";
@@ -177,7 +177,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	const id = query.id as string | undefined;
 	const [images, setImages] = useAtom(imagesAtom);
 	const [selectedImage, setSelectedImage] = useAtom(selectedImageAtom);
-	const [dataset, setDataset] = useAtom(projectAtom);
+	const [dataset, setDataset] = useAtom(datasetAtom);
 	const columnCount = useColumns({ xs: 2, sm: 3, md: 4, lg: 6 });
 	const [caption, setCaption] = useState("");
 	const [name, setName] = useState("");
@@ -213,7 +213,6 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	useKeyboardControlledImagesNavigation({ onBeforeChange: saveCaptionToFile });
 
 	useEffect(() => {
-		console.log({ captionRunningData });
 		if (typeof captionRunningData === "boolean") {
 			setCaptionRunning(captionRunningData);
 		}
@@ -222,6 +221,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	useEffect(() => {
 		if (datasetData) {
 			setDataset(datasetData.dataset);
+			// We need to keep the local selected state.
 			setImages(datasetData.images);
 			setName(datasetData.dataset.name);
 			setDirectory(datasetData.dataset.files);
@@ -451,6 +451,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 										<FormLabel>{t("common:caption")}</FormLabel>
 										<Textarea
 											minRows={3}
+											maxRows={5}
 											value={caption}
 											onChange={event => {
 												setCaption(event.target.value);

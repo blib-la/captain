@@ -11,7 +11,9 @@ import {
 	DOWNLOAD,
 	FEEDBACK,
 	FETCH,
+	GIT,
 	GPTV,
+	LLAVA,
 	MARKETPLACE_INDEX,
 	MODEL,
 	MODELS,
@@ -37,8 +39,7 @@ const handler = {
 		ipcRenderer.invoke(`${MODEL}:download`, type, url, options),
 	download: (url: string, directory: string, options: { storeKey: string }) =>
 		ipcRenderer.invoke(`${DOWNLOAD}`, url, directory, options),
-	getModels: (type: "loras" | "checkpoints" | "captions") =>
-		ipcRenderer.invoke(`${MODELS}:get`, type),
+	getModels: (type: string) => ipcRenderer.invoke(`${MODELS}:get`, type),
 	getDatasets: () => ipcRenderer.invoke(`${DATASETS}:get`),
 	createDataset: (directory: string, name: string) =>
 		ipcRenderer.invoke(`${DATASET}:create`, directory, name),
@@ -50,10 +51,12 @@ const handler = {
 		ipcRenderer.invoke(`${MARKETPLACE_INDEX}:download`, url),
 	batchEditCaption: (images: DatasetEntry[]) =>
 		ipcRenderer.invoke(`${CAPTIONS}:runBatch`, images),
+	gitCloneLFS: (location: string, repo: string, options: { id: string; storeKey: string }) =>
+		ipcRenderer.invoke(`${GIT}:lfs-clone`, location, repo, options),
 	handleRunGPTV: async (
 		images: string[],
 		options: {
-			exampleResponse: string;
+			exampleResponse: string[];
 			guidelines: string;
 			batchSize?: number;
 		}
@@ -66,6 +69,14 @@ const handler = {
 			exclude: string[];
 		}
 	) => ipcRenderer.invoke(`${WD14}:run`, images, options),
+	handleRunLlava: async (
+		images: string[],
+		options: {
+			batchSize?: number;
+			model: string;
+			prompt: string;
+		}
+	) => ipcRenderer.invoke(`${LLAVA}:run`, images, options),
 	send(channel: string, value?: unknown) {
 		ipcRenderer.send(channel, value);
 	},

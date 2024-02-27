@@ -5,6 +5,7 @@ import path from "path";
 import axios from "axios";
 import { BrowserWindow, ipcMain, shell } from "electron";
 import { download } from "electron-dl";
+import _ from "lodash";
 
 import package_ from "../../package.json";
 
@@ -42,9 +43,10 @@ ipcMain.handle(`${LOCALE}:get`, async () => store.get(LOCALE));
 
 ipcMain.handle(`${FETCH}:get`, async (event, key: string) => store.get(key));
 ipcMain.handle(`${FETCH}:delete`, async (event, key: string) => store.delete(key));
-ipcMain.handle(`${FETCH}:post`, async (event, key: string, data: Record<string, unknown>) =>
-	store.set(key, data)
-);
+ipcMain.handle(`${FETCH}:post`, async (event, key: string, data: Record<string, unknown>) => {
+	console.log(key, data);
+	return store.set(key, data);
+});
 
 ipcMain.handle(
 	`${FETCH}:patch`,
@@ -107,7 +109,7 @@ ipcMain.handle(
 		console.log({ storeKey });
 		try {
 			let directory = settings[type as keyof typeof settings];
-			if (type === "wd14") {
+			if (type === "caption/wd14") {
 				directory = getUserData("Captain_Data", "downloads", "caption", "wd14", id);
 			}
 
@@ -156,7 +158,7 @@ async function readFilesRecursively(directory: string) {
 
 	for (const item of items) {
 		const fullPath = path.join(directory, item.name);
-		if (item.isDirectory()) {
+		if (item.isDirectory() && !item.name.startsWith(".")) {
 			files = [...files, ...(await readFilesRecursively(fullPath))];
 		} else {
 			files.push(item);
@@ -194,22 +196,24 @@ Version: ${package_.version}
 
 /// ////  NEW SHIT
 
-ipcMain.handle(`${MODELS}:get`, async (_event, type: "loras" | "checkpoints" | "captions") => {
+ipcMain.handle(`${MODELS}:get`, async (_event, type_: string) => {
+	const [type, subtype] = type_.split("/");
 	if (type === "captions") {
-		const directory = getUserData("Captain_Data", "downloads", "caption", "wd14");
+		const directory = getUserData("Captain_Data", "downloads", "caption", subtype);
 		try {
 			const files = await readFilesRecursively(directory);
-			return files
-				.filter(item => item.name.endsWith(".onnx"))
-				.map(item => {
-					const id = path
-						.normalize(item.path)
-						.replaceAll("\\", "/")
-						.split("/")
-						.slice(-2)
-						.join("/");
-					return [id, item.name].join("/");
-				});
+			return _.uniq(
+				files
+					// .filter(item => item.name.endsWith(".onnx"))
+					.map(item =>
+						path
+							.normalize(item.path)
+							.replaceAll("\\", "/")
+							.split("/")
+							.slice(-2)
+							.join("/")
+					)
+			);
 		} catch (error) {
 			console.log(error);
 			return [];

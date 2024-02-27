@@ -3,11 +3,12 @@ import path from "path";
 
 import { BrowserWindow, ipcMain } from "electron";
 
-import { CAPTION, CAPTION_RUNNING, CAPTIONS, GPTV, WD14 } from "../helpers/constants";
+import { CAPTION, CAPTION_RUNNING, CAPTIONS, GPTV, LLAVA, WD14 } from "../helpers/constants";
 import { store } from "../helpers/store";
 import type { DatasetEntry } from "../helpers/types";
 
 import type { CaptionOptions } from "./misc";
+import { llava } from "./misc";
 import { gpt, handleFiles, wd14 } from "./misc";
 
 export function runCaptions<T extends CaptionOptions>(
@@ -73,6 +74,21 @@ ipcMain.handle(
 			exclude: string[];
 		}
 	) => runCaptions(files, wd14, options)
+);
+
+// Handler to execute the GPT-Vision (GPTV) service.
+ipcMain.handle(
+	`${LLAVA}:run`,
+	async (
+		_event,
+		files: string[],
+		options: {
+			batchSize?: number;
+			model: string;
+			prompt: string;
+			temperature: number;
+		}
+	) => runCaptions(files, llava, options)
 );
 
 ipcMain.handle(

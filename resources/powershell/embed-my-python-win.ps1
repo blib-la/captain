@@ -64,7 +64,7 @@ if (Test-Path $requirementsPath) {
 
     Push-Location $requirementsDir
 
-    $installResult = & $pythonExePath -m pip install -r (Get-Item $requirementsPath).Name
+    & $pythonExePath -m pip install -r (Get-Item $requirementsPath).Name
 
     Pop-Location
 

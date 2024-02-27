@@ -1,20 +1,37 @@
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import Grid from "@mui/joy/Grid";
 import Sheet from "@mui/joy/Sheet";
 import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
+import { useAtom } from "jotai/index";
 import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
+import { useEffect } from "react";
 
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 import { DrawingCanvas } from "@/organisms/live-painting/drawing-canvas";
 import { OutputCanvas } from "@/organisms/live-painting/output-canvas";
-import { UpdateProperties } from "@/organisms/live-painting/update-properties";
+import { livePaintingOptionsAtom, Prompt } from "@/organisms/live-painting/update-properties";
 
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["common"]);
+	const [livePaintingOptions] = useAtom(livePaintingOptionsAtom);
+
+	// Use effect to send updates
+	useEffect(() => {
+		window.ipc.send("live-painting:update-properties", {
+			prompt: livePaintingOptions.prompt,
+			size: livePaintingOptions.size,
+			seed: livePaintingOptions.seed,
+			strength: livePaintingOptions.strength,
+			guidance_scale: livePaintingOptions.guidanceScale,
+			num_inference_steps: livePaintingOptions.steps,
+		});
+	}, [livePaintingOptions]);
+
 	return (
 		<>
 			<Head>
@@ -34,9 +51,19 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 					}}
 				>
 					<Typography level="h4" component="h1" sx={{ mr: 1 }}>
-						{t("common:livepainting")}
+						{t("common:livePainting")}
 					</Typography>
-					<Button onClick={() => window.ipc.handleRunLivePainting()}>Start</Button>
+					<Box sx={{ flex: 1 }} />
+					<Button
+						color="primary"
+						size="sm"
+						startDecorator={<PlayArrowIcon />}
+						onClick={async () => {
+							await window.ipc.handleRunLivePainting();
+						}}
+					>
+						{t("common:start")}
+					</Button>
 				</Sheet>
 				<Box
 					sx={{
@@ -53,8 +80,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 							<OutputCanvas />
 						</Grid>
 					</Grid>
-
-					<UpdateProperties />
+					<Prompt />
 				</Box>
 			</Stack>
 		</>

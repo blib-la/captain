@@ -1,0 +1,39 @@
+name: Release - Windows
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "alpha"
+
+jobs:
+  release:
+    runs-on: windows-latest-l
+    if: ${{ !contains(github.event.head_commit.message, 'chore(release)') }}
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Fix auto-fixable eslint issues
+        run: npm run eslint -- --fix
+
+      - name: Update the ToC in the README.md
+        run: npx markdown-toc README.md -i
+
+      - name: Semantic release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

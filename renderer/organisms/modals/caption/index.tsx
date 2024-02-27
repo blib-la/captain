@@ -8,6 +8,7 @@ import WarningIcon from "@mui/icons-material/Warning";
 import Alert from "@mui/joy/Alert";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
+import CircularProgress from "@mui/joy/CircularProgress";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Link from "@mui/joy/Link";
@@ -32,6 +33,7 @@ import dynamic from "next/dynamic";
 import { Trans, useTranslation } from "next-i18next";
 import React, { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
+import { v4 } from "uuid";
 
 import {
 	CAPTIONS,
@@ -41,6 +43,8 @@ import {
 } from "../../../../main/helpers/constants";
 
 import { captioningErrorAtom, imagesAtom, editCaptionScopeAtom } from "@/ions/atoms";
+import { fetcher } from "@/ions/swr/fetcher";
+import { SimpleItemList } from "@/organisms/list/simple-item-list";
 import { PasswordField } from "@/organisms/password-field";
 
 export const CodeMirror = dynamic(
@@ -58,10 +62,18 @@ export const defaultGptOptions = {
 	batchSize: 4,
 	parallel: true,
 	guidelines: `Please caption these images, separate groups by comma, ensure logical groups: "black torn wide pants, red stained sweater" instead of "black, torn, wide pants and red, stained sweater"`,
-	exampleResponse: `[
-  "a photo of a young man, red hair, blue torn overalls with brass buttons, orange t-shirt with holes, white background",
-  "a watercolor painting of an elderly woman, grey hair, yellow and blue floral print sundress with puffy sleeves, pink high heels, looking at a castle in the distance"
-]`,
+	exampleResponse: [
+		{
+			content:
+				"a photo of a young man, red hair, blue torn overalls with brass buttons, orange t-shirt with holes, white background",
+			id: v4(),
+		},
+		{
+			content:
+				"a watercolor painting of an elderly woman, grey hair, yellow and blue floral print sundress with puffy sleeves, pink high heels, looking at a castle in the distance",
+			id: v4(),
+		},
+	],
 };
 
 export function EmptyCaptionIcon() {
@@ -99,10 +111,13 @@ export function useFilteredImages() {
 export function EditCaptionScope() {
 	const { t } = useTranslation(["common"]);
 	const [value, setValue] = useAtom(editCaptionScopeAtom);
+	const filteredImages = useFilteredImages();
 
 	return (
 		<Box>
-			<Typography sx={{ my: 1 }}>{t("common:scopeForEditing")}</Typography>
+			<Typography sx={{ my: 1 }}>
+				{t("common:scopeForEditing")} ({filteredImages.length})
+			</Typography>
 			<ToggleButtonGroup
 				value={value}
 				onChange={(event, newValue) => {
@@ -138,8 +153,8 @@ export function GPTVCaptionModal({
 	const [confirmGpt, setConfirmGpt] = useState(false);
 	const { t } = useTranslation(["common"]);
 	const [, setCaptioningError] = useAtom(captioningErrorAtom);
-	const { data: openApiKeyData } = useSWR(OPENAI_API_KEY);
-	const { data: gptVisionData } = useSWR(GPT_VISION_OPTIONS);
+	const { data: openApiKeyData } = useSWR(OPENAI_API_KEY, fetcher, { refreshInterval: 0 });
+	const { data: gptVisionData } = useSWR(GPT_VISION_OPTIONS, fetcher, { refreshInterval: 0 });
 	const filteredImages = useFilteredImages();
 
 	useEffect(() => {
@@ -154,12 +169,20 @@ export function GPTVCaptionModal({
 				gptVisionData as {
 					batchSize: number;
 					guidelines: string;
-					exampleResponse: string;
+					exampleResponse: { id: string; content: string }[];
 					parallel: boolean;
 				}
 			);
 		}
 	}, [gptVisionData]);
+
+	function setAndSend(newState: typeof defaultGptOptions) {
+		setGptVisionOptions(newState);
+		window.ipc.fetch(GPT_VISION_OPTIONS, {
+			method: "POST",
+			data: newState,
+		});
+	}
 
 	return (
 		<Stack
@@ -229,8 +252,8 @@ export function GPTVCaptionModal({
 									filteredImages.map(image => image.image),
 									{
 										...gptVisionOptions,
-										exampleResponse: JSON.parse(
-											gptVisionOptions.exampleResponse
+										exampleResponse: gptVisionOptions.exampleResponse.map(
+											item => item.content
 										),
 									}
 								);
@@ -264,11 +287,7 @@ export function GPTVCaptionModal({
 				<Box sx={{ display: "flex", justifyContent: "flex-end", my: 1 }}>
 					<Button
 						onClick={() => {
-							setGptVisionOptions(defaultGptOptions);
-							window.ipc.fetch(GPT_VISION_OPTIONS, {
-								method: "POST",
-								data: defaultGptOptions,
-							});
+							setAndSend(defaultGptOptions);
 						}}
 					>
 						{t("common:reset")}
@@ -310,44 +329,47 @@ export function GPTVCaptionModal({
 							lineWrapping: true,
 						}}
 						onBeforeChange={(editor, data, value) => {
-							setGptVisionOptions({
+							setAndSend({
 								...gptVisionOptions,
 								guidelines: value,
-							});
-							window.ipc.fetch(GPT_VISION_OPTIONS, {
-								method: "POST",
-								data: {
-									...gptVisionOptions,
-									guidelines: value,
-								},
 							});
 						}}
 					/>
 				</Box>
 				<Typography sx={{ my: 1 }}>{t("common:exampleResponse")}</Typography>
-				<Box sx={{ height: 200 }}>
-					<StyledEditor
-						value={gptVisionOptions.exampleResponse}
-						options={{
-							mode: "application/ld+json",
-							theme: "material",
-							lineWrapping: true,
-						}}
-						onBeforeChange={(editor, data, value) => {
-							setGptVisionOptions({
-								...gptVisionOptions,
-								exampleResponse: value,
-							});
-							window.ipc.fetch(GPT_VISION_OPTIONS, {
-								method: "POST",
-								data: {
-									...gptVisionOptions,
-									exampleResponse: value,
-								},
-							});
-						}}
-					/>
-				</Box>
+				<SimpleItemList
+					items={gptVisionOptions.exampleResponse}
+					onEdit={(id, content) => {
+						setAndSend({
+							...gptVisionOptions,
+							exampleResponse: gptVisionOptions.exampleResponse.map(item =>
+								item.id === id
+									? {
+											...item,
+											content,
+										}
+									: item
+							),
+						});
+					}}
+					onDelete={id => {
+						setAndSend({
+							...gptVisionOptions,
+							exampleResponse: gptVisionOptions.exampleResponse.filter(
+								item => item.id !== id
+							),
+						});
+					}}
+					onAdd={content => {
+						setAndSend({
+							...gptVisionOptions,
+							exampleResponse: [
+								{ id: v4(), content },
+								...gptVisionOptions.exampleResponse,
+							],
+						});
+					}}
+				/>
 			</Box>
 		</Stack>
 	);
@@ -364,14 +386,18 @@ export function WD14CaptionModal({
 	const [options, setOptions] = useState({ batchSize: 10, model: "", exclude: "" });
 	const { t } = useTranslation(["common"]);
 	const [, setCaptioningError] = useAtom(captioningErrorAtom);
-	const { data: loadingModel } = useSWR("SmilingWolf/wd-v1-4-convnextv2-tagger-v2/model");
-	const { data: loadingCSV } = useSWR("SmilingWolf/wd-v1-4-convnextv2-tagger-v2/selected_tags");
-	const { data: checkpointsData } = useSWR(CAPTIONS, () => window.ipc.getModels("captions"));
+	const storeKey = `${DOWNLOADS}.SmilingWolf/wd-v1-4-convnextv2-tagger-v2`;
+	const { data: wd14Data } = useSWR(`${CAPTIONS}:wd14-data`, fetcher, { refreshInterval: 0 });
+	const { data: loadingModel } = useSWR(storeKey);
+	const { data: checkpointsData } = useSWR(`${CAPTIONS}:wd14`, () =>
+		window.ipc.getModels("captions/wd14")
+	);
 	const isInstalled = Boolean(checkpointsData?.length);
 	const model =
 		"https://huggingface.co/SmilingWolf/wd-v1-4-convnextv2-tagger-v2/resolve/main/model.onnx";
 	const csv =
 		"https://huggingface.co/SmilingWolf/wd-v1-4-convnextv2-tagger-v2/resolve/main/selected_tags.csv";
+	const filteredImages = useFilteredImages();
 
 	useEffect(() => {
 		if (checkpointsData) {
@@ -379,7 +405,19 @@ export function WD14CaptionModal({
 		}
 	}, [checkpointsData]);
 
-	const filteredImages = useFilteredImages();
+	useEffect(() => {
+		if (wd14Data) {
+			setOptions(wd14Data as { batchSize: number; model: string; exclude: string });
+		}
+	}, [wd14Data]);
+
+	function setAndSend(newState: { batchSize: number; model: string; exclude: string }) {
+		setOptions(newState);
+		window.ipc.fetch(`${CAPTIONS}:wd14-data`, {
+			method: "POST",
+			data: newState,
+		});
+	}
 
 	return (
 		<Stack
@@ -397,13 +435,11 @@ export function WD14CaptionModal({
 					startDecorator={<WarningIcon />}
 					endDecorator={
 						<Button
-							disabled={loadingModel || loadingCSV}
+							disabled={loadingModel}
 							color="warning"
 							variant="solid"
 							startDecorator={<CloudDownloadIcon />}
 							onClick={async () => {
-								const storeKey = `${DOWNLOADS}.SmilingWolf/wd-v1-4-convnextv2-tagger-v2.model.onnx`;
-
 								await window.ipc.downloadModel("wd14", model, {
 									id: "SmilingWolf/wd-v1-4-convnextv2-tagger-v2",
 									storeKey,
@@ -430,11 +466,13 @@ export function WD14CaptionModal({
 			)}
 			<Button
 				fullWidth
-				disabled={!isInstalled}
 				variant="solid"
 				color="neutral"
 				startDecorator={<StyleIcon />}
 				sx={{ flex: 1 }}
+				disabled={
+					!isInstalled || filteredImages.length === 0 || loadingModel || !options.model
+				}
 				onClick={async () => {
 					onStart();
 					onClose();
@@ -458,10 +496,11 @@ export function WD14CaptionModal({
 				<FormControl sx={{ mt: 2 }}>
 					<FormLabel>{t("common:model")}</FormLabel>
 					<Select
-						value={options.model}
+						disabled={!checkpointsData?.length}
+						value={options.model ?? ""}
 						onChange={(_event, value) => {
 							if (value) {
-								setOptions(previousState => ({ ...previousState, model: value }));
+								setAndSend({ ...options, model: value });
 							}
 						}}
 					>
@@ -472,17 +511,190 @@ export function WD14CaptionModal({
 						))}
 					</Select>
 				</FormControl>
+				<Box component="label" sx={{ px: 2, pt: 3, display: "block" }}>
+					<Box>{t("common:batch")}</Box>
+					<Slider
+						min={1}
+						max={filteredImages.length}
+						step={1}
+						valueLabelDisplay="auto"
+						value={options.batchSize}
+						onChange={(_event, value) => {
+							setOptions({
+								...options,
+								batchSize: value as number,
+							});
+						}}
+						onChangeCommitted={(_event, value) => {
+							setAndSend({
+								...options,
+								batchSize: value as number,
+							});
+						}}
+					/>
+				</Box>
 				<FormControl sx={{ mt: 2 }}>
 					<FormLabel>{t("common:excludedTags")}</FormLabel>
 					<Textarea
 						value={options.exclude}
 						onChange={event => {
-							setOptions(previousState => ({
-								...previousState,
+							setOptions({
+								...options,
 								exclude: event.target.value,
-							}));
+							});
+						}}
+						onBlur={event => {
+							setAndSend({
+								...options,
+								exclude: event.target.value,
+							});
 						}}
 					/>
+				</FormControl>
+			</Box>
+		</Stack>
+	);
+}
+
+export const llavaDefaultOptions = {
+	batchSize: 10,
+	temperature: 0.2,
+	model: "",
+	prompt: `Please caption the image precisely. Mention all details in the image with certainty. Use one long sentence with comma separated term groupings.
+e.g. An elderly man, red lumberjack style flannel shirt, stained denim overalls with holes, dirty light-brow work boots with red laces.
+`,
+};
+
+export function LlavaCaptionModal({
+	onClose,
+	onStart,
+}: {
+	onClose(): void | Promise<void>;
+	onStart(): void | Promise<void>;
+	onDone(): void | Promise<void>;
+}) {
+	const [options, setOptions] = useState(llavaDefaultOptions);
+	const { t } = useTranslation(["common"]);
+	const [, setCaptioningError] = useAtom(captioningErrorAtom);
+	const storeKey = `${DOWNLOADS}.llava-hf/llava-1.5-7b-hf`;
+	const { data: llavaData } = useSWR(`${CAPTIONS}:llava-data`, fetcher, { refreshInterval: 0 });
+	const { data: loadingModel } = useSWR(storeKey);
+	const { data: checkpointsData } = useSWR(`${CAPTIONS}:llava`, () =>
+		window.ipc.getModels("captions/llava")
+	);
+	const isInstalled = Boolean(checkpointsData?.length);
+	const filteredImages = useFilteredImages();
+
+	useEffect(() => {
+		if (checkpointsData) {
+			setOptions(previousState => ({ ...previousState, model: checkpointsData[0] }));
+		}
+	}, [checkpointsData]);
+
+	useEffect(() => {
+		if (llavaData) {
+			setOptions(llavaData as typeof llavaDefaultOptions);
+		}
+	}, [llavaData]);
+
+	function setAndSend(newState: typeof llavaDefaultOptions) {
+		setOptions(newState);
+		window.ipc.fetch(`${CAPTIONS}:llava-data`, {
+			method: "POST",
+			data: newState,
+		});
+	}
+
+	return (
+		<Stack
+			spacing={2}
+			sx={{
+				minHeight: "100%",
+				justifyContent: "center",
+				width: 600,
+				mx: "auto",
+			}}
+		>
+			{(!isInstalled || loadingModel) && (
+				<Alert
+					color="warning"
+					startDecorator={<WarningIcon />}
+					endDecorator={
+						<Button
+							disabled={loadingModel}
+							color="warning"
+							variant="solid"
+							startDecorator={
+								loadingModel ? <CircularProgress /> : <CloudDownloadIcon />
+							}
+							onClick={async () => {
+								await window.ipc.gitCloneLFS(
+									"caption/llava",
+									"llava-hf/llava-1.5-7b-hf",
+									{
+										id: "llava-hf/llava-1.5-7b-hf",
+										storeKey,
+									}
+								);
+							}}
+						>
+							{t("common:download")}
+						</Button>
+					}
+					sx={{
+						".MuiAlert-endDecorator": {
+							alignSelf: "flex-start",
+							mt: -0.5,
+							mr: -0.5,
+						},
+					}}
+				>
+					{t("common:pages.dataset.oneTimeDownloadNote")}
+				</Alert>
+			)}
+			<Button
+				fullWidth
+				variant="solid"
+				color="neutral"
+				startDecorator={<StyleIcon />}
+				sx={{ flex: 1 }}
+				disabled={
+					filteredImages.length === 0 || !isInstalled || loadingModel || !options.model
+				}
+				onClick={async () => {
+					onStart();
+					onClose();
+					try {
+						await window.ipc.handleRunLlava(
+							filteredImages.map(image => image.image),
+							options
+						);
+					} catch (error) {
+						setCaptioningError((error as Error).message);
+					}
+				}}
+			>
+				{t("common:pages.dataset.customCaptionsWithLlava")}
+			</Button>
+
+			<Box sx={{ flex: 1, overflow: "auto", WebkitOverflowScrolling: "touch" }}>
+				<FormControl sx={{ mt: 2 }}>
+					<FormLabel>{t("common:model")}</FormLabel>
+					<Select
+						disabled={!checkpointsData?.length}
+						value={options.model ?? ""}
+						onChange={(_event, value) => {
+							if (value) {
+								setAndSend({ ...options, model: value });
+							}
+						}}
+					>
+						{checkpointsData?.map((model: string) => (
+							<Option key={model} value={model}>
+								{model}
+							</Option>
+						))}
+					</Select>
 				</FormControl>
 				<Box component="label" sx={{ px: 2, pt: 3, display: "block" }}>
 					<Box>{t("common:batch")}</Box>
@@ -497,6 +709,51 @@ export function WD14CaptionModal({
 								...previousState,
 								batchSize: value as number,
 							}));
+						}}
+						onChangeCommitted={(_event, value) => {
+							setAndSend({
+								...options,
+								batchSize: value as number,
+							});
+						}}
+					/>
+				</Box>
+				<Box component="label" sx={{ px: 2, pt: 3, display: "block", overflow: "hidden" }}>
+					<Box>{t("common:temperature")}</Box>
+					<Slider
+						min={0}
+						max={0.5}
+						step={0.01}
+						valueLabelDisplay="auto"
+						value={options.temperature}
+						onChange={(_event, value) => {
+							setOptions(previousState => ({
+								...previousState,
+								temperature: value as number,
+							}));
+						}}
+						onChangeCommitted={(_event, value) => {
+							setAndSend({
+								...options,
+								temperature: value as number,
+							});
+						}}
+					/>
+				</Box>
+				<Typography sx={{ my: 1 }}>{t("common:guideline")}</Typography>
+				<Box sx={{ height: 200 }}>
+					<StyledEditor
+						value={options.prompt}
+						options={{
+							mode: "markdown",
+							theme: "dracula",
+							lineWrapping: true,
+						}}
+						onBeforeChange={(_editor, _data, value) => {
+							setOptions({
+								...options,
+								prompt: value,
+							});
 						}}
 					/>
 				</Box>
@@ -537,6 +794,7 @@ export function CaptionModal({
 				>
 					<TabList>
 						<Tab>WD14</Tab>
+						<Tab>Llava</Tab>
 						<Tab>GPT Vision</Tab>
 					</TabList>
 					<TabPanel
@@ -552,6 +810,17 @@ export function CaptionModal({
 					</TabPanel>
 					<TabPanel
 						value={1}
+						sx={{
+							overflow: "hidden",
+							flex: 1,
+							display: "flex",
+							flexDirection: "column",
+						}}
+					>
+						<LlavaCaptionModal onStart={onStart} onClose={onClose} onDone={onDone} />
+					</TabPanel>
+					<TabPanel
+						value={2}
 						sx={{
 							overflow: "hidden",
 							flex: 1,

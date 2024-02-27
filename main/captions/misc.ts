@@ -11,6 +11,8 @@ import { python } from "../helpers/python";
 import { store } from "../helpers/store";
 import { getDirectory, getUserData } from "../helpers/utils";
 
+import { resizeImageKeepingAspectRatio } from "./resize";
+
 export interface CaptionOptions {
 	batchSize?: number;
 	parallel?: boolean;
@@ -42,6 +44,7 @@ export async function gpt(
 	{ exampleResponse, instructions }: { instructions: string; exampleResponse: string[] }
 ): Promise<{ filePath: string; caption: string }[]> {
 	const images = batch.map(image => image.base64);
+
 	try {
 		const descriptions = await createImageDescriptions(images, {
 			systemMessage: `You are an expert in captioning images based on given guidelines.
@@ -68,9 +71,10 @@ code block will cause errors.
 		const error_ = error as AxiosError;
 		if (error_.code === "invalid_api_key") {
 			console.log("API key issue");
-			store.set(CAPTION_RUNNING, false);
 			throw error;
 		}
+
+		store.set(CAPTION_RUNNING, false);
 
 		return [];
 	}
@@ -85,10 +89,8 @@ export async function wd14(
 	const wd14Path = getUserData("Captain_Data/downloads/caption/wd14");
 
 	const modelPath = path.join(wd14Path, options.model);
-	const tagsPath = path.join(
-		wd14Path,
-		options.model.replace(/model\.onnx$/, "selected_tags.csv")
-	);
+	const onnxPath = path.join(modelPath, "model.onnx");
+	const tagsPath = path.join(modelPath, "selected_tags.csv");
 
 	try {
 		let result: { filePath: string; caption: string }[] = [];
@@ -99,7 +101,7 @@ export async function wd14(
 				"--image_paths",
 				...images,
 				"--model_path",
-				modelPath,
+				onnxPath,
 				"--tags_path",
 				tagsPath,
 			],
@@ -107,6 +109,9 @@ export async function wd14(
 				stdout(data: string) {
 					let parsed;
 					try {
+						console.log("-----------------------------------");
+						console.log(data);
+						console.log("---------------------------------");
 						parsed = JSON.parse(data).map((entry: any) => ({
 							...entry,
 							caption: entry.tags
@@ -129,6 +134,53 @@ export async function wd14(
 	} catch (error) {
 		console.error(error);
 		throw new Error("Failed to run WD14 script.");
+	}
+}
+
+export async function llava(
+	batch: { base64: string; filePath: string }[],
+	options: { model: string; prompt: string; temperature: number }
+) {
+	const images = batch.map(entry => entry.filePath);
+	const pathToPythonScript = getDirectory("python/caption/llava/main.py");
+	const llavaPath = getUserData("Captain_Data/downloads/caption/llava");
+	const modelPath = path.join(llavaPath, options.model);
+	console.log(options);
+	const arguments_: (string | number)[] = [
+		pathToPythonScript,
+		"--image_paths",
+		...images,
+		"--model_path",
+		modelPath,
+		"--prompt",
+		options.prompt,
+	];
+	if (options.temperature > 0) {
+		arguments_.push("--temperature", options.temperature, "--do_sample");
+	}
+
+	try {
+		let result: { filePath: string; caption: string }[] = [];
+		await python(arguments_, {
+			stdout(data: string) {
+				let parsed;
+				try {
+					parsed = JSON.parse(data).map((entry: any) => ({
+						...entry,
+						caption: entry.output,
+					}));
+				} finally {
+					if (Array.isArray(parsed)) {
+						result = parsed;
+					}
+				}
+			},
+		});
+
+		return result;
+	} catch (error) {
+		console.error(error);
+		throw new Error("Failed to run Llava script.");
 	}
 }
 
@@ -207,33 +259,14 @@ export async function createImageCache(
 		// Load the image to get its dimensions
 		const metadata = await sharp(filePath).metadata();
 
-		const originalWidth = metadata.width;
-		const originalHeight = metadata.height;
-
-		if (!originalWidth || !originalHeight) {
-			error = new Error("Unable to retrieve image dimensions.");
-			console.log(error.message);
-			return { filePath, cachePath, success, error };
-		}
-
-		// Calculate the scaling factor to fit the image within the maximum area, maintaining aspect ratio
-		const maxArea = width * height; // Maximum area (height * width)
-		const originalArea = originalWidth * originalHeight;
-		let scaleFactor = Math.sqrt(maxArea / originalArea);
-
-		// Calculate new dimensions based on the scaling factor
-		let newWidth = Math.floor(originalWidth * scaleFactor);
-		let newHeight = Math.floor(originalHeight * scaleFactor);
-
-		// Ensure new dimensions do not exceed max dimensions
-		if (newWidth > width || newHeight > height) {
-			scaleFactor = newWidth > newHeight ? width / originalWidth : height / originalHeight;
-			newWidth = Math.floor(originalWidth * scaleFactor);
-			newHeight = Math.floor(originalHeight * scaleFactor);
-		}
+		const result = resizeImageKeepingAspectRatio(
+			metadata.height!,
+			metadata.width!,
+			width * height
+		);
 
 		// Use sharp to resize the image to the new dimensions
-		const image = sharp(filePath).resize(newWidth, newHeight, {
+		const image = sharp(filePath).resize(result.width, result.height, {
 			fit: sharp.fit.fill, // Use 'fill' to ensure the exact dimensions are used
 			withoutEnlargement: true,
 		});

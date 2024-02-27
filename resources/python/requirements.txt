@@ -18,3 +18,5 @@ opencv-python==4.9.0.80
 
 # Testing
 pytest==8.0.0
+
+.\caption\llava\bitsandbytes-0.43.0.dev0-cp310-cp310-win_amd64.whl

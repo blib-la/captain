@@ -16,7 +16,7 @@ import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 
 export const DEFAULT_MARKETPLACE_URL =
-	"https://gist.githubusercontent.com/pixelass/004948226b2ce96b0c6be1ae459f3f42/raw/695bf222fee0c109135ea5b91902046b401175ba/captain-marketplace-test.json";
+	"https://github.com/blib-la/captain-marketplace/releases/download/1.0.0-alpha.3/index.json";
 
 import {
 	CAPTIONS,
@@ -60,6 +60,7 @@ interface ModelInfo {
 	architecture: string;
 	title: string;
 	author: string;
+	git?: boolean;
 	link: string;
 	license: string;
 	files: FileInfo[];
@@ -385,7 +386,12 @@ export function CaptionsSection() {
 	const scrollPosition = useScrollPosition(scrollReference);
 
 	const { data: marketPlaceData } = useSWR(MARKETPLACE_INDEX_DATA);
-	const { data: checkpointsData } = useSWR(CAPTIONS, () => window.ipc.getModels("captions"));
+	const { data: wd14Data } = useSWR(`${CAPTIONS}:wd14`, () =>
+		window.ipc.getModels("captions/wd14")
+	);
+	const { data: llavaData } = useSWR(`${CAPTIONS}:llava`, () =>
+		window.ipc.getModels("captions/llava")
+	);
 
 	useEffect(() => {
 		if (marketPlaceData?.caption) {
@@ -393,10 +399,10 @@ export function CaptionsSection() {
 		}
 	}, [marketPlaceData]);
 	useEffect(() => {
-		if (checkpointsData) {
-			setInstalledCaptionModels(checkpointsData);
+		if (wd14Data && llavaData) {
+			setInstalledCaptionModels([...wd14Data, ...llavaData]);
 		}
-	}, [checkpointsData, setInstalledCaptionModels]);
+	}, [wd14Data, llavaData, setInstalledCaptionModels]);
 
 	return (
 		<Container sx={{ py: 2 }}>
@@ -487,12 +493,13 @@ export function CaptionsSection() {
 						>
 							<ModelCard
 								id={captionModel.id}
-								type="wd14"
+								type={`caption/${captionModel.info.architecture}`}
 								title={captionModel.info.title}
 								author={captionModel.info.author}
 								link={captionModel.info.link}
 								license={captionModel.info.license}
 								files={captionModel.info.files}
+								git={captionModel.info.git}
 								architecture={captionModel.info.architecture}
 								caption={
 									captionModel.previews.find(item => item.type === "text")
