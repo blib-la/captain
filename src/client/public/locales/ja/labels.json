@@ -1,24 +1,72 @@
 {
   "accessibility": "アクセシビリティ",
+  "artStyle": "アートスタイル",
   "back": "戻る",
   "brushSize": "ブラシサイズ",
   "clear": "クリア",
   "close": "閉じる",
   "color": "色",
+  "createStory": "ストーリー作成",
   "dashboard": "ダッシュボード",
+  "delete": "削除",
+  "deleted": "削除済み",
   "downloading": "ダウンロード中",
+  "formLabel": {
+    "characters": "キャラクター",
+    "customStyle": "カスタムスタイル",
+    "length": "長さ",
+    "mood": "ムード",
+    "styleTheme": "スタイル＆テーマ"
+  },
+  "illustrationStyles": {
+    "childrensBook": "児童書",
+    "custom": "カスタム",
+    "customInfo": "プロンプトに希望のスタイルを含めてください",
+    "fantasyArt": "ファンタジーアート",
+    "graphicNovel": "グラフィックノベル",
+    "manga": "マンガ",
+    "realism": "リアリズム"
+  },
+  "length": {
+    "long": "長編",
+    "medium": "中編",
+    "short": "短編"
+  },
   "livePainting": "ライブペインティング",
   "maximize": "最大化",
   "minimize": "最小化",
+  "mood": {
+    "exciting": "エキサイティング",
+    "joyful": "楽しい",
+    "relaxing": "リラックス",
+    "sad": "悲しい",
+    "suspenseful": "サスペンス"
+  },
   "overlay": "オーバーレイ",
+  "placeholder": {
+    "characters": "少年の名前はエリン、彼の犬の名前はラフィです",
+    "customStyle": "物語は風変わりでとても面白く、結末のないミステリーを含めるべきです"
+  },
   "privacy": "プライバシー",
+  "prompt": "プロンプト",
+  "promptInfo": "プロンプトは英語で記入してください。",
+  "randomize": "ランダム化",
+  "readStory": "ストーリー閲覧",
+  "removeAllImages": "すべての画像を削除",
+  "save": "保存",
+  "saved": "保存済み",
+  "saveImage": "画像を保存",
   "security": "セキュリティ",
   "sideBySide": "並列",
   "start": "開始",
   "stop": "停止",
-  "unpacking": "解凍中",
-  "createStory": "ストーリー作成",
-  "readStory": "ストーリー閲覧",
-  "prompt": "プロンプト",
-  "randomize": "ランダム化"
+  "style": {
+    "adventure": "冒険",
+    "custom": "カスタム",
+    "historical": "歴史",
+    "magicalMystery": "魔法＆ミステリー",
+    "sciFi": "SF"
+  },
+  "submitButtonText": "送信",
+  "unpacking": "解凍中"
 }

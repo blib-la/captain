@@ -1,24 +1,72 @@
 {
   "accessibility": "Accesibilidad",
+  "artStyle": "Estilo artístico",
   "back": "Atrás",
   "brushSize": "Tamaño Pincel",
   "clear": "Limpiar",
   "close": "Cerrar",
   "color": "Color",
+  "createStory": "Crear Historia",
   "dashboard": "Tablero",
+  "delete": "Eliminar",
+  "deleted": "Eliminado",
   "downloading": "Descargando",
+  "formLabel": {
+    "characters": "Personajes",
+    "customStyle": "Estilo personalizado",
+    "length": "Longitud",
+    "mood": "Ánimo",
+    "styleTheme": "Estilo & Tema"
+  },
+  "illustrationStyles": {
+    "childrensBook": "Libro Infantil",
+    "custom": "Personalizado",
+    "customInfo": "Incluye el estilo deseado en el prompt",
+    "fantasyArt": "Arte Fantástico",
+    "graphicNovel": "Novela Gráfica",
+    "manga": "Manga",
+    "realism": "Realismo"
+  },
+  "length": {
+    "long": "Largo",
+    "medium": "Medio",
+    "short": "Corto"
+  },
   "livePainting": "Pintura en Vivo",
   "maximize": "Maximizar",
   "minimize": "Minimizar",
+  "mood": {
+    "exciting": "Emocionante",
+    "joyful": "Alegre",
+    "relaxing": "Relajante",
+    "sad": "Triste",
+    "suspenseful": "Suspense"
+  },
   "overlay": "Superposición",
+  "placeholder": {
+    "characters": "El nombre del chico es Erin y el de su perro es Ruffy",
+    "customStyle": "La historia debe ser peculiar y muy divertida, incluir un misterio sin resolver"
+  },
   "privacy": "Privacidad",
+  "prompt": "Prompt",
+  "promptInfo": "El prompt debe estar escrito en inglés.",
+  "randomize": "Aleatorizar",
+  "readStory": "Leer Historia",
+  "removeAllImages": "Eliminar todas las imágenes",
+  "save": "Guardar",
+  "saved": "Guardado",
+  "saveImage": "Guardar imagen",
   "security": "Seguridad",
   "sideBySide": "Lado a Lado",
   "start": "Iniciar",
   "stop": "Detener",
-  "unpacking": "Desempaquetando",
-  "createStory": "Crear Historia",
-  "readStory": "Leer Historia",
-  "prompt": "Prompt",
-  "randomize": "Aleatorizar"
+  "style": {
+    "adventure": "Aventura",
+    "custom": "Personalizado",
+    "historical": "Histórico",
+    "magicalMystery": "Magia & Misterio",
+    "sciFi": "Ciencia Ficción"
+  },
+  "submitButtonText": "Enviar",
+  "unpacking": "Desempaquetando"
 }

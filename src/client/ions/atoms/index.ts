@@ -1,8 +1,6 @@
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
-type Dataset = any;
-
 export interface Project {
 	id: string;
 	name: string;
@@ -22,7 +20,6 @@ export interface DatasetEntry {
 	selected?: boolean;
 }
 
-export const datasetsAtom = atom<Dataset[]>([]);
 export const projectAtom = atom<Project | false>(false);
 export const selectedImageAtom = atom(0);
 export const canSelectImagesAtom = atom(false);
@@ -33,7 +30,6 @@ export const editCaptionScopeAtom = atomWithStorage<"all" | "empty" | "selected"
 export const imagesAtom = atom<DatasetEntry[]>([]);
 export const filteredImagesAtom = atom<DatasetEntry[]>([]);
 export const directoryAtom = atom("");
-export const modelDownloadNoteAtom = atomWithStorage("modelDownloadNote", true);
 export const captionRunningAtom = atom(false);
 export const checkpointsAtom = atom<string[]>([]);
 export const lorasAtom = atom<string[]>([]);

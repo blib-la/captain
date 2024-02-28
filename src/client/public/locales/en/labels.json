@@ -1,24 +1,72 @@
 {
   "accessibility": "Accessibility",
+  "artStyle": "Art Style",
   "back": "Back",
   "brushSize": "Brush Size",
   "clear": "Clear",
   "close": "Close",
   "color": "Color",
+  "createStory": "Create Story",
   "dashboard": "Dashboard",
+  "delete": "Delete",
+  "deleted": "Deleted",
   "downloading": "Downloading",
+  "formLabel": {
+    "characters": "Characters",
+    "customStyle": "Custom Style",
+    "length": "Length",
+    "mood": "Mood",
+    "styleTheme": "Style & Theme"
+  },
+  "illustrationStyles": {
+    "childrensBook": "Children's Book",
+    "custom": "Custom",
+    "customInfo": "Include the desired style in the prompt",
+    "fantasyArt": "Fantasy Art",
+    "graphicNovel": "Graphic Novel",
+    "manga": "Manga",
+    "realism": "Realism"
+  },
+  "length": {
+    "long": "Long",
+    "medium": "Medium",
+    "short": "Short"
+  },
   "livePainting": "Live Painting",
   "maximize": "Maximize",
   "minimize": "Minimize",
+  "mood": {
+    "exciting": "Exciting",
+    "joyful": "Joyful",
+    "relaxing": "Relaxing",
+    "sad": "Sad",
+    "suspenseful": "Suspenseful"
+  },
   "overlay": "Overlay",
+  "placeholder": {
+    "characters": "The boys's name is Erin and his dog's name is Ruffy",
+    "customStyle": "The story should be quirky and very funny, include a mystery without closure"
+  },
   "privacy": "Privacy",
+  "prompt": "Prompt",
+  "promptInfo": "The prompt should be written in English.",
+  "randomize": "Randomize",
+  "readStory": "Read Story",
+  "removeAllImages": "Remove all Images",
+  "save": "Save",
+  "saved": "Saved",
+  "saveImage": "Save Image",
   "security": "Security",
   "sideBySide": "Side by Side",
   "start": "Start",
   "stop": "Stop",
-  "unpacking": "Unpacking",
-  "createStory": "Create Story",
-  "readStory": "Read Story",
-  "prompt": "Prompt",
-  "randomize": "Randomize"
+  "style": {
+    "adventure": "Adventure",
+    "custom": "Custom",
+    "historical": "Historical",
+    "magicalMystery": "Magical & Mystery",
+    "sciFi": "Science Fiction"
+  },
+  "submitButtonText": "Submit",
+  "unpacking": "Unpacking"
 }

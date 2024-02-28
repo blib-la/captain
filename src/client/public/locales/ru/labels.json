@@ -1,24 +1,72 @@
 {
   "accessibility": "Доступность",
+  "artStyle": "Стиль искусства",
   "back": "Назад",
   "brushSize": "Размер Кисти",
   "clear": "Очистить",
   "close": "Закрыть",
   "color": "Цвет",
+  "createStory": "Создать Историю",
   "dashboard": "Панель управления",
+  "delete": "Удалить",
+  "deleted": "Удалено",
   "downloading": "Загрузка",
+  "formLabel": {
+    "characters": "Персонажи",
+    "customStyle": "Свой стиль",
+    "length": "Длина",
+    "mood": "Настроение",
+    "styleTheme": "Стиль и тема"
+  },
+  "illustrationStyles": {
+    "childrensBook": "Детская книга",
+    "custom": "На заказ",
+    "customInfo": "Укажите желаемый стиль в подсказке",
+    "fantasyArt": "Фэнтези-арт",
+    "graphicNovel": "Графический роман",
+    "manga": "Манга",
+    "realism": "Реализм"
+  },
+  "length": {
+    "long": "Длинная",
+    "medium": "Средняя",
+    "short": "Короткая"
+  },
   "livePainting": "Живая Живопись",
   "maximize": "Развернуть",
   "minimize": "Свернуть",
+  "mood": {
+    "exciting": "Волнующее",
+    "joyful": "Радостное",
+    "relaxing": "Расслабляющее",
+    "sad": "Грустное",
+    "suspenseful": "Захватывающее"
+  },
   "overlay": "Наложение",
+  "placeholder": {
+    "characters": "Имя мальчика - Эрин, а его собаки - Раффи",
+    "customStyle": "История должна быть оригинальной и очень смешной, включать загадку без разгадки"
+  },
   "privacy": "Конфиденциальность",
+  "prompt": "Запрос",
+  "promptInfo": "Подсказка должна быть написана на английском языке.",
+  "randomize": "Рандомизировать",
+  "readStory": "Читать Историю",
+  "removeAllImages": "Удалить все изображения",
+  "save": "Сохранить",
+  "saved": "Сохранено",
+  "saveImage": "Сохранить изображение",
   "security": "Безопасность",
   "sideBySide": "Бок о Бок",
   "start": "Старт",
   "stop": "Стоп",
-  "unpacking": "Распаковка",
-  "createStory": "Создать Историю",
-  "readStory": "Читать Историю",
-  "prompt": "Запрос",
-  "randomize": "Рандомизировать"
+  "style": {
+    "adventure": "Приключение",
+    "custom": "Особенный",
+    "historical": "Историческая",
+    "magicalMystery": "Магия и Мистика",
+    "sciFi": "Научная фантастика"
+  },
+  "submitButtonText": "Отправить",
+  "unpacking": "Распаковка"
 }

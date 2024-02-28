@@ -4,22 +4,22 @@ import { ID } from "../enums";
 describe("buildKey function", () => {
 	it("should construct the key correctly with default options", () => {
 		const result = buildKey([ID.STORE, ID.USER]);
-		expect(result).toBe("____STORE--USER____");
+		expect(result).toBe("STORE-USER");
 	});
 
 	it("should construct the key correctly with a custom delimiter", () => {
 		const result = buildKey([ID.STORE, ID.USER], { delimiter: ":" });
-		expect(result).toBe("____STORE:USER____");
+		expect(result).toBe("STORE:USER");
 	});
 
 	it("should construct the key correctly with a custom prefix", () => {
 		const result = buildKey([ID.STORE, ID.USER], { prefix: "start_" });
-		expect(result).toBe("start_STORE--USER____");
+		expect(result).toBe("start_STORE-USER");
 	});
 
 	it("should construct the key correctly with a custom suffix", () => {
 		const result = buildKey([ID.STORE, ID.USER], { suffix: "_end" });
-		expect(result).toBe("____STORE--USER_end");
+		expect(result).toBe("STORE-USER_end");
 	});
 
 	it("should construct the key correctly with all custom options", () => {
@@ -33,7 +33,7 @@ describe("buildKey function", () => {
 
 	it("should handle a single key correctly", () => {
 		const result = buildKey([ID.APP]);
-		expect(result).toBe("____APP____");
+		expect(result).toBe("APP");
 	});
 
 	it("should throw an error when no keys are provided", () => {
