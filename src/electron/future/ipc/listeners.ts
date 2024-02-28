@@ -56,6 +56,8 @@ ipcMain.on(buildKey([ID.INSTALL], { suffix: "start" }), async () => {
 		"https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/python-embedded-win.7z";
 
 	try {
+		const gitPromise = unpack(getDirectory("7zip", "win", "7za.exe"), item.path, targetPath);
+
 		await download(window_, pythonEmbedded, {
 			directory: getCaptainDownloads(),
 
@@ -76,6 +78,8 @@ ipcMain.on(buildKey([ID.INSTALL], { suffix: "start" }), async () => {
 
 				const targetPath = getCaptainData("python-embedded");
 				await unpack(getDirectory("7zip", "win", "7za.exe"), item.path, targetPath);
+
+				await gitPromise;
 
 				window_.webContents.send(buildKey([ID.INSTALL], { suffix: ":completed" }), true);
 				appSettingsStore.set("status", DownloadState.DONE);

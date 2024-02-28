@@ -7,8 +7,8 @@ import Seven from "node-7z";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const my7z = path.join(__dirname, "..", "resources", "7zip", "win", "7za.exe");
 
-const sourceFolder = path.join(__dirname, "..", "resources", "python-embedded");
-const outputArchive = path.join(__dirname, "..", "resources", "python-embedded.7z");
+const sourceFolder = path.join(__dirname, "..", "resources", "git/win/PortableGit");
+const outputArchive = path.join(__dirname, "..", "resources", "portable-git.7z");
 
 const files = await fsp.readdir(sourceFolder);
 
