@@ -2,7 +2,7 @@ import type { Dirent } from "node:fs";
 import fsp from "node:fs/promises";
 import path from "path";
 
-import { app, ipcMain, Menu, protocol, screen } from "electron";
+import { app, ipcMain, Menu, protocol, screen, globalShortcut } from "electron";
 
 import { version } from "../../../package.json";
 
@@ -72,6 +72,57 @@ async function createMainWindow() {
 
 	await loadURL(mainWindow, "dashboard");
 	return mainWindow;
+}
+
+async function createBackgroundWindow() {
+	// Ens
+	const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+
+	const window_ = await createWindow("main", {
+		width: 350,
+		height: 30,
+		minWidth: 350,
+		maxWidth: 350,
+		frame: false,
+		alwaysOnTop: true,
+		minimizable: false,
+		maximizable: false,
+		fullscreen: false,
+		fullscreenable: false,
+		transparent: true,
+		webPreferences: {
+			preload: path.join(__dirname, "preload.js"),
+			contextIsolation: true,
+			nodeIntegration: false,
+		},
+	});
+	await loadURL(window_, "prompt");
+	window_.hide();
+	window_.on("show", () => {
+		window_.focus();
+	});
+	window_.on("focus", () => {
+		window_.webContents.send(buildKey([ID.WINDOW], { suffix: ":focus" }));
+	});
+	window_.on("blur", () => {
+		window_.hide();
+	});
+	globalShortcut.register("CommandOrControl+M", async () => {
+		console.log("CommandOrControl+M is pressed");
+		window_.show();
+	});
+	globalShortcut.register("Escape", async () => {
+		window_.hide();
+	});
+	app.on("will-quit", () => {
+		// Unregister a shortcut.
+		globalShortcut.unregister("CommandOrControl+X");
+		globalShortcut.unregister("Escape");
+
+		// Unregister all shortcuts.
+		globalShortcut.unregisterAll();
+	});
+	return window_;
 }
 
 /**
@@ -223,6 +274,9 @@ export async function main() {
 	if (isProduction) {
 		Menu.setApplicationMenu(null);
 	}
+
+	await createBackgroundWindow();
+	return;
 
 	if (isUpToDate && isReady) {
 		// Close installer window if open

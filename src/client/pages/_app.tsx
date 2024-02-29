@@ -1,9 +1,7 @@
-import CssBaseline from "@mui/joy/CssBaseline";
 import { CssVarsProvider } from "@mui/joy/styles";
 import dayjs from "dayjs";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import { appWithTranslation, useTranslation } from "next-i18next";
 import { useEffect, useMemo } from "react";
 import { SWRConfig } from "swr";
@@ -12,16 +10,15 @@ import { globalStyles } from "@/ions/styles";
 import { fetcher } from "@/ions/swr/fetcher";
 import { theme } from "@/ions/theme";
 import { CSS_VARIABLE_PREFIX } from "@/ions/theme/constants";
-import { Layout } from "@/organisms/layout";
+
 import "@/ions/date";
-import { SimpleLayout } from "@/organisms/layout/simple";
+import { css, Global } from "@emotion/react";
+import CssBaseline from "@mui/joy/CssBaseline";
 
 function App({ Component, pageProps }: AppProps) {
-	const { pathname } = useRouter();
 	const {
 		i18n: { language },
 	} = useTranslation();
-	const isInstaller = pathname.includes("[locale]/installer");
 
 	// Intended abuse of useMemo to allow changes on server and client mount
 	useMemo(() => {
@@ -39,7 +36,6 @@ function App({ Component, pageProps }: AppProps) {
 			defaultMode="system"
 			modeStorageKey={`${CSS_VARIABLE_PREFIX}-mode`}
 		>
-			<CssBaseline />
 			{globalStyles}
 			<Head>
 				<title>Blibla</title>
@@ -59,15 +55,14 @@ function App({ Component, pageProps }: AppProps) {
 					revalidateOnReconnect: true,
 				}}
 			>
-				{isInstaller ? (
-					<SimpleLayout>
-						<Component {...pageProps} />
-					</SimpleLayout>
-				) : (
-					<Layout>
-						<Component {...pageProps} />
-					</Layout>
-				)}
+				<Global
+					styles={css({
+						"*": { overflow: "hidden" },
+						body: { margin: 0 },
+					})}
+				/>
+				<CssBaseline />
+				<Component {...pageProps} />
 			</SWRConfig>
 		</CssVarsProvider>
 	);

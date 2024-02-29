@@ -280,3 +280,14 @@ ipcMain.handle(
 ipcMain.handle(buildKey([ID.FILE], { suffix: ":read" }), async (_event, name: string) =>
 	fsp.readFile(name, { encoding: "utf8" })
 );
+
+ipcMain.on(buildKey([ID.WINDOW], { suffix: ":resize" }), (_event, { height, width }) => {
+	const window_ = BrowserWindow.getFocusedWindow();
+	if (!window_) {
+		return;
+	}
+
+	if (width && height) {
+		window_.setSize(350, height + 100);
+	}
+});
