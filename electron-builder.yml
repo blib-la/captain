@@ -12,7 +12,6 @@ files:
       - resources/python/**/*
       - resources/powershell/**/*
       - resources/7zip/**/*
-      - resources/git/**/*
 publish: null
 nsis:
   oneClick: false
@@ -23,4 +22,3 @@ asarUnpack:
   - "resources/python/**/*"
   - "resources/powershell/**/*"
   - "resources/7zip/**/*"
-  - "resources/git/**/*"
