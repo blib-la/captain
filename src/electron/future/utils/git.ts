@@ -100,7 +100,7 @@ export async function clone(repository: string, destination: string, options?: G
 		const output = buffer.toString();
 		const progressMatch = output.match(/(\d+)% \((\d+)\/(\d+)\)/);
 		if (progressMatch) {
-			const percent = Number.parseFloat(progressMatch[1]);
+			const percent = Number.parseFloat(progressMatch[1]) / 100;
 
 			options?.onProgress?.({
 				percent,
