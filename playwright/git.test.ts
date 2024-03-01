@@ -16,7 +16,7 @@ test.beforeAll(async () => {
 		args: ["."],
 		env: {
 			...process.env,
-			NODE_ENV: "development",
+			TEST_ENV: "test",
 			TEST_VERSION: "upToDate",
 			TEST_APP_STATUS: "DONE",
 		},

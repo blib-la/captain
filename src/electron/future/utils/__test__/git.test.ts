@@ -5,10 +5,10 @@ import { execa } from "execa";
 jest.mock("execa");
 
 import { clone, lfs } from "@/utils/git";
-import { getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
+import { getCaptainDownloads, getCaptainData } from "@/utils/path-helpers";
 
 jest.mock("@/utils/path-helpers", () => ({
-	getDirectory: jest.fn(),
+	getCaptainData: jest.fn(),
 	getCaptainDownloads: jest.fn(),
 }));
 
@@ -19,7 +19,7 @@ describe("lfs", () => {
 	const successMessage = "Git LFS has been set up successfully.";
 
 	beforeEach(() => {
-		(getDirectory as jest.Mock).mockReturnValue(fakePath);
+		(getCaptainData as jest.Mock).mockReturnValue(fakePath);
 		mockedExeca.mockClear();
 	});
 
@@ -59,7 +59,7 @@ describe("clone", () => {
 
 	beforeEach(() => {
 		(getCaptainDownloads as jest.Mock).mockReturnValue(fakeDestination);
-		(getDirectory as jest.Mock).mockReturnValue(fakePath);
+		(getCaptainData as jest.Mock).mockReturnValue(fakePath);
 		mockedExeca.mockClear();
 
 		const mockChildProcess = {
@@ -184,7 +184,7 @@ describe("clone", () => {
 			stderr: {
 				on: jest.fn((event, handler) => {
 					if (event === "data") {
-						handler(Buffer.from("Receiving objects: 50%"));
+						handler(Buffer.from("Receiving objects: 100%"));
 					}
 				}),
 			},
@@ -196,7 +196,7 @@ describe("clone", () => {
 		await clone(repository, destination, { onProgress: onProgressMock });
 
 		expect(onProgressMock).toHaveBeenCalledWith({
-			percent: 50,
+			percent: 100,
 			transferredBytes: 0,
 			totalBytes: 0,
 		});

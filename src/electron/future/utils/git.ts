@@ -4,7 +4,8 @@ import path from "node:path";
 import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 
-import { getCaptainDownloads, getDirectory } from "./path-helpers";
+import { createDirectory } from "@/utils/fs";
+import { getCaptainData, getCaptainDownloads } from "@/utils/path-helpers";
 
 export interface GitCloneOptions {
 	onStarted?: (item: any) => void;
@@ -29,12 +30,14 @@ export interface GitCloneInfo {
 }
 
 export function git() {
-	return getDirectory("git/win/PortableGit/bin/git.exe");
+	return getCaptainData("portable-git/bin/git.exe");
 }
 
 export async function clone(repository: string, destination: string, options?: GitCloneOptions) {
 	const destinationPath = getCaptainDownloads(destination, repository);
 	const gitDirectory = path.join(destinationPath, ".git");
+
+	createDirectory(destinationPath);
 
 	let process: ExecaChildProcess | null = null;
 
