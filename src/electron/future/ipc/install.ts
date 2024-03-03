@@ -13,32 +13,23 @@ ipcMain.on(buildKey([ID.INSTALL], { suffix: ":start" }), async (_event, data) =>
 		return;
 	}
 
-	console.log(data);
-
 	try {
 		// Iterate over each download object
 		for (const { url, destination } of data) {
-			console.log(url);
-
 			await download(window_, url, {
 				directory: getCaptainDownloads(),
 
 				onStarted() {
-					console.log("started");
 					appSettingsStore.set("status", DownloadState.ACTIVE);
 					window_.webContents.send(buildKey([ID.INSTALL], { suffix: ":started" }), true);
 				},
 				onProgress(progress) {
-					console.log("progress");
-
 					window_.webContents.send(
 						buildKey([ID.INSTALL], { suffix: ":progress" }),
 						progress
 					);
 				},
 				onCancel() {
-					console.log("cancel");
-
 					window_.webContents.send(
 						buildKey([ID.INSTALL], { suffix: ":cancelled" }),
 						true
@@ -46,8 +37,6 @@ ipcMain.on(buildKey([ID.INSTALL], { suffix: ":start" }), async (_event, data) =>
 					appSettingsStore.set("status", DownloadState.CANCELLED);
 				},
 				async onCompleted(item) {
-					console.log("completed");
-
 					window_.webContents.send(
 						buildKey([ID.INSTALL], { suffix: ":unpacking" }),
 						true

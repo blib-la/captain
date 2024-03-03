@@ -8,6 +8,11 @@ import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import type { GitCloneCompleted } from "@/utils/git";
 
+/**
+ * For these tests to work, you need "portable-git" inside of "Captain_Data"
+ */
+
+const isLocalEnvironment = process.env.TEST_ENV === "local";
 let electronApp: ElectronApplication;
 let page: Page;
 
@@ -29,7 +34,7 @@ test.afterAll(async () => {
 	await electronApp.close();
 });
 
-test("clone a repository until is is completed", async () => {
+(isLocalEnvironment ? test : test.skip)("clone a repository until is is completed", async () => {
 	page = await electronApp.firstWindow();
 
 	const clone = buildKey([ID.DOWNLOADS], { suffix: ":clone" });
@@ -55,7 +60,7 @@ test("clone a repository until is is completed", async () => {
 	await expect((result as GitCloneCompleted).path).toContain("captain-test-model");
 });
 
-test("get the progress when cloning a repository", async () => {
+(isLocalEnvironment ? test : test.skip)("get the progress when cloning a repository", async () => {
 	page = await electronApp.firstWindow();
 
 	const clone = buildKey([ID.DOWNLOADS], { suffix: ":clone" });
@@ -80,7 +85,7 @@ test("get the progress when cloning a repository", async () => {
 	await expect(result).toHaveProperty("percent");
 });
 
-test("clone a repository that doesn't exist", async () => {
+(isLocalEnvironment ? test : test.skip)("clone a repository that doesn't exist", async () => {
 	page = await electronApp.firstWindow();
 
 	const clone = buildKey([ID.DOWNLOADS], { suffix: ":clone" });

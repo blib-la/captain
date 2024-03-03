@@ -93,12 +93,12 @@ describe("clone", () => {
 		await clone(repository, destination, { onProgress: onProgressMock });
 
 		expect(onProgressMock).toHaveBeenCalledWith({
-			percent: 20,
+			percent: 0.2,
 			transferredBytes: 0,
 			totalBytes: 0,
 		});
 		expect(onProgressMock).toHaveBeenCalledWith({
-			percent: 100,
+			percent: 1,
 			transferredBytes: 0,
 			totalBytes: 0,
 		});

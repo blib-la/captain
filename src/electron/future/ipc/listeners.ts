@@ -9,7 +9,7 @@ import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import { readFilesRecursively } from "@/main";
 import { keyStore, userStore } from "@/stores";
-import { clone } from "@/utils/git";
+import { clone, lfs } from "@/utils/git";
 import {
 	getCaptainData,
 	getCaptainDownloads,
@@ -192,6 +192,8 @@ ipcMain.on(buildKey([ID.DOWNLOADS], { suffix: ":clone" }), async (_event, data) 
 	const { repository, destination } = data;
 
 	try {
+		await lfs();
+
 		await clone(repository, destination, {
 			onProgress(progress) {
 				_event.sender.send(buildKey([ID.DOWNLOADS], { suffix: ":progress" }), progress);
