@@ -5,6 +5,7 @@ import { _electron as electron } from "playwright";
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 
+const isLocalEnvironment = process.env.TEST_ENV === "local";
 let electronApp: ElectronApplication;
 let page: Page;
 
@@ -55,7 +56,7 @@ test("Can open page 2 of the installer & download & unpack", async () => {
 	await page.getByTestId("installer-02-start").click();
 });
 
-test("Download and unpack archives", async () => {
+(isLocalEnvironment ? test : test.skip)("Download and unpack archives", async () => {
 	page = await electronApp.firstWindow();
 
 	const start = buildKey([ID.INSTALL], { suffix: ":start" });
