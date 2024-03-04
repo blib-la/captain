@@ -15,7 +15,6 @@ build
 
 # python
 resources/python-embedded/
-resources/git/
 resources/python/caption/wd14/models/model.onnx
 __pycache__
 .pytest_cache

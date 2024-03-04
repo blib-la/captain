@@ -2,21 +2,20 @@ import fsp from "node:fs/promises";
 import path from "node:path";
 
 import { BrowserWindow, ipcMain } from "electron";
-import { download } from "electron-dl";
 import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 
 import { buildKey } from "#/build-key";
-import { DownloadState, ID } from "#/enums";
+import { ID } from "#/enums";
 import { readFilesRecursively } from "@/main";
-import { appSettingsStore, keyStore, userStore } from "@/stores";
+import { keyStore, userStore } from "@/stores";
+import { clone, lfs } from "@/utils/git";
 import {
 	getCaptainData,
 	getCaptainDownloads,
 	getCaptainTemporary,
 	getDirectory,
 } from "@/utils/path-helpers";
-import { unpack } from "@/utils/unpack";
 
 ipcMain.on(buildKey([ID.WINDOW], { suffix: ":close" }), () => {
 	const window_ = BrowserWindow.getFocusedWindow();
@@ -42,49 +41,6 @@ ipcMain.on(buildKey([ID.WINDOW], { suffix: ":maximize" }), () => {
 		window_.unmaximize();
 	} else {
 		window_.maximize();
-	}
-});
-
-ipcMain.on(buildKey([ID.INSTALL], { suffix: "start" }), async () => {
-	const window_ = BrowserWindow.getFocusedWindow();
-	if (!window_) {
-		return;
-	}
-
-	const pythonEmbedded =
-		"https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/python-embedded-win.7z";
-
-	try {
-		await download(window_, pythonEmbedded, {
-			directory: getCaptainDownloads(),
-
-			onStarted() {
-				appSettingsStore.set("status", DownloadState.ACTIVE);
-				window_.webContents.send(buildKey([ID.INSTALL], { suffix: ":started" }), true);
-			},
-			onProgress(progress) {
-				window_.webContents.send(buildKey([ID.INSTALL], { suffix: ":progress" }), progress);
-			},
-			onCancel() {
-				window_.webContents.send(buildKey([ID.INSTALL], { suffix: ":cancelled" }), true);
-				appSettingsStore.set("status", DownloadState.CANCELLED);
-			},
-			async onCompleted(item) {
-				window_.webContents.send(buildKey([ID.INSTALL], { suffix: ":unpacking" }), true);
-				appSettingsStore.set("status", DownloadState.UNPACKING);
-
-				const targetPath = getCaptainData("python-embedded");
-				await unpack(getDirectory("7zip", "win", "7za.exe"), item.path, targetPath);
-
-				window_.webContents.send(buildKey([ID.INSTALL], { suffix: ":completed" }), true);
-				appSettingsStore.set("status", DownloadState.DONE);
-			},
-		});
-	} catch (error) {
-		if (error instanceof Error) {
-			window_.webContents.send(buildKey([ID.INSTALL], { suffix: ":failed" }), error.message);
-			appSettingsStore.set("status", DownloadState.FAILED);
-		}
 	}
 });
 
@@ -230,6 +186,25 @@ ipcMain.on(buildKey([ID.KEYS], { suffix: ":set-openAiApiKey" }), (_event, openAi
 ipcMain.on(buildKey([ID.KEYS], { suffix: ":get-openAiApiKey" }), event => {
 	const openAiApiKey = keyStore.get("openAiApiKey");
 	event.sender.send(buildKey([ID.KEYS], { suffix: ":openAiApiKey" }), openAiApiKey);
+});
+
+ipcMain.on(buildKey([ID.DOWNLOADS], { suffix: ":clone" }), async (_event, data) => {
+	const { repository, destination } = data;
+
+	try {
+		await lfs();
+
+		await clone(repository, destination, {
+			onProgress(progress) {
+				_event.sender.send(buildKey([ID.DOWNLOADS], { suffix: ":progress" }), progress);
+			},
+			onCompleted(completed) {
+				_event.sender.send(buildKey([ID.DOWNLOADS], { suffix: ":cloned" }), completed);
+			},
+		});
+	} catch (error) {
+		_event.sender.send(buildKey([ID.DOWNLOADS], { suffix: ":error" }), error);
+	}
 });
 
 ipcMain.on(
