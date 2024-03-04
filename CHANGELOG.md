@@ -1,3 +1,10 @@
+# [1.0.0-alpha.9](https://github.com/blib-la/captain/compare/v1.0.0-alpha.8...v1.0.0-alpha.9) (2024-03-04)
+
+
+### Features
+
+* git clone & lfs ([#67](https://github.com/blib-la/captain/issues/67)) ([2a5bbc9](https://github.com/blib-la/captain/commit/2a5bbc975ee765bd9cfb8d8aeee7d703cfa305c4))
+
 # [1.0.0-alpha.8](https://github.com/blib-la/captain/compare/v1.0.0-alpha.7...v1.0.0-alpha.8) (2024-02-26)
 
 
