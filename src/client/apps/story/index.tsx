@@ -6,14 +6,14 @@ import Select from "@mui/joy/Select";
 import Stack from "@mui/joy/Stack";
 import Textarea from "@mui/joy/Textarea";
 import Typography from "@mui/joy/Typography";
-import { useAtom } from "jotai/index";
+import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
 import { Controller, useForm } from "react-hook-form";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import type { FormInput } from "#/types/story";
-import { imagesAtom } from "@/ions/atoms/live-painting";
+import { imagesAtom } from "@/apps/live-painting/atoms";
 
 export function StoryForm({ onSubmit }: { onSubmit?(): void }) {
 	const {

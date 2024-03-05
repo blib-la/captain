@@ -1,27 +1,30 @@
+import { useSDK } from "@captn/react/use-sdk";
 import Box from "@mui/joy/Box";
-import { useAtom } from "jotai/index";
-import { useEffect } from "react";
+import { useAtom } from "jotai";
 
 import { imageAtom } from "./atoms";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
+import { APP_ID } from "@/pages/[locale]/apps/constants";
 
 export function RenderingArea() {
 	const [image, setImage] = useAtom(imageAtom);
 
-	useEffect(() => {
-		const unsubscribe = window.ipc.on(
-			buildKey([ID.LIVE_PAINT], { suffix: ":generated" }),
-			(dataUrl: string) => {
-				setImage(dataUrl);
-			}
-		);
+	useSDK<unknown, string>(APP_ID, {
+		onMessage(message) {
+			console.log(message);
+			switch (message.action) {
+				case "livePainting:generated": {
+					setImage(message.payload);
+					break;
+				}
 
-		return () => {
-			unsubscribe();
-		};
-	}, [setImage]);
+				default: {
+					break;
+				}
+			}
+		},
+	});
+
 	return (
 		<Box
 			sx={{

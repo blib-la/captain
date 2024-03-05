@@ -1,11 +1,11 @@
+import { useSDK } from "@captn/react/use-sdk";
 import Box from "@mui/joy/Box";
-import { useAtom } from "jotai/index";
+import { useAtom } from "jotai";
 import { type PointerEvent as ReactPointerEvent, useEffect, useRef } from "react";
 
 import { clearCounterAtom, livePaintingOptionsAtom } from "./atoms";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
+import { APP_ID } from "@/pages/[locale]/apps/constants";
 
 export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 	const canvas = useRef<HTMLCanvasElement>(null);
@@ -14,6 +14,21 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 	const [livePaintingOptions] = useAtom(livePaintingOptionsAtom);
 	const [clearCounter] = useAtom(clearCounterAtom);
 	const canvasContainerReference = useRef<HTMLDivElement>(null);
+
+	const { send } = useSDK<unknown, string>(APP_ID, {
+		onMessage(message) {
+			console.log(message);
+			switch (message.action) {
+				case "livePainting:generated": {
+					break;
+				}
+
+				default: {
+					break;
+				}
+			}
+		},
+	});
 
 	function startDrawing(event: ReactPointerEvent) {
 		if (!canvas.current) {
@@ -62,10 +77,12 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 				return;
 			}
 
-			context.current?.lineTo(event.clientX - rect.left, event.clientY - rect.top);
-			context.current?.stroke();
-			const dataUrl = canvas.current.toDataURL();
-			window.ipc.send(buildKey([ID.LIVE_PAINT], { suffix: ":dataUrl" }), dataUrl);
+			if (context.current) {
+				context.current.lineTo(event.clientX - rect.left, event.clientY - rect.top);
+				context.current.stroke();
+			}
+
+			send({ action: "livePainting:dataUrl", payload: canvas.current.toDataURL() });
 		}
 
 		function handleMouseUp() {
@@ -127,8 +144,7 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 			context.current.fillStyle = "#ffffff";
 			context.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
 			context.current.fillRect(0, 0, canvas.current.width, canvas.current.height);
-			const dataUrl = canvas.current.toDataURL();
-			window.ipc.send(buildKey([ID.LIVE_PAINT], { suffix: ":dataUrl" }), dataUrl);
+			send({ action: "livePainting:dataUrl", payload: canvas.current.toDataURL() });
 		}
 	}, [clearCounter]);
 
@@ -138,7 +154,7 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 			sx={{
 				width: 512,
 				height: 512,
-				boxShadow: "sm",
+				boxShadow: isOverlay ? undefined : "sm",
 				position: "relative",
 				overflow: "hidden",
 				cursor: "none",
