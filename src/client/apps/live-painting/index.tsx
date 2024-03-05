@@ -1,23 +1,15 @@
 import { ClickAwayListener } from "@mui/base";
 import BrushIcon from "@mui/icons-material/Brush";
 import CasinoIcon from "@mui/icons-material/Casino";
-import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import MenuBookIcon from "@mui/icons-material/MenuBook";
-import MmsIcon from "@mui/icons-material/Mms";
 import PaletteIcon from "@mui/icons-material/Palette";
 import PhotoFilterIcon from "@mui/icons-material/PhotoFilter";
 import SaveIcon from "@mui/icons-material/Save";
 import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
-import CircularProgress from "@mui/joy/CircularProgress";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import IconButton from "@mui/joy/IconButton";
-import Modal from "@mui/joy/Modal";
-import ModalClose from "@mui/joy/ModalClose";
-import ModalDialog from "@mui/joy/ModalDialog";
 import Option from "@mui/joy/Option";
 import Select from "@mui/joy/Select";
 import Sheet from "@mui/joy/Sheet";
@@ -26,34 +18,22 @@ import Textarea from "@mui/joy/Textarea";
 import ToggleButtonGroup from "@mui/joy/ToggleButtonGroup";
 import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
-import dayjs from "dayjs";
 import { useAtom } from "jotai/index";
 import { useTranslation } from "next-i18next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { v4 } from "uuid";
 
-import { buildKey } from "#/build-key";
+import { clearCounterAtom, imageAtom, imagesAtom, livePaintingOptionsAtom } from "./atoms";
+import { DrawingArea } from "./drawing-area";
+import { RenderingArea } from "./rendering-area";
+import type { IllustrationStyles } from "./text-to-image";
+import { illustrationStyles } from "./text-to-image";
+
 import { LOCAL_PROTOCOL } from "#/constants";
-import { ID } from "#/enums";
 import { randomSeed } from "#/number";
-import { extractH1Headings } from "#/string";
 import { FlagUs } from "@/atoms/flags/us";
 import { ImageEditIcon, ImageRemoveIcon, OverlayEditIcon } from "@/atoms/icons";
-import {
-	clearCounterAtom,
-	imageAtom,
-	imagesAtom,
-	livePaintingOptionsAtom,
-	storyImagesAtom,
-} from "@/ions/atoms/live-painting";
-import type { IllustrationStyles } from "@/ions/text-to-image";
-import { illustrationStyles } from "@/ions/text-to-image";
 import { getContrastColor } from "@/ions/utils/color";
-import { replaceImagePlaceholders } from "@/ions/utils/string";
-import { DrawingArea } from "@/organisms/live-painting/drawing-area";
-import { RenderingArea } from "@/organisms/live-painting/rendering-area";
-import { Markdown } from "@/organisms/markdown";
-import { StoryForm } from "@/organisms/story";
 
 export type ViewType = "side-by-side" | "overlay";
 
@@ -67,129 +47,23 @@ export function LivePainting({ running }: { running?: boolean }) {
 	const [, setClearCounter] = useAtom(clearCounterAtom);
 	const [image] = useAtom(imageAtom);
 	const [brushSizeOpen, setBrushSizeOpen] = useState(false);
-	const [generatingStory, setGeneratingStory] = useState(false);
-	const [story, setStory] = useState("");
 	const [prompt, setPrompt] = useState("a person enjoying nature");
 	const [illustrationStyle, setIllustrationStyle] = useState<IllustrationStyles>("childrensBook");
-	const [storyModalOpen, setStoryModalOpen] = useState(false);
-	const [storyConfigModalOpen, setStoryConfigModalOpen] = useState(false);
 	const [seed, setSeed] = useState(randomSeed());
 	const isOverlay = value === "overlay";
 	const [images, setImages] = useAtom(imagesAtom);
-	const [storyImages, setStoryImages] = useAtom(storyImagesAtom);
-	const [saved, setSaved] = useState(false);
 
-	const [openAiApiKey, setOpenAiApiKey] = useState("");
-
-	useEffect(() => {
-		window.ipc.send(buildKey([ID.KEYS], { suffix: ":get-openAiApiKey" }));
-		const unsubscribeApiKey = window.ipc.on(
-			buildKey([ID.KEYS], { suffix: ":openAiApiKey" }),
-			(openAiApiKey_: string) => {
-				setOpenAiApiKey(openAiApiKey_);
-			}
-		);
-		const unsubscribeStoryGenerated = window.ipc.on(
-			buildKey([ID.STORY], { suffix: ":generated" }),
-			(story_: string) => {
-				setStory(story_);
-				setStoryModalOpen(true);
-				setGeneratingStory(false);
-				setSaved(false);
-			}
-		);
-		return () => {
-			unsubscribeStoryGenerated();
-			unsubscribeApiKey();
-		};
-	}, []);
-
-	useEffect(() => {
-		if (running) {
-			window.ipc.send(buildKey([ID.LIVE_PAINT], { suffix: ":settings" }), {
-				prompt: [prompt, illustrationStyles[illustrationStyle]].join(", "),
-				seed,
-			});
-		}
-	}, [prompt, seed, running, illustrationStyle]);
+	// UseEffect(() => {
+	// 	if (running) {
+	// 		window.ipc.send(buildKey([ID.LIVE_PAINT], { suffix: ":settings" }), {
+	// 			prompt: [prompt, illustrationStyles[illustrationStyle]].join(", "),
+	// 			seed,
+	// 		});
+	// 	}
+	// }, [prompt, seed, running, illustrationStyle]);
 
 	return (
 		<Box sx={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column" }}>
-			<Modal
-				open={storyModalOpen}
-				onClose={() => {
-					setStoryModalOpen(false);
-				}}
-			>
-				<ModalDialog sx={{ width: "80%", maxWidth: 1440, p: 1 }}>
-					<ModalClose aria-label={t("labels:close")} />
-					<Button
-						disabled={saved}
-						startDecorator={saved ? <CheckIcon /> : <SaveIcon />}
-						size="sm"
-						sx={theme => ({
-							position: "absolute",
-							top: theme.spacing(1),
-							left: theme.spacing(1),
-						})}
-						onClick={async () => {
-							const id = v4();
-							const now = dayjs().toString();
-							await Promise.all([
-								window.ipc.saveFile(
-									`stories/${id}/story.md`,
-									replaceImagePlaceholders(story, storyImages)
-								),
-								window.ipc.saveFile(
-									`stories/${id}/info.json`,
-									JSON.stringify({
-										id,
-										locale,
-										type: "story",
-										story,
-										createdAt: now,
-										updatedAt: now,
-										title: extractH1Headings(story)[0],
-										images: storyImages,
-									})
-								),
-								...storyImages.map(({ dataUrl }, index) =>
-									window.ipc.saveFile(
-										`stories/${id}/${index + 1}.png`,
-										dataUrl.split(";base64,").pop()!,
-										{ encoding: "base64" }
-									)
-								),
-							]);
-							setSaved(true);
-						}}
-					>
-						{saved ? t("labels:saved") : t("labels:save")}
-					</Button>
-					<Box sx={{ mt: 5, mb: 1, px: 1, overflow: "auto" }}>
-						<Markdown key="story" markdown={story} images={storyImages} />
-					</Box>
-				</ModalDialog>
-			</Modal>
-			<Modal
-				open={storyConfigModalOpen}
-				onClose={() => {
-					setStoryConfigModalOpen(false);
-				}}
-			>
-				<ModalDialog>
-					<ModalClose aria-label={t("labels:close")} />
-					<Box sx={{ mt: 4, width: "100%", overflow: "auto" }}>
-						<StoryForm
-							onSubmit={() => {
-								setStoryImages(images);
-								setGeneratingStory(true);
-								setStoryConfigModalOpen(false);
-							}}
-						/>
-					</Box>
-				</ModalDialog>
-			</Modal>
 			<Sheet
 				sx={{
 					position: "relative",
@@ -428,33 +302,6 @@ export function LivePainting({ running }: { running?: boolean }) {
 							}}
 						>
 							<SaveIcon />
-						</IconButton>
-					</Tooltip>
-
-					<Tooltip title={t("labels:createStory")}>
-						<IconButton
-							disabled={generatingStory || !openAiApiKey}
-							size="md"
-							variant="soft"
-							aria-label={t("labels:createStory")}
-							onClick={() => {
-								setStoryConfigModalOpen(true);
-							}}
-						>
-							{generatingStory ? <CircularProgress /> : <MmsIcon />}
-						</IconButton>
-					</Tooltip>
-					<Tooltip title={t("labels:readStory")}>
-						<IconButton
-							disabled={!story?.trim()}
-							size="md"
-							variant="soft"
-							aria-label={t("labels:readStory")}
-							onClick={() => {
-								setStoryModalOpen(true);
-							}}
-						>
-							<MenuBookIcon />
 						</IconButton>
 					</Tooltip>
 				</Box>

@@ -1,4 +1,5 @@
-import Box from "@mui/joy/Box";
+import { AppFrame } from "@captn/joy/app-frame";
+import { TitleBar } from "@captn/joy/title-bar";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Container from "@mui/joy/Container";
@@ -6,7 +7,6 @@ import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import ListItemContent from "@mui/joy/ListItemContent";
 import ListItemDecorator from "@mui/joy/ListItemDecorator";
-import Sheet from "@mui/joy/Sheet";
 import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
 import type { InferGetStaticPropsType } from "next";
@@ -18,7 +18,6 @@ import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 import { ColorModeSelector } from "@/organisms/color-mode-selector";
-import { CustomScrollbars } from "@/organisms/custom-scrollbars";
 import { LanguageSelect } from "@/organisms/language-select";
 import { PasswordField } from "@/organisms/password-field";
 
@@ -116,49 +115,27 @@ export function OpenAISettings() {
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["common"]);
 	return (
-		<>
+		<AppFrame
+			titleBar={
+				<TitleBar>
+					<Typography level="title-md" component="h1">
+						{t("common:settings")}
+					</Typography>
+				</TitleBar>
+			}
+		>
 			<Head>
 				<title>{`Captain | ${t("common:settings")}`}</title>
 			</Head>
-			<Box
-				sx={{
-					position: "absolute",
-					inset: 0,
-					display: "flex",
-					flexDirection: "column",
-					overflow: "hidden",
-				}}
-			>
-				<Sheet
-					sx={{
-						position: "sticky",
-						top: 0,
-						display: "flex",
-						alignItems: "center",
-						height: 44,
-						px: 1,
-						zIndex: 1,
-					}}
-				>
-					<Typography level="h4" component="h1">
-						{t("common:settings")}
-					</Typography>
-					<Box sx={{ flex: 1 }} />
-				</Sheet>
-				<Box sx={{ flex: 1, position: "relative" }}>
-					<CustomScrollbars>
-						<Container sx={{ py: 2 }}>
-							<Stack spacing={4}>
-								<UserPreferences />
-								<OpenAISettings />
-								{/* 	<RunPodSettings />
+			<Container sx={{ py: 2 }}>
+				<Stack spacing={4}>
+					<UserPreferences />
+					<OpenAISettings />
+					{/* 	<RunPodSettings />
 								<StableDiffusionSettings /> */}
-							</Stack>
-						</Container>
-					</CustomScrollbars>
-				</Box>
-			</Box>
-		</>
+				</Stack>
+			</Container>
+		</AppFrame>
 	);
 }
 

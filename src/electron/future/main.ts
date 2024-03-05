@@ -1,7 +1,9 @@
 import type { Dirent } from "node:fs";
 import fsp from "node:fs/promises";
 import path from "path";
+import url from "url";
 
+import type { BrowserWindow, BrowserWindowConstructorOptions } from "electron";
 import { app, ipcMain, Menu, protocol, screen, globalShortcut } from "electron";
 
 import { version } from "../../../package.json";
@@ -12,8 +14,10 @@ import { buildKey } from "#/build-key";
 import { LOCAL_PROTOCOL } from "#/constants";
 import { DownloadState, ID } from "#/enums";
 import { isProduction } from "#/flags";
+import { isCoreApp } from "@/utils/core";
 import { createWindow } from "@/utils/create-window";
 import { loadURL } from "@/utils/load-window";
+import { getCaptainData } from "@/utils/path-helpers";
 
 /**
  * Creates and displays the installer window with predefined dimensions.
@@ -34,55 +38,18 @@ async function createInstallerWindow() {
 		maxWidth: windowWidth,
 		maxHeight: windowHeight,
 		frame: false,
-		webPreferences: {
-			preload: path.join(__dirname, "preload.js"),
-			contextIsolation: true,
-			nodeIntegration: false,
-		},
 	});
 
 	await loadURL(installerWindow, "installer/00");
 	return installerWindow;
 }
 
-/**
- * Asynchronously creates and displays the main application window, adjusting its size
- * to fit within the user's screen resolution. It waits for the Electron app to be ready before
- * creating the window. The dimensions are set to a default or lesser value based on the screen size,
- * ensuring the window fits comfortably on the user's screen.
- *
- * @returns {Promise<BrowserWindow>} A promise that resolves to the created BrowserWindow instance for the main application interface.
- */
-async function createMainWindow() {
-	// Ens
-	const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-
-	const mainWindow = await createWindow("main", {
-		width: Math.min(1400, width),
-		height: Math.min(850, height),
-		minWidth: 800,
-		minHeight: 600,
-		frame: false,
-		webPreferences: {
-			preload: path.join(__dirname, "preload.js"),
-			contextIsolation: true,
-			nodeIntegration: false,
-		},
-	});
-
-	await loadURL(mainWindow, "dashboard");
-	return mainWindow;
-}
-
-async function createBackgroundWindow() {
-	// Ens
-	const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-
+async function createPromptWindow() {
 	const window_ = await createWindow("main", {
-		width: 350,
-		height: 30,
-		minWidth: 350,
-		maxWidth: 350,
+		width: 750,
+		height: 112,
+		minWidth: 750,
+		maxWidth: 750,
 		frame: false,
 		alwaysOnTop: true,
 		minimizable: false,
@@ -90,33 +57,46 @@ async function createBackgroundWindow() {
 		fullscreen: false,
 		fullscreenable: false,
 		transparent: true,
-		webPreferences: {
-			preload: path.join(__dirname, "preload.js"),
-			contextIsolation: true,
-			nodeIntegration: false,
-		},
+		resizable: false,
+		show: false,
 	});
 	await loadURL(window_, "prompt");
-	window_.hide();
 	window_.on("show", () => {
 		window_.focus();
+		globalShortcut.register("Escape", async () => {
+			console.log("Escape is pressed");
+			window_.hide();
+		});
+	});
+	window_.on("hide", () => {
+		globalShortcut.unregister("Escape");
 	});
 	window_.on("focus", () => {
 		window_.webContents.send(buildKey([ID.WINDOW], { suffix: ":focus" }));
 	});
+
 	window_.on("blur", () => {
 		window_.hide();
 	});
-	globalShortcut.register("CommandOrControl+M", async () => {
-		console.log("CommandOrControl+M is pressed");
+
+	ipcMain.on(buildKey([ID.WINDOW], { suffix: ":resize" }), (_event, { height, width }) => {
+		if (width && height) {
+			console.log(height, width);
+			window_.setResizable(true);
+			window_.setSize(750, Math.ceil(height));
+			window_.setResizable(false);
+		}
+	});
+
+	const promptShortcut = "Control+Alt+Space";
+	globalShortcut.register(promptShortcut, async () => {
+		console.log(promptShortcut);
 		window_.show();
 	});
-	globalShortcut.register("Escape", async () => {
-		window_.hide();
-	});
+
 	app.on("will-quit", () => {
 		// Unregister a shortcut.
-		globalShortcut.unregister("CommandOrControl+X");
+		globalShortcut.unregister(promptShortcut);
 		globalShortcut.unregister("Escape");
 
 		// Unregister all shortcuts.
@@ -243,6 +223,45 @@ export async function readFilesRecursively(
 	return files;
 }
 
+async function createCoreAppWindow(id: string, options: BrowserWindowConstructorOptions = {}) {
+	const appWindow = await createWindow(id, {
+		frame: false,
+		...options,
+		webPreferences: {
+			preload: path.join(__dirname, "app-preload.js"),
+			...options.webPreferences,
+		},
+	});
+
+	await loadURL(appWindow, `apps/${id}`);
+
+	return appWindow;
+}
+
+async function createAppWindow(id: string, options: BrowserWindowConstructorOptions = {}) {
+	const appWindow = await createWindow(id, {
+		frame: false,
+		...options,
+		webPreferences: {
+			preload: path.join(__dirname, "app-preload.js"),
+			...options.webPreferences,
+		},
+	});
+
+	const appPath = getCaptainData("apps", id, "index.html");
+	const appUrl = url.format({
+		pathname: appPath,
+		protocol: "file:",
+		slashes: true,
+	});
+
+	await appWindow.loadURL(appUrl);
+	return appWindow;
+}
+
+// Cache for apps that are opened
+const apps: Record<string, BrowserWindow | null> = {};
+
 /**
  * Initializes the application by determining its current state based on version and setup status.
  * It awaits Electron's readiness before proceeding with either launching the main application window
@@ -275,23 +294,39 @@ export async function main() {
 		Menu.setApplicationMenu(null);
 	}
 
-	await createBackgroundWindow();
-	return;
+	ipcMain.on(
+		buildKey([ID.APP], { suffix: ":open" }),
+		async (_event, { data: appId }: { data: string }) => {
+			// Info:
+			// data is the appId. If the appId is a core app we need to handle it
+			apps[appId] ||= await (isCoreApp(appId)
+				? createCoreAppWindow(appId)
+				: createAppWindow(appId));
+
+			console.log(appId);
+			if (apps[appId]) {
+				apps[appId]!.on("close", () => {
+					apps[appId] = null;
+					// TODO Needs to ensure that all processes opened by this window are closed
+				});
+				apps[appId]!.focus();
+			}
+		}
+	);
 
 	if (isUpToDate && isReady) {
-		// Close installer window if open
-		// Create and show the main application window
-		await createMainWindow();
+		// When the app is up-to-date and ready, we open the prompt window
+		await createPromptWindow();
 	} else {
 		// Update app settings for installation
 		appSettingsStore.set("status", DownloadState.IDLE);
 		appSettingsStore.set("version", version);
 		// Create and show installer window
 		const installerWindow = await createInstallerWindow();
-		// When the installer is done we open the main window
+		// When the installer is done we open the prompt window
 		ipcMain.on(buildKey([ID.APP], { suffix: ":ready" }), async () => {
 			installerWindow.close();
-			await createMainWindow();
+			await createPromptWindow();
 		});
 	}
 }

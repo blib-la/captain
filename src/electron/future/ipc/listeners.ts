@@ -1,13 +1,15 @@
 import fsp from "node:fs/promises";
 import path from "node:path";
 
-import { BrowserWindow, ipcMain } from "electron";
+import { APP_MESSAGE_KEY } from "@captn/utils/constants";
+import { BrowserWindow, ipcMain, type IpcMainEvent } from "electron";
 import { download } from "electron-dl";
 import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 
 import { buildKey } from "#/build-key";
 import { DownloadState, ID } from "#/enums";
+import type { SDKMessage } from "@/ipc/sdk";
 import { readFilesRecursively } from "@/main";
 import { appSettingsStore, keyStore, userStore } from "@/stores";
 import {
@@ -17,33 +19,6 @@ import {
 	getDirectory,
 } from "@/utils/path-helpers";
 import { unpack } from "@/utils/unpack";
-
-ipcMain.on(buildKey([ID.WINDOW], { suffix: ":close" }), () => {
-	const window_ = BrowserWindow.getFocusedWindow();
-	if (window_) {
-		window_.close();
-	}
-});
-
-ipcMain.on(buildKey([ID.WINDOW], { suffix: ":minimize" }), () => {
-	const window_ = BrowserWindow.getFocusedWindow();
-	if (window_) {
-		window_.minimize();
-	}
-});
-
-ipcMain.on(buildKey([ID.WINDOW], { suffix: ":maximize" }), () => {
-	const window_ = BrowserWindow.getFocusedWindow();
-	if (!window_) {
-		return;
-	}
-
-	if (window_.isMaximized()) {
-		window_.unmaximize();
-	} else {
-		window_.maximize();
-	}
-});
 
 ipcMain.on(buildKey([ID.INSTALL], { suffix: "start" }), async () => {
 	const window_ = BrowserWindow.getFocusedWindow();
@@ -95,133 +70,172 @@ ipcMain.on(buildKey([ID.USER], { suffix: ":language" }), (_event, language) => {
 let process_: ExecaChildProcess<string> | undefined;
 let cache = "";
 
-ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":dataUrl" }), async (_event, dataUrl) => {
-	const dataString = dataUrl.toString();
-	const base64Data = dataString.replace(/^data:image\/png;base64,/, "");
-	const decodedImageData = Buffer.from(base64Data, "base64");
+ipcMain.on(
+	APP_MESSAGE_KEY,
+	async <T>(
+		_event: IpcMainEvent,
+		{ message, appId }: { message: SDKMessage<T>; appId: string }
+	) => {
+		if (message.action !== "livePaint:dataUrl") {
+			return;
+		}
 
-	await fsp.writeFile(getCaptainData("temp/live-painting/input.png"), decodedImageData);
-});
+		const dataString = message.payload as string;
+		const base64Data = dataString.replace(/^data:image\/png;base64,/, "");
+		const decodedImageData = Buffer.from(base64Data, "base64");
 
-ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":start" }), () => {
-	const window_ = BrowserWindow.getFocusedWindow();
-	if (!window_) {
-		return;
+		await fsp.writeFile(getCaptainData("temp/live-painting/input.png"), decodedImageData);
 	}
+);
 
-	if (!process_) {
-		const pythonBinaryPath = getCaptainData("python-embedded/python.exe");
-		const scriptPath = getDirectory("python/live-painting/main.py");
-		const scriptArguments = [
-			"--model_path",
-			getCaptainDownloads("stable-diffusion/checkpoints/stabilityai/sd-turbo"),
-			"--vae_path",
-			getCaptainDownloads("stable-diffusion/vae/madebyollin/taesd"),
-			"--input_image_path",
-			getCaptainTemporary("live-painting/input.png"),
-			"--output_image_path",
-			getCaptainTemporary("live-painting/output.png"),
-			"--disable_stablefast",
-			"--debug",
-		];
+ipcMain.on(
+	APP_MESSAGE_KEY,
+	(event, { message, appId }: { message: SDKMessage<string>; appId: string }) => {
+		if (message.action !== "livePaint:start") {
+			return;
+		}
 
-		process_ = execa(pythonBinaryPath, ["-u", scriptPath, ...scriptArguments]);
+		const channel = `${appId}:${APP_MESSAGE_KEY}`;
+		if (!process_) {
+			const pythonBinaryPath = getCaptainData("python-embedded/python.exe");
+			const scriptPath = getDirectory("python/live-painting/main.py");
+			const scriptArguments = [
+				"--model_path",
+				getCaptainDownloads("stable-diffusion/checkpoints/stabilityai/sd-turbo"),
+				"--vae_path",
+				getCaptainDownloads("stable-diffusion/vae/madebyollin/taesd"),
+				"--input_image_path",
+				getCaptainTemporary("live-painting/input.png"),
+				"--output_image_path",
+				getCaptainTemporary("live-painting/output.png"),
+				"--disable_stablefast",
+				"--debug",
+			];
 
-		if (process_.stdout && process_.stderr) {
-			process_.stdout.on("data", async data => {
-				const dataString = data.toString();
+			process_ = execa(pythonBinaryPath, ["-u", scriptPath, ...scriptArguments]);
 
-				try {
-					const jsonData = JSON.parse(dataString);
+			if (process_.stdout && process_.stderr) {
+				process_.stdout.on("data", async data => {
+					const dataString = data.toString();
 
-					console.log(`live-painting: ${JSON.stringify(jsonData)}`);
+					try {
+						const jsonData = JSON.parse(dataString);
 
-					if (process_ && jsonData.status === "starting") {
-						window_.webContents.send(
-							buildKey([ID.LIVE_PAINT], { suffix: ":starting" }),
-							true
-						);
-					}
+						console.log(`live-painting: ${JSON.stringify(jsonData)}`);
 
-					if (process_ && jsonData.status === "started") {
-						window_.webContents.send(
-							buildKey([ID.LIVE_PAINT], { suffix: ":started" }),
-							true
-						);
-					}
-
-					if (
-						process_ &&
-						(jsonData.status === "shutdown" || jsonData.status === "stopped")
-					) {
-						if (process_) {
-							if (process_.stdout) {
-								process_.stdout.removeAllListeners("data");
-							}
-
-							if (process_.stderr) {
-								process_.stderr.removeAllListeners("data");
-							}
-
-							if (process_ && !process_.killed) {
-								process_.kill();
-							}
+						if (process_ && jsonData.status === "starting") {
+							event.sender.send(channel, { action: "starting", payload: true });
 						}
 
-						process_ = undefined;
-
-						window_.webContents.send(
-							buildKey([ID.LIVE_PAINT], { suffix: ":stopped" }),
-							true
-						);
-					}
-
-					if (jsonData.status === "image_generated") {
-						const imageData = await fsp.readFile(
-							getCaptainData("temp/live-painting/output.png")
-						);
-						const base64Image = imageData.toString("base64");
-
-						if (!base64Image.trim()) {
-							return;
+						if (process_ && jsonData.status === "started") {
+							event.sender.send(channel, { action: "started", payload: true });
 						}
 
-						if (base64Image.trim() === cache) {
-							return;
+						if (
+							process_ &&
+							(jsonData.status === "shutdown" || jsonData.status === "stopped")
+						) {
+							if (process_) {
+								if (process_.stdout) {
+									process_.stdout.removeAllListeners("data");
+								}
+
+								if (process_.stderr) {
+									process_.stderr.removeAllListeners("data");
+								}
+
+								if (process_ && !process_.killed) {
+									process_.kill();
+								}
+							}
+
+							process_ = undefined;
+
+							event.sender.send(channel, { action: "stopped", payload: true });
 						}
 
-						cache = base64Image;
+						if (jsonData.status === "image_generated") {
+							const imageData = await fsp.readFile(
+								getCaptainData("temp/live-painting/output.png")
+							);
+							const base64Image = imageData.toString("base64");
 
-						window_.webContents.send(
-							buildKey([ID.LIVE_PAINT], { suffix: ":generated" }),
-							`data:image/png;base64,${base64Image}`
-						);
+							if (!base64Image.trim()) {
+								return;
+							}
+
+							if (base64Image.trim() === cache) {
+								return;
+							}
+
+							cache = base64Image;
+
+							event.sender.send(channel, {
+								action: "generated",
+								payload: `data:image/png;base64,${base64Image}`,
+							});
+						}
+					} catch {
+						console.log("Received non-JSON data:", dataString);
 					}
-				} catch {
-					console.log("Received non-JSON data:", dataString);
-				}
-			});
+				});
 
-			process_.stderr.on("data", data => {
-				console.error(`error: ${data}`);
+				process_.stderr.on("data", data => {
+					console.error(`error: ${data}`);
 
-				window_.webContents.send(buildKey([ID.LIVE_PAINT], { suffix: ":error" }), data);
-			});
+					event.sender.send(channel, data);
+				});
+			}
 		}
 	}
-});
+);
 
-ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":stop" }), () => {
-	if (process_ && process_.stdin) {
-		process_.stdin.write(JSON.stringify({ command: "shutdown" }) + "\n");
-	}
-});
+ipcMain.on(
+	APP_MESSAGE_KEY,
+	async <T>(
+		_event: IpcMainEvent,
+		{ message, appId }: { message: SDKMessage<T>; appId: string }
+	) => {
+		switch (message.action) {
+			case "livePaint:stop": {
+				if (process_ && process_.stdin) {
+					process_.stdin.write(JSON.stringify({ command: "shutdown" }) + "\n");
+				}
 
-ipcMain.on(buildKey([ID.LIVE_PAINT], { suffix: ":settings" }), (_event, data) => {
-	if (process_ && process_.stdin) {
-		process_.stdin.write(JSON.stringify(data) + "\n");
+				break;
+			}
+
+			case "livePaint:settings": {
+				if (process_ && process_.stdin) {
+					process_.stdin.write(JSON.stringify(message.payload) + "\n");
+				}
+
+				break;
+			}
+
+			case "livePaint:dataUrl": {
+				try {
+					const dataString = message.payload as string;
+					const base64Data = dataString.replace(/^data:image\/png;base64,/, "");
+					const decodedImageData = Buffer.from(base64Data, "base64");
+
+					await fsp.writeFile(
+						getCaptainData("temp/live-painting/input.png"),
+						decodedImageData
+					);
+				} catch (error) {
+					console.error(error);
+				}
+
+				break;
+			}
+
+			default: {
+				break;
+			}
+		}
 	}
-});
+);
 
 ipcMain.on(buildKey([ID.KEYS], { suffix: ":set-openAiApiKey" }), (_event, openAiApiKey) => {
 	keyStore.set("openAiApiKey", openAiApiKey);
@@ -280,14 +294,3 @@ ipcMain.handle(
 ipcMain.handle(buildKey([ID.FILE], { suffix: ":read" }), async (_event, name: string) =>
 	fsp.readFile(name, { encoding: "utf8" })
 );
-
-ipcMain.on(buildKey([ID.WINDOW], { suffix: ":resize" }), (_event, { height, width }) => {
-	const window_ = BrowserWindow.getFocusedWindow();
-	if (!window_) {
-		return;
-	}
-
-	if (width && height) {
-		window_.setSize(350, height + 100);
-	}
-});

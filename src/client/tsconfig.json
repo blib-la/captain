@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "include": [
-    "next-env.d.ts",
+    "**/*.d.ts",
     "**/*.ts",
     "**/*.tsx"
   ],
@@ -9,6 +9,7 @@
     "node_modules"
   ],
   "compilerOptions": {
+    "moduleResolution": "Bundler",
     "baseUrl": ".",
     "paths": {
       "@/*": [

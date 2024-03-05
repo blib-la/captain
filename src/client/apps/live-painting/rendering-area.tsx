@@ -2,9 +2,10 @@ import Box from "@mui/joy/Box";
 import { useAtom } from "jotai/index";
 import { useEffect } from "react";
 
+import { imageAtom } from "./atoms";
+
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
-import { imageAtom } from "@/ions/atoms/live-painting";
 
 export function RenderingArea() {
 	const [image, setImage] = useAtom(imageAtom);

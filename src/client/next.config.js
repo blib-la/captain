@@ -2,7 +2,13 @@ const path = require("path");
 
 const transpileModules = require("next-transpile-modules");
 
-const withTM = transpileModules(["@mui/joy"]); // Pass the modules you would like to see transpiled
+const withTM = transpileModules([
+	"@mui/joy",
+	"@captn/joy",
+	"@captn/react",
+	"@captn/utils",
+	"@captn/theme",
+]); // Pass the modules you would like to see transpiled
 
 const cwd = process.cwd();
 const folderPaths = [path.resolve(cwd, "src/shared")];

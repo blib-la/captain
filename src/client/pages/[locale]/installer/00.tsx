@@ -1,3 +1,4 @@
+import { CustomScrollbars } from "@captn/react/custom-scrollbars";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Box from "@mui/joy/Box";
 import IconButton from "@mui/joy/IconButton";
@@ -7,7 +8,6 @@ import { useTranslation } from "next-i18next";
 
 import { I18nLink } from "@/atoms/i18n-link";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
-import { CustomScrollbars } from "@/organisms/custom-scrollbars";
 import { Illustration } from "@/organisms/illustration";
 import { LanguageSelectList } from "@/organisms/language-select";
 

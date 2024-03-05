@@ -1,25 +1,23 @@
-import { CssVarsProvider } from "@mui/joy/styles";
+import { globalStyles } from "@captn/joy/styles";
+import { ThemeProvider } from "@captn/joy/theme";
+import { css, Global } from "@emotion/react";
+import CssBaseline from "@mui/joy/CssBaseline";
 import dayjs from "dayjs";
 import type { AppProps } from "next/app";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { appWithTranslation, useTranslation } from "next-i18next";
 import { useEffect, useMemo } from "react";
-import { SWRConfig } from "swr";
-
-import { globalStyles } from "@/ions/styles";
-import { fetcher } from "@/ions/swr/fetcher";
-import { theme } from "@/ions/theme";
-import { CSS_VARIABLE_PREFIX } from "@/ions/theme/constants";
 
 import "@/ions/date";
-import { css, Global } from "@emotion/react";
-import CssBaseline from "@mui/joy/CssBaseline";
 
 function App({ Component, pageProps }: AppProps) {
 	const {
 		i18n: { language },
 	} = useTranslation();
+	const { pathname } = useRouter();
 
+	const isPrompt = pathname === "/[locale]/prompt";
 	// Intended abuse of useMemo to allow changes on server and client mount
 	useMemo(() => {
 		// We need to set is before the render to tell dayjs to change the locale
@@ -31,11 +29,7 @@ function App({ Component, pageProps }: AppProps) {
 	}, [language]);
 
 	return (
-		<CssVarsProvider
-			theme={theme}
-			defaultMode="system"
-			modeStorageKey={`${CSS_VARIABLE_PREFIX}-mode`}
-		>
+		<ThemeProvider>
 			{globalStyles}
 			<Head>
 				<title>Blibla</title>
@@ -47,24 +41,17 @@ function App({ Component, pageProps }: AppProps) {
 				<meta name="format-detection" content="telephone=no" />
 				<link rel="shortcut icon" type="image/png" href="/images/logo.png" />
 			</Head>
-			<SWRConfig
-				value={{
-					fetcher,
-					errorRetryCount: 3,
-					focusThrottleInterval: 5 * 1000,
-					revalidateOnReconnect: true,
-				}}
-			>
+
+			<CssBaseline />
+			{isPrompt && (
 				<Global
 					styles={css({
-						"*": { overflow: "hidden" },
-						body: { margin: 0 },
+						body: { background: "none", overflow: "hidden" },
 					})}
 				/>
-				<CssBaseline />
-				<Component {...pageProps} />
-			</SWRConfig>
-		</CssVarsProvider>
+			)}
+			<Component {...pageProps} />
+		</ThemeProvider>
 	);
 }
 

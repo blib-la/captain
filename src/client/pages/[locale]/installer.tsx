@@ -1,3 +1,5 @@
+import { TitleBar } from "@captn/joy/title-bar";
+import { CustomScrollbars } from "@captn/react/custom-scrollbars";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
@@ -14,10 +16,8 @@ import { buildKey } from "#/build-key";
 import { DownloadState, ID } from "#/enums";
 import { useSsrColorScheme } from "@/ions/hooks/color-scheme";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
-import { CustomScrollbars } from "@/organisms/custom-scrollbars";
 import { Illustration } from "@/organisms/illustration";
 import { LanguageSelectList } from "@/organisms/language-select";
-import { TitleBar } from "@/organisms/title-bar";
 
 function useSteps({ initialStep = 0, max = Number.POSITIVE_INFINITY, min = 0 } = {}) {
 	const [step, setStep] = useState(initialStep);

@@ -1,3 +1,4 @@
+import { CustomScrollbars } from "@captn/react/custom-scrollbars";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import Card from "@mui/joy/Card";
@@ -18,11 +19,10 @@ import { useEffect, useState } from "react";
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import type { ImageItem } from "#/types";
+import { Markdown } from "@/apps/story/markdown";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 import { localFile } from "@/ions/utils/string";
-import { CustomScrollbars } from "@/organisms/custom-scrollbars";
 import { localeFlags } from "@/organisms/language-select";
-import { Markdown } from "@/organisms/markdown";
 
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["common", "labels"]);

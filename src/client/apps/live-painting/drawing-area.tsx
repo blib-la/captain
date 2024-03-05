@@ -2,9 +2,10 @@ import Box from "@mui/joy/Box";
 import { useAtom } from "jotai/index";
 import { type PointerEvent as ReactPointerEvent, useEffect, useRef } from "react";
 
+import { clearCounterAtom, livePaintingOptionsAtom } from "./atoms";
+
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
-import { clearCounterAtom, livePaintingOptionsAtom } from "@/ions/atoms/live-painting";
 
 export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 	const canvas = useRef<HTMLCanvasElement>(null);
