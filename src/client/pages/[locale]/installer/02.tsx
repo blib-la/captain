@@ -154,9 +154,27 @@ export function InstallScreen({ percent, status }: { percent: number; status: Do
 					heading={t("labels:unpacking")}
 					illustration="/illustrations/minimalistic/discovery.svg"
 				>
-					<Typography level="body-lg" sx={{ my: 2, textAlign: "center" }}>
-						{t("texts:downloadSuccessUnpacking")}
-					</Typography>
+					<Box
+						sx={{
+							flex: 1,
+							position: "relative",
+							display: "flex",
+							alignItems: "center",
+						}}
+					>
+						<Typography level="body-lg" sx={{ my: 2, textAlign: "center" }}>
+							{t("texts:downloadSuccessUnpacking")}
+						</Typography>
+					</Box>
+					<LinearProgress
+						color="primary"
+						sx={{
+							mb: 4,
+							flexGrow: 0,
+							"--LinearProgress-radius": "0px",
+							"--LinearProgress-thickness": "48px",
+						}}
+					/>
 				</InstallStep>
 			);
 		}
@@ -192,10 +210,12 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 									{
 										url: "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/python-embedded-win.7z",
 										destination: "python-embedded",
+										unzip: true,
 									},
 									{
 										url: "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/portable-git-win.7z",
 										destination: "portable-git",
+										unzip: true,
 									},
 								]);
 							}}
