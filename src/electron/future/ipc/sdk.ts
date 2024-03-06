@@ -43,31 +43,12 @@ let cache = "";
 
 ipcMain.on(
 	APP_MESSAGE_KEY,
-	async <T>(
-		_event: IpcMainEvent,
-		{ message, appId }: { message: SDKMessage<T>; appId: string }
-	) => {
-		if (message.action !== "livePainting:dataUrl") {
-			return;
-		}
-
-		const dataString = message.payload as string;
-		const base64Data = dataString.replace(/^data:image\/png;base64,/, "");
-		const decodedImageData = Buffer.from(base64Data, "base64");
-
-		await fsp.writeFile(getCaptainData("temp/live-painting/input.png"), decodedImageData);
-	}
-);
-
-ipcMain.on(
-	APP_MESSAGE_KEY,
 	(event, { message, appId }: { message: SDKMessage<string>; appId: string }) => {
 		if (message.action !== "livePainting:start") {
 			return;
 		}
 
 		const channel = `${appId}:${APP_MESSAGE_KEY}`;
-
 		if (process_) {
 			event.sender.send(channel, { action: "livePainting:started", payload: true });
 			return;

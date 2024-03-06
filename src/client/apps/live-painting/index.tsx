@@ -70,7 +70,18 @@ export function LivePainting({ running }: { running?: boolean }) {
 				},
 			});
 		}
-	}, [prompt, seed, running, illustrationStyle]);
+	}, [send, prompt, seed, running, illustrationStyle]);
+
+	useEffect(() => {
+		function beforeUnload() {
+			send({ action: "livePainting:stop", payload: APP_ID });
+		}
+
+		window.addEventListener("beforeunload", beforeUnload);
+		return () => {
+			window.removeEventListener("beforeunload", beforeUnload);
+		};
+	}, [send]);
 
 	return (
 		<Box sx={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column" }}>
