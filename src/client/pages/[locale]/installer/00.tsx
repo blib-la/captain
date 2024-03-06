@@ -1,3 +1,5 @@
+import { AppFrame } from "@captn/joy/app-frame";
+import { TitleBar } from "@captn/joy/title-bar";
 import { CustomScrollbars } from "@captn/react/custom-scrollbars";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Box from "@mui/joy/Box";
@@ -23,6 +25,7 @@ export function LanguageSettings() {
 				sx={{
 					flex: 1,
 					position: "relative",
+					mx: 8,
 				}}
 			>
 				<Box sx={{ position: "absolute", inset: 0 }}>
@@ -39,10 +42,10 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	const { t } = useTranslation(["common"]);
 
 	return (
-		<>
-			<LanguageSettings />
-			<Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-				<Box sx={{ display: "flex", gap: 1 }}>
+		<AppFrame titleBar={<TitleBar disableMaximize />}>
+			<Box sx={{ minHeight: "100%", display: "flex", flexDirection: "column" }}>
+				<LanguageSettings />
+				<Box sx={{ display: "flex", justifyContent: "flex-end", m: 1 }}>
 					<I18nLink href="/installer/01">
 						<IconButton component="a" aria-label={t("common:next")}>
 							<ArrowForwardIcon />
@@ -50,7 +53,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 					</I18nLink>
 				</Box>
 			</Box>
-		</>
+		</AppFrame>
 	);
 }
 

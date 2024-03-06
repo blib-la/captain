@@ -1,13 +1,11 @@
 import { defaults } from "jest-config";
 
-// Adjust the import path to your tsconfig.json file
-
 const jestConfig = {
 	...defaults,
 	roots: ["<rootDir>/src/electron"],
 	testMatch: ["**/?(*.)test.ts"],
 	transform: {
-		"^.+\\.ts$": ["@swc/jest"],
+		"^.+\\.(ts|js)$": ["@swc/jest"],
 	},
 	moduleNameMapper: {
 		"@/(.*)": "<rootDir>/src/electron/future/$1",
@@ -22,7 +20,7 @@ const jestConfig = {
 			lines: 80,
 		},
 	},
-	transformIgnorePatterns: ["/node_modules/"],
+	transformIgnorePatterns: ["/node_modules/.+\\.(?!c?js|mjs$)[^.]+$"],
 	extensionsToTreatAsEsm: [".ts"],
 	setupFilesAfterEnv: ["<rootDir>/jest.setup.electron.ts"],
 };

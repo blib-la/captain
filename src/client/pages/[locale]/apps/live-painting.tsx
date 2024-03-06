@@ -11,8 +11,8 @@ import { useTranslation } from "next-i18next";
 import { useState } from "react";
 
 import { LivePainting } from "@/apps/live-painting";
+import { APP_ID } from "@/apps/live-painting/constants";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
-import { APP_ID } from "@/pages/[locale]/apps/constants";
 
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["common", "labels"]);

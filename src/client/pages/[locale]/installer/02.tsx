@@ -1,3 +1,5 @@
+import { AppFrame } from "@captn/joy/app-frame";
+import { TitleBar } from "@captn/joy/title-bar";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import LinearProgress from "@mui/joy/LinearProgress";
@@ -96,6 +98,7 @@ function InstallStep({
 					display: "flex",
 					flexDirection: "column",
 					justifyContent: "center",
+					mx: 8,
 				}}
 			>
 				{children}
@@ -135,6 +138,7 @@ export function InstallScreen({ percent, status }: { percent: number; status: Do
 						color="primary"
 						value={percent * 100}
 						sx={{
+							mb: 4,
 							flexGrow: 0,
 							"--LinearProgress-radius": "0px",
 							"--LinearProgress-thickness": "48px",
@@ -168,28 +172,40 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	const { progress, status, reset } = useInstallProgress();
 
 	return (
-		<>
-			<InstallScreen percent={progress.percent} status={status} />
-			<Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-				<Box sx={{ display: "flex", gap: 1 }}>
-					<I18nLink href="/installer/01">
-						<Button component="a" disabled={status !== DownloadState.IDLE}>
-							{t("common:previous")}
-						</Button>
-					</I18nLink>
-					<Button
-						disabled={status !== DownloadState.IDLE}
-						onClick={() => {
-							reset();
+		<AppFrame titleBar={<TitleBar disableMaximize />}>
+			<Box sx={{ minHeight: "100%", display: "flex", flexDirection: "column" }}>
+				<InstallScreen percent={progress.percent} status={status} />
+				<Box sx={{ display: "flex", justifyContent: "flex-end", m: 1 }}>
+					<Box sx={{ display: "flex", gap: 1 }}>
+						<I18nLink href="/installer/01">
+							<Button component="a" disabled={status !== DownloadState.IDLE}>
+								{t("common:previous")}
+							</Button>
+						</I18nLink>
+						<Button
+							disabled={status !== DownloadState.IDLE}
+							data-testid="installer-02-start"
+							onClick={() => {
+								reset();
 
-							window.ipc.send(buildKey([ID.INSTALL], { suffix: "start" }));
-						}}
-					>
-						{t("installer:install")}
-					</Button>
+								window.ipc.send(buildKey([ID.INSTALL], { suffix: ":start" }), [
+									{
+										url: "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/python-embedded-win.7z",
+										destination: "python-embedded",
+									},
+									{
+										url: "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/portable-git-win.7z",
+										destination: "portable-git",
+									},
+								]);
+							}}
+						>
+							{t("installer:install")}
+						</Button>
+					</Box>
 				</Box>
 			</Box>
-		</>
+		</AppFrame>
 	);
 }
 

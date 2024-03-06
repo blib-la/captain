@@ -42,6 +42,13 @@ import "@/ipc/global"; // Manages global IPC events, including those related to 
 // listeners.
 import "@/ipc/sdk";
 
+// Import install handlers and listeners
+import "@/ipc/install";
+
+// Import testing helpers
+import "@/ipc/testing";
+
+
 // Initialize the application by calling the main function.
 // Upon completion, log to the console indicating the application has started.
 main().then(() => {

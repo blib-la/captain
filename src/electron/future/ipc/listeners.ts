@@ -2,7 +2,8 @@ import fsp from "node:fs/promises";
 import path from "node:path";
 
 import { APP_MESSAGE_KEY } from "@captn/utils/constants";
-import { BrowserWindow, ipcMain, type IpcMainEvent } from "electron";
+import { BrowserWindow, ipcMain } from "electron";
+import type { IpcMainEvent } from "electron";
 import { download } from "electron-dl";
 import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
@@ -12,6 +13,7 @@ import { DownloadState, ID } from "#/enums";
 import type { SDKMessage } from "@/ipc/sdk";
 import { readFilesRecursively } from "@/main";
 import { appSettingsStore, keyStore, userStore } from "@/stores";
+import { clone, lfs } from "@/utils/git";
 import {
 	getCaptainData,
 	getCaptainDownloads,
@@ -257,6 +259,25 @@ ipcMain.on(buildKey([ID.KEYS], { suffix: ":set-openAiApiKey" }), (_event, openAi
 ipcMain.on(buildKey([ID.KEYS], { suffix: ":get-openAiApiKey" }), event => {
 	const openAiApiKey = keyStore.get("openAiApiKey");
 	event.sender.send(buildKey([ID.KEYS], { suffix: ":openAiApiKey" }), openAiApiKey);
+});
+
+ipcMain.on(buildKey([ID.DOWNLOADS], { suffix: ":clone" }), async (_event, data) => {
+	const { repository, destination } = data;
+
+	try {
+		await lfs();
+
+		await clone(repository, destination, {
+			onProgress(progress) {
+				_event.sender.send(buildKey([ID.DOWNLOADS], { suffix: ":progress" }), progress);
+			},
+			onCompleted(completed) {
+				_event.sender.send(buildKey([ID.DOWNLOADS], { suffix: ":cloned" }), completed);
+			},
+		});
+	} catch (error) {
+		_event.sender.send(buildKey([ID.DOWNLOADS], { suffix: ":error" }), error);
+	}
 });
 
 ipcMain.on(

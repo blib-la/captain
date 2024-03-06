@@ -36,10 +36,10 @@ import { illustrationStyles } from "./text-to-image";
 
 import { LOCAL_PROTOCOL } from "#/constants";
 import { randomSeed } from "#/number";
+import { APP_ID } from "@/apps/live-painting/constants";
 import { FlagUs } from "@/atoms/flags/us";
 import { ImageRemoveIcon } from "@/atoms/icons";
 import { getContrastColor } from "@/ions/utils/color";
-import { APP_ID } from "@/pages/[locale]/apps/constants";
 
 export type ViewType = "side-by-side" | "overlay";
 

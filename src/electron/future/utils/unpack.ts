@@ -7,12 +7,10 @@ export async function unpack(binary: string, source: string, target: string) {
 		});
 
 		extraction.on("end", () => {
-			console.log("Extraction complete");
 			resolve();
 		});
 
 		extraction.on("error", error => {
-			console.error("Error extracting archive", error);
 			reject(error);
 		});
 	});

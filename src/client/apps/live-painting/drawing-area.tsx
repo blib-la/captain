@@ -5,7 +5,7 @@ import { type PointerEvent as ReactPointerEvent, useEffect, useRef } from "react
 
 import { clearCounterAtom, livePaintingOptionsAtom } from "./atoms";
 
-import { APP_ID } from "@/pages/[locale]/apps/constants";
+import { APP_ID } from "@/apps/live-painting/constants";
 
 export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 	const canvas = useRef<HTMLCanvasElement>(null);
