@@ -1,5 +1,3 @@
-import { AppFrame } from "@captn/joy/app-frame";
-import { TitleBar } from "@captn/joy/title-bar";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Container from "@mui/joy/Container";
@@ -115,17 +113,9 @@ export function OpenAISettings() {
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["common"]);
 	return (
-		<AppFrame
-			titleBar={
-				<TitleBar>
-					<Typography level="title-md" component="h1">
-						{t("common:settings")}
-					</Typography>
-				</TitleBar>
-			}
-		>
+		<>
 			<Head>
-				<title>{`Captain | ${t("common:settings")}`}</title>
+				<title>{t("common:settings")}</title>
 			</Head>
 			<Container sx={{ py: 2 }}>
 				<Stack spacing={4}>
@@ -135,7 +125,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 								<StableDiffusionSettings /> */}
 				</Stack>
 			</Container>
-		</AppFrame>
+		</>
 	);
 }
 

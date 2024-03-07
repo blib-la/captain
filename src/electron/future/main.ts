@@ -3,18 +3,18 @@ import fsp from "node:fs/promises";
 import path from "path";
 import url from "url";
 
-import type { BrowserWindow, BrowserWindowConstructorOptions } from "electron";
-import { app, ipcMain, Menu, protocol, screen, globalShortcut } from "electron";
+import type { BrowserWindowConstructorOptions } from "electron";
+import { app, ipcMain, BrowserWindow, Menu, protocol, screen, globalShortcut } from "electron";
 
 import { version } from "../../../package.json";
 
-import { appSettingsStore } from "./stores";
+import { appSettingsStore, userStore } from "./stores";
 
 import { buildKey } from "#/build-key";
 import { LOCAL_PROTOCOL } from "#/constants";
 import { DownloadState, ID } from "#/enums";
 import { isProduction } from "#/flags";
-import { isCoreApp } from "@/utils/core";
+import { isCoreApp, isCoreView } from "@/utils/core";
 import { createWindow } from "@/utils/create-window";
 import { loadURL } from "@/utils/load-window";
 import { getCaptainData } from "@/utils/path-helpers";
@@ -26,7 +26,7 @@ import { getCaptainData } from "@/utils/path-helpers";
  *
  * @returns {Promise<BrowserWindow>} A promise that resolves to the created BrowserWindow instance for the installer.
  */
-async function createInstallerWindow() {
+async function createInstallerWindow(): Promise<BrowserWindow> {
 	const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 	const windowWidth = Math.min(600, width);
 	const windowHeight = Math.min(700, height);
@@ -44,6 +44,93 @@ async function createInstallerWindow() {
 	return installerWindow;
 }
 
+interface SearchResult {
+	id: string;
+	label: string;
+	keywords: string[];
+}
+
+const searchResults: SearchResult[] = [
+	{
+		id: "live-painting",
+		label: "live painting",
+		keywords: ["live", "draw", "paint", "art", "create", "artwork", "canvas"],
+	},
+	{
+		id: "dark-mode",
+		label: "switch to dark mode",
+		keywords: ["dark", "theme", "mode", "color", "dark mode"],
+	},
+	{
+		id: "light-mode",
+		label: "switch to light mode",
+		keywords: ["light", "theme", "mode", "color", "light mode"],
+	},
+	{
+		id: "generate-images",
+		label: "generate images",
+		keywords: ["create", "art", "AI", "design", "graphics", "generate"],
+	},
+	{
+		id: "story",
+		label: "write a story",
+		keywords: ["narrative", "write", "fiction", "plot", "creative writing", "story"],
+	},
+	{
+		id: "marketplace",
+		label: "marketplace",
+		keywords: ["app", "buy", "sell", "trade", "download", "shop", "marketplace", "store"],
+	},
+	{
+		id: "settings",
+		label: "settings",
+		keywords: [
+			"configure",
+			"preferences",
+			"setup",
+			"options",
+			"adjust",
+			"language",
+			"color scheme",
+			"light mode",
+			"dark mode",
+		],
+	},
+	{
+		id: "dashboard",
+		label: "dashboard",
+		keywords: ["overview", "control", "monitor", "statistics", "manage"],
+	},
+];
+
+function lookup(query: string): SearchResult[] {
+	// Normalize query
+	const normalizedQuery = query.toLowerCase();
+
+	// First, try to match directly within the labels
+	const directMatches = searchResults.filter(result =>
+		result.label.toLowerCase().includes(normalizedQuery)
+	);
+
+	if (directMatches.length > 0) {
+		return directMatches;
+	}
+
+	// If no direct matches, look for indirect matches in keywords
+	return searchResults.filter(result =>
+		result.keywords.some(keyword => {
+			const normalizedKeyword = keyword.toLowerCase();
+			return (
+				normalizedQuery.includes(normalizedKeyword) ||
+				normalizedKeyword.includes(normalizedQuery)
+			);
+		})
+	);
+}
+
+/**
+ *
+ */
 async function createPromptWindow() {
 	const window_ = await createWindow("main", {
 		width: 750,
@@ -86,6 +173,14 @@ async function createPromptWindow() {
 			window_.setSize(750, Math.ceil(height));
 			window_.setResizable(false);
 		}
+	});
+
+	ipcMain.on(buildKey([ID.PROMPT], { suffix: ":query" }), (event, value: string) => {
+		console.log(value);
+		window_.webContents.send(
+			buildKey([ID.PROMPT], { suffix: ":suggestion" }),
+			value ? lookup(value) : []
+		);
 	});
 
 	const promptShortcut = "Control+Alt+Space";
@@ -238,6 +333,17 @@ async function createCoreAppWindow(id: string, options: BrowserWindowConstructor
 	return appWindow;
 }
 
+async function createCoreWindow(options: BrowserWindowConstructorOptions = {}) {
+	return createWindow("core", {
+		frame: false,
+		...options,
+		webPreferences: {
+			preload: path.join(__dirname, "preload.js"),
+			...options.webPreferences,
+		},
+	});
+}
+
 async function createAppWindow(id: string, options: BrowserWindowConstructorOptions = {}) {
 	const appWindow = await createWindow(id, {
 		frame: false,
@@ -296,29 +402,40 @@ export async function main() {
 		Menu.setApplicationMenu(null);
 	}
 
+	userStore.onDidChange("language", language => {
+		if (language) {
+			const windows_ = BrowserWindow.getAllWindows();
+			for (const window_ of windows_) {
+				window_.webContents.send("language", language);
+			}
+		}
+	});
+
 	ipcMain.on(
 		buildKey([ID.APP], { suffix: ":open" }),
-		async (_event, { data: appId }: { data: string }) => {
-			// Info:
-			// data is the appId. If the appId is a core app we need to handle it
-			apps[appId] ||= await (isCoreApp(appId)
-				? createCoreAppWindow(appId)
-				: createAppWindow(appId));
-
-			console.log(appId);
-			if (apps[appId]) {
-				apps[appId]!.on("close", () => {
-					apps[appId] = null;
+		async (_event, { data: id }: { data: string }) => {
+			// If the appId is a core app we need to handle it
+			if (isCoreView(id)) {
+				// If the appId is a core view we need to handle it
+				apps.core ||= await createCoreWindow();
+				await loadURL(apps.core, `core/${id}`);
+				apps.core.on("close", () => {
+					apps.core = null;
+				});
+				apps.core.focus();
+			} else {
+				apps[id] ||= await (isCoreApp(id) ? createCoreAppWindow(id) : createAppWindow(id));
+				apps[id]!.on("close", () => {
+					apps[id] = null;
 					// TODO Needs to ensure that all processes opened by this window are closed
 				});
-				apps[appId]!.focus();
+				apps[id]!.focus();
 			}
 		}
 	);
-
 	if (isUpToDate && isReady) {
 		// When the app is up-to-date and ready, we open the prompt window
-		await createPromptWindow();
+		apps.prompt = await createPromptWindow();
 	} else {
 		// Update app settings for installation
 		appSettingsStore.set("status", DownloadState.IDLE);
@@ -328,7 +445,14 @@ export async function main() {
 		// When the installer is done we open the prompt window
 		ipcMain.on(buildKey([ID.APP], { suffix: ":ready" }), async () => {
 			installerWindow.close();
-			await createPromptWindow();
+			apps.prompt = await createPromptWindow();
+			apps.core = await createCoreWindow();
+			await loadURL(apps.core, `core/dashboard`);
+			apps.core.on("close", () => {
+				apps.core = null;
+			});
+			apps.core.focus();
 		});
 	}
 }
+//

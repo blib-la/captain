@@ -40,6 +40,7 @@ import { APP_ID } from "@/apps/live-painting/constants";
 import { FlagUs } from "@/atoms/flags/us";
 import { ImageRemoveIcon } from "@/atoms/icons";
 import { getContrastColor } from "@/ions/utils/color";
+import { useLocalizedPath } from "@/organisms/language-select";
 
 export type ViewType = "side-by-side" | "overlay";
 
@@ -59,6 +60,17 @@ export function LivePainting({ running }: { running?: boolean }) {
 	const [images, setImages] = useAtom(imagesAtom);
 
 	const { send } = useSDK<unknown, string>(APP_ID, {});
+	const { changeLanguage } = useLocalizedPath();
+
+	useEffect(() => {
+		const unsubscribe = window.ipc.on("language", locale => {
+			changeLanguage(locale);
+		});
+
+		return () => {
+			unsubscribe();
+		};
+	}, [changeLanguage]);
 
 	useEffect(() => {
 		if (running) {
