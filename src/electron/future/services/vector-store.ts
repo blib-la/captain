@@ -64,20 +64,30 @@ class VectorStore {
 	 * the service is fully operational for subsequent operations.
 	 *
 	 * @throws {Error} If the Qdrant binary is not found at the specified path.
+	 * @throws {Error} If Qdrant can't be started.
 	 */
 	private async start() {
 		if (!this.process) {
+			const cwdPath = getCaptainData("qdrant");
 			const binaryPath = getCaptainData("qdrant/qdrant.exe");
+			const configPath = getCaptainData("qdrant/config.yaml");
 
+			const scriptArguments = ["--config-path", configPath];
+
+			// Check if the binary exists
 			try {
 				await fsp.access(binaryPath);
-				this.process = execa(binaryPath);
-				this.process.stdout?.on("data", data => console.log(`Qdrant info: ${data}`));
-				this.process.stderr?.on("data", data => console.error(`Qdrant error: ${data}`));
-
-				await this.serviceReady();
 			} catch {
 				throw new Error(`Qdrant binary not found at path: ${binaryPath}`);
+			}
+
+			// Start the process and wait until its ready
+			try {
+				this.process = execa(binaryPath, [...scriptArguments], { cwd: cwdPath });
+
+				await this.serviceReady();
+			} catch (error) {
+				throw new Error(`Qdrant can't be started: ${error}`);
 			}
 		}
 	}
@@ -129,6 +139,22 @@ class VectorStore {
 		}
 
 		throw new Error("Qdrant service did not become ready in time.");
+	}
+
+	/**
+	 * Returns the current instance of the VectorStore class.
+	 *
+	 * @returns {VectorStore} The current VectorStore instance.
+	 * @throws {Error} If the instance has not been initialized yet.
+	 */
+	public static get getInstance(): VectorStore {
+		if (!VectorStore.instance) {
+			throw new Error(
+				"VectorStore instance has not been initialized. Please call 'init' first."
+			);
+		}
+
+		return VectorStore.instance;
 	}
 
 	/**
