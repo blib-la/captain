@@ -1,8 +1,10 @@
-import Typography from "@mui/joy/Typography";
+import Input from "@mui/joy/Input";
+import Sheet from "@mui/joy/Sheet";
 import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
 
+import { Logo } from "@/atoms/logo";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -13,7 +15,9 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			<Head>
 				<title>{t("labels:help")}</title>
 			</Head>
-			<Typography>{t("labels:help")}</Typography>
+			<Sheet variant="soft" color="primary" sx={{ p: 2, display: "flex", gap: 2 }}>
+				<Input startDecorator={<Logo />} sx={{ flex: 1 }} />
+			</Sheet>
 		</>
 	);
 }

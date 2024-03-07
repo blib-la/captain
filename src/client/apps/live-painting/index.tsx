@@ -142,7 +142,7 @@ export function LivePainting() {
 								send({ action: "livePainting:stop", payload: APP_ID });
 							}}
 						>
-							Stop
+							{t("labels:stop")}
 						</Button>
 					) : (
 						<Button
@@ -153,7 +153,7 @@ export function LivePainting() {
 								send({ action: "livePainting:start", payload: APP_ID });
 							}}
 						>
-							Start
+							{t("labels:start")}
 						</Button>
 					)}
 					<Switch
@@ -207,6 +207,7 @@ export function LivePainting() {
 						open={brushSizeOpen}
 						variant="soft"
 						sx={{ p: 0 }}
+						placement="bottom-start"
 						title={
 							<ClickAwayListener
 								onClickAway={() => {
@@ -214,17 +215,40 @@ export function LivePainting() {
 								}}
 							>
 								<Box
-									sx={{ display: "flex", width: 200, px: 2, py: 1 }}
+									sx={{ display: "flex", width: 300, px: 2, py: 1, gap: 2 }}
 									onMouseLeave={() => {
 										setBrushSizeOpen(false);
 									}}
 								>
+									<Box
+										sx={{
+											bgcolor: "background.body",
+											color: "text.primary",
+											height: 108,
+											width: 108,
+											flexShrink: 0,
+											display: "flex",
+											alignItems: "center",
+											justifyContent: "center",
+										}}
+									>
+										<Box
+											style={{ width: livePaintingOptions.brushSize }}
+											sx={{
+												bgcolor: "text.primary",
+												aspectRatio: 1,
+												borderRadius: "50%",
+											}}
+										/>
+									</Box>
 									<Slider
 										min={1}
 										max={100}
 										step={1}
 										value={livePaintingOptions.brushSize}
-										slotProps={{ input: { autoFocus: true } }}
+										slotProps={{
+											input: { autoFocus: true },
+										}}
 										onChange={(event, value) => {
 											setLivePaintingOptions(previousState => ({
 												...previousState,
@@ -239,7 +263,6 @@ export function LivePainting() {
 						<Tooltip title={t("labels:brushSize")} sx={{ py: 0.5, px: 0.75 }}>
 							<IconButton
 								size="md"
-								variant="soft"
 								aria-label={t("labels:brushSize")}
 								onClick={() => {
 									setBrushSizeOpen(true);
@@ -254,7 +277,6 @@ export function LivePainting() {
 					<Tooltip title={t("labels:clear")}>
 						<IconButton
 							size="md"
-							variant="soft"
 							aria-label={t("labels:clear")}
 							onClick={() => {
 								setClearCounter(previousState => previousState + 1);
@@ -365,8 +387,6 @@ export function LivePainting() {
 				</Box>
 			</Sheet>
 			<Sheet
-				color="neutral"
-				variant="soft"
 				sx={{
 					flex: 1,
 					display: "flex",
@@ -413,7 +433,8 @@ export function LivePainting() {
 					<RenderingArea />
 				</Box>
 			</Sheet>
-			<Box
+			<Sheet
+				variant="soft"
 				sx={{
 					display: "flex",
 					gap: 1,
@@ -471,7 +492,7 @@ export function LivePainting() {
 						}}
 					/>
 				</FormControl>
-			</Box>
+			</Sheet>
 		</Box>
 	);
 }

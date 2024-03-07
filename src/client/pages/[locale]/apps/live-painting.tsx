@@ -13,8 +13,6 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 
 	return (
 		<AppFrame
-			color="violet"
-			variant="solid"
 			titleBar={
 				<TitleBar>
 					<Typography level="title-md" component="h1">

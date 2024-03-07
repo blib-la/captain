@@ -20,7 +20,7 @@ import "@/ions/date";
 
 export function Layout({ children }: { children?: ReactNode }) {
 	const { changeLanguage } = useLocalizedPath();
-
+	const { t } = useTranslation(["common", "labels"]);
 	useEffect(() => {
 		const unsubscribe = window.ipc.on("language", locale => {
 			changeLanguage(locale);
@@ -43,9 +43,9 @@ export function Layout({ children }: { children?: ReactNode }) {
 							ml: -1,
 						}}
 					>
-						<TabButton href="/core/dashboard">Dashboard</TabButton>
-						<TabButton href="/core/settings">Settings</TabButton>
-						<TabButton href="/core/help">Help</TabButton>
+						<TabButton href="/core/dashboard">{t("labels:dashboard")}</TabButton>
+						<TabButton href="/core/settings">{t("common:settings")}</TabButton>
+						<TabButton href="/core/help">{t("labels:help")}</TabButton>
 					</Box>
 				</TitleBar>
 			}
