@@ -6,7 +6,7 @@ import "@/core-setup";
 import "@/ipc/listeners";
 import "@/ipc/story";
 import "@/ipc/testing";
-import "@/ipc/assistant";
+import "@/ipc/vector-store";
 
 main().then(() => {
 	console.log("started");
