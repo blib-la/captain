@@ -32,15 +32,8 @@ export function TabButton({
 					disabled={disabled}
 					size="md"
 					component="a"
-					color="neutral"
+					color={isActive ? "primary" : "neutral"}
 					variant={isActive ? "soft" : "plain"}
-					slotProps={{
-						startDecorator: { sx: { "--Icon-margin": "0 0 0 -2px" } },
-					}}
-					sx={{
-						whiteSpace: "nowrap",
-						overflow: "hidden",
-					}}
 				>
 					{children}
 				</Button>

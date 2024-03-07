@@ -35,9 +35,16 @@ export function Layout({ children }: { children?: ReactNode }) {
 		<AppFrame
 			titleBar={
 				<TitleBar>
-					<Box sx={{ WebkitAppRegion: "no-drag", display: "flex", ml: -1 }}>
-						<TabButton href="/core/settings">Settings</TabButton>
+					<Box
+						sx={{
+							WebkitAppRegion: "no-drag",
+							display: "flex",
+							alignItems: "center",
+							ml: -1,
+						}}
+					>
 						<TabButton href="/core/dashboard">Dashboard</TabButton>
+						<TabButton href="/core/settings">Settings</TabButton>
 						<TabButton href="/core/help">Help</TabButton>
 					</Box>
 				</TitleBar>

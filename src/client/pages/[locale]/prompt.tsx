@@ -133,8 +133,20 @@ export default function Page() {
 						}}
 					>
 						{suggestions.map(suggestion => (
-							<ListItem key={suggestion.id}>
-								<ListItemButton sx={{ height: 64 }}>
+							<ListItem
+								key={suggestion.id}
+								sx={{
+									"--focus-outline-offset": "-2px",
+								}}
+							>
+								<ListItemButton
+									sx={{ height: 64 }}
+									onClick={() => {
+										window.ipc.send(buildKey([ID.APP], { suffix: ":open" }), {
+											data: suggestion.id,
+										});
+									}}
+								>
 									<ListItemDecorator>
 										<Logo sx={{ color: "currentColor" }} />
 									</ListItemDecorator>

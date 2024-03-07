@@ -11,9 +11,9 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	return (
 		<>
 			<Head>
-				<title>{t("labels:dashboard")}</title>
+				<title>{t("labels:help")}</title>
 			</Head>
-			<Typography>{t("labels:dashboard")}</Typography>
+			<Typography>{t("labels:help")}</Typography>
 		</>
 	);
 }
