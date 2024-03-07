@@ -4,6 +4,7 @@ import { main } from "@/main";
 
 import "@/core-setup";
 import "@/ipc/listeners";
+import "@/ipc/install";
 import "@/ipc/story";
 import "@/ipc/testing";
 import "@/ipc/vector-store";

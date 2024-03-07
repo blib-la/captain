@@ -179,10 +179,20 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 					</I18nLink>
 					<Button
 						disabled={status !== DownloadState.IDLE}
+						data-testid="installer-02-start"
 						onClick={() => {
 							reset();
 
-							window.ipc.send(buildKey([ID.INSTALL], { suffix: "start" }));
+							window.ipc.send(buildKey([ID.INSTALL], { suffix: ":start" }), [
+								{
+									url: "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/python-embedded-win.7z",
+									destination: "python-embedded",
+								},
+								{
+									url: "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/portable-git-win.7z",
+									destination: "portable-git",
+								},
+							]);
 						}}
 					>
 						{t("installer:install")}
