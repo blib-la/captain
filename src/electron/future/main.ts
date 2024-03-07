@@ -381,6 +381,10 @@ export async function readFilesRecursively(
 
 async function createCoreAppWindow(id: string, options: BrowserWindowConstructorOptions = {}) {
 	const appWindow = await createWindow(id, {
+		minWidth: 800,
+		minHeight: 600,
+		width: 1200,
+		height: 1000,
 		frame: false,
 		...options,
 		webPreferences: {
@@ -396,6 +400,10 @@ async function createCoreAppWindow(id: string, options: BrowserWindowConstructor
 
 async function createCoreWindow(options: BrowserWindowConstructorOptions = {}) {
 	return createWindow("core", {
+		minWidth: 800,
+		minHeight: 600,
+		width: 1200,
+		height: 1000,
 		frame: false,
 		...options,
 		webPreferences: {

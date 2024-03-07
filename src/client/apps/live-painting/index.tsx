@@ -6,8 +6,12 @@ import ClearIcon from "@mui/icons-material/Clear";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PaletteIcon from "@mui/icons-material/Palette";
+import PlayIcon from "@mui/icons-material/PlayArrow";
 import SaveIcon from "@mui/icons-material/Save";
+import StopIcon from "@mui/icons-material/Stop";
 import Box from "@mui/joy/Box";
+import Button from "@mui/joy/Button";
+import CircularProgress from "@mui/joy/CircularProgress";
 import Dropdown from "@mui/joy/Dropdown";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
@@ -28,7 +32,7 @@ import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
 
-import { clearCounterAtom, imageAtom, imagesAtom, livePaintingOptionsAtom } from "./atoms";
+import { clearCounterAtom, imagesAtom, livePaintingOptionsAtom } from "./atoms";
 import { DrawingArea } from "./drawing-area";
 import { RenderingArea } from "./rendering-area";
 import type { IllustrationStyles } from "./text-to-image";
@@ -44,22 +48,41 @@ import { useLocalizedPath } from "@/organisms/language-select";
 
 export type ViewType = "side-by-side" | "overlay";
 
-export function LivePainting({ running }: { running?: boolean }) {
-	const {
-		t,
-		i18n: { language: locale },
-	} = useTranslation(["common", "labels"]);
+export function LivePainting() {
+	const { t } = useTranslation(["common", "labels"]);
 	const [isOverlay, setIsOverlay] = useState(false);
 	const [livePaintingOptions, setLivePaintingOptions] = useAtom(livePaintingOptionsAtom);
 	const [, setClearCounter] = useAtom(clearCounterAtom);
-	const [image] = useAtom(imageAtom);
 	const [brushSizeOpen, setBrushSizeOpen] = useState(false);
-	const [prompt, setPrompt] = useState("a person enjoying nature");
+	const [prompt, setPrompt] = useState("");
 	const [illustrationStyle, setIllustrationStyle] = useState<IllustrationStyles>("childrensBook");
 	const [seed, setSeed] = useState(randomSeed());
 	const [images, setImages] = useAtom(imagesAtom);
+	const [running, setRunning] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 
-	const { send } = useSDK<unknown, string>(APP_ID, {});
+	const { send } = useSDK<unknown, string>(APP_ID, {
+		onMessage(message) {
+			console.log(message);
+			switch (message.action) {
+				case "livePainting:started": {
+					setRunning(true);
+					setIsLoading(false);
+					break;
+				}
+
+				case "livePainting:stopped": {
+					setRunning(false);
+					setIsLoading(false);
+					break;
+				}
+
+				default: {
+					break;
+				}
+			}
+		},
+	});
 	const { changeLanguage } = useLocalizedPath();
 
 	useEffect(() => {
@@ -98,16 +121,41 @@ export function LivePainting({ running }: { running?: boolean }) {
 	return (
 		<Box sx={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column" }}>
 			<Sheet
-				sx={{
-					position: "relative",
+				sx={theme => ({
+					position: "sticky",
+					top: 0,
 					zIndex: 2,
 					display: "flex",
 					alignItems: "center",
 					flexShrink: 0,
 					height: 44,
-				}}
+					background: theme.vars.palette.background.popup,
+				})}
 			>
 				<Box sx={{ display: "flex", gap: 1, flex: 1, px: 1, width: "50%" }}>
+					{running ? (
+						<Button
+							disabled={isLoading}
+							startDecorator={isLoading ? <CircularProgress /> : <StopIcon />}
+							onClick={() => {
+								setIsLoading(true);
+								send({ action: "livePainting:stop", payload: APP_ID });
+							}}
+						>
+							Stop
+						</Button>
+					) : (
+						<Button
+							disabled={isLoading}
+							startDecorator={isLoading ? <CircularProgress /> : <PlayIcon />}
+							onClick={() => {
+								setIsLoading(true);
+								send({ action: "livePainting:start", payload: APP_ID });
+							}}
+						>
+							Start
+						</Button>
+					)}
 					<Switch
 						checked={isOverlay}
 						component="div"
@@ -321,7 +369,6 @@ export function LivePainting({ running }: { running?: boolean }) {
 				variant="soft"
 				sx={{
 					flex: 1,
-					rowGap: 2,
 					display: "flex",
 					flexWrap: "wrap",
 					py: 2,
@@ -339,6 +386,7 @@ export function LivePainting({ running }: { running?: boolean }) {
 						position: isOverlay ? "absolute" : "relative",
 						inset: 0,
 						zIndex: 1,
+						p: 1,
 						display: "flex",
 						alignItems: "center",
 						justifyContent: "center",
@@ -356,6 +404,7 @@ export function LivePainting({ running }: { running?: boolean }) {
 						position: "relative",
 						flex: isOverlay ? 1 : undefined,
 						zIndex: 0,
+						p: 1,
 						display: "flex",
 						alignItems: "center",
 						justifyContent: "center",
