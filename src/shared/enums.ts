@@ -6,7 +6,6 @@
  */
 export enum ID {
 	APP = "APP",
-	ASSISTANT = "ASSISTANT",
 	CAPTAIN = "CAPTAIN",
 	DOWNLOADS = "DOWNLOADS",
 	FILE = "FILE",
