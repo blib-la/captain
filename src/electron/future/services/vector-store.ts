@@ -10,7 +10,7 @@ import { v4 } from "uuid";
 
 import { getCaptainData } from "@/utils/path-helpers";
 
-export type DocumentType = {
+export type VectorStoreDocument = {
 	id?: number | string;
 	content: string;
 	payload: {
@@ -188,10 +188,10 @@ class VectorStore {
 	 ```
 	 *
 	 * @param {string} collectionName - The name of the collection where documents will be upserted.
-	 * @param {DocumentType[]} documents - An array of documents to be upserted.
+	 * @param {VectorStoreDocument[]} documents - An array of documents to be upserted.
 	 * @returns {Promise<any[]>} A promise that resolves when all upsert operations are completed.
 	 */
-	public async upsert(collectionName: string, documents: DocumentType[]) {
+	public async upsert(collectionName: string, documents: VectorStoreDocument[]) {
 		await this.ensureCollection(collectionName);
 
 		const contentArray = documents.map(document_ => document_.content);
