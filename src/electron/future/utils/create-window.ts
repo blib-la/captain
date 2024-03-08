@@ -1,3 +1,5 @@
+import path from "path";
+
 import type { BrowserWindowConstructorOptions, Rectangle } from "electron";
 import { BrowserWindow, shell } from "electron";
 import Store from "electron-store";
@@ -41,6 +43,7 @@ export async function createWindow(
 		...state,
 		...options,
 		webPreferences: {
+			preload: path.join(__dirname, "preload.js"),
 			nodeIntegration: false,
 			contextIsolation: true,
 			...options.webPreferences,

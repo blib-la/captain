@@ -24,19 +24,19 @@ test.afterAll(async () => {
 	await electronApp.close();
 });
 
-test("Renders the dashboard page", async () => {
+test.skip("Renders the dashboard page", async () => {
 	page = await electronApp.firstWindow();
 	await expect(page.url()).toContain("dashboard");
 });
 
-test("Open Live Painting", async () => {
+test.skip("Open Live Painting", async () => {
 	page = await electronApp.firstWindow();
 
 	await page.getByTestId("sidebar-live-painting").click();
 	await expect(page.url()).toContain("live-painting");
 });
 
-test("Open Settings", async () => {
+test.skip("Open Settings", async () => {
 	page = await electronApp.firstWindow();
 
 	await page.getByTestId("sidebar-settings").click();

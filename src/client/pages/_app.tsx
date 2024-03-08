@@ -1,28 +1,68 @@
+import { AppFrame } from "@captn/joy/app-frame";
+import { globalStyles } from "@captn/joy/styles";
+import { ThemeProvider } from "@captn/joy/theme";
+import { TitleBar } from "@captn/joy/title-bar";
+import { css, Global } from "@emotion/react";
+import Box from "@mui/joy/Box";
 import CssBaseline from "@mui/joy/CssBaseline";
-import { CssVarsProvider } from "@mui/joy/styles";
 import dayjs from "dayjs";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { appWithTranslation, useTranslation } from "next-i18next";
+import type { ReactNode } from "react";
 import { useEffect, useMemo } from "react";
-import { SWRConfig } from "swr";
 
-import { globalStyles } from "@/ions/styles";
-import { fetcher } from "@/ions/swr/fetcher";
-import { theme } from "@/ions/theme";
-import { CSS_VARIABLE_PREFIX } from "@/ions/theme/constants";
-import { Layout } from "@/organisms/layout";
+import { useLocalizedPath } from "@/organisms/language-select";
+import { TabButton } from "@/organisms/tab";
+
 import "@/ions/date";
-import { SimpleLayout } from "@/organisms/layout/simple";
+
+export function Layout({ children }: { children?: ReactNode }) {
+	const { changeLanguage } = useLocalizedPath();
+	const { t } = useTranslation(["common", "labels"]);
+	useEffect(() => {
+		const unsubscribe = window.ipc.on("language", locale => {
+			changeLanguage(locale);
+		});
+
+		return () => {
+			unsubscribe();
+		};
+	}, [changeLanguage]);
+
+	return (
+		<AppFrame
+			titleBar={
+				<TitleBar>
+					<Box
+						sx={{
+							WebkitAppRegion: "no-drag",
+							display: "flex",
+							alignItems: "center",
+							ml: -1,
+						}}
+					>
+						<TabButton href="/core/dashboard">{t("labels:dashboard")}</TabButton>
+						<TabButton href="/core/settings">{t("common:settings")}</TabButton>
+						<TabButton href="/core/help">{t("labels:help")}</TabButton>
+					</Box>
+				</TitleBar>
+			}
+		>
+			{children}
+		</AppFrame>
+	);
+}
 
 function App({ Component, pageProps }: AppProps) {
-	const { pathname } = useRouter();
 	const {
 		i18n: { language },
 	} = useTranslation();
-	const isInstaller = pathname.includes("[locale]/installer");
+	const { pathname } = useRouter();
 
+	const isPrompt = pathname === "/[locale]/prompt";
+	const isCore = pathname.startsWith("/[locale]/core");
 	// Intended abuse of useMemo to allow changes on server and client mount
 	useMemo(() => {
 		// We need to set is before the render to tell dayjs to change the locale
@@ -34,12 +74,7 @@ function App({ Component, pageProps }: AppProps) {
 	}, [language]);
 
 	return (
-		<CssVarsProvider
-			theme={theme}
-			defaultMode="system"
-			modeStorageKey={`${CSS_VARIABLE_PREFIX}-mode`}
-		>
-			<CssBaseline />
+		<ThemeProvider>
 			{globalStyles}
 			<Head>
 				<title>Blibla</title>
@@ -51,25 +86,23 @@ function App({ Component, pageProps }: AppProps) {
 				<meta name="format-detection" content="telephone=no" />
 				<link rel="shortcut icon" type="image/png" href="/images/logo.png" />
 			</Head>
-			<SWRConfig
-				value={{
-					fetcher,
-					errorRetryCount: 3,
-					focusThrottleInterval: 5 * 1000,
-					revalidateOnReconnect: true,
-				}}
-			>
-				{isInstaller ? (
-					<SimpleLayout>
-						<Component {...pageProps} />
-					</SimpleLayout>
-				) : (
-					<Layout>
-						<Component {...pageProps} />
-					</Layout>
-				)}
-			</SWRConfig>
-		</CssVarsProvider>
+
+			<CssBaseline />
+			{isPrompt && (
+				<Global
+					styles={css({
+						body: { background: "none", overflow: "hidden" },
+					})}
+				/>
+			)}
+			{isCore ? (
+				<Layout>
+					<Component {...pageProps} />
+				</Layout>
+			) : (
+				<Component {...pageProps} />
+			)}
+		</ThemeProvider>
 	);
 }
 

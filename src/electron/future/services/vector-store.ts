@@ -106,9 +106,7 @@ class VectorStore {
 	 * Initializes the Qdrant client for communicating with the Qdrant service.
 	 */
 	private initializeClient() {
-		if (!this.client) {
-			this.client = new QdrantClient({ url: this.url });
-		}
+		this.client ||= new QdrantClient({ url: this.url });
 	}
 
 	/**

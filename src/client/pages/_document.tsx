@@ -1,8 +1,7 @@
+import { CSS_VARIABLE_PREFIX } from "@captn/joy/theme";
 import { getInitColorSchemeScript } from "@mui/joy/styles";
 import type { DocumentContext } from "next/document";
 import Document, { Head, Html, Main, NextScript } from "next/document";
-
-import { CSS_VARIABLE_PREFIX } from "@/ions/theme/constants";
 
 export default class MyDocument extends Document {
 	public static async getInitialProps(context: DocumentContext) {

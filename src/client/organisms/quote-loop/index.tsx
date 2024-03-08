@@ -36,9 +36,7 @@ export function useNumberRotation(end: number, { interval = 1000, loop = false }
 		let animationFrame: number;
 
 		function step(timestamp: number) {
-			if (!startTimestamp) {
-				startTimestamp = timestamp;
-			}
+			startTimestamp ||= timestamp;
 
 			const progress = timestamp - startTimestamp;
 

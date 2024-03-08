@@ -3,7 +3,7 @@ import { defaults } from "jest-config";
 const jestConfig = {
 	...defaults,
 	roots: ["<rootDir>/src/electron"],
-	testMatch: ["**/e2e/**/*.test.ts"],
+	testMatch: ["**/*.test.e2e.ts"],
 	transform: {
 		"^.+\\.(ts|js)$": ["@swc/jest"],
 	},

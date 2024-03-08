@@ -8,8 +8,9 @@ import Select from "@mui/joy/Select";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import type { ReactElement } from "react";
+import { useCallback } from "react";
 
-import index18Next from "../../../../next-i18next.config.js";
+import nexti18Next from "../../../../next-i18next.config.js";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
@@ -57,16 +58,28 @@ export const localeFlags: Record<string, ReactElement> = {
 	zh: <FlagZh />,
 };
 
-export function LanguageSelect() {
-	const { asPath = [], push } = useRouter();
+export function useLocalizedPath() {
+	const { asPath, push } = useRouter();
 	const {
-		t,
 		i18n: { language: locale },
-	} = useTranslation(["common"]);
-	const { locales } = index18Next.i18n;
-	// Const locale = "en";
+	} = useTranslation();
+	const { locales, defaultLocale } = nexti18Next.i18n;
 	const localeRegex = new RegExp(`/(${locales.join("|")})/`);
-	const asPath_ = (asPath as string).replace(localeRegex, "/");
+	const asPath_ = asPath.replace(localeRegex, "/");
+	return {
+		locale,
+		locales,
+		defaultLocale,
+		changeLanguage: useCallback(
+			(locale_: string) => push(`/${locale_}${asPath_}`, undefined),
+			[asPath_, push]
+		),
+	};
+}
+
+export function LanguageSelect() {
+	const { t } = useTranslation(["common"]);
+	const { changeLanguage, locale, locales } = useLocalizedPath();
 
 	return (
 		<Select
@@ -97,8 +110,10 @@ export function LanguageSelect() {
 				</StyledValueWrapper>
 			)}
 			onChange={async (event, value: string | null) => {
-				await window.ipc.send(buildKey([ID.USER], { suffix: ":language" }), value);
-				await push(`/${value}${asPath_}`, undefined);
+				if (value) {
+					await window.ipc.send(buildKey([ID.USER], { suffix: ":language" }), value);
+					await changeLanguage(value);
+				}
 			}}
 		>
 			{locales.map(locale => (
@@ -116,7 +131,7 @@ export function LanguageSelectList() {
 	const {
 		i18n: { language: locale },
 	} = useTranslation(["common"]);
-	const { locales } = index18Next.i18n;
+	const { locales } = nexti18Next.i18n;
 	// Const locale = "en";
 	const localeRegex = new RegExp(`/(${locales.join("|")})/`);
 	const asPath_ = (asPath as string).replace(localeRegex, "/");
