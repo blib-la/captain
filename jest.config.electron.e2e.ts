@@ -3,8 +3,7 @@ import { defaults } from "jest-config";
 const jestConfig = {
 	...defaults,
 	roots: ["<rootDir>/src/electron"],
-	testMatch: ["**/?(*.)test.ts"],
-	testPathIgnorePatterns: [".e2e."],
+	testMatch: ["**/e2e/**/*.test.ts"],
 	transform: {
 		"^.+\\.(ts|js)$": ["@swc/jest"],
 	},
@@ -23,7 +22,6 @@ const jestConfig = {
 	},
 	transformIgnorePatterns: ["/node_modules/.+\\.(?!c?js|mjs$)[^.]+$"],
 	extensionsToTreatAsEsm: [".ts"],
-	setupFilesAfterEnv: ["<rootDir>/jest.setup.electron.ts"],
 };
 
 export default jestConfig;

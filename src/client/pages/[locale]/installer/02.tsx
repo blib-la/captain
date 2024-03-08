@@ -210,11 +210,19 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 									{
 										url: "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/python-embedded-win.7z",
 										destination: "python-embedded",
+										size: "2.1 GB",
 										unzip: true,
 									},
 									{
 										url: "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/portable-git-win.7z",
 										destination: "portable-git",
+										size: "86.9 MB",
+										unzip: true,
+									},
+									{
+										url: "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/qdrant-win.7z",
+										destination: "qdrant",
+										size: "13.9 MB",
 										unzip: true,
 									},
 								]);

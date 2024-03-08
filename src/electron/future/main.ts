@@ -3,12 +3,14 @@ import fsp from "node:fs/promises";
 import path from "path";
 import url from "url";
 
+import { OpenAIEmbeddings } from "@langchain/openai";
 import type { BrowserWindowConstructorOptions } from "electron";
 import { app, ipcMain, BrowserWindow, Menu, protocol, screen, globalShortcut } from "electron";
 
 import { version } from "../../../package.json";
 
-import { appSettingsStore, userStore } from "./stores";
+import { VectorStore } from "./services/vector-store";
+import { appSettingsStore, keyStore, userStore } from "./stores";
 
 import { buildKey } from "#/build-key";
 import { LOCAL_PROTOCOL } from "#/constants";
@@ -523,5 +525,14 @@ export async function main() {
 			apps.core.focus();
 		});
 	}
+
+	const apiKey = keyStore.get("openAiApiKey", "");
+
+	// Start the vector store
+	await VectorStore.init(
+		new OpenAIEmbeddings({
+			openAIApiKey: apiKey,
+			modelName: "text-embedding-3-large",
+		})
+	);
 }
-//

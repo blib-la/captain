@@ -47,6 +47,7 @@ import "@/ipc/install";
 
 // Import testing helpers
 import "@/ipc/testing";
+import "@/ipc/vector-store";
 
 // Initialize the application by calling the main function.
 // Upon completion, log to the console indicating the application has started.
