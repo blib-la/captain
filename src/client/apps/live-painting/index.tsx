@@ -30,7 +30,7 @@ import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
 import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { v4 } from "uuid";
 
 import { clearCounterAtom, imageAtom, imagesAtom, livePaintingOptionsAtom } from "./atoms";
@@ -87,15 +87,37 @@ export function LivePainting() {
 	});
 	const { changeLanguage } = useLocalizedPath();
 
+	const saveImage = useCallback(async () => {
+		const id = v4();
+		const url = await writeFile(`images/${id}.png`, image.split(";base64,").pop()!, {
+			encoding: "base64",
+		});
+		setImages(previousImages => [...previousImages, { id, dataUrl: image, url }]);
+	}, [image, setImages, writeFile]);
+
 	useEffect(() => {
-		const unsubscribe = window.ipc.on("language", locale => {
-			changeLanguage(locale);
+		const unsubscribe = window.ipc.on("language", async locale => {
+			await changeLanguage(locale);
 		});
 
 		return () => {
 			unsubscribe();
 		};
 	}, [changeLanguage]);
+
+	useEffect(() => {
+		async function handleSave(event: KeyboardEvent) {
+			if (event.key === "s" && event.ctrlKey) {
+				event.preventDefault();
+				await saveImage();
+			}
+		}
+
+		window.addEventListener("keydown", handleSave);
+		return () => {
+			window.removeEventListener("keydown", handleSave);
+		};
+	}, [saveImage]);
 
 	useEffect(() => {
 		if (running) {
@@ -123,18 +145,26 @@ export function LivePainting() {
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
 			<Sheet
-				sx={theme => ({
+				sx={{
 					position: "sticky",
 					top: 0,
 					zIndex: 2,
 					display: "flex",
+					flexWrap: "wrap",
 					alignItems: "center",
 					flexShrink: 0,
-					height: 44,
-					background: theme.vars.palette.background.popup,
-				})}
+				}}
 			>
-				<Box sx={{ display: "flex", gap: 1, flex: 1, px: 1, width: "50%" }}>
+				<Box
+					sx={{
+						display: "flex",
+						gap: 1,
+						flex: 1,
+						px: 1,
+						height: 44,
+						alignItems: "center",
+					}}
+				>
 					{running ? (
 						<Button
 							disabled={isLoading}
@@ -266,6 +296,7 @@ export function LivePainting() {
 							<IconButton
 								size="md"
 								aria-label={t("labels:brushSize")}
+								sx={{ flexShrink: 0 }}
 								onClick={() => {
 									setBrushSizeOpen(true);
 								}}
@@ -274,7 +305,22 @@ export function LivePainting() {
 							</IconButton>
 						</Tooltip>
 					</Tooltip>
-					<Box sx={{ px: 2 }} />
+					<Box sx={{ flex: 1 }} />
+					<Tooltip title={t("labels:randomize")}>
+						<IconButton
+							size="md"
+							aria-label={t("labels:randomize")}
+							sx={{ flexShrink: 0 }}
+							onClick={() => {
+								setSeed(randomSeed());
+							}}
+						>
+							<CasinoIcon />
+						</IconButton>
+					</Tooltip>
+					<Select variant="plain" defaultValue="sd-turbo">
+						<Option value="sd-turbo">SD Turbo</Option>
+					</Select>
 
 					<Tooltip title={t("labels:clear")}>
 						<IconButton
@@ -287,7 +333,6 @@ export function LivePainting() {
 							<ClearIcon />
 						</IconButton>
 					</Tooltip>
-					<Box sx={{ flex: 1 }} />
 				</Box>
 				<Box
 					sx={{
@@ -295,7 +340,6 @@ export function LivePainting() {
 						gap: 1,
 						flex: 1,
 						px: 1,
-						width: "50%",
 						overflow: "hidden",
 						alignItems: "center",
 						flexShrink: 0,
@@ -346,40 +390,12 @@ export function LivePainting() {
 						</Box>
 					</Box>
 
-					<Tooltip title={t("labels:randomize")}>
-						<IconButton
-							size="md"
-							variant="soft"
-							aria-label={t("labels:randomize")}
-							onClick={() => {
-								setSeed(randomSeed());
-							}}
-						>
-							<CasinoIcon />
-						</IconButton>
-					</Tooltip>
-
 					<Dropdown>
 						<MenuButton slots={{ root: IconButton }}>
 							<MoreVertIcon />
 						</MenuButton>
 						<Menu>
-							<MenuItem
-								onClick={async () => {
-									const id = v4();
-									const url = await writeFile(
-										`images/${id}.png`,
-										image.split(";base64,").pop()!,
-										{
-											encoding: "base64",
-										}
-									);
-									setImages(previousImages => [
-										...previousImages,
-										{ id, dataUrl: image, url },
-									]);
-								}}
-							>
+							<MenuItem onClick={saveImage}>
 								<ListItemDecorator sx={{ color: "inherit" }}>
 									<SaveIcon />
 								</ListItemDecorator>
