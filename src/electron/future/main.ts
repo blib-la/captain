@@ -9,13 +9,13 @@ import { app, ipcMain, BrowserWindow, Menu, protocol, screen, globalShortcut } f
 
 import { version } from "../../../package.json";
 
-import { VectorStore } from "./services/vector-store";
 import { appSettingsStore, keyStore, userStore } from "./stores";
 
 import { buildKey } from "#/build-key";
 import { LOCAL_PROTOCOL } from "#/constants";
 import { DownloadState, ID } from "#/enums";
 import { isProduction } from "#/flags";
+import { VectorStore } from "@/services/vector-store";
 import { isCoreApp, isCoreView } from "@/utils/core";
 import { createWindow } from "@/utils/create-window";
 import { loadURL } from "@/utils/load-window";
@@ -504,9 +504,20 @@ export async function main() {
 			}
 		}
 	);
+
+	const apiKey = keyStore.get("openAiApiKey", "");
+
 	if (isUpToDate && isReady) {
+		await VectorStore.init(
+			new OpenAIEmbeddings({
+				openAIApiKey: apiKey,
+				modelName: "text-embedding-3-large",
+			})
+		);
 		// When the app is up-to-date and ready, we open the prompt window
 		apps.prompt = await createPromptWindow();
+
+		// Start the vector store
 	} else {
 		// Update app settings for installation
 		appSettingsStore.set("status", DownloadState.IDLE);
@@ -516,6 +527,13 @@ export async function main() {
 		// When the installer is done we open the prompt window
 		ipcMain.on(buildKey([ID.APP], { suffix: ":ready" }), async () => {
 			installerWindow.close();
+			// Start the vector store
+			await VectorStore.init(
+				new OpenAIEmbeddings({
+					openAIApiKey: apiKey,
+					modelName: "text-embedding-3-large",
+				})
+			);
 			apps.prompt = await createPromptWindow();
 			apps.core = await createCoreWindow();
 			await loadURL(apps.core, `core/dashboard`);
@@ -525,14 +543,4 @@ export async function main() {
 			apps.core.focus();
 		});
 	}
-
-	const apiKey = keyStore.get("openAiApiKey", "");
-
-	// Start the vector store
-	await VectorStore.init(
-		new OpenAIEmbeddings({
-			openAIApiKey: apiKey,
-			modelName: "text-embedding-3-large",
-		})
-	);
 }
