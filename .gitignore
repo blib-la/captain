@@ -27,3 +27,6 @@ live-canvas-generate-image-output.png.tmp.png
 # test
 coverage
 playwright-report
+
+# qdrant
+Captain_Data/*

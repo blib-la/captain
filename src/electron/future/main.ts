@@ -2,11 +2,13 @@ import type { Dirent } from "node:fs";
 import fsp from "node:fs/promises";
 import path from "path";
 
+import { OpenAIEmbeddings } from "@langchain/openai";
 import { app, ipcMain, Menu, protocol, screen } from "electron";
 
 import { version } from "../../../package.json";
 
-import { appSettingsStore } from "./stores";
+import { VectorStore } from "./services/vector-store";
+import { appSettingsStore, keyStore } from "./stores";
 
 import { buildKey } from "#/build-key";
 import { LOCAL_PROTOCOL } from "#/constants";
@@ -242,4 +244,14 @@ export async function main() {
 			await createMainWindow();
 		});
 	}
+
+	const apiKey = keyStore.get("openAiApiKey", "");
+
+	// Start the vector store
+	await VectorStore.init(
+		new OpenAIEmbeddings({
+			openAIApiKey: apiKey,
+			modelName: "text-embedding-3-large",
+		})
+	);
 }
