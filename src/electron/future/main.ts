@@ -245,7 +245,7 @@ export async function main() {
 		});
 	}
 
-	const apiKey = keyStore.get("openAiApiKey") || "none";
+	const apiKey = keyStore.get("openAiApiKey", "");
 
 	// Start the vector store
 	await VectorStore.init(
