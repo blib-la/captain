@@ -47,8 +47,6 @@ import { ImageRemoveIcon } from "@/atoms/icons";
 import { getContrastColor } from "@/ions/utils/color";
 import { useLocalizedPath } from "@/organisms/language-select";
 
-export type ViewType = "side-by-side" | "overlay";
-
 export function LivePainting() {
 	const { t } = useTranslation(["common", "labels"]);
 	const [isOverlay, setIsOverlay] = useState(false);
