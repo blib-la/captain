@@ -240,7 +240,7 @@ class VectorStore {
 	 * @returns {Promise<any>} A promise that resolves with the search results.
 	 */
 	public async search(collectionName: string, query: string, options?: SearchOptions) {
-		await this.ensureCollection(collectionName, false);
+		await this.ensureCollection(collectionName);
 
 		const queryVector = await this.embeddings.embedDocuments([query]);
 		const searchResults = await this.client?.search(collectionName, {
