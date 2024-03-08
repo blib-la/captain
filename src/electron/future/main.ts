@@ -6,20 +6,21 @@ import url from "url";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import type { BrowserWindowConstructorOptions } from "electron";
 import { app, ipcMain, BrowserWindow, Menu, protocol, screen, globalShortcut } from "electron";
+import { globby } from "globby";
 
 import { version } from "../../../package.json";
 
 import { appSettingsStore, keyStore, userStore } from "./stores";
 
 import { buildKey } from "#/build-key";
-import { LOCAL_PROTOCOL } from "#/constants";
+import { LOCAL_PROTOCOL, VECTOR_STORE_COLLECTION } from "#/constants";
 import { DownloadState, ID } from "#/enums";
 import { isProduction } from "#/flags";
 import { VectorStore } from "@/services/vector-store";
 import { isCoreApp, isCoreView } from "@/utils/core";
 import { createWindow } from "@/utils/create-window";
 import { loadURL } from "@/utils/load-window";
-import { getCaptainData } from "@/utils/path-helpers";
+import { getCaptainData, getDirectory } from "@/utils/path-helpers";
 
 /**
  * Creates and displays the installer window with predefined dimensions.
@@ -436,6 +437,32 @@ async function createAppWindow(id: string, options: BrowserWindowConstructorOpti
 	return appWindow;
 }
 
+async function populateVectorStoreFromDocuments() {
+	const documentPaths = await globby(["**/captain.md"], {
+		cwd: getCaptainData("apps"),
+		absolute: true,
+	});
+
+	const corePaths = await globby(["**/*.md"], {
+		cwd: getDirectory("docs"),
+		absolute: true,
+	});
+
+	const documents = await Promise.all(
+		[...documentPaths, ...corePaths].map(async documentPath => ({
+			content: await fsp.readFile(documentPath, "utf8"),
+			payload: {
+				id: path.parse(documentPath).dir.split("/").pop()!,
+				language: "en",
+			},
+		}))
+	);
+	const vectorStore = VectorStore.getInstance;
+
+	const operations = await vectorStore.upsert(VECTOR_STORE_COLLECTION, documents);
+	console.log(operations);
+}
+
 // Cache for apps that are opened
 const apps: Record<string, BrowserWindow | null> = {};
 
@@ -514,6 +541,8 @@ export async function main() {
 				modelName: "text-embedding-3-large",
 			})
 		);
+		//
+		await populateVectorStoreFromDocuments();
 		// When the app is up-to-date and ready, we open the prompt window
 		apps.prompt = await createPromptWindow();
 
@@ -534,6 +563,7 @@ export async function main() {
 					modelName: "text-embedding-3-large",
 				})
 			);
+			await populateVectorStoreFromDocuments();
 			apps.prompt = await createPromptWindow();
 			apps.core = await createCoreWindow();
 			await loadURL(apps.core, `core/dashboard`);
