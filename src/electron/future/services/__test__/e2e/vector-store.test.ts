@@ -2,9 +2,25 @@ import { OpenAIEmbeddings } from "@langchain/openai";
 import axios from "axios";
 import dotenv from "dotenv";
 
-import { VectorStore } from "@/services/vector-store";
-
 dotenv.config();
+
+jest.mock("electron", () => ({
+	app: {
+		getPath: jest.fn().mockImplementation((key: string) => {
+			switch (key) {
+				case "userData": {
+					return process.cwd();
+				}
+
+				default: {
+					return "/default/path";
+				}
+			}
+		}),
+	},
+}));
+
+import { VectorStore } from "@/services/vector-store";
 
 describe("VectorStore Integration Tests", () => {
 	let vectorStore: VectorStore;

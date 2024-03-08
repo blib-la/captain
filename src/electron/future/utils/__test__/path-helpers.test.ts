@@ -43,7 +43,6 @@ describe("Path Utilities", () => {
 			isDevelopment: true,
 		}));
 		const expectedDevelopmentPath = path.join(process.cwd(), "resources");
-		// Force re-import to apply the mock
 		const { resourcesDirectory } = await import("../path-helpers");
 		expect(resourcesDirectory).toEqual(expectedDevelopmentPath);
 	});

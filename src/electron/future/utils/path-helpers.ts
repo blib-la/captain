@@ -12,8 +12,6 @@ export const resourcesDirectory = isDevelopment
 	? path.join(process.cwd(), "resources")
 	: path.join(app.getPath("exe"), "..", "resources", "app.asar.unpacked", "resources");
 
-export const userDataDirectory = isDevelopment ? process.cwd() : app.getPath("userData");
-
 /**
  * Combines the resources directory path with additional subpaths.
  * This utility function uses the Node.js path module's join method to construct a full path
@@ -27,7 +25,7 @@ export function getDirectory(...subpath: string[]): string {
 }
 
 export function getUserData(...subpath: string[]): string {
-	return path.join(userDataDirectory, ...subpath);
+	return path.join(app.getPath("userData"), ...subpath);
 }
 
 export function getCaptainData(...subpath: string[]): string {
