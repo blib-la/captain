@@ -1,3 +1,10 @@
+# [1.0.0-alpha.10](https://github.com/blib-la/captain/compare/v1.0.0-alpha.9...v1.0.0-alpha.10) (2024-03-08)
+
+
+### Features
+
+* vector store ([#68](https://github.com/blib-la/captain/issues/68)) ([2dbe978](https://github.com/blib-la/captain/commit/2dbe978f5aaa81834234961b2d78f0ccc8639dc6))
+
 # [1.0.0-alpha.9](https://github.com/blib-la/captain/compare/v1.0.0-alpha.8...v1.0.0-alpha.9) (2024-03-04)
 
 
