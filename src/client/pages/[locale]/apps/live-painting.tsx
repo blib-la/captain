@@ -1,5 +1,6 @@
 import { AppFrame } from "@captn/joy/app-frame";
 import { TitleBar } from "@captn/joy/title-bar";
+import { CustomScrollbars } from "@captn/react/custom-scrollbars";
 import Typography from "@mui/joy/Typography";
 import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
@@ -24,8 +25,9 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			<Head>
 				<title>{t("labels:livePainting")}</title>
 			</Head>
-
-			<LivePainting />
+			<CustomScrollbars>
+				<LivePainting />
+			</CustomScrollbars>
 		</AppFrame>
 	);
 }

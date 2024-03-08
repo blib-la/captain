@@ -36,10 +36,10 @@
     "sharp": "0.33.2"
   },
   "devDependencies": {
-    "@captn/joy": "^0.2.1",
-    "@captn/react": "^0.2.1",
-    "@captn/theme": "^0.2.1",
-    "@captn/utils": "^0.2.1",
+    "@captn/joy": "^0.3.0",
+    "@captn/react": "^0.3.1",
+    "@captn/theme": "^0.3.0",
+    "@captn/utils": "^0.3.0",
     "@commitlint/cli": "^19.0.3",
     "@commitlint/config-conventional": "^19.0.3",
     "@emotion/react": "11.11.4",

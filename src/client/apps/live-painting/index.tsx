@@ -3,7 +3,7 @@ import { ClickAwayListener } from "@mui/base";
 import BrushIcon from "@mui/icons-material/Brush";
 import CasinoIcon from "@mui/icons-material/Casino";
 import ClearIcon from "@mui/icons-material/Clear";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PaletteIcon from "@mui/icons-material/Palette";
 import PlayIcon from "@mui/icons-material/PlayArrow";
@@ -31,8 +31,9 @@ import Typography from "@mui/joy/Typography";
 import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
+import { v4 } from "uuid";
 
-import { clearCounterAtom, imagesAtom, livePaintingOptionsAtom } from "./atoms";
+import { clearCounterAtom, imageAtom, imagesAtom, livePaintingOptionsAtom } from "./atoms";
 import { DrawingArea } from "./drawing-area";
 import { RenderingArea } from "./rendering-area";
 import type { IllustrationStyles } from "./text-to-image";
@@ -57,11 +58,12 @@ export function LivePainting() {
 	const [prompt, setPrompt] = useState("");
 	const [illustrationStyle, setIllustrationStyle] = useState<IllustrationStyles>("childrensBook");
 	const [seed, setSeed] = useState(randomSeed());
+	const [image] = useAtom(imageAtom);
 	const [images, setImages] = useAtom(imagesAtom);
 	const [running, setRunning] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
-	const { send } = useSDK<unknown, string>(APP_ID, {
+	const { send, writeFile } = useSDK<unknown, string>(APP_ID, {
 		onMessage(message) {
 			console.log(message);
 			switch (message.action) {
@@ -119,7 +121,7 @@ export function LivePainting() {
 	}, [send]);
 
 	return (
-		<Box sx={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column" }}>
+		<Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
 			<Sheet
 				sx={theme => ({
 					position: "sticky",
@@ -322,7 +324,7 @@ export function LivePainting() {
 													);
 												}}
 											>
-												<DeleteForeverIcon />
+												<DeleteIcon />
 											</IconButton>
 											<Box
 												component="img"
@@ -364,7 +366,18 @@ export function LivePainting() {
 						<Menu>
 							<MenuItem
 								onClick={async () => {
-									console.log("should save image");
+									const id = v4();
+									const url = await writeFile(
+										`images/${id}.png`,
+										image.split(";base64,").pop()!,
+										{
+											encoding: "base64",
+										}
+									);
+									setImages(previousImages => [
+										...previousImages,
+										{ id, dataUrl: image, url },
+									]);
 								}}
 							>
 								<ListItemDecorator sx={{ color: "inherit" }}>

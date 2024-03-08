@@ -7,6 +7,7 @@
 export enum ID {
 	APP = "APP",
 	CAPTAIN = "CAPTAIN",
+	DIRECTORY = "DIRECTORY",
 	DOWNLOADS = "DOWNLOADS",
 	FILE = "FILE",
 	IMAGE = "IMAGE",

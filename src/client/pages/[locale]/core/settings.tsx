@@ -1,3 +1,4 @@
+import { CustomScrollbars } from "@captn/react/custom-scrollbars";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Container from "@mui/joy/Container";
@@ -117,14 +118,14 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			<Head>
 				<title>{t("common:settings")}</title>
 			</Head>
-			<Container sx={{ py: 2 }}>
-				<Stack spacing={4}>
-					<UserPreferences />
-					<OpenAISettings />
-					{/* 	<RunPodSettings />
-								<StableDiffusionSettings /> */}
-				</Stack>
-			</Container>
+			<CustomScrollbars>
+				<Container sx={{ py: 2 }}>
+					<Stack spacing={4}>
+						<UserPreferences />
+						<OpenAISettings />
+					</Stack>
+				</Container>
+			</CustomScrollbars>
 		</>
 	);
 }

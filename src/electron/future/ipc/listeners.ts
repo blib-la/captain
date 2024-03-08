@@ -75,18 +75,3 @@ ipcMain.on(
 		event.sender.send(buildKey([ID.STORY], { suffix: ":all" }), parsedFiles);
 	}
 );
-
-ipcMain.handle(
-	buildKey([ID.FILE], { suffix: ":save" }),
-	async (_event, name: string, content: string, { encoding }: { encoding?: BufferEncoding }) => {
-		const filePath = getCaptainData("files", name);
-		const directory = path.parse(filePath).dir;
-		await fsp.mkdir(directory, { recursive: true });
-		await fsp.writeFile(filePath, content, { encoding });
-		return filePath;
-	}
-);
-
-ipcMain.handle(buildKey([ID.FILE], { suffix: ":read" }), async (_event, name: string) =>
-	fsp.readFile(name, { encoding: "utf8" })
-);
