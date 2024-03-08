@@ -192,6 +192,10 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 									url: "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/portable-git-win.7z",
 									destination: "portable-git",
 								},
+								{
+									url: "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/qdrant-win.7z",
+									destination: "qdrant",
+								},
 							]);
 						}}
 					>
