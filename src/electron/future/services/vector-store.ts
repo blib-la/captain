@@ -161,31 +161,29 @@ class VectorStore {
 	 * Inserts or updates documents in the specified collection. If a document ID is not provided,
 	 * the method will attempt to find an existing document based on the payload 'id' and 'language'.
 	 * If an existing document is not found, a new UUID will be generated.
-	 * 
-	 * Example: Auto-ID (recommended)
-	 * 
-	 ```
-	 	const document = {
-		content: "Live Painting is very nice",
-		payload: {
-			id: "live-painting:schema",
-			language: "en",
-		},
-	};
-	 ```
-	 * 
-	 * Example: Custom-ID using uuid
-	 * 
-	 ```
-	 	const document = {
-		id: v4(),
-		content: "Live Painting is very nice",
-		payload: {
-			id: "live-painting:schema",
-			language: "en",
-		},
-	};
-	 ```
+	 *
+	 * @example Auto-ID (recommended)
+	 * ```javascript
+	 * const document = {
+	 *   content: "Live Painting is very nice",
+	 *   payload: {
+	 *     id: "live-painting:schema",
+	 *     language: "en",
+	 *   },
+	 * };
+	 * ```
+	 *
+	 * @example Custom-ID using uuid
+	 * ```javascript
+	 * const document = {
+	 *   id: v4(),
+	 *   content: "Live Painting is very nice",
+	 *   payload: {
+	 *     id: "live-painting:schema",
+	 *     language: "en",
+	 *   },
+	 * };
+	 * ```
 	 *
 	 * @param {string} collectionName - The name of the collection where documents will be upserted.
 	 * @param {VectorStoreDocument[]} documents - An array of documents to be upserted.
