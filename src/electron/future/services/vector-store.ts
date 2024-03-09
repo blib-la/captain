@@ -8,7 +8,7 @@ import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 import { v4 } from "uuid";
 
-import { getCaptainData } from "@/utils/path-helpers";
+import { getCaptainData } from "../utils/path-helpers";
 
 export type VectorStoreDocument = {
 	id?: number | string;
