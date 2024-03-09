@@ -157,10 +157,7 @@ ipcMain.on(
 
 ipcMain.on(
 	APP_MESSAGE_KEY,
-	async <T>(
-		_event: IpcMainEvent,
-		{ message, appId }: { message: SDKMessage<T>; appId: string }
-	) => {
+	async <T>(_event: IpcMainEvent, { message }: { message: SDKMessage<T>; appId: string }) => {
 		switch (message.action) {
 			case "livePainting:stop": {
 				if (process_ && process_.stdin) {

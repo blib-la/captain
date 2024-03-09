@@ -117,7 +117,7 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 			document.removeEventListener("mouseup", handleMouseUp);
 			cancelAnimationFrame(animationFame);
 		};
-	}, []);
+	}, [send]);
 
 	useEffect(() => {
 		if (context.current) {
@@ -146,7 +146,7 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 			context.current.fillRect(0, 0, canvas.current.width, canvas.current.height);
 			send({ action: "livePainting:dataUrl", payload: canvas.current.toDataURL() });
 		}
-	}, [clearCounter]);
+	}, [send, clearCounter]);
 
 	return (
 		<Box
