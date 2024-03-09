@@ -460,7 +460,6 @@ async function populateVectorStoreFromDocuments() {
 	const vectorStore = VectorStore.getInstance;
 
 	const operations = await vectorStore.upsert(VECTOR_STORE_COLLECTION, documents);
-	console.log(operations);
 }
 
 // Cache for apps that are opened

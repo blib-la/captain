@@ -22,12 +22,10 @@ ipcMain.on(
 );
 
 ipcMain.on(buildKey([ID.VECTOR_STORE], { suffix: ":search" }), async (event, query, options) => {
-	console.log("hello");
 	try {
 		const vectorStore = VectorStore.getInstance;
 
 		const result = await vectorStore.search(VECTOR_STORE_COLLECTION, query, options);
-		console.log({ result });
 
 		event.sender.send(buildKey([ID.VECTOR_STORE], { suffix: ":result" }), result);
 	} catch (error) {
