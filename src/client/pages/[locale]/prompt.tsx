@@ -8,6 +8,7 @@ import ListItemContent from "@mui/joy/ListItemContent";
 import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import Sheet from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
+import { evaluate } from "mathjs";
 import type { RefObject } from "react";
 import { useEffect, useRef, useState } from "react";
 
@@ -21,13 +22,15 @@ import { useVectorStore } from "@/ions/hooks/vector-store";
 
 export function useAutoFocusIPC<T extends HTMLElement>(reference: RefObject<T>) {
 	useEffect(() => {
-		const unsubscribe = window.ipc.on(buildKey([ID.WINDOW], { suffix: ":focus" }), () => {
+		function handleFocus() {
 			if (reference.current) {
 				reference.current.focus();
 			}
-		});
+		}
+
+		window.addEventListener("focus", handleFocus);
 		return () => {
-			unsubscribe();
+			window.removeEventListener("focus", handleFocus);
 		};
 	}, [reference]);
 }
@@ -43,6 +46,7 @@ export default function Page() {
 	const frameReference = useRef<HTMLDivElement | null>(null);
 	const promptReference = useRef<HTMLInputElement | null>(null);
 	const [value, setValue] = useState("");
+	const [evaluationResult, setEvaluationResult] = useState("");
 	const suggestions = useVectorStore(value);
 
 	useAutoFocusIPC(promptReference);
@@ -102,14 +106,21 @@ export default function Page() {
 					}}
 					onChange={event => {
 						setValue(event.target.value);
-						window.ipc.send(
-							buildKey([ID.PROMPT], { suffix: ":query" }),
-							event.target.value
-						);
+						try {
+							const result = evaluate(event.target.value);
+							setEvaluationResult(result.toString());
+						} catch (error) {
+							console.error(error);
+							setEvaluationResult("");
+						}
 					}}
-					onKeyDown={event => {
+					onKeyDown={async event => {
 						if (event.key === "Enter" && !event.shiftKey) {
 							event.preventDefault();
+							if (evaluationResult) {
+								return;
+							}
+
 							const [suggestion] = suggestions;
 							if (suggestion) {
 								handleSuggestion(suggestion);
@@ -118,7 +129,7 @@ export default function Page() {
 					}}
 				/>
 			</Box>
-			{suggestions.length > 0 && (
+			{(suggestions.length > 0 || evaluationResult) && (
 				<Sheet
 					sx={{
 						my: "1em",
@@ -135,7 +146,34 @@ export default function Page() {
 							WebkitOverflowScrolling: "touch",
 						}}
 					>
-						{suggestions.map((suggestion, index) => {
+						{evaluationResult && (
+							<ListItem
+								sx={{
+									"--focus-outline-offset": "-2px",
+								}}
+							>
+								<ListItemButton
+									sx={{ height: 64 }}
+									onClick={async () => {
+										try {
+											await navigator.clipboard.writeText(evaluationResult);
+										} catch (error) {
+											console.log(error);
+										}
+									}}
+								>
+									<ListItemDecorator>
+										<Logo sx={{ color: "currentColor" }} />
+									</ListItemDecorator>
+									<ListItemContent>
+										<Typography level="h4" component="div">
+											{evaluationResult}
+										</Typography>
+									</ListItemContent>
+								</ListItemButton>
+							</ListItem>
+						)}
+						{suggestions.map(suggestion => {
 							let color: ChipProps["color"] = "red";
 							if (suggestion.score > 0.2) {
 								color = "orange";
@@ -157,8 +195,6 @@ export default function Page() {
 									}}
 								>
 									<ListItemButton
-										color={index === 0 ? "primary" : undefined}
-										variant={index === 0 ? "soft" : undefined}
 										sx={{ height: 64 }}
 										onClick={() => {
 											handleSuggestion(suggestion);

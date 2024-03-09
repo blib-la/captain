@@ -22,7 +22,10 @@ export function useVectorStore(value: string) {
 
 	useEffect(() => {
 		if (query.trim()) {
-			window.ipc.send(buildKey([ID.VECTOR_STORE], { suffix: ":search" }), query);
+			window.ipc.send(buildKey([ID.VECTOR_STORE], { suffix: ":search" }), {
+				query,
+				options: { score_threshold: 0.2 },
+			});
 		} else {
 			setResults([]);
 		}
