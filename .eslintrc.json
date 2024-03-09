@@ -89,6 +89,12 @@
         "reservedFirst": true,
         "noSortAlphabetically": true
       }
+    ],
+    "unicorn/prevent-abbreviations": [
+      "error",
+      {
+        "ignore": ["\\.e2e$", "/^ignore/i"]
+      }
     ]
   },
   "overrides": [
