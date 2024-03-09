@@ -1,7 +1,11 @@
+import type { ChipProps } from "@mui/joy/Chip";
+import Chip from "@mui/joy/Chip";
 import Input from "@mui/joy/Input";
 import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import ListItemButton from "@mui/joy/ListItemButton";
+import ListItemContent from "@mui/joy/ListItemContent";
+import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import Sheet from "@mui/joy/Sheet";
 import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
@@ -36,19 +40,38 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			</Sheet>
 			<Sheet>
 				<List>
-					{results.map(result => (
-						<ListItem key={result.id}>
-							<ListItemButton
-								onClick={() => {
-									window.ipc.send(buildKey([ID.APP], { suffix: ":open" }), {
-										data: result.payload.id,
-									});
-								}}
-							>
-								{result.payload.id}
-							</ListItemButton>
-						</ListItem>
-					))}
+					{results.map(result => {
+						let color: ChipProps["color"] = "red";
+						if (result.score > 0.2) {
+							color = "orange";
+						}
+
+						if (result.score > 0.2) {
+							color = "yellow";
+						}
+
+						if (result.score > 0.4) {
+							color = "green";
+						}
+
+						return (
+							<ListItem key={result.id}>
+								<ListItemButton
+									onClick={() => {
+										window.ipc.send(buildKey([ID.APP], { suffix: ":open" }), {
+											data: result.payload.id,
+											action: result.payload.action,
+										});
+									}}
+								>
+									<ListItemContent>{result.payload.label}</ListItemContent>
+									<ListItemDecorator>
+										<Chip color={color}>{result.score.toFixed(3)}</Chip>
+									</ListItemDecorator>
+								</ListItemButton>
+							</ListItem>
+						);
+					})}
 				</List>
 			</Sheet>
 		</>

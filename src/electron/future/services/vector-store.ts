@@ -16,6 +16,8 @@ export type VectorStoreDocument = {
 	payload: {
 		id: string;
 		language: string;
+		action?: string;
+		label: string;
 	};
 };
 

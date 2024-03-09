@@ -1,4 +1,5 @@
 import Box from "@mui/joy/Box";
+import Chip, { type ChipProps } from "@mui/joy/Chip";
 import Input from "@mui/joy/Input";
 import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
@@ -87,7 +88,7 @@ export default function Page() {
 							ref: promptReference,
 							autoFocus: true,
 							sx: {
-								resize: "none",
+								lineHeight: 1.5,
 							},
 						},
 					}}
@@ -133,32 +134,56 @@ export default function Page() {
 							WebkitOverflowScrolling: "touch",
 						}}
 					>
-						{suggestions.map(suggestion => (
-							<ListItem
-								key={suggestion.id}
-								sx={{
-									"--focus-outline-offset": "-2px",
-								}}
-							>
-								<ListItemButton
-									sx={{ height: 64 }}
-									onClick={() => {
-										window.ipc.send(buildKey([ID.APP], { suffix: ":open" }), {
-											data: suggestion.id,
-										});
+						{suggestions.map((suggestion, index) => {
+							let color: ChipProps["color"] = "red";
+							if (suggestion.score > 0.2) {
+								color = "orange";
+							}
+
+							if (suggestion.score > 0.2) {
+								color = "yellow";
+							}
+
+							if (suggestion.score > 0.4) {
+								color = "green";
+							}
+
+							return (
+								<ListItem
+									key={suggestion.id}
+									sx={{
+										"--focus-outline-offset": "-2px",
 									}}
 								>
-									<ListItemDecorator>
-										<Logo sx={{ color: "currentColor" }} />
-									</ListItemDecorator>
-									<ListItemContent>
-										<Typography level="h4" component="div">
-											{suggestion.payload.id}
-										</Typography>
-									</ListItemContent>
-								</ListItemButton>
-							</ListItem>
-						))}
+									<ListItemButton
+										color={index === 0 ? "primary" : undefined}
+										variant={index === 0 ? "soft" : undefined}
+										sx={{ height: 64 }}
+										onClick={() => {
+											window.ipc.send(
+												buildKey([ID.APP], { suffix: ":open" }),
+												{
+													data: suggestion.payload.id,
+													action: suggestion.payload.action,
+												}
+											);
+										}}
+									>
+										<ListItemDecorator>
+											<Logo sx={{ color: "currentColor" }} />
+										</ListItemDecorator>
+										<ListItemContent>
+											<Typography level="h4" component="div">
+												{suggestion.payload.label}
+											</Typography>
+										</ListItemContent>
+										<ListItemDecorator>
+											<Chip color={color}>{suggestion.score.toFixed(3)}</Chip>
+										</ListItemDecorator>
+									</ListItemButton>
+								</ListItem>
+							);
+						})}
 					</List>
 				</Sheet>
 			)}

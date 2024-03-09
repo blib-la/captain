@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 
-import type { VectorStoreDocument } from "../../../electron/future/services/vector-store";
-
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 
+export type VectorStoreDocument = {
+	id?: number | string;
+	score: number;
+	payload: {
+		id: string;
+		language: string;
+		action?: string;
+		label: string;
+	};
+};
 export function useVectorStore(value: string) {
 	const [query] = useDebounce(value, 1000);
 	const [results, setResults] = useState<VectorStoreDocument[]>([]);
