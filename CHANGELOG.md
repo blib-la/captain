@@ -1,3 +1,11 @@
+# [1.0.0-alpha.11](https://github.com/blib-la/captain/compare/v1.0.0-alpha.10...v1.0.0-alpha.11) (2024-03-09)
+
+
+### Features
+
+* app separation ([#69](https://github.com/blib-la/captain/issues/69)) ([1339741](https://github.com/blib-la/captain/commit/133974153ec3944e0d9fdfbebb6a51d55c6f63f9))
+* integrate vector store ([#70](https://github.com/blib-la/captain/issues/70)) ([c654e13](https://github.com/blib-la/captain/commit/c654e133fee9c119ccda138f263d39d40a0be787))
+
 # [1.0.0-alpha.10](https://github.com/blib-la/captain/compare/v1.0.0-alpha.9...v1.0.0-alpha.10) (2024-03-08)
 
 
