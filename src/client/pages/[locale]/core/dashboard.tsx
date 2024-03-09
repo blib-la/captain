@@ -1,51 +1,26 @@
+import type { ChipProps } from "@mui/joy/Chip";
+import Chip from "@mui/joy/Chip";
 import Input from "@mui/joy/Input";
 import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
+import ListItemButton from "@mui/joy/ListItemButton";
+import ListItemContent from "@mui/joy/ListItemContent";
+import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import Sheet from "@mui/joy/Sheet";
 import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
-import { useEffect, useState } from "react";
-import { useDebounce } from "use-debounce";
+import { useState } from "react";
 
-import type { VectorStoreDocument } from "../../../../electron/future/services/vector-store";
-
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
 import { Logo } from "@/atoms/logo";
+import { handleSuggestion } from "@/ions/hooks/vector-actions";
+import { useVectorStore } from "@/ions/hooks/vector-store";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["common", "labels"]);
 	const [value, setValue] = useState("");
-	const [results, setResults] = useState<VectorStoreDocument[]>([]);
-	const [query] = useDebounce(value, 1000);
-
-	useEffect(() => {
-		if (query) {
-			window.ipc.send(buildKey([ID.VECTOR_STORE], { suffix: ":search" }), query);
-		}
-	}, [query]);
-
-	useEffect(() => {
-		const unsubscribeResult = window.ipc.on(
-			buildKey([ID.VECTOR_STORE], { suffix: ":result" }),
-			data => {
-				console.log(data);
-				setResults(data);
-			}
-		);
-		const unsubscribeError = window.ipc.on(
-			buildKey([ID.VECTOR_STORE], { suffix: ":error" }),
-			error => {
-				console.log(error);
-			}
-		);
-		return () => {
-			unsubscribeResult();
-			unsubscribeError();
-		};
-	}, []);
+	const results = useVectorStore(value);
 
 	return (
 		<>
@@ -60,13 +35,50 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 					onChange={event => {
 						setValue(event.target.value);
 					}}
+					onKeyDown={event => {
+						if (event.key === "Enter" && !event.shiftKey) {
+							event.preventDefault();
+							const [result] = results;
+							if (result) {
+								handleSuggestion(result);
+							}
+						}
+					}}
 				/>
 			</Sheet>
 			<Sheet>
 				<List>
-					{results.map(result => (
-						<ListItem key={result.id}>{result.payload.id}</ListItem>
-					))}
+					{results.map((result, index) => {
+						let color: ChipProps["color"] = "red";
+						if (result.score > 0.2) {
+							color = "orange";
+						}
+
+						if (result.score > 0.2) {
+							color = "yellow";
+						}
+
+						if (result.score > 0.4) {
+							color = "green";
+						}
+
+						return (
+							<ListItem key={result.id}>
+								<ListItemButton
+									color={index === 0 ? "primary" : undefined}
+									variant={index === 0 ? "outlined" : undefined}
+									onClick={() => {
+										handleSuggestion(result);
+									}}
+								>
+									<ListItemContent>{result.payload.label}</ListItemContent>
+									<ListItemDecorator>
+										<Chip color={color}>{result.score.toFixed(3)}</Chip>
+									</ListItemDecorator>
+								</ListItemButton>
+							</ListItem>
+						);
+					})}
 				</List>
 			</Sheet>
 		</>

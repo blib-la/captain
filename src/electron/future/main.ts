@@ -7,6 +7,7 @@ import { OpenAIEmbeddings } from "@langchain/openai";
 import type { BrowserWindowConstructorOptions } from "electron";
 import { app, ipcMain, BrowserWindow, Menu, protocol, screen, globalShortcut } from "electron";
 import { globby } from "globby";
+import matter from "gray-matter";
 
 import { version } from "../../../package.json";
 
@@ -45,151 +46,6 @@ async function createInstallerWindow(): Promise<BrowserWindow> {
 
 	await loadURL(installerWindow, "installer/00");
 	return installerWindow;
-}
-
-interface SearchResult {
-	id: string;
-	label: string;
-	keywords: string[];
-}
-
-const searchResults: SearchResult[] = [
-	{
-		id: "dark-mode",
-		label: "switch to dark mode",
-		keywords: ["dark", "theme", "mode", "color", "dark mode"],
-	},
-	{
-		id: "light-mode",
-		label: "switch to light mode",
-		keywords: ["light", "theme", "mode", "color", "light mode"],
-	},
-	{
-		id: "live-painting",
-		label: "live painting",
-		keywords: [
-			"live",
-			"draw",
-			"paint",
-			"art",
-			"create",
-			"artwork",
-			"generate",
-			"image",
-			"painting",
-		],
-	},
-	{
-		id: "generate-images",
-		label: "generate images",
-		keywords: [
-			"create",
-			"art",
-			"AI",
-			"artwork",
-			"design",
-			"artwork",
-			"generate",
-			"image",
-			"painting",
-		],
-	},
-	{
-		id: "story",
-		label: "write a story",
-		keywords: [
-			"narrative",
-			"write",
-			"AI",
-			"fiction",
-			"plot",
-			"creative writing",
-			"story",
-			"book",
-			"poem",
-		],
-	},
-	{
-		id: "marketplace",
-		label: "marketplace",
-		keywords: [
-			"app",
-			"buy",
-			"sell",
-			"trade",
-			"download",
-			"shop",
-			"marketplace",
-			"store",
-			"widget",
-			"add-on",
-			"add on",
-			"addon",
-		],
-	},
-	{
-		id: "settings",
-		label: "settings",
-		keywords: [
-			"configure",
-			"preferences",
-			"setup",
-			"options",
-			"adjust",
-			"a11y",
-			"a11y",
-			"settings",
-			"language",
-			"color scheme",
-			"light mode",
-			"dark mode",
-		],
-	},
-	{
-		id: "dashboard",
-		label: "dashboard",
-		keywords: [
-			"overview",
-			"control",
-			"monitor",
-			"statistics",
-			"manage",
-			"apps",
-			"panel",
-			"dashboard",
-			"search",
-		],
-	},
-	{
-		id: "help",
-		label: "help",
-		keywords: ["help", "bug", "problem", "don't know", "how", "when", "search"],
-	},
-];
-
-function lookup(query: string): SearchResult[] {
-	// Normalize query
-	const normalizedQuery = query.toLowerCase();
-
-	// First, try to match directly within the labels
-	const directMatches = searchResults.filter(result =>
-		result.label.toLowerCase().includes(normalizedQuery)
-	);
-
-	if (directMatches.length > 0) {
-		return directMatches;
-	}
-
-	// If no direct matches, look for indirect matches in keywords
-	return searchResults.filter(result =>
-		result.keywords.some(keyword => {
-			const normalizedKeyword = keyword.toLowerCase();
-			return (
-				normalizedQuery.includes(normalizedKeyword) ||
-				normalizedKeyword.includes(normalizedQuery)
-			);
-		})
-	);
 }
 
 /**
@@ -237,14 +93,6 @@ async function createPromptWindow() {
 			window_.setSize(750, Math.ceil(height));
 			window_.setResizable(false);
 		}
-	});
-
-	ipcMain.on(buildKey([ID.PROMPT], { suffix: ":query" }), (event, value: string) => {
-		console.log(value);
-		window_.webContents.send(
-			buildKey([ID.PROMPT], { suffix: ":suggestion" }),
-			value ? lookup(value) : []
-		);
 	});
 
 	const promptShortcut = "Control+Alt+Space";
@@ -438,7 +286,7 @@ async function createAppWindow(id: string, options: BrowserWindowConstructorOpti
 }
 
 async function populateVectorStoreFromDocuments() {
-	const documentPaths = await globby(["**/captain.md"], {
+	const documentPaths = await globby(["**/*.md"], {
 		cwd: getCaptainData("apps"),
 		absolute: true,
 	});
@@ -449,21 +297,53 @@ async function populateVectorStoreFromDocuments() {
 	});
 
 	const documents = await Promise.all(
-		[...documentPaths, ...corePaths].map(async documentPath => ({
-			content: await fsp.readFile(documentPath, "utf8"),
-			payload: {
-				id: path.parse(documentPath).dir.split("/").pop()!,
-				language: "en",
-			},
-		}))
+		[...documentPaths, ...corePaths].map(async documentPath => {
+			const markdownWithFrontmatter = await fsp.readFile(documentPath, "utf8");
+			const { content, data } = matter(markdownWithFrontmatter);
+			return {
+				content,
+				payload: {
+					id: data.id,
+					language: data.language,
+					action: data.action,
+					label: data.label,
+					description: data.description,
+					icon: data.icon,
+				},
+			};
+		})
 	);
 	const vectorStore = VectorStore.getInstance;
 
-	const operations = await vectorStore.upsert(VECTOR_STORE_COLLECTION, documents);
+	return vectorStore.upsert(VECTOR_STORE_COLLECTION, documents);
 }
 
 // Cache for apps that are opened
 const apps: Record<string, BrowserWindow | null> = {};
+
+async function runStartup(withDashboard?: boolean) {
+	const apiKey = keyStore.get("openAiApiKey", "");
+	await VectorStore.init(
+		new OpenAIEmbeddings({
+			openAIApiKey: apiKey,
+			modelName: "text-embedding-3-large",
+		})
+	);
+
+	//
+	// await VectorStore.getInstance.deleteCollection(VECTOR_STORE_COLLECTION);
+	// await populateVectorStoreFromDocuments();
+
+	apps.prompt = await createPromptWindow();
+	if (withDashboard) {
+		apps.core = await createCoreWindow();
+		await loadURL(apps.core, `core/dashboard`);
+		apps.core.on("close", () => {
+			apps.core = null;
+		});
+		apps.core.focus();
+	}
+}
 
 /**
  * Initializes the application by determining its current state based on version and setup status.
@@ -510,12 +390,12 @@ export async function main() {
 
 	ipcMain.on(
 		buildKey([ID.APP], { suffix: ":open" }),
-		async (_event, { data: id }: { data: string }) => {
-			// If the appId is a core app we need to handle it
+		async (_event, { data: id, action }: { data: string; action?: string }) => {
 			if (isCoreView(id)) {
 				// If the appId is a core view we need to handle it
 				apps.core ||= await createCoreWindow();
-				await loadURL(apps.core, `core/${id}`);
+				// Add action to the url
+				await loadURL(apps.core, `core/${id}${action ? `?action=${action}` : ""}`);
 				apps.core.on("close", () => {
 					apps.core = null;
 				});
@@ -531,21 +411,8 @@ export async function main() {
 		}
 	);
 
-	const apiKey = keyStore.get("openAiApiKey", "");
-
 	if (isUpToDate && isReady) {
-		await VectorStore.init(
-			new OpenAIEmbeddings({
-				openAIApiKey: apiKey,
-				modelName: "text-embedding-3-large",
-			})
-		);
-		//
-		await populateVectorStoreFromDocuments();
-		// When the app is up-to-date and ready, we open the prompt window
-		apps.prompt = await createPromptWindow();
-
-		// Start the vector store
+		await runStartup(true);
 	} else {
 		// Update app settings for installation
 		appSettingsStore.set("status", DownloadState.IDLE);
@@ -555,21 +422,7 @@ export async function main() {
 		// When the installer is done we open the prompt window
 		ipcMain.on(buildKey([ID.APP], { suffix: ":ready" }), async () => {
 			installerWindow.close();
-			// Start the vector store
-			await VectorStore.init(
-				new OpenAIEmbeddings({
-					openAIApiKey: apiKey,
-					modelName: "text-embedding-3-large",
-				})
-			);
-			await populateVectorStoreFromDocuments();
-			apps.prompt = await createPromptWindow();
-			apps.core = await createCoreWindow();
-			await loadURL(apps.core, `core/dashboard`);
-			apps.core.on("close", () => {
-				apps.core = null;
-			});
-			apps.core.focus();
+			await runStartup(true);
 		});
 	}
 }

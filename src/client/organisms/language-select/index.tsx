@@ -84,6 +84,7 @@ export function LanguageSelect() {
 	return (
 		<Select
 			data-testid="language-selector"
+			data-captainid="language-settings"
 			value={locale}
 			name="language"
 			variant="soft"
