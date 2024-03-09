@@ -13,11 +13,11 @@ import { appWithTranslation, useTranslation } from "next-i18next";
 import type { ReactNode } from "react";
 import { useEffect, useMemo } from "react";
 
+import { useCaptainAction } from "@/ions/hooks/vector-actions";
 import { useLocalizedPath } from "@/organisms/language-select";
 import { TabButton } from "@/organisms/tab";
 
 import "@/ions/date";
-import { useCaptainAction } from "@/ions/hooks/vector-actions";
 
 export function Layout({ children }: { children?: ReactNode }) {
 	const { changeLanguage } = useLocalizedPath();
