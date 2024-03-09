@@ -108,10 +108,29 @@ export default function Page() {
 					onKeyDown={event => {
 						if (event.key === "Enter" && !event.shiftKey) {
 							event.preventDefault();
-							if (suggestions[0]) {
-								window.ipc.send(buildKey([ID.APP], { suffix: ":open" }), {
-									data: suggestions[0].payload.id,
-								});
+							const [suggestion] = suggestions;
+							if (suggestions) {
+								if (suggestion.payload.id === "silent-action") {
+									if (!suggestion.payload.action) {
+										return;
+									}
+
+									const [action, key, value] =
+										suggestion.payload.action.split(":");
+									window.ipc.send("CAPTAIN_ACTION", {
+										action,
+										payload: {
+											key,
+											value,
+											scope: "user",
+										},
+									});
+								} else {
+									window.ipc.send(buildKey([ID.APP], { suffix: ":open" }), {
+										data: suggestion.payload.id,
+										action: suggestion.payload.action,
+									});
+								}
 							}
 						}
 					}}
@@ -160,13 +179,30 @@ export default function Page() {
 										variant={index === 0 ? "soft" : undefined}
 										sx={{ height: 64 }}
 										onClick={() => {
-											window.ipc.send(
-												buildKey([ID.APP], { suffix: ":open" }),
-												{
-													data: suggestion.payload.id,
-													action: suggestion.payload.action,
+											if (suggestion.payload.id === "silent-action") {
+												if (!suggestion.payload.action) {
+													return;
 												}
-											);
+
+												const [action, key, value] =
+													suggestion.payload.action.split(":");
+												window.ipc.send("CAPTAIN_ACTION", {
+													action,
+													payload: {
+														key,
+														value,
+														scope: "user",
+													},
+												});
+											} else {
+												window.ipc.send(
+													buildKey([ID.APP], { suffix: ":open" }),
+													{
+														data: suggestion.payload.id,
+														action: suggestion.payload.action,
+													}
+												);
+											}
 										}}
 									>
 										<ListItemDecorator>

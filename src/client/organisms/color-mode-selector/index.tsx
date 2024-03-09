@@ -12,6 +12,7 @@ export function ColorModeSelector() {
 	return (
 		<Select
 			data-testid="color-mode-selector"
+			data-captainid="color-mode-settings"
 			value={mode}
 			name="mode"
 			variant="soft"

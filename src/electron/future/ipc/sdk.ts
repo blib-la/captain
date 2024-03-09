@@ -6,6 +6,7 @@ import { ipcMain } from "electron";
 import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 
+import { userStore } from "@/stores";
 import {
 	getCaptainData,
 	getCaptainDownloads,
@@ -198,3 +199,30 @@ ipcMain.on(
 		}
 	}
 );
+
+ipcMain.on("CAPTAIN_ACTION", (_event, message: { action: string; payload: unknown }) => {
+	console.log(message);
+	switch (message.action) {
+		case "set": {
+			try {
+				const { key, value, scope } = message.payload as {
+					key: string;
+					value: unknown;
+					scope: string;
+				};
+				if (scope === "user" && key) {
+					console.log("setting:", { key, value });
+					userStore.set(key, value);
+				}
+			} catch (error) {
+				console.log(error);
+			}
+
+			break;
+		}
+
+		default: {
+			break;
+		}
+	}
+});
