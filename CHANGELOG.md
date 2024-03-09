@@ -1,3 +1,10 @@
+# [1.0.0-alpha.12](https://github.com/blib-la/captain/compare/v1.0.0-alpha.11...v1.0.0-alpha.12) (2024-03-09)
+
+
+### Features
+
+* prompt uses vector store ([#71](https://github.com/blib-la/captain/issues/71)) ([99b9cee](https://github.com/blib-la/captain/commit/99b9cee9e3573c1eba6840d7906b5875efc482a3))
+
 # [1.0.0-alpha.11](https://github.com/blib-la/captain/compare/v1.0.0-alpha.10...v1.0.0-alpha.11) (2024-03-09)
 
 
