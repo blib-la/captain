@@ -1,3 +1,10 @@
+# [1.0.0-alpha.13](https://github.com/blib-la/captain/compare/v1.0.0-alpha.12...v1.0.0-alpha.13) (2024-03-09)
+
+
+### Features
+
+* add math prompt ([#72](https://github.com/blib-la/captain/issues/72)) ([12a79eb](https://github.com/blib-la/captain/commit/12a79eb2b7733294e223e4fe4c0f70adbff86a65))
+
 # [1.0.0-alpha.12](https://github.com/blib-la/captain/compare/v1.0.0-alpha.11...v1.0.0-alpha.12) (2024-03-09)
 
 
