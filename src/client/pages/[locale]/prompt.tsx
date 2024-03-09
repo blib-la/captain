@@ -106,17 +106,11 @@ export default function Page() {
 						setValue(event.target.value);
 						try {
 							const result = evaluate(event.target.value);
-							console.log({ result });
 							setEvaluationResult(result.toString());
 						} catch (error) {
 							console.error(error);
 							setEvaluationResult("");
 						}
-
-						window.ipc.send(
-							buildKey([ID.PROMPT], { suffix: ":query" }),
-							event.target.value
-						);
 					}}
 					onKeyDown={event => {
 						if (event.key === "Enter" && !event.shiftKey) {
