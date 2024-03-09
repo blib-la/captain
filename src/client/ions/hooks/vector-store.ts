@@ -11,6 +11,7 @@ export type VectorStoreDocument = {
 		id: string;
 		language: string;
 		action?: string;
+		icon?: string;
 		label: string;
 	};
 };
