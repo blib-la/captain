@@ -8,6 +8,7 @@ import ListItemContent from "@mui/joy/ListItemContent";
 import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import Sheet from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
+import { evaluate } from "mathjs";
 import type { RefObject } from "react";
 import { useEffect, useRef, useState } from "react";
 
@@ -43,6 +44,7 @@ export default function Page() {
 	const frameReference = useRef<HTMLDivElement | null>(null);
 	const promptReference = useRef<HTMLInputElement | null>(null);
 	const [value, setValue] = useState("");
+	const [evaluationResult, setEvaluationResult] = useState("");
 	const suggestions = useVectorStore(value);
 
 	useAutoFocusIPC(promptReference);
@@ -102,6 +104,15 @@ export default function Page() {
 					}}
 					onChange={event => {
 						setValue(event.target.value);
+						try {
+							const result = evaluate(event.target.value);
+							console.log({ result });
+							setEvaluationResult(result.toString());
+						} catch (error) {
+							console.error(error);
+							setEvaluationResult("");
+						}
+
 						window.ipc.send(
 							buildKey([ID.PROMPT], { suffix: ":query" }),
 							event.target.value
@@ -118,7 +129,7 @@ export default function Page() {
 					}}
 				/>
 			</Box>
-			{suggestions.length > 0 && (
+			{(suggestions.length > 0 || evaluationResult) && (
 				<Sheet
 					sx={{
 						my: "1em",
@@ -135,6 +146,29 @@ export default function Page() {
 							WebkitOverflowScrolling: "touch",
 						}}
 					>
+						{evaluationResult && (
+							<ListItem>
+								<ListItemButton
+									sx={{ height: 64 }}
+									onClick={async () => {
+										try {
+											await navigator.clipboard.writeText(evaluationResult);
+										} catch (error) {
+											console.log(error);
+										}
+									}}
+								>
+									<ListItemDecorator>
+										<Logo sx={{ color: "currentColor" }} />
+									</ListItemDecorator>
+									<ListItemContent>
+										<Typography level="h4" component="div">
+											{evaluationResult}
+										</Typography>
+									</ListItemContent>
+								</ListItemButton>
+							</ListItem>
+						)}
 						{suggestions.map((suggestion, index) => {
 							let color: ChipProps["color"] = "red";
 							if (suggestion.score > 0.2) {
