@@ -285,13 +285,6 @@ async function createAppWindow(id: string, options: BrowserWindowConstructorOpti
 	return appWindow;
 }
 
-export interface ActionConfig {
-	id: string;
-	label: string;
-	language: string;
-	action?: string;
-}
-
 async function populateVectorStoreFromDocuments() {
 	const documentPaths = await globby(["**/*.md"], {
 		cwd: getCaptainData("apps"),
@@ -314,6 +307,7 @@ async function populateVectorStoreFromDocuments() {
 					language: data.language,
 					action: data.action,
 					label: data.label,
+					description: data.description,
 					icon: data.icon,
 				},
 			};
