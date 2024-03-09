@@ -48,7 +48,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			</Sheet>
 			<Sheet>
 				<List>
-					{results.map(result => {
+					{results.map((result, index) => {
 						let color: ChipProps["color"] = "red";
 						if (result.score > 0.2) {
 							color = "orange";
@@ -65,6 +65,8 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 						return (
 							<ListItem key={result.id}>
 								<ListItemButton
+									color={index === 0 ? "primary" : undefined}
+									variant={index === 0 ? "outlined" : undefined}
 									onClick={() => {
 										handleSuggestion(result);
 									}}

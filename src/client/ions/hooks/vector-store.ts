@@ -23,6 +23,8 @@ export function useVectorStore(value: string) {
 	useEffect(() => {
 		if (query.trim()) {
 			window.ipc.send(buildKey([ID.VECTOR_STORE], { suffix: ":search" }), query);
+		} else {
+			setResults([]);
 		}
 	}, [query]);
 
