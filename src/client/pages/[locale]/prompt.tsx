@@ -22,13 +22,15 @@ import { useVectorStore } from "@/ions/hooks/vector-store";
 
 export function useAutoFocusIPC<T extends HTMLElement>(reference: RefObject<T>) {
 	useEffect(() => {
-		const unsubscribe = window.ipc.on(buildKey([ID.WINDOW], { suffix: ":focus" }), () => {
+		function handleFocus() {
 			if (reference.current) {
 				reference.current.focus();
 			}
-		});
+		}
+
+		window.addEventListener("focus", handleFocus);
 		return () => {
-			unsubscribe();
+			window.removeEventListener("focus", handleFocus);
 		};
 	}, [reference]);
 }
@@ -112,9 +114,13 @@ export default function Page() {
 							setEvaluationResult("");
 						}
 					}}
-					onKeyDown={event => {
+					onKeyDown={async event => {
 						if (event.key === "Enter" && !event.shiftKey) {
 							event.preventDefault();
+							if (evaluationResult) {
+								return;
+							}
+
 							const [suggestion] = suggestions;
 							if (suggestion) {
 								handleSuggestion(suggestion);
@@ -141,7 +147,11 @@ export default function Page() {
 						}}
 					>
 						{evaluationResult && (
-							<ListItem>
+							<ListItem
+								sx={{
+									"--focus-outline-offset": "-2px",
+								}}
+							>
 								<ListItemButton
 									sx={{ height: 64 }}
 									onClick={async () => {
@@ -163,7 +173,7 @@ export default function Page() {
 								</ListItemButton>
 							</ListItem>
 						)}
-						{suggestions.map((suggestion, index) => {
+						{suggestions.map(suggestion => {
 							let color: ChipProps["color"] = "red";
 							if (suggestion.score > 0.2) {
 								color = "orange";
@@ -185,8 +195,6 @@ export default function Page() {
 									}}
 								>
 									<ListItemButton
-										color={index === 0 ? "primary" : undefined}
-										variant={index === 0 ? "soft" : undefined}
 										sx={{ height: 64 }}
 										onClick={() => {
 											handleSuggestion(suggestion);
