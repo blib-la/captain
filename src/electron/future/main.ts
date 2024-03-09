@@ -391,12 +391,10 @@ export async function main() {
 	ipcMain.on(
 		buildKey([ID.APP], { suffix: ":open" }),
 		async (_event, { data: id, action }: { data: string; action?: string }) => {
-			if (id === "silent-action") {
-				console.log("silent action called", action);
-			} else if (isCoreView(id)) {
+			if (isCoreView(id)) {
 				// If the appId is a core view we need to handle it
 				apps.core ||= await createCoreWindow();
-				console.log(action);
+				// Add action to the url
 				await loadURL(apps.core, `core/${id}${action ? `?action=${action}` : ""}`);
 				apps.core.on("close", () => {
 					apps.core = null;

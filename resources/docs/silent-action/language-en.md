@@ -1,5 +1,5 @@
 ---
-id: silent-action
+id: action:user
 label: Switch to English
 icon: ./icons/english-flag.svg
 action: set:language:en

@@ -200,7 +200,7 @@ ipcMain.on(
 	}
 );
 
-ipcMain.on("CAPTAIN_ACTION", (_event, message: { action: string; payload: unknown }) => {
+ipcMain.on("CAPTAIN_ACTION", (event, message: { action: string; payload: unknown }) => {
 	console.log(message);
 	switch (message.action) {
 		case "set": {
@@ -213,6 +213,8 @@ ipcMain.on("CAPTAIN_ACTION", (_event, message: { action: string; payload: unknow
 				if (scope === "user" && key) {
 					console.log("setting:", { key, value });
 					userStore.set(key, value);
+				} else if (scope === "window" && key) {
+					event.sender.send("CAPTAIN_ACTION", { key, value });
 				}
 			} catch (error) {
 				console.log(error);

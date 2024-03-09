@@ -1,5 +1,5 @@
 ---
-id: silent-action
+id: action:user
 label: Switch to German
 icon: ./icons/de-flag.svg
 action: set:language:de

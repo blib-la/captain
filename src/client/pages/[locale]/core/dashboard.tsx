@@ -12,9 +12,8 @@ import Head from "next/head";
 import { useTranslation } from "next-i18next";
 import { useState } from "react";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
 import { Logo } from "@/atoms/logo";
+import { handleSuggestion } from "@/ions/hooks/vector-actions";
 import { useVectorStore } from "@/ions/hooks/vector-store";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 
@@ -35,6 +34,15 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 					sx={{ flex: 1 }}
 					onChange={event => {
 						setValue(event.target.value);
+					}}
+					onKeyDown={event => {
+						if (event.key === "Enter" && !event.shiftKey) {
+							event.preventDefault();
+							const [result] = results;
+							if (result) {
+								handleSuggestion(result);
+							}
+						}
 					}}
 				/>
 			</Sheet>
@@ -58,10 +66,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 							<ListItem key={result.id}>
 								<ListItemButton
 									onClick={() => {
-										window.ipc.send(buildKey([ID.APP], { suffix: ":open" }), {
-											data: result.payload.id,
-											action: result.payload.action,
-										});
+										handleSuggestion(result);
 									}}
 								>
 									<ListItemContent>{result.payload.label}</ListItemContent>

@@ -9,13 +9,14 @@ import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import Sheet from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
 import type { RefObject } from "react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import { Logo } from "@/atoms/logo";
 import { Captain } from "@/atoms/logo/captain";
 import { useResizeObserver } from "@/ions/hooks/resize-observer";
+import { handleSuggestion, useCaptainActionResponse } from "@/ions/hooks/vector-actions";
 import { useVectorStore } from "@/ions/hooks/vector-store";
 
 export function useAutoFocusIPC<T extends HTMLElement>(reference: RefObject<T>) {
@@ -46,6 +47,7 @@ export default function Page() {
 
 	useAutoFocusIPC(promptReference);
 	useAutoSizerWindow(frameReference);
+	useCaptainActionResponse();
 
 	return (
 		<Box
@@ -109,28 +111,8 @@ export default function Page() {
 						if (event.key === "Enter" && !event.shiftKey) {
 							event.preventDefault();
 							const [suggestion] = suggestions;
-							if (suggestions) {
-								if (suggestion.payload.id === "silent-action") {
-									if (!suggestion.payload.action) {
-										return;
-									}
-
-									const [action, key, value] =
-										suggestion.payload.action.split(":");
-									window.ipc.send("CAPTAIN_ACTION", {
-										action,
-										payload: {
-											key,
-											value,
-											scope: "user",
-										},
-									});
-								} else {
-									window.ipc.send(buildKey([ID.APP], { suffix: ":open" }), {
-										data: suggestion.payload.id,
-										action: suggestion.payload.action,
-									});
-								}
+							if (suggestion) {
+								handleSuggestion(suggestion);
 							}
 						}
 					}}
@@ -179,30 +161,7 @@ export default function Page() {
 										variant={index === 0 ? "soft" : undefined}
 										sx={{ height: 64 }}
 										onClick={() => {
-											if (suggestion.payload.id === "silent-action") {
-												if (!suggestion.payload.action) {
-													return;
-												}
-
-												const [action, key, value] =
-													suggestion.payload.action.split(":");
-												window.ipc.send("CAPTAIN_ACTION", {
-													action,
-													payload: {
-														key,
-														value,
-														scope: "user",
-													},
-												});
-											} else {
-												window.ipc.send(
-													buildKey([ID.APP], { suffix: ":open" }),
-													{
-														data: suggestion.payload.id,
-														action: suggestion.payload.action,
-													}
-												);
-											}
+											handleSuggestion(suggestion);
 										}}
 									>
 										<ListItemDecorator>
