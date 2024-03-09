@@ -149,6 +149,7 @@
     "type-fest": "4.12.0",
     "typescript": "^5.4.2",
     "uuid": "^9.0.1",
+    "use-debounce": "^10.0.0",
     "webpack": "^5.90.3"
   },
   "optionalDependencies": {

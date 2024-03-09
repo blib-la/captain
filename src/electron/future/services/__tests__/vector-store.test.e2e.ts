@@ -56,6 +56,12 @@ describe("VectorStore Integration Tests", () => {
 		await vectorStore.stop();
 	});
 
+	it("should find nothing", async () => {
+		const searchResults = await vectorStore.search(collectionName, document1.content);
+
+		expect(searchResults!.length).toBe(0);
+	}, 10_000);
+
 	it("should verify Qdrant is running", async () => {
 		const response = await axios.get("http://127.0.0.1:6333");
 

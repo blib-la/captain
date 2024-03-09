@@ -53,6 +53,12 @@
     "unicorn/prefer-node-protocol": "off",
     "unicorn/prefer-module": "off",
     "unicorn/prefer-top-level-await": "off",
+    "unicorn/prevent-abbreviations": [
+      "error",
+      {
+        "ignore": ["\\.e2e$", "/^ignore/i"]
+      }
+    ],
     "@typescript-eslint/consistent-type-imports": "error",
     "react/jsx-curly-brace-presence": "error",
     "react/self-closing-comp": "error",
@@ -88,6 +94,12 @@
         "multiline": "last",
         "reservedFirst": true,
         "noSortAlphabetically": true
+      }
+    ],
+    "unicorn/prevent-abbreviations": [
+      "error",
+      {
+        "ignore": ["\\.e2e$", "/^ignore/i"]
       }
     ]
   },

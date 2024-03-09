@@ -8,7 +8,7 @@ import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 import { v4 } from "uuid";
 
-import { getCaptainData } from "@/utils/path-helpers";
+import { getCaptainData } from "../utils/path-helpers";
 
 export type VectorStoreDocument = {
 	id?: number | string;
@@ -240,7 +240,7 @@ class VectorStore {
 	 * @returns {Promise<any>} A promise that resolves with the search results.
 	 */
 	public async search(collectionName: string, query: string, options?: SearchOptions) {
-		await this.ensureCollection(collectionName, false);
+		await this.ensureCollection(collectionName);
 
 		const queryVector = await this.embeddings.embedDocuments([query]);
 		const searchResults = await this.client?.search(collectionName, {

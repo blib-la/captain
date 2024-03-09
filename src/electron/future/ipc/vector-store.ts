@@ -3,7 +3,7 @@ import { ipcMain } from "electron";
 import { buildKey } from "#/build-key";
 import { VECTOR_STORE_COLLECTION } from "#/constants";
 import { ID } from "#/enums";
-import type { DocumentType as VectorStoreDocument } from "@/services/vector-store";
+import type { VectorStoreDocument } from "@/services/vector-store";
 import { VectorStore } from "@/services/vector-store";
 
 ipcMain.on(
