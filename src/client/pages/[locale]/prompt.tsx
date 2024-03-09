@@ -13,7 +13,9 @@ import { useEffect, useState, useRef } from "react";
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import { Logo } from "@/atoms/logo";
+import { Captain } from "@/atoms/logo/captain";
 import { useResizeObserver } from "@/ions/hooks/resize-observer";
+import { useVectorStore } from "@/ions/hooks/vector-store";
 
 export function useAutoFocusIPC<T extends HTMLElement>(reference: RefObject<T>) {
 	useEffect(() => {
@@ -39,22 +41,10 @@ export default function Page() {
 	const frameReference = useRef<HTMLDivElement | null>(null);
 	const promptReference = useRef<HTMLInputElement | null>(null);
 	const [value, setValue] = useState("");
-	const [suggestions, setSuggestions] = useState<{ id: string; label: string }[]>([]);
+	const suggestions = useVectorStore(value);
 
 	useAutoFocusIPC(promptReference);
 	useAutoSizerWindow(frameReference);
-
-	useEffect(() => {
-		const unsubscribe = window.ipc.on(
-			buildKey([ID.PROMPT], { suffix: ":suggestion" }),
-			(suggestions_: { id: string; label: string }[]) => {
-				setSuggestions(suggestions_);
-			}
-		);
-		return () => {
-			unsubscribe();
-		};
-	}, []);
 
 	return (
 		<Box
@@ -79,8 +69,17 @@ export default function Page() {
 				<Input
 					placeholder="I want to draw something..."
 					endDecorator={
-						<Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
-							<Logo sx={{ height: 30 }} />
+						<Box
+							sx={{
+								flex: 1,
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center",
+								height: 44,
+								width: 44,
+							}}
+						>
+							<Captain sx={{ height: "100%" }} />
 						</Box>
 					}
 					slotProps={{
@@ -108,9 +107,11 @@ export default function Page() {
 					onKeyDown={event => {
 						if (event.key === "Enter" && !event.shiftKey) {
 							event.preventDefault();
-							window.ipc.send(buildKey([ID.APP], { suffix: ":open" }), {
-								data: value,
-							});
+							if (suggestions[0]) {
+								window.ipc.send(buildKey([ID.APP], { suffix: ":open" }), {
+									data: suggestions[0].payload.id,
+								});
+							}
 						}
 					}}
 				/>
@@ -152,7 +153,7 @@ export default function Page() {
 									</ListItemDecorator>
 									<ListItemContent>
 										<Typography level="h4" component="div">
-											{suggestion.label}
+											{suggestion.payload.id}
 										</Typography>
 									</ListItemContent>
 								</ListItemButton>
