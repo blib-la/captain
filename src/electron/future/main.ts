@@ -333,8 +333,8 @@ async function runStartup(withDashboard?: boolean) {
 	);
 
 	//
-	await VectorStore.getInstance.deleteCollection(VECTOR_STORE_COLLECTION);
-	await populateVectorStoreFromDocuments();
+	// await VectorStore.getInstance.deleteCollection(VECTOR_STORE_COLLECTION);
+	// await populateVectorStoreFromDocuments();
 
 	apps.prompt = await createPromptWindow();
 	if (withDashboard) {
