@@ -1,9 +1,8 @@
 ---
-id: action
+id: userStore.set
 label: Switch to Light mode
 icon: sun
 action: function
-function: userStore.set
 parameters:
     theme: light
 language: en

@@ -1,9 +1,8 @@
 ---
-id: action
+id: userStore.set
 label: Switch to German
 icon: flagDe
 action: function
-function: userStore.set
 parameters:
     language: de
 language: en    

@@ -1,9 +1,8 @@
 ---
-id: action
+id: userStore.set
 label: Switch to Dark mode
 icon: moon
 action: function
-function: userStore.set
 parameters:
     theme: dark
 language: en
