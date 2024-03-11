@@ -1,3 +1,10 @@
+# [1.0.0-alpha.14](https://github.com/blib-la/captain/compare/v1.0.0-alpha.13...v1.0.0-alpha.14) (2024-03-11)
+
+
+### Features
+
+* adjust action logic ([#73](https://github.com/blib-la/captain/issues/73)) ([9485760](https://github.com/blib-la/captain/commit/9485760fda2b917fd996b7050f8595a8aa1f6192))
+
 # [1.0.0-alpha.13](https://github.com/blib-la/captain/compare/v1.0.0-alpha.12...v1.0.0-alpha.13) (2024-03-09)
 
 
