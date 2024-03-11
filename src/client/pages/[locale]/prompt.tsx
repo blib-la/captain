@@ -16,8 +16,8 @@ import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import { Logo } from "@/atoms/logo";
 import { Captain } from "@/atoms/logo/captain";
+import { handleCaptainAction } from "@/ions/handlers/action";
 import { useResizeObserver } from "@/ions/hooks/resize-observer";
-import { handleSuggestion, useCaptainActionResponse } from "@/ions/hooks/vector-actions";
 import { useVectorStore } from "@/ions/hooks/vector-store";
 
 export function useAutoFocusIPC<T extends HTMLElement>(reference: RefObject<T>) {
@@ -51,7 +51,6 @@ export default function Page() {
 
 	useAutoFocusIPC(promptReference);
 	useAutoSizerWindow(frameReference);
-	useCaptainActionResponse();
 
 	return (
 		<Box
@@ -123,7 +122,7 @@ export default function Page() {
 
 							const [suggestion] = suggestions;
 							if (suggestion) {
-								handleSuggestion(suggestion);
+								handleCaptainAction(suggestion);
 							}
 						}
 					}}
@@ -197,7 +196,7 @@ export default function Page() {
 									<ListItemButton
 										sx={{ height: 64 }}
 										onClick={() => {
-											handleSuggestion(suggestion);
+											handleCaptainAction(suggestion);
 										}}
 									>
 										<ListItemDecorator>

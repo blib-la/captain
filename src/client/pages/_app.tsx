@@ -1,63 +1,17 @@
-import { AppFrame } from "@captn/joy/app-frame";
 import { globalStyles } from "@captn/joy/styles";
 import { ThemeProvider } from "@captn/joy/theme";
-import { TitleBar } from "@captn/joy/title-bar";
 import { css, Global } from "@emotion/react";
-import Box from "@mui/joy/Box";
 import CssBaseline from "@mui/joy/CssBaseline";
 import dayjs from "dayjs";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { appWithTranslation, useTranslation } from "next-i18next";
-import type { ReactNode } from "react";
 import { useEffect, useMemo } from "react";
 
-import { useCaptainAction } from "@/ions/hooks/vector-actions";
-import { useLocalizedPath } from "@/organisms/language-select";
-import { TabButton } from "@/organisms/tab";
-
+import { ActionListeners } from "@/ions/hook-containers/actions";
+import { CoreLayout } from "@/organisms/layout/core";
 import "@/ions/date";
-
-export function Layout({ children }: { children?: ReactNode }) {
-	const { changeLanguage } = useLocalizedPath();
-
-	const { t } = useTranslation(["common", "labels"]);
-
-	useCaptainAction();
-	useEffect(() => {
-		const unsubscribe = window.ipc.on("language", locale => {
-			changeLanguage(locale);
-		});
-
-		return () => {
-			unsubscribe();
-		};
-	}, [changeLanguage]);
-
-	return (
-		<AppFrame
-			titleBar={
-				<TitleBar>
-					<Box
-						sx={{
-							WebkitAppRegion: "no-drag",
-							display: "flex",
-							alignItems: "center",
-							ml: -1,
-						}}
-					>
-						<TabButton href="/core/dashboard">{t("labels:dashboard")}</TabButton>
-						<TabButton href="/core/settings">{t("common:settings")}</TabButton>
-						<TabButton href="/core/help">{t("labels:help")}</TabButton>
-					</Box>
-				</TitleBar>
-			}
-		>
-			{children}
-		</AppFrame>
-	);
-}
 
 function App({ Component, pageProps }: AppProps) {
 	const {
@@ -81,7 +35,7 @@ function App({ Component, pageProps }: AppProps) {
 		<ThemeProvider>
 			{globalStyles}
 			<Head>
-				<title>Blibla</title>
+				<title>Captain</title>
 				<meta
 					name="viewport"
 					content="width=device-width, initial-scale=1.0, viewport-fit=cover"
@@ -92,6 +46,7 @@ function App({ Component, pageProps }: AppProps) {
 			</Head>
 
 			<CssBaseline />
+			<ActionListeners />
 			{isPrompt && (
 				<Global
 					styles={css({
@@ -100,9 +55,9 @@ function App({ Component, pageProps }: AppProps) {
 				/>
 			)}
 			{isCore ? (
-				<Layout>
+				<CoreLayout>
 					<Component {...pageProps} />
-				</Layout>
+				</CoreLayout>
 			) : (
 				<Component {...pageProps} />
 			)}
