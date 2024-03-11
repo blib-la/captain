@@ -1,4 +1,4 @@
-import type { ID } from "./enums";
+import type { ID, KEY } from "./enums";
 
 /**
  * Constructs a storage key using a combination of provided keys and optional formatting parameters.
@@ -12,7 +12,7 @@ import type { ID } from "./enums";
  * @returns A string representing the fully formatted key, incorporating the specified segments and formatting.
  * @throws {Error} If the `keys` array is empty, indicating that at least one key is required for key generation.
  */
-export function buildKey(keys: ID[], { delimiter = "-", prefix = "", suffix = "" } = {}) {
+export function buildKey(keys: (ID | KEY)[], { delimiter = "-", prefix = "", suffix = "" } = {}) {
 	if (keys.length === 0) {
 		throw new Error("At least one key is required");
 	}

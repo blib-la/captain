@@ -1,150 +1,73 @@
-import type { Mode } from "@mui/system/cssVars/useCurrentColorScheme";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
-import { useSsrColorScheme } from "@/ions/hooks/color-scheme";
-import type { VectorStoreDocument } from "@/ions/hooks/vector-store";
+import { getActionArguments } from "#/string";
+import { performElementAction } from "@/ions/handlers/action";
 
-export function handleSuggestion(suggestion: VectorStoreDocument) {
-	switch (suggestion.payload.id) {
-		case "action:user": {
-			if (!suggestion.payload.action) {
-				break;
-			}
-
-			try {
-				const [action, key, value] = suggestion.payload.action.split(":");
-				window.ipc.send("CAPTAIN_ACTION", {
-					action,
-					payload: {
-						key,
-						value,
-						scope: "user",
-					},
-				});
-			} catch (error) {
-				console.log(error);
-			}
-
-			break;
-		}
-
-		case "action:window": {
-			if (!suggestion.payload.action) {
-				break;
-			}
-
-			try {
-				const [action, key, value] = suggestion.payload.action.split(":");
-				window.ipc.send("CAPTAIN_ACTION", {
-					action,
-					payload: {
-						key,
-						value,
-						scope: "window",
-					},
-				});
-			} catch (error) {
-				console.log(error);
-			}
-
-			break;
-		}
-
-		default: {
-			window.ipc.send(buildKey([ID.APP], { suffix: ":open" }), {
-				data: suggestion.payload.id,
-				action: suggestion.payload.action,
-			});
-		}
-	}
-}
-
-export function useCaptainActionResponse() {
-	const { setMode } = useSsrColorScheme();
-	useEffect(() => {
-		const unsubscribe = window.ipc.on(
-			"CAPTAIN_ACTION",
-			({ key, value }: { key: string; value: unknown }) => {
-				console.log({ key, value });
-				switch (key) {
-					case "color-mode": {
-						if (
-							typeof value === "string" &&
-							["system", "light", "dark"].includes(value)
-						) {
-							setMode(value as Mode);
-						}
-
-						break;
-					}
-
-					default: {
-						break;
-					}
-				}
-			}
-		);
-		return () => {
-			unsubscribe();
-		};
-	}, [setMode]);
-}
-
+/**
+ * A custom React hook that uses URL query parameters to perform specified actions on elements identified by their `data-captainid`.
+ *
+ * The hook listens for changes in the URL's `action` query parameter and parses its value to execute supported commands:
+ * - "focus": Sets focus on the targeted element.
+ * - "click": Triggers a click event on the targeted element.
+ * - "type": Sets the value of an input element and dispatches an input event to simulate typing.
+ *
+ * This hook is intended for use in Next.js applications to dynamically handle UI interactions based on URL state,
+ * enhancing user experience by enabling direct interaction triggers via URL navigation.
+ *
+ * @example
+ * // Assuming a component within a Next.js application:
+ * useCaptainAction();
+ * // Given a URL like: /page?action=click:data-captainid-123
+ * // Automatically clicks the element with `data-captainid="data-captainid-123"`
+ */
 export function useCaptainAction() {
 	const {
-		asPath,
 		query: { action },
 	} = useRouter();
-	useCaptainActionResponse();
 
 	useEffect(() => {
-		if (action && typeof action === "string") {
-			const [command, id, value] = action.split(":");
+		if (typeof action === "string") {
+			const { command, captainId, value } = getActionArguments(action);
+
+			if (!captainId) {
+				return;
+			} // Early return if captainId is missing
+
 			switch (command) {
 				case "focus": {
-					try {
-						if (!id) {
-							break;
-						}
-
-						const element = document.querySelector<HTMLElement>(
-							`[data-captainid=${id}]`
-						);
-						if (element) {
-							element.focus();
-						}
-					} catch (error) {
-						console.log(error);
-					}
-
+					performElementAction(captainId, element => {
+						element.focus();
+					});
 					break;
 				}
 
-				case "set": {
-					try {
-						if (!id || value === undefined) {
-							break;
-						}
+				case "click": {
+					performElementAction(captainId, element => {
+						element.click();
+					});
+					break;
+				}
 
-						console.log(`| id: ${id} | to: ${value} |`);
-						window.ipc.send("CAPTAIN_ACTION", {
-							action: "set",
-							payload: { scope: "user", key: id, value },
+				case "type": {
+					if (value !== undefined) {
+						performElementAction(captainId, element => {
+							if ("value" in element) {
+								(element as HTMLInputElement).value = value; // Assuming el can be cast to HTMLInputElement
+								element.dispatchEvent(new Event("input", { bubbles: true })); // Trigger input event
+							}
 						});
-					} catch (error) {
-						console.log(error);
 					}
 
 					break;
 				}
 
 				default: {
+					// Handle unsupported commands or log an informative message
+					console.warn(`Unsupported command: ${command}`);
 					break;
 				}
 			}
 		}
-	}, [action, asPath]);
+	}, [action]);
 }

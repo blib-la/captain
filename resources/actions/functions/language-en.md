@@ -1,8 +1,10 @@
 ---
-id: action:user
+id: userStore.set
 label: Switch to English
-icon: ./icons/english-flag.svg
-action: set:language:en
+icon: flagEn
+action: function
+parameters:
+    language: en
 language: en
 description: "Instantly switch the application's language to English for a seamless user experience."
 ---

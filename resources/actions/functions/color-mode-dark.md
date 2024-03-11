@@ -1,8 +1,10 @@
 ---
-id: action:window
+id: userStore.set
 label: Switch to Dark mode
-icon: ./icons/moon.svg
-action: set:color-mode:dark
+icon: moon
+action: function
+parameters:
+    theme: dark
 language: en
 description: "Change your app's theme to Dark mode with one click."
 ---

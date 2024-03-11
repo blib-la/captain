@@ -31,7 +31,7 @@ test.afterAll(async () => {
 test("Renders the installer page", async () => {
 	page = await electronApp.firstWindow();
 	const title = await page.title();
-	expect(title).toBe("Blibla");
+	expect(title).toBe("Captain");
 });
 
 test("Allows switching the language", async () => {

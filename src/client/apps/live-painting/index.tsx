@@ -94,16 +94,6 @@ export function LivePainting() {
 	}, [image, setImages, writeFile]);
 
 	useEffect(() => {
-		const unsubscribe = window.ipc.on("language", async locale => {
-			await changeLanguage(locale);
-		});
-
-		return () => {
-			unsubscribe();
-		};
-	}, [changeLanguage]);
-
-	useEffect(() => {
 		async function handleSave(event: KeyboardEvent) {
 			if (event.key === "s" && event.ctrlKey) {
 				event.preventDefault();

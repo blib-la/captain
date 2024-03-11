@@ -1,7 +1,7 @@
 import Store from "electron-store";
 
 import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
+import { KEY } from "#/enums";
 import type { DownloadsSettings, KeysSettings, MarketplaceSettings, UserSettings } from "@/types";
 
 // Ensure that core settings are loaded before the stores are instantiated.
@@ -13,7 +13,7 @@ import "@/core-setup";
  * Utilizing a distinct store for user preferences facilitates easier access, updates, and potentially user-specific encryption or access control
  * mechanisms in the future.
  */
-export const userStore = new Store<UserSettings>({ name: buildKey([ID.STORE, ID.USER]) });
+export const userStore = new Store<UserSettings>({ name: buildKey([KEY.STORE, KEY.USER]) });
 
 /**
  * The `marketplaceStore` is dedicated to persisting data about marketplace items that have been retrieved,
@@ -25,7 +25,7 @@ export const userStore = new Store<UserSettings>({ name: buildKey([ID.STORE, ID.
  * that the application works with the most current information without unnecessary data fetching.
  */
 export const marketplaceStore = new Store<MarketplaceSettings>({
-	name: buildKey([ID.STORE, ID.MARKETPLACE]),
+	name: buildKey([KEY.STORE, KEY.MARKETPLACE]),
 });
 
 /**
@@ -38,7 +38,7 @@ export const marketplaceStore = new Store<MarketplaceSettings>({
  * activities.
  */
 export const downloadsStore = new Store<DownloadsSettings>({
-	name: buildKey([ID.STORE, ID.DOWNLOADS]),
+	name: buildKey([KEY.STORE, KEY.DOWNLOADS]),
 });
 
 /**
@@ -51,7 +51,7 @@ export const downloadsStore = new Store<DownloadsSettings>({
  * resources and integrate them into their workflows. The inventory store is a pivotal component
  * in bridging the gap between acquisition (via downloads) and utilization of marketplace items.
  */
-export const inventoryStore = new Store({ name: buildKey([ID.STORE, ID.INVENTORY]) });
+export const inventoryStore = new Store({ name: buildKey([KEY.STORE, KEY.INVENTORY]) });
 
 /**
  * The `keyStore` is specifically tailored for the secure handling of sensitive data, like API keys,
@@ -63,8 +63,8 @@ export const inventoryStore = new Store({ name: buildKey([ID.STORE, ID.INVENTORY
  * file inspection or inadvertent sharing.
  */
 export const keyStore = new Store<KeysSettings>({
-	name: buildKey([ID.STORE, ID.KEYS]),
-	encryptionKey: ID.KEYS, // Using "KEYS" enum as an encryption key for obfuscation purposes.
+	name: buildKey([KEY.STORE, KEY.KEYS]),
+	encryptionKey: KEY.KEYS, // Using "KEYS" enum as an encryption key for obfuscation purposes.
 });
 
 /**
@@ -77,5 +77,5 @@ export const keyStore = new Store<KeysSettings>({
  * enhancing reliability and user experience.
  */
 export const appSettingsStore = new Store({
-	name: buildKey([ID.STORE, ID.APP]),
+	name: buildKey([KEY.STORE, KEY.APP]),
 });

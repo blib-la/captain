@@ -1,9 +1,11 @@
 ---
-id: action:user
+id: userStore.set
 label: Switch to German
-icon: ./icons/de-flag.svg
-action: set:language:de
-language: en
+icon: flagDe
+action: function
+parameters:
+    language: de
+language: en    
 description: "Instantly switch the application's language to German for a seamless user experience."
 ---
 

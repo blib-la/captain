@@ -1,4 +1,21 @@
 /**
+ * Enum `KEY` serves as a centralized registry of key identifiers used across different Electron stores.
+ * This approach ensures consistency in naming conventions and simplifies the management of various data segments
+ * within the application. Each member of the enum represents a distinct data domain or functionality,
+ * facilitating a modular and organized storage strategy.
+ */
+export enum KEY {
+	APP = "APP",
+	DOWNLOADS = "DOWNLOADS",
+	INVENTORY = "INVENTORY",
+	KEYS = "KEYS",
+	MARKETPLACE = "MARKETPLACE",
+	STORE = "STORE",
+	USER = "USER",
+	WINDOW = "WINDOW",
+}
+
+/**
  * Enum `ID` serves as a centralized registry of key identifiers used across different Electron stores.
  * This approach ensures consistency in naming conventions and simplifies the management of various data segments
  * within the application. Each member of the enum represents a distinct data domain or functionality,
@@ -7,6 +24,7 @@
 export enum ID {
 	APP = "APP",
 	CAPTAIN = "CAPTAIN",
+	CAPTAIN_ACTION = "CAPTAIN_ACTION",
 	DIRECTORY = "DIRECTORY",
 	DOWNLOADS = "DOWNLOADS",
 	FILE = "FILE",

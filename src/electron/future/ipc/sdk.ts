@@ -1,11 +1,15 @@
 import fsp from "node:fs/promises";
 
 import { APP_MESSAGE_KEY } from "@captn/utils/constants";
+import { getProperty } from "dot-prop";
 import type { IpcMainEvent } from "electron";
 import { ipcMain } from "electron";
 import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 
+import { buildKey } from "#/build-key";
+import { ID } from "#/enums";
+import type { VectorStoreDocument } from "#/types/vector-store";
 import { userStore } from "@/stores";
 import {
 	getCaptainData,
@@ -200,21 +204,33 @@ ipcMain.on(
 	}
 );
 
-ipcMain.on("CAPTAIN_ACTION", (event, message: { action: string; payload: unknown }) => {
-	console.log(message);
+interface FunctionTree {
+	[key: string]: FunctionTree | ((properties: Record<string, unknown>) => void);
+}
+
+export const functions: FunctionTree = {
+	userStore: {
+		set(properties: Record<string, unknown>) {
+			for (const key in properties) {
+				if (Object.hasOwn(properties, key)) {
+					userStore.set(key, properties[key]);
+				}
+			}
+		},
+	},
+};
+
+export function handleCaptainAction(message: {
+	action: string;
+	payload: VectorStoreDocument["payload"];
+}) {
 	switch (message.action) {
-		case "set": {
+		case "function": {
 			try {
-				const { key, value, scope } = message.payload as {
-					key: string;
-					value: unknown;
-					scope: string;
-				};
-				if (scope === "user" && key) {
-					console.log("setting:", { key, value });
-					userStore.set(key, value);
-				} else if (scope === "window" && key) {
-					event.sender.send("CAPTAIN_ACTION", { key, value });
+				const { id: functionPath, parameters } = message.payload;
+				const function_ = getProperty(functions, functionPath);
+				if (typeof function_ === "function") {
+					function_(parameters ?? {});
 				}
 			} catch (error) {
 				console.log(error);
@@ -227,4 +243,33 @@ ipcMain.on("CAPTAIN_ACTION", (event, message: { action: string; payload: unknown
 			break;
 		}
 	}
-});
+}
+
+ipcMain.on(
+	buildKey([ID.CAPTAIN_ACTION]),
+	(event, message: { action: string; payload: unknown }) => {
+		console.log(message);
+		switch (message.action) {
+			case "function": {
+				try {
+					const { id: functionPath, parameters } = message.payload as {
+						id: string;
+						parameters: Record<string, unknown>;
+					};
+					const function_ = getProperty(functions, functionPath);
+					if (typeof function_ === "function") {
+						function_(parameters);
+					}
+				} catch (error) {
+					console.log(error);
+				}
+
+				break;
+			}
+
+			default: {
+				break;
+			}
+		}
+	}
+);

@@ -1,8 +1,10 @@
 ---
-id: action:window
+id: userStore.set
 label: Switch to Light mode
-icon: ./icons/sun.svg
-action: set:color-mode:light
+icon: sun
+action: function
+parameters:
+    theme: light
 language: en
 description: "Change your app's theme to Light mode with one click."
 ---
