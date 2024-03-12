@@ -24,8 +24,6 @@ describe("CustomHuggingFaceEmbeddings", () => {
 	beforeAll(() => {
 		env.localModelPath = path.join(process.cwd(), "models");
 
-		console.log(env.backends);
-
 		embeddings = new CustomHuggingFaceTransformersEmbeddings({
 			modelName: "Xenova/all-MiniLM-L6-v2",
 			maxTokens: 128,
