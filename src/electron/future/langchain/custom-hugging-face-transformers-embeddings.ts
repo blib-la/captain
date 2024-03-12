@@ -6,6 +6,14 @@ import { AutoTokenizer, env } from "@xenova/transformers";
 env.allowRemoteModels = false;
 env.allowLocalModels = true;
 
+/**
+ * Truncate texts to a specified maximum token length.
+ *
+ * @param texts - The array of text strings to truncate.
+ * @param modelName - The name of the model used for tokenization.
+ * @param maxTokens - The maximum number of tokens allowed for each text.
+ * @returns A Promise that resolves to an array of truncated text strings.
+ */
 async function truncateTexts(
 	texts: string[],
 	modelName: string,
@@ -23,6 +31,14 @@ async function truncateTexts(
 	);
 }
 
+/**
+ * Custom wrapper around HuggingFaceTransformersEmbeddings to support text truncation
+ * to a specified maximum number of tokens before embedding. This can be useful
+ * when working with models that have a fixed maximum input size, but produce better results
+ * when you use a lower input size as the maximum.
+ *
+ * @extends HuggingFaceTransformersEmbeddings
+ */
 export class CustomHuggingFaceTransformersEmbeddings extends HuggingFaceTransformersEmbeddings {
 	private maxTokens?: number;
 
@@ -35,6 +51,13 @@ export class CustomHuggingFaceTransformersEmbeddings extends HuggingFaceTransfor
 		this.maxTokens = fields?.maxTokens;
 	}
 
+	/**
+	 * Embeds multiple documents, optionally truncating each to a maximum token length.
+	 *
+	 * @param texts - The array of text strings to embed.
+	 * @returns A Promise that resolves to a two-dimensional array of embeddings, with each
+	 * sub-array representing the embedding of one input text.
+	 */
 	async embedDocuments(texts: string[]): Promise<number[][]> {
 		// Truncate texts if maxTokens is specified
 		if (this.maxTokens) {
@@ -45,6 +68,12 @@ export class CustomHuggingFaceTransformersEmbeddings extends HuggingFaceTransfor
 		return super.embedDocuments(texts);
 	}
 
+	/**
+	 * Embeds a single query, optionally truncating it to a maximum token length.
+	 *
+	 * @param text - The text string to embed.
+	 * @returns A Promise that resolves to an array representing the embedding of the input text.
+	 */
 	async embedQuery(text: string): Promise<number[]> {
 		// Truncate text if maxTokens is specified
 		if (this.maxTokens) {
