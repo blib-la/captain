@@ -1,3 +1,10 @@
+# [1.0.0-alpha.15](https://github.com/blib-la/captain/compare/v1.0.0-alpha.14...v1.0.0-alpha.15) (2024-03-12)
+
+
+### Features
+
+* use transformer.js for embeddings ([#74](https://github.com/blib-la/captain/issues/74)) ([d254612](https://github.com/blib-la/captain/commit/d254612926e42132c98ce758af984a6c4f87551d))
+
 # [1.0.0-alpha.14](https://github.com/blib-la/captain/compare/v1.0.0-alpha.13...v1.0.0-alpha.14) (2024-03-11)
 
 
