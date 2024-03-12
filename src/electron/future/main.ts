@@ -294,7 +294,7 @@ async function populateVectorStoreFromDocuments() {
 	});
 
 	const corePaths = await globby(["**/*.md"], {
-		cwd: getDirectory("docs"),
+		cwd: getDirectory("actions"),
 		absolute: true,
 	});
 
@@ -310,6 +310,8 @@ async function populateVectorStoreFromDocuments() {
 					action: data.action,
 					label: data.label,
 					description: data.description,
+					parameters: data.parameters,
+					function: data.function,
 					icon: data.icon,
 				},
 			};
@@ -396,25 +398,36 @@ export async function main() {
 		}
 	});
 
+	userStore.onDidChange("theme", theme => {
+		if (theme) {
+			const windows_ = BrowserWindow.getAllWindows();
+			for (const window_ of windows_) {
+				window_.webContents.send("theme", theme);
+			}
+		}
+	});
+
 	ipcMain.on(
 		buildKey([ID.APP], { suffix: ":open" }),
-		async (_event, { data: id, action }: { data: string; action?: string }) => {
-			if (isCoreView(id)) {
+		async (_event, { appId, action }: { appId: string; action?: string }) => {
+			if (isCoreView(appId)) {
 				// If the appId is a core view we need to handle it
 				apps.core ||= await createCoreWindow();
 				// Add action to the url
-				await loadURL(apps.core, `core/${id}${action ? `?action=${action}` : ""}`);
+				await loadURL(apps.core, `core/${appId}${action ? `?action=${action}` : ""}`);
 				apps.core.on("close", () => {
 					apps.core = null;
 				});
 				apps.core.focus();
 			} else {
-				apps[id] ||= await (isCoreApp(id) ? createCoreAppWindow(id) : createAppWindow(id));
-				apps[id]!.on("close", () => {
-					apps[id] = null;
+				apps[appId] ||= await (isCoreApp(appId)
+					? createCoreAppWindow(appId)
+					: createAppWindow(appId));
+				apps[appId]!.on("close", () => {
+					apps[appId] = null;
 					// TODO Needs to ensure that all processes opened by this window are closed
 				});
-				apps[id]!.focus();
+				apps[appId]!.focus();
 			}
 		}
 	);

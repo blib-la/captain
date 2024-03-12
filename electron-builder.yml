@@ -10,7 +10,7 @@ files:
       - package.json
       - app
       - resources/python/**/*
-      - resources/powershell/**/*
+      - resources/actions/**/*
       - resources/7zip/**/*
 publish: null
 nsis:
@@ -20,5 +20,5 @@ nsis:
 asar: true
 asarUnpack:
   - "resources/python/**/*"
-  - "resources/powershell/**/*"
+  - "resources/actions/**/*"
   - "resources/7zip/**/*"

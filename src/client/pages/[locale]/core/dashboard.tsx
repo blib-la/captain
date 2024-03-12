@@ -13,7 +13,7 @@ import { useTranslation } from "next-i18next";
 import { useState } from "react";
 
 import { Logo } from "@/atoms/logo";
-import { handleSuggestion } from "@/ions/hooks/vector-actions";
+import { handleCaptainAction } from "@/ions/handlers/action";
 import { useVectorStore } from "@/ions/hooks/vector-store";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 
@@ -40,7 +40,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 							event.preventDefault();
 							const [result] = results;
 							if (result) {
-								handleSuggestion(result);
+								handleCaptainAction(result);
 							}
 						}
 					}}
@@ -68,7 +68,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 									color={index === 0 ? "primary" : undefined}
 									variant={index === 0 ? "outlined" : undefined}
 									onClick={() => {
-										handleSuggestion(result);
+										handleCaptainAction(result);
 									}}
 								>
 									<ListItemContent>{result.payload.label}</ListItemContent>

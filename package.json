@@ -1,6 +1,6 @@
 {
   "name": "captain",
-  "version": "1.0.0-alpha.13",
+  "version": "1.0.0-alpha.14",
   "private": true,
   "description": "The Captain of AI",
   "license": "AGPL 3.0",
@@ -90,6 +90,7 @@
     "dayjs": "1.11.10",
     "dotenv": "^16.4.5",
     "dotenv-cli": "^7.4.0",
+    "dot-prop": "^8.0.2",
     "electron": "30.0.0-alpha.4",
     "electron-builder": "^24.13.3",
     "eslint": "^8.57.0",

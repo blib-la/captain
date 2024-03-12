@@ -36,6 +36,7 @@ const jestConfig = {
 	testEnvironment: "jsdom",
 	transformIgnorePatterns: ["/node_modules/"],
 	extensionsToTreatAsEsm: [".ts", ".tsx"],
+	setupFilesAfterEnv: ["<rootDir>/jest.setup.client.ts"],
 };
 
 export default jestConfig;

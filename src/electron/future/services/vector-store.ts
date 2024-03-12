@@ -1,8 +1,8 @@
 import fsp from "node:fs/promises";
 
 import type { EmbeddingsInterface } from "@langchain/core/embeddings";
-import { QdrantClient } from "@qdrant/js-client-rest";
 import type { Schemas as QdrantSchemas } from "@qdrant/js-client-rest";
+import { QdrantClient } from "@qdrant/js-client-rest";
 import axios from "axios";
 import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
@@ -10,28 +10,13 @@ import { v4 } from "uuid";
 
 import { getCaptainData } from "../utils/path-helpers";
 
-export type VectorStoreDocument = {
-	id?: number | string;
-	content: string;
-	payload: {
-		id: string;
-		language: string;
-		action?: string;
-		icon?: string;
-		description?: string;
-		label: string;
-	};
-};
+import type { SearchOptions, VectorStoreDocument } from "#/types/vector-store";
 
 interface ServiceReadyConfig {
 	maxRetries?: number;
 	retryInterval?: number;
 	timeout?: number;
 }
-
-export type SearchOptions = {
-	score_threshold?: number;
-};
 
 class VectorStore {
 	private static instance: VectorStore | null = null;
