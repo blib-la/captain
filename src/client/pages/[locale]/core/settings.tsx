@@ -1,4 +1,4 @@
-import { CustomScrollbars } from "@captn/react/custom-scrollbars";
+import { CustomScrollbars } from "@captn/joy/custom-scrollbars";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Container from "@mui/joy/Container";

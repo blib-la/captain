@@ -1,141 +1,97 @@
-import Button from "@mui/joy/Button";
-import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
-import Option from "@mui/joy/Option";
-import Select from "@mui/joy/Select";
-import Stack from "@mui/joy/Stack";
-import Textarea from "@mui/joy/Textarea";
-import Typography from "@mui/joy/Typography";
+import { CustomScrollbars } from "@captn/joy/custom-scrollbars";
+import { useSDK } from "@captn/react/use-sdk";
+import Box from "@mui/joy/Box";
+import Grid from "@mui/joy/Grid";
+import LinearProgress from "@mui/joy/LinearProgress";
 import { useAtom } from "jotai";
-import { useTranslation } from "next-i18next";
-import { Controller, useForm } from "react-hook-form";
+import { useCallback, useEffect, useState } from "react";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
-import type { FormInput } from "#/types/story";
-import { imagesAtom } from "@/apps/live-painting/atoms";
+import { selectedStoryImagesAtom, storyImagesAtom } from "./atoms";
+import { VirtualGrid } from "./components";
+import { APP_ID } from "./constants";
+import { Markdown } from "./markdown";
+import { StoryForm } from "./story-form";
 
-export function StoryForm({ onSubmit }: { onSubmit?(): void }) {
-	const {
-		t,
-		i18n: { language: locale },
-	} = useTranslation(["labels", "texts"]);
-	const [images] = useAtom(imagesAtom);
-	const { handleSubmit, register, control, watch } = useForm<FormInput>({
-		defaultValues: {
-			length: "short",
-			style: "magicalMystery",
-			customStyle: "",
-			characters: "",
-			mood: "exciting",
+import { LOCAL_PROTOCOL } from "#/constants";
+
+export function Story() {
+	const [images, setImages] = useAtom(storyImagesAtom);
+	const [selectedImages] = useAtom(selectedStoryImagesAtom);
+
+	const [story, setStory] = useState("");
+	const [generating, setGenerating] = useState(false);
+
+	const loadImages = useCallback(() => {
+		window.ipc.inventoryStore
+			.get<{ filePath: string; id: string }[]>("files.image", [])
+			.then(images_ => {
+				console.log(images_);
+				setImages(images_);
+			});
+	}, [setImages]);
+	useSDK<unknown, { done: boolean; story: string }>(APP_ID, {
+		onMessage(message) {
+			console.log(message);
+			setStory(message.payload.story);
+			if (message.payload.done) {
+				setGenerating(false);
+			}
+
+			switch (message.action) {
+				case "story:create": {
+					break;
+				}
+
+				default: {
+					break;
+				}
+			}
 		},
 	});
 
-	const style = watch("style");
+	useEffect(() => {
+		loadImages();
+		const unsubscribe = window.ipc.on("images", images_ => {
+			setImages(images_);
+		});
+		return () => {
+			unsubscribe();
+		};
+	}, [loadImages, setImages]);
 
-	return (
-		<Stack
-			component="form"
-			gap={2}
-			onSubmit={handleSubmit(data => {
-				if (onSubmit) {
-					onSubmit();
-				}
+	if (story) {
+		return (
+			<CustomScrollbars>
+				<Box sx={{ p: 2 }}>
+					<Markdown
+						markdown={story}
+						images={selectedImages.map(
+							image => `${LOCAL_PROTOCOL}://${image.filePath}`
+						)}
+					/>
+				</Box>
+			</CustomScrollbars>
+		);
+	}
 
-				window.ipc.send(buildKey([ID.STORY], { suffix: ":describe" }), {
-					images: images.map(image => image.dataUrl),
-					locale,
-					options: data,
-				});
-			})}
-		>
-			<Typography>{t("texts:storyFormIntroduction")}</Typography>
-			<FormControl required>
-				<FormLabel>{t("labels:formLabel.length")}</FormLabel>
-				<Controller
-					name="length"
-					control={control}
-					render={({ field: { onChange, ...field } }) => (
-						<Select
-							{...field}
-							required
-							onChange={(event, value) => {
-								onChange({ target: { value } });
-							}}
-						>
-							<Option value="short">{t("labels:length.short")}</Option>
-							<Option value="medium">{t("labels:length.medium")}</Option>
-							<Option value="long">{t("labels:length.long")}</Option>
-						</Select>
-					)}
-				/>
-			</FormControl>
-			<FormControl required>
-				<FormLabel>{t("labels:formLabel.styleTheme")}</FormLabel>
-				<Controller
-					name="style"
-					control={control}
-					render={({ field: { onChange, ...field } }) => (
-						<Select
-							{...field}
-							required
-							onChange={(event, value) => {
-								onChange({ target: { value } });
-							}}
-						>
-							<Option value="magicalMystery">
-								{t("labels:style.magicalMystery")}
-							</Option>
-							<Option value="adventure">{t("labels:style.adventure")}</Option>
-							<Option value="sciFi">{t("labels:style.sciFi")}</Option>
-							<Option value="historical">{t("labels:style.historical")}</Option>
-							<Option value="custom">{t("labels:style.custom")}</Option>
-						</Select>
-					)}
-				/>
-			</FormControl>
-			<FormControl
-				sx={{
-					display: style === "custom" ? undefined : "none",
-				}}
-			>
-				<FormLabel>{t("labels:formLabel.customStyle")}</FormLabel>
-				<Textarea
-					disabled={style !== "custom"}
-					{...register("customStyle", { required: style === "custom" })}
-					placeholder={t("labels:placeholder.customStyle")}
-				/>
-			</FormControl>
-			<FormControl>
-				<FormLabel>{t("labels:formLabel.characters")}</FormLabel>
-				<Textarea
-					{...register("characters")}
-					placeholder={t("labels:placeholder.characters")}
-				/>
-			</FormControl>
-			<FormControl required>
-				<FormLabel>{t("labels:formLabel.mood")}</FormLabel>
-				<Controller
-					name="mood"
-					control={control}
-					render={({ field: { onChange, ...field } }) => (
-						<Select
-							{...field}
-							required
-							onChange={(event, value) => {
-								onChange({ target: { value } });
-							}}
-						>
-							<Option value="joyful">{t("labels:mood.joyful")}</Option>
-							<Option value="sad">{t("labels:mood.sad")}</Option>
-							<Option value="suspenseful">{t("labels:mood.suspenseful")}</Option>
-							<Option value="relaxing">{t("labels:mood.relaxing")}</Option>
-							<Option value="exciting">{t("labels:mood.exciting")}</Option>
-						</Select>
-					)}
-				/>
-			</FormControl>
-			<Button type="submit">{t("labels:submitButtonText")}</Button>
-		</Stack>
+	return generating ? (
+		<Box sx={{ p: 6 }}>
+			<LinearProgress />
+		</Box>
+	) : (
+		<Box sx={{ px: 2, overflow: "hidden", height: "100%" }}>
+			<Grid container spacing={2} columns={{ xs: 1, lg: 2 }} sx={{ height: "100%", pt: 2 }}>
+				<Grid xs={1} sx={{ position: "relative" }}>
+					<VirtualGrid items={images?.length ?? 0} />
+				</Grid>
+				<Grid xs={1} sx={{ display: "flex" }}>
+					<StoryForm
+						onSubmit={() => {
+							setGenerating(true);
+						}}
+					/>
+				</Grid>
+			</Grid>
+		</Box>
 	);
 }

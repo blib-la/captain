@@ -6,10 +6,13 @@ import type { IpcMainEvent } from "electron";
 import { ipcMain } from "electron";
 import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
+import type { Except } from "type-fest";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
+import type { StoryRequest } from "#/types/story";
 import type { VectorStoreDocument } from "#/types/vector-store";
+import { captionImages, createStory, maxTokenMap } from "@/ipc/story";
 import { userStore } from "@/stores";
 import {
 	getCaptainData,
@@ -203,6 +206,69 @@ ipcMain.on(
 		}
 	}
 );
+
+ipcMain.on(
+	APP_MESSAGE_KEY,
+	async <T>(
+		event: IpcMainEvent,
+		{ message, appId }: { message: SDKMessage<T>; appId: string }
+	) => {
+		switch (message.action) {
+			case "story:create": {
+				try {
+					const { images, locale, options } = message.payload as Except<
+						StoryRequest,
+						"imageDescriptions"
+					> & { images: string[] };
+					const imageDescriptions = await captionImages(images);
+
+					// Seems like no descriptions were generated. Handle as error
+					if (!imageDescriptions) {
+						console.log("missing descriptions");
+
+						return;
+					}
+
+					console.log(imageDescriptions);
+
+					const maxTokens = maxTokenMap[options.length] * images.length;
+					const channel = `${appId}:${APP_MESSAGE_KEY}`;
+
+					createStory(
+						{ imageDescriptions, maxTokens, locale, options },
+						{
+							onError(error) {
+								console.log(error);
+							},
+							onChunk(story) {
+								console.log(story);
+								event.sender.send(channel, {
+									action: "story:create",
+									payload: { story, done: false },
+								});
+							},
+							onDone(story) {
+								console.log(story);
+								event.sender.send(channel, {
+									action: "story:create",
+									payload: { story, done: true },
+								});
+							},
+						}
+					);
+				} catch {}
+
+				break;
+			}
+
+			default: {
+				break;
+			}
+		}
+	}
+);
+
+// Actions
 
 interface FunctionTree {
 	[key: string]: FunctionTree | ((properties: Record<string, unknown>) => void);

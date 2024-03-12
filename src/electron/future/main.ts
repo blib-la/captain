@@ -4,14 +4,14 @@ import path from "path";
 import url from "url";
 
 import { OpenAIEmbeddings } from "@langchain/openai";
-import type { BrowserWindowConstructorOptions } from "electron";
-import { app, ipcMain, BrowserWindow, Menu, protocol, screen, globalShortcut } from "electron";
+import type { BrowserWindowConstructorOptions, BrowserWindow } from "electron";
+import { app, ipcMain, Menu, protocol, screen, globalShortcut } from "electron";
 import { globby } from "globby";
 import matter from "gray-matter";
 
 import { version } from "../../../package.json";
 
-import { appSettingsStore, keyStore, userStore } from "./stores";
+import { appSettingsStore, keyStore } from "./stores";
 
 import { buildKey } from "#/build-key";
 import { LOCAL_PROTOCOL, VECTOR_STORE_COLLECTION } from "#/constants";
@@ -380,24 +380,6 @@ export async function main() {
 	if (isProduction) {
 		Menu.setApplicationMenu(null);
 	}
-
-	userStore.onDidChange("language", language => {
-		if (language) {
-			const windows_ = BrowserWindow.getAllWindows();
-			for (const window_ of windows_) {
-				window_.webContents.send("language", language);
-			}
-		}
-	});
-
-	userStore.onDidChange("theme", theme => {
-		if (theme) {
-			const windows_ = BrowserWindow.getAllWindows();
-			for (const window_ of windows_) {
-				window_.webContents.send("theme", theme);
-			}
-		}
-	});
 
 	ipcMain.on(
 		buildKey([ID.APP], { suffix: ":open" }),

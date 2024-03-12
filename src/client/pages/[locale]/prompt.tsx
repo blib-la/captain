@@ -108,8 +108,8 @@ export default function Page() {
 						try {
 							const result = evaluate(event.target.value);
 							setEvaluationResult(result.toString());
-						} catch (error) {
-							console.error(error);
+						} catch {
+							// Console.error(error);
 							setEvaluationResult("");
 						}
 					}}

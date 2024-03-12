@@ -1,6 +1,7 @@
 import { app } from "electron";
 
 import { main } from "@/main";
+import { watchStores } from "@/stores/watchers";
 
 // Import core setup module.
 // This ensures the core setup process is executed explicitly, even though it may already be called
@@ -51,10 +52,12 @@ import "@/ipc/testing";
 // Import the vector store
 import "@/ipc/vector-store";
 
+let unsubscribe: (() => Promise<void>) | undefined;
 // Initialize the application by calling the main function.
 // Upon completion, log to the console indicating the application has started.
 main().then(() => {
 	console.log("Application started successfully.");
+	unsubscribe = watchStores();
 });
 
 // Listen for the 'window-all-closed' event on the Electron app object.
@@ -63,4 +66,7 @@ main().then(() => {
 // behavior.
 app.on("window-all-closed", () => {
 	app.quit();
+	if (unsubscribe) {
+		unsubscribe();
+	}
 });

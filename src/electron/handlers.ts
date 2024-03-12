@@ -1,9 +1,19 @@
-import { ipcRenderer, type IpcRendererEvent } from "electron";
+import type { IpcRendererEvent } from "electron";
+import { ipcRenderer } from "electron";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 
 export const handlers = {
+	inventoryStore: {
+		get<T>(key: string, defaultValue?: T): Promise<T> {
+			return ipcRenderer.invoke(
+				buildKey([ID.STORE, ID.INVENTORY], { suffix: ":get" }),
+				key,
+				defaultValue
+			);
+		},
+	},
 	writeFile(name: string, content: string, options: { encoding?: BufferEncoding } = {}) {
 		return ipcRenderer.invoke(
 			buildKey([ID.FILE], { suffix: ":write" }),

@@ -81,3 +81,31 @@ export function getActionArguments(action: string) {
 
 	return { command, captainId, value, options } as const;
 }
+
+/**
+ * Determines the file type based on its extension.
+ *
+ * This function examines the extension of the provided file path and categorizes it into
+ * one of the predetermined types: 'image', 'markdown', 'audio', or 'other'.
+ *
+ * @param {string} filePath The complete path of the file including its name and extension.
+ * @returns {string} The category of the file based on its extension. Possible return values
+ * are 'image', 'markdown', 'audio', or 'other'.
+ */
+export function getFileType(filePath: string) {
+	const extension = `.${filePath.split(".").pop()?.toLowerCase() ?? ""}`;
+
+	if ([".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp", ".svg"].includes(extension)) {
+		return "image";
+	}
+
+	if (extension === ".md") {
+		return "markdown";
+	}
+
+	if ([".mp3", ".wav", ".aac", ".ogg", ".flac"].includes(extension)) {
+		return "audio";
+	}
+
+	return "other";
+}
