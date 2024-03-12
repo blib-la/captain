@@ -21,7 +21,7 @@
     "spj": "npx sort-package-json@latest",
     "test:client": "jest --runInBand --config jest.config.client.ts --verbose",
     "pretest:e2e": "nextron build --no-pack",
-    "test:e2e": "xvfb-run --auto-servernum --server-args=\"-screen 0 1280x960x24\" -- cross-env TEST_ENV=test npx playwright test",
+    "test:e2e": "cross-env TEST_ENV=test npx playwright test",
     "test:e2e:local": "cross-env TEST_ENV=local npx playwright test",
     "test:electron": "jest --runInBand --config jest.config.electron.ts --verbose",
     "test:electron:e2e": "cross-env TEST_ENV=local jest --runInBand --config jest.config.electron.e2e.ts --verbose",
