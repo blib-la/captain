@@ -1,4 +1,6 @@
-import { OpenAIEmbeddings } from "@langchain/openai";
+import path from "node:path";
+
+import { env } from "@xenova/transformers";
 import axios from "axios";
 import dotenv from "dotenv";
 
@@ -20,15 +22,32 @@ jest.mock("electron", () => ({
 	},
 }));
 
+const originalImplementation = Array.isArray;
+// @ts-expect-error we just want to mock this
+Array.isArray = jest.fn(type => {
+	if (
+		type &&
+		type.constructor &&
+		(type.constructor.name === "Float32Array" || type.constructor.name === "BigInt64Array")
+	) {
+		return true;
+	}
+
+	return originalImplementation(type);
+});
+
+import { CustomHuggingFaceTransformersEmbeddings } from "@/langchain/custom-hugging-face-transformers-embeddings";
 import { VectorStore } from "@/services/vector-store";
 
 describe("VectorStore Integration Tests", () => {
 	let vectorStore: VectorStore;
 	const collectionName = "test_collection";
+	const collectionName2 = "test_collection_2";
 	const document1 = {
 		content: "Live Painting is very nice",
 		payload: {
 			id: "live-painting:schema",
+			label: "Live Painting",
 			language: "en",
 		},
 	};
@@ -38,21 +57,27 @@ describe("VectorStore Integration Tests", () => {
 		content: "Story Creator writes any story",
 		payload: {
 			id: "story-creator:schema",
+			label: "Story Creator",
 			language: "en",
 		},
 	};
 
 	beforeAll(async () => {
-		const embedding = new OpenAIEmbeddings({
-			openAIApiKey: process.env.OPENAI_API_KEY,
-			modelName: "text-embedding-3-large",
+		env.localModelPath = path.join(process.cwd(), "models");
+
+		const embedding = new CustomHuggingFaceTransformersEmbeddings({
+			modelName: "Xenova/all-MiniLM-L6-v2",
+			maxTokens: 128,
+			stripNewLines: true,
 		});
 
 		vectorStore = await VectorStore.init(embedding);
+
+		await vectorStore.deleteCollection(collectionName);
+		await vectorStore.deleteCollection(collectionName2);
 	});
 
 	afterAll(async () => {
-		await vectorStore.deleteCollection(collectionName);
 		await vectorStore.stop();
 	});
 
@@ -108,10 +133,13 @@ describe("VectorStore Integration Tests", () => {
 
 	it("should throw an error as searching in a non-existing collection doesn't work", async () => {
 		try {
-			await vectorStore.search("doesnt-exist", document1.content);
+			await vectorStore.search(collectionName2, document1.content);
 		} catch (error) {
 			expect(error).toBeDefined();
-			expect((error as Error).message).toContain("Collection doesnt-exist doesn't exist");
+			console.log(error);
+			expect((error as Error).message).toContain(
+				`Collection ${collectionName2} doesn't exist`
+			);
 		}
 	}, 10_000);
 

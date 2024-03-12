@@ -287,7 +287,7 @@ class VectorStore {
 	 * @returns {Promise<any>} A promise that resolves when the collection has been deleted.
 	 */
 	public async deleteCollection(collectionName: string) {
-		this.ensureCollection(collectionName, false);
+		await this.ensureCollection(collectionName, false);
 
 		return this.client?.deleteCollection(collectionName);
 	}
