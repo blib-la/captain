@@ -2,14 +2,14 @@ name: e2e Tests
 
 on:
   push:
-    branches: [ alpha, beta, rc, main ]
+    branches: [alpha, beta, rc, main]
   pull_request:
     types: [opened, synchronize]
-    branches: [ alpha, beta, rc, main ]
+    branches: [alpha, beta, rc, main]
 
 jobs:
   test-e2e:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     strategy:
       matrix:
         node-version: [18.x]
