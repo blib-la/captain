@@ -20,7 +20,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+
       - name: Install dependencies
         run: npm install
+
+      - name: Fix auto-fixable eslint issues
+        run: npm run eslint -- --fix
+
       - name: Run e2e tests
         run: npm run test:e2e
