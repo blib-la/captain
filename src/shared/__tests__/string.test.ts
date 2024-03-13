@@ -1,4 +1,4 @@
-import { extractH1Headings, getFileType } from "#/string";
+import { extractH1Headings, getFileType } from "../string";
 
 describe("extractH1Headings", () => {
 	it("extracts multiple H1 headings", () => {

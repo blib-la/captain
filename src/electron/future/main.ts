@@ -6,6 +6,7 @@ import url from "url";
 // We have to ignore the error since the package is not compiled but the original source from ghithub
 // See package.json
 // "@xenova/transformers": "github:xenova/transformers.js#v3",
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { env } from "@xenova/transformers";
 import type { BrowserWindowConstructorOptions, BrowserWindow } from "electron";
