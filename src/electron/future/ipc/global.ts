@@ -4,6 +4,7 @@ import path from "node:path";
 
 import { WINDOW_CLOSE_KEY, WINDOW_MAXIMIZE_KEY, WINDOW_MINIMIZE_KEY } from "@captn/utils/constants";
 import { BrowserWindow, dialog, ipcMain } from "electron";
+import { v4 } from "uuid";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
@@ -99,7 +100,7 @@ ipcMain.handle(
 		} = {}
 	) => {
 		const filePath = getCaptainData("files", subpath);
-		const { dir: directory, name } = path.parse(filePath);
+		const { dir: directory } = path.parse(filePath);
 		const fileType = getFileType(filePath);
 
 		// Ensure the directory exists, creating it if necessary
@@ -109,11 +110,11 @@ ipcMain.handle(
 
 		// Write the file content
 		await fsp.writeFile(filePath, content, options);
-
+		const id = v4();
 		const keyPath = `files.${fileType}`;
 		// Update the application's file inventory
 		const files = inventoryStore.get<string, { filePath: string; id: string }[]>(keyPath, []);
-		files.push({ filePath, id: name });
+		files.push({ filePath, id });
 		inventoryStore.set(keyPath, files);
 
 		return { filePath, fileType };
