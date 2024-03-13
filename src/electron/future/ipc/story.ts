@@ -228,7 +228,6 @@ export async function createStory(
 		const userPromptStory = buildUserPrompt(imageDescriptions, { options, locale });
 
 		// Debugging helper to check what has been passed down byu the user
-		console.log({ userPromptStory });
 
 		const streamStory = await openai.chat.completions.create({
 			model: "gpt-4-turbo-preview",
