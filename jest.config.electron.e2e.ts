@@ -5,7 +5,15 @@ const jestConfig = {
 	roots: ["<rootDir>/src/electron"],
 	testMatch: ["**/*.test.e2e.ts"],
 	transform: {
-		"^.+\\.(ts|js)$": ["@swc/jest"],
+		"^.+\\.(ts)$": ["@swc/jest"],
+		"^.+\\.(js)$": [
+			"@swc/jest",
+			{
+				jsc: {
+					target: "es5",
+				},
+			},
+		],
 	},
 	moduleNameMapper: {
 		"@/(.*)": "<rootDir>/src/electron/future/$1",

@@ -3,7 +3,11 @@ import fsp from "node:fs/promises";
 import path from "path";
 import url from "url";
 
-import { OpenAIEmbeddings } from "@langchain/openai";
+// We have to ignore the error since the package is not compiled but the original source from ghithub
+// See package.json
+// "@xenova/transformers": "github:xenova/transformers.js#v3",
+// @ts-ignore
+import { env } from "@xenova/transformers";
 import type { BrowserWindowConstructorOptions, BrowserWindow } from "electron";
 import { app, ipcMain, Menu, protocol, screen, globalShortcut } from "electron";
 import { globby } from "globby";
@@ -11,17 +15,18 @@ import matter from "gray-matter";
 
 import { version } from "../../../package.json";
 
-import { appSettingsStore, keyStore } from "./stores";
+import { appSettingsStore } from "./stores";
 
 import { buildKey } from "#/build-key";
 import { LOCAL_PROTOCOL, VECTOR_STORE_COLLECTION } from "#/constants";
 import { DownloadState, ID } from "#/enums";
 import { isProduction } from "#/flags";
+import { CustomHuggingFaceTransformersEmbeddings } from "@/langchain/custom-hugging-face-transformers-embeddings";
 import { VectorStore } from "@/services/vector-store";
 import { isCoreApp, isCoreView } from "@/utils/core";
 import { createWindow } from "@/utils/create-window";
 import { loadURL } from "@/utils/load-window";
-import { getCaptainData, getDirectory } from "@/utils/path-helpers";
+import { getCaptainData, getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
 
 /**
  * Creates and displays the installer window with predefined dimensions.
@@ -324,17 +329,23 @@ async function populateVectorStoreFromDocuments() {
 const apps: Record<string, BrowserWindow | null> = {};
 
 async function runStartup(withDashboard?: boolean) {
-	const apiKey = keyStore.get("openAiApiKey", "");
+	env.localModelPath = getCaptainDownloads("llm/embeddings");
+	env.allowRemoteModels = false;
+	env.allowLocalModels = true;
+
 	await VectorStore.init(
-		new OpenAIEmbeddings({
-			openAIApiKey: apiKey,
-			modelName: "text-embedding-3-large",
+		new CustomHuggingFaceTransformersEmbeddings({
+			modelName: "Xenova/all-MiniLM-L6-v2",
+			maxTokens: 128,
+			stripNewLines: true,
 		})
 	);
 
-	//
-	// await VectorStore.getInstance.deleteCollection(VECTOR_STORE_COLLECTION);
-	// await populateVectorStoreFromDocuments();
+	try {
+		await VectorStore.getInstance.deleteCollection(VECTOR_STORE_COLLECTION);
+	} catch {}
+
+	await populateVectorStoreFromDocuments();
 
 	apps.prompt = await createPromptWindow();
 	if (withDashboard) {
