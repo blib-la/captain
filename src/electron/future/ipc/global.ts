@@ -88,7 +88,6 @@ ipcMain.handle(buildKey([ID.FILE], { prefix: "path:", suffix: ":get" }), async (
  * ipcRenderer.invoke(buildKey([ID.FILE], { suffix: ":write" }), 'notes/to-do.md', 'Complete the project documentation.', { encoding: 'utf8' })
  *   .then(({ filePath, fileType }) => console.log(`File written at ${filePath} as ${fileType}.`));
  */
-// Assuming 'buildKey' and 'ID' are defined and accessible in this context
 ipcMain.handle(
 	buildKey([ID.FILE], { suffix: ":write" }),
 	async (
@@ -118,6 +117,24 @@ ipcMain.handle(
 		inventoryStore.set(keyPath, files);
 
 		return { filePath, fileType };
+	}
+);
+
+ipcMain.handle(
+	buildKey([ID.FILE], { suffix: ":copy" }),
+	async (_event, source: string, destination: string) => {
+		const filePath = getCaptainData("files", destination);
+		const { dir: directory } = path.parse(filePath);
+		console.log("COPY FILE 1", { source, filePath });
+
+		// Ensure the directory exists, creating it if necessary
+		if (!existsSync(directory)) {
+			await fsp.mkdir(directory, { recursive: true });
+		}
+
+		console.log("COPY FILE 2", { source, filePath });
+		// Copy the file
+		await fsp.copyFile(source, filePath);
 	}
 );
 

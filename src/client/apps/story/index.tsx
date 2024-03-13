@@ -1,12 +1,15 @@
 import { CustomScrollbars } from "@captn/joy/custom-scrollbars";
 import { useSDK } from "@captn/react/use-sdk";
+import { localFile } from "@captn/utils/string";
 import Box from "@mui/joy/Box";
 import Grid from "@mui/joy/Grid";
 import LinearProgress from "@mui/joy/LinearProgress";
 import Typography from "@mui/joy/Typography";
+import dayjs from "dayjs";
 import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
 import { useCallback, useEffect, useState } from "react";
+import { v4 } from "uuid";
 
 import { selectedStoryImagesAtom, storyImagesAtom } from "./atoms";
 import { VirtualGrid } from "./components";
@@ -14,16 +17,52 @@ import { APP_ID } from "./constants";
 import { Markdown } from "./markdown";
 import { StoryForm } from "./story-form";
 
-import { LOCAL_PROTOCOL } from "#/constants";
+import { extractH1Headings } from "#/string";
+import { replaceImagePlaceholders } from "@/ions/utils/string";
 import { Lottie } from "@/organisms/lottie";
 
 export function Story() {
-	const { t } = useTranslation(["common", "labels", "texts"]);
+	const {
+		t,
+		i18n: { language: locale },
+	} = useTranslation(["common", "labels", "texts"]);
 	const [images, setImages] = useAtom(storyImagesAtom);
 	const [selectedImages] = useAtom(selectedStoryImagesAtom);
 
 	const [story, setStory] = useState("");
 	const [generating, setGenerating] = useState(false);
+
+	const saveStory = useCallback(
+		async (story_: string) => {
+			const id = v4();
+			const now = dayjs().toString();
+			await Promise.all([
+				window.ipc.writeFile(
+					`stories/${id}/story.md`,
+					replaceImagePlaceholders(story_, selectedImages),
+					{ encoding: "utf8" }
+				),
+				window.ipc.writeFile(
+					`stories/${id}/info.json`,
+					JSON.stringify({
+						id,
+						locale,
+						type: "story",
+						story: story_,
+						createdAt: now,
+						updatedAt: now,
+						title: extractH1Headings(story_)[0],
+						images: selectedImages,
+					}),
+					{ encoding: "utf8" }
+				),
+				...selectedImages.map(({ filePath }, index) =>
+					window.ipc.copyFile(filePath, `stories/${id}/${index + 1}.png`)
+				),
+			]);
+		},
+		[locale, selectedImages]
+	);
 
 	const loadImages = useCallback(() => {
 		window.ipc.inventoryStore
@@ -33,12 +72,14 @@ export function Story() {
 				setImages(images_);
 			});
 	}, [setImages]);
+
 	useSDK<unknown, { done: boolean; story: string }>(APP_ID, {
-		onMessage(message) {
+		async onMessage(message) {
 			console.log(message);
 			setStory(message.payload.story);
 			if (message.payload.done) {
 				setGenerating(false);
+				await saveStory(message.payload.story);
 			}
 
 			switch (message.action) {
@@ -69,9 +110,7 @@ export function Story() {
 				<Box sx={{ p: 2 }}>
 					<Markdown
 						markdown={story}
-						images={selectedImages.map(
-							image => `${LOCAL_PROTOCOL}://${image.filePath}`
-						)}
+						images={selectedImages.map(image => localFile(image.filePath))}
 					/>
 				</Box>
 			</CustomScrollbars>

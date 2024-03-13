@@ -1,3 +1,4 @@
+import { localFile } from "@captn/utils/string";
 import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import type { DragEndEvent } from "@dnd-kit/core/dist/types";
 import {
@@ -19,7 +20,6 @@ import { FixedSizeGrid } from "react-window";
 
 import { selectedStoryImagesAtom, storyImagesAtom } from "./atoms";
 
-import { LOCAL_PROTOCOL } from "#/constants";
 import { AutoGrid } from "@/organisms/auto-grid";
 
 export function SortableItem({ id, children }: { id: string; children?: ReactNode }) {
@@ -68,11 +68,7 @@ export function SelectedImages() {
 				<AutoGrid minWidth={150}>
 					{images.map(({ filePath, id }) => (
 						<SortableItem key={id} id={id}>
-							<img
-								src={`${LOCAL_PROTOCOL}://${filePath}`}
-								style={{ width: "100%" }}
-								alt=""
-							/>
+							<img src={localFile(filePath)} style={{ width: "100%" }} alt="" />
 						</SortableItem>
 					))}
 				</AutoGrid>
@@ -119,7 +115,7 @@ export function ImageSelectorCell({
 					}}
 				>
 					<img
-						src={`${LOCAL_PROTOCOL}://${image.filePath}`}
+						src={localFile(image.filePath)}
 						alt=""
 						style={{ height: "auto", width: "100%" }}
 					/>

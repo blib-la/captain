@@ -1,7 +1,4 @@
-import { capitalizeFirstLetter, localFile, replaceImagePlaceholders } from "../string";
-
-import { LOCAL_PROTOCOL } from "#/constants";
-import type { ImageItem } from "#/types";
+import { capitalizeFirstLetter, replaceImagePlaceholders } from "../string";
 
 describe("capitalizeFirstLetter", () => {
 	it("should capitalize the first letter of a string", () => {
@@ -26,16 +23,14 @@ describe("capitalizeFirstLetter", () => {
 describe("replaceImagePlaceholders", () => {
 	it("replaces all image placeholders with corresponding URLs", () => {
 		// Define a sample array of images
-		const images: ImageItem[] = [
+		const images: { filePath: string; id: string }[] = [
 			{
 				id: "img0",
-				dataUrl: "data:image/png;base64,...",
-				url: "http://example.com/image0.png",
+				filePath: "./image0.png",
 			},
 			{
 				id: "img1",
-				dataUrl: "data:image/png;base64,...",
-				url: "http://example.com/image1.png",
+				filePath: "./image1.png",
 			},
 		];
 
@@ -56,7 +51,7 @@ describe("replaceImagePlaceholders", () => {
 
 	it("leaves the markdown unchanged if no corresponding images are found", () => {
 		// Define a sample array of images
-		const images: ImageItem[] = []; // Empty array, simulating no matching images
+		const images: { filePath: string; id: string }[] = []; // Empty array, simulating no matching images
 
 		// Define a sample markdown string with placeholders
 		const markdown = "This is an image: ![Image 2](2)";
@@ -66,25 +61,5 @@ describe("replaceImagePlaceholders", () => {
 
 		// Assert that the markdown remains unchanged
 		expect(result).toEqual(markdown);
-	});
-});
-
-describe("localFile", () => {
-	it("should format the file path with the custom protocol correctly", () => {
-		const filePath = "C:/foo/bar/baz.png";
-		const expected = `${LOCAL_PROTOCOL}://${filePath}`;
-		expect(localFile(filePath)).toBe(expected);
-	});
-
-	it("should handle file paths with spaces correctly", () => {
-		const filePath = "C:/foo/bar/with space.png";
-		const expected = `${LOCAL_PROTOCOL}://${filePath}`;
-		expect(localFile(filePath)).toBe(expected);
-	});
-
-	it("should handle custom protocols", () => {
-		const filePath = "C:/foo/bar/with space.png";
-		const expected = `test://${filePath}`;
-		expect(localFile(filePath, { localProtocol: "test" })).toBe(expected);
 	});
 });

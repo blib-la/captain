@@ -22,6 +22,9 @@ export const handlers = {
 			options
 		);
 	},
+	copyFile(source: string, destination: string) {
+		return ipcRenderer.invoke(buildKey([ID.FILE], { suffix: ":copy" }), source, destination);
+	},
 	readFile(name: string, encoding?: BufferEncoding) {
 		return ipcRenderer.invoke(buildKey([ID.FILE], { suffix: ":read" }), name, encoding);
 	},
