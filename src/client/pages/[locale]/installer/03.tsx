@@ -68,13 +68,9 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			}
 		);
 
-		const unsubscribeError = window.ipc.on(
-			buildKey([ID.INSTALL], { suffix: ":error" }),
-			error => {
-				console.error(error);
-				setLoading(true);
-			}
-		);
+		const unsubscribeError = window.ipc.on(buildKey([ID.INSTALL], { suffix: ":error" }), () => {
+			setLoading(true);
+		});
 
 		window.ipc.send(buildKey([ID.INSTALL], { suffix: ":initialize" }));
 
