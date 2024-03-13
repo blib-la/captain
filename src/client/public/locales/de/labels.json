@@ -46,7 +46,8 @@
   "overlay": "Überlagerung",
   "placeholder": {
     "characters": "Der Name des Jungen ist Erin und sein Hund heißt Ruffy",
-    "customStyle": "Die Geschichte sollte skurril und sehr lustig sein, ein Mysterium ohne Abschluss beinhalten"
+    "customStyle": "Die Geschichte sollte skurril und sehr lustig sein, ein Mysterium ohne Abschluss beinhalten",
+    "prompt": "Ich möchte ein Bild malen"
   },
   "privacy": "Datenschutz",
   "prompt": "Prompt",
@@ -69,5 +70,9 @@
     "sciFi": "Science-Fiction"
   },
   "submitButtonText": "Absenden",
-  "unpacking": "Entpacken"
+  "unpacking": "Entpacken",
+  "finishing": "Abschluss",
+  "starting": "Captain wird gestartet",
+  "preparation": "Captain wird vorbereitet",
+  "installtionSuccess": "Installation fertig"
 }

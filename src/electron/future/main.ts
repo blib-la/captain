@@ -3,27 +3,22 @@ import fsp from "node:fs/promises";
 import path from "path";
 import url from "url";
 
-import { HuggingFaceTransformersEmbeddings } from "@langchain/community/embeddings/hf_transformers";
-import { env } from "@xenova/transformers";
 import type { BrowserWindowConstructorOptions } from "electron";
 import { app, ipcMain, BrowserWindow, Menu, protocol, screen, globalShortcut } from "electron";
-import { globby } from "globby";
-import matter from "gray-matter";
 
 import { version } from "../../../package.json";
 
 import { appSettingsStore, userStore } from "./stores";
+import { initialize, populateFromDocuments, reset } from "./utils/vector-store";
 
 import { buildKey } from "#/build-key";
-import { LOCAL_PROTOCOL, VECTOR_STORE_COLLECTION } from "#/constants";
+import { LOCAL_PROTOCOL } from "#/constants";
 import { DownloadState, ID } from "#/enums";
 import { isProduction } from "#/flags";
-import { VectorStore } from "@/services/vector-store";
 import { isCoreApp, isCoreView } from "@/utils/core";
 import { createWindow } from "@/utils/create-window";
 import { loadURL } from "@/utils/load-window";
-import { getCaptainData, getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
-import { CustomHuggingFaceTransformersEmbeddings } from "@/langchain/custom-hugging-face-transformers-embeddings";
+import { getCaptainData } from "@/utils/path-helpers";
 
 /**
  * Creates and displays the installer window with predefined dimensions.
@@ -287,72 +282,17 @@ async function createAppWindow(id: string, options: BrowserWindowConstructorOpti
 	return appWindow;
 }
 
-async function populateVectorStoreFromDocuments() {
-	const documentPaths = await globby(["**/*.md"], {
-		cwd: getCaptainData("apps"),
-		absolute: true,
-	});
-
-	const corePaths = await globby(["**/*.md"], {
-		cwd: getDirectory("actions"),
-		absolute: true,
-	});
-
-	const documents = await Promise.all(
-		[...documentPaths, ...corePaths].map(async documentPath => {
-			const markdownWithFrontmatter = await fsp.readFile(documentPath, "utf8");
-			const { content, data } = matter(markdownWithFrontmatter);
-			return {
-				content,
-				payload: {
-					id: data.id,
-					language: data.language,
-					action: data.action,
-					label: data.label,
-					description: data.description,
-					parameters: data.parameters,
-					function: data.function,
-					icon: data.icon,
-				},
-			};
-		})
-	);
-	const vectorStore = VectorStore.getInstance;
-
-	return vectorStore.upsert(VECTOR_STORE_COLLECTION, documents);
-}
-
 // Cache for apps that are opened
 const apps: Record<string, BrowserWindow | null> = {};
 
-async function runStartup(withDashboard?: boolean) {
-	env.localModelPath = getCaptainDownloads("llm/embeddings");
-	env.allowRemoteModels = false;
-	env.allowLocalModels = true;
-
-	await VectorStore.init(
-		new CustomHuggingFaceTransformersEmbeddings({
-			modelName: "Xenova/all-MiniLM-L6-v2",
-			maxTokens: 128,
-			stripNewLines: true,
-		})
-	);
-
-	try {
-		await VectorStore.getInstance.deleteCollection(VECTOR_STORE_COLLECTION);
-	} catch {}
-
-	await populateVectorStoreFromDocuments();
-
+async function runStartup() {
 	apps.prompt = await createPromptWindow();
-	if (withDashboard) {
-		apps.core = await createCoreWindow();
-		await loadURL(apps.core, `core/dashboard`);
-		apps.core.on("close", () => {
-			apps.core = null;
-		});
-		apps.core.focus();
-	}
+	apps.core = await createCoreWindow();
+	await loadURL(apps.core, `core/dashboard`);
+	apps.core.on("close", () => {
+		apps.core = null;
+	});
+	apps.core.focus();
 }
 
 /**
@@ -433,17 +373,25 @@ export async function main() {
 	);
 
 	if (isUpToDate && isReady) {
-		await runStartup(true);
+		// Start the vector store and fill it with data
+		await initialize();
+		await reset();
+		await populateFromDocuments();
+
+		// Start app
+		await runStartup();
 	} else {
 		// Update app settings for installation
 		appSettingsStore.set("status", DownloadState.IDLE);
 		appSettingsStore.set("version", version);
+
 		// Create and show installer window
 		const installerWindow = await createInstallerWindow();
+
 		// When the installer is done we open the prompt window
 		ipcMain.on(buildKey([ID.APP], { suffix: ":ready" }), async () => {
+			await runStartup();
 			installerWindow.close();
-			await runStartup(true);
 		});
 	}
 }

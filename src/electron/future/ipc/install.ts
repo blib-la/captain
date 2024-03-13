@@ -6,6 +6,7 @@ import { DownloadState, ID } from "#/enums";
 import { appSettingsStore } from "@/stores";
 import { getCaptainData, getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
 import { unpack } from "@/utils/unpack";
+import { initialize, populateFromDocuments, reset } from "@/utils/vector-store";
 
 ipcMain.on(
 	buildKey([ID.INSTALL], { suffix: ":start" }),
@@ -51,7 +52,8 @@ ipcMain.on(
 								unpack(
 									getDirectory("7zip", "win", "7za.exe"),
 									file.path,
-									targetPath
+									targetPath,
+									true
 								)
 							);
 						}
@@ -63,6 +65,7 @@ ipcMain.on(
 			window_.webContents.send(buildKey([ID.INSTALL], { suffix: ":unpacking" }), true);
 			appSettingsStore.set("status", DownloadState.UNPACKING);
 			await Promise.all(items);
+
 			// Everything was downloaded & unpacked
 			window_.webContents.send(buildKey([ID.INSTALL], { suffix: ":completed" }), true);
 			appSettingsStore.set("status", DownloadState.DONE);
@@ -77,3 +80,16 @@ ipcMain.on(
 		}
 	}
 );
+
+ipcMain.on(buildKey([ID.INSTALL], { suffix: ":initialize" }), async event => {
+	try {
+		// Start the vector store and fill it with data
+		await initialize();
+		await reset();
+		await populateFromDocuments();
+
+		event.sender.send(buildKey([ID.INSTALL], { suffix: ":initialized" }), true);
+	} catch (error) {
+		event.sender.send(buildKey([ID.INSTALL], { suffix: ":error" }), error);
+	}
+});

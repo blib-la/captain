@@ -6,6 +6,7 @@ import LinearProgress from "@mui/joy/LinearProgress";
 import Typography from "@mui/joy/Typography";
 import type { Progress } from "electron-dl";
 import type { InferGetStaticPropsType } from "next";
+import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import type { ReactNode } from "react";
 import { useCallback, useEffect, useState } from "react";
@@ -18,6 +19,10 @@ import { Illustration } from "@/organisms/illustration";
 import { QuoteLoop } from "@/organisms/quote-loop";
 
 function useInstallProgress() {
+	const {
+		i18n: { language: locale },
+	} = useTranslation();
+	const router = useRouter();
 	const [status, setStatus] = useState(DownloadState.IDLE);
 	const [progress, setProgress] = useState<Progress>({
 		percent: 0,
@@ -56,7 +61,6 @@ function useInstallProgress() {
 			buildKey([ID.INSTALL], { suffix: ":completed" }),
 			() => {
 				setStatus(DownloadState.DONE);
-				window.ipc.send(buildKey([ID.APP], { suffix: ":ready" }), true);
 			}
 		);
 		const unsubscribeUnpacking = window.ipc.on(
@@ -179,6 +183,28 @@ export function InstallScreen({ percent, status }: { percent: number; status: Do
 			);
 		}
 
+		case DownloadState.DONE: {
+			return (
+				<InstallStep
+					heading={t("labels:installtionSuccess")}
+					illustration="/illustrations/minimalistic/discovery.svg"
+				>
+					<Box
+						sx={{
+							flex: 1,
+							position: "relative",
+							display: "flex",
+							alignItems: "center",
+						}}
+					>
+						<Typography level="body-lg" sx={{ my: 2, textAlign: "center" }}>
+							{t("texts:unpackingSuccess")}
+						</Typography>
+					</Box>
+				</InstallStep>
+			);
+		}
+
 		default: {
 			return null;
 		}
@@ -200,36 +226,48 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 								{t("common:previous")}
 							</Button>
 						</I18nLink>
-						<Button
-							disabled={status !== DownloadState.IDLE}
-							data-testid="installer-02-start"
-							onClick={() => {
-								reset();
+						{status === DownloadState.DONE ? (
+							<I18nLink href="/installer/03">
+								<Button component="a">{t("common:next")}</Button>
+							</I18nLink>
+						) : (
+							<Button
+								disabled={status !== DownloadState.IDLE}
+								data-testid="installer-02-start"
+								onClick={() => {
+									reset();
 
-								window.ipc.send(buildKey([ID.INSTALL], { suffix: ":start" }), [
-									{
-										url: "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/python-embedded-win.7z",
-										destination: "python-embedded",
-										size: "2.1 GB",
-										unzip: true,
-									},
-									{
-										url: "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/portable-git-win.7z",
-										destination: "portable-git",
-										size: "86.9 MB",
-										unzip: true,
-									},
-									{
-										url: "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/qdrant-win.7z",
-										destination: "qdrant",
-										size: "13.9 MB",
-										unzip: true,
-									},
-								]);
-							}}
-						>
-							{t("installer:install")}
-						</Button>
+									window.ipc.send(buildKey([ID.INSTALL], { suffix: ":start" }), [
+										{
+											url: "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/python-embedded-win.7z",
+											destination: "python-embedded",
+											size: "2.1 GB",
+											unzip: true,
+										},
+										{
+											url: "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/portable-git-win.7z",
+											destination: "portable-git",
+											size: "86.9 MB",
+											unzip: true,
+										},
+										{
+											url: "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/all-MiniLM-L6-v2.7z",
+											destination: "downloads/llm/embeddings/Xenova",
+											size: "15.3 MB",
+											unzip: true,
+										},
+										{
+											url: "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/qdrant-win.7z",
+											destination: "qdrant",
+											size: "13.9 MB",
+											unzip: true,
+										},
+									]);
+								}}
+							>
+								{t("installer:install")}
+							</Button>
+						)}
 					</Box>
 				</Box>
 			</Box>
