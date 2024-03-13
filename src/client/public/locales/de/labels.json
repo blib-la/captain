@@ -1,5 +1,6 @@
 {
   "accessibility": "Barrierefreiheit",
+  "analyzingImages": "Analyse deiner Bilder",
   "artStyle": "Kunststil",
   "back": "Zurück",
   "brushSize": "Pinselgröße",
@@ -55,8 +56,8 @@
   "readStory": "Erzählung lesen",
   "removeAllImages": "Alle Bilder entfernen",
   "save": "Speichern",
-  "saved": "Gespeichert",
   "saveImage": "Bild speichern",
+  "saved": "Gespeichert",
   "security": "Sicherheit",
   "sideBySide": "Nebeneinander",
   "start": "Start",

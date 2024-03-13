@@ -1,5 +1,6 @@
 {
   "accessibility": "Accessibility",
+  "analyzingImages": "Analyzing Your Images",
   "artStyle": "Art Style",
   "back": "Back",
   "brushSize": "Brush Size",
@@ -55,8 +56,8 @@
   "readStory": "Read Story",
   "removeAllImages": "Remove all Images",
   "save": "Save",
-  "saved": "Saved",
   "saveImage": "Save Image",
+  "saved": "Saved",
   "security": "Security",
   "sideBySide": "Side by Side",
   "start": "Start",

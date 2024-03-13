@@ -57,7 +57,7 @@ export function StoryForm({ onSubmit }: { onSubmit?(): void }) {
 		>
 			<Box sx={{ flex: 1, position: "relative" }}>
 				<CustomScrollbars>
-					<Typography>{t("texts:storyFormIntroduction")}</Typography>
+					<Typography sx={{ mb: 2 }}>{t("texts:storyFormIntroduction")}</Typography>
 					<FormControl required>
 						<FormLabel>{t("labels:formLabel.length")}</FormLabel>
 						<Controller
