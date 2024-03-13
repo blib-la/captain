@@ -1,8 +1,11 @@
 import type { HuggingFaceTransformersEmbeddingsParams } from "@langchain/community/embeddings/hf_transformers";
 import { HuggingFaceTransformersEmbeddings } from "@langchain/community/embeddings/hf_transformers";
-// We have to ignore the error since the package is not compiled but the original source from ghithub
-// See package.json
-// "@xenova/transformers": "github:xenova/transformers.js#v3",
+// The @xenova/transformers package is imported directly from GitHub as it includes
+// certain functionalities that are not available in the npm published version. This package
+// may not have complete type definitions, which can cause TypeScript to raise compilation errors.
+// The use of `@ts-ignore` is necessary here to bypass these TypeScript errors.
+// However, this is a known issue and has been accounted for in our usage of the library.
+// See package.json for the specific version and source of the @xenova/transformers package.
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { AutoTokenizer, env } from "@xenova/transformers";

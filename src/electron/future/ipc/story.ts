@@ -185,8 +185,6 @@ export async function captionImages(images: string[], maxTokens = 1000): Promise
 			max_tokens: maxTokens,
 		});
 
-		console.log(responseVision.choices[0].message.content);
-
 		imageDescriptions = responseVision.choices[0].message.content ?? "";
 	} catch (error) {
 		window_.webContents.send(
@@ -212,8 +210,7 @@ export async function createStory(
 	}
 
 	const apiKey = keyStore.get("openAiApiKey");
-	console.log(">>>>>>>>>>>>>>");
-	console.log("<<<<<<<<<<<<<");
+
 	if (!apiKey) {
 		window_.webContents.send(
 			buildKey([ID.STORY], { suffix: ":error" }),
@@ -230,6 +227,7 @@ export async function createStory(
 	try {
 		const userPromptStory = buildUserPrompt(imageDescriptions, { options, locale });
 
+		// Debugging helper to check what has been passed down byu the user
 		console.log({ userPromptStory });
 
 		const streamStory = await openai.chat.completions.create({

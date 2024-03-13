@@ -229,12 +229,13 @@ ipcMain.on(
 						return;
 					}
 
+					// Debugging helper to check how the images were captioned
 					console.log(imageDescriptions);
 
 					const maxTokens = maxTokenMap[options.length] * images.length;
 					const channel = `${appId}:${APP_MESSAGE_KEY}`;
 
-					createStory(
+					await createStory(
 						{ imageDescriptions, maxTokens, locale, options },
 						{
 							onError(error) {
