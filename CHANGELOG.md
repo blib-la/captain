@@ -1,3 +1,10 @@
+# [1.0.0-alpha.16](https://github.com/blib-la/captain/compare/v1.0.0-alpha.15...v1.0.0-alpha.16) (2024-03-13)
+
+
+### Features
+
+* add story app ([#75](https://github.com/blib-la/captain/issues/75)) ([cbae2cf](https://github.com/blib-la/captain/commit/cbae2cf841e424b6d3399b165c96f467d78d99b6))
+
 # [1.0.0-alpha.15](https://github.com/blib-la/captain/compare/v1.0.0-alpha.14...v1.0.0-alpha.15) (2024-03-12)
 
 
