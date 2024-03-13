@@ -2,9 +2,8 @@ import { useSDK } from "@captn/react/use-sdk";
 import { ClickAwayListener } from "@mui/base";
 import BrushIcon from "@mui/icons-material/Brush";
 import CasinoIcon from "@mui/icons-material/Casino";
+import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
-import DeleteIcon from "@mui/icons-material/Delete";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PaletteIcon from "@mui/icons-material/Palette";
 import PlayIcon from "@mui/icons-material/PlayArrow";
 import SaveIcon from "@mui/icons-material/Save";
@@ -12,14 +11,9 @@ import StopIcon from "@mui/icons-material/Stop";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import CircularProgress from "@mui/joy/CircularProgress";
-import Dropdown from "@mui/joy/Dropdown";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import IconButton from "@mui/joy/IconButton";
-import ListItemDecorator from "@mui/joy/ListItemDecorator";
-import Menu from "@mui/joy/Menu";
-import MenuButton from "@mui/joy/MenuButton";
-import MenuItem from "@mui/joy/MenuItem";
 import Option from "@mui/joy/Option";
 import Select from "@mui/joy/Select";
 import Sheet from "@mui/joy/Sheet";
@@ -33,19 +27,17 @@ import { useTranslation } from "next-i18next";
 import { useCallback, useEffect, useState } from "react";
 import { v4 } from "uuid";
 
-import { clearCounterAtom, imageAtom, imagesAtom, livePaintingOptionsAtom } from "./atoms";
+import { clearCounterAtom, imageAtom, livePaintingOptionsAtom } from "./atoms";
 import { DrawingArea } from "./drawing-area";
 import { RenderingArea } from "./rendering-area";
 import type { IllustrationStyles } from "./text-to-image";
 import { illustrationStyles } from "./text-to-image";
 
-import { LOCAL_PROTOCOL } from "#/constants";
 import { randomSeed } from "#/number";
 import { APP_ID } from "@/apps/live-painting/constants";
 import { FlagUs } from "@/atoms/flags/us";
-import { ImageRemoveIcon } from "@/atoms/icons";
+import { useResettableState } from "@/ions/hooks/resettable-state";
 import { getContrastColor } from "@/ions/utils/color";
-import { useLocalizedPath } from "@/organisms/language-select";
 
 export function LivePainting() {
 	const { t } = useTranslation(["common", "labels"]);
@@ -57,9 +49,9 @@ export function LivePainting() {
 	const [illustrationStyle, setIllustrationStyle] = useState<IllustrationStyles>("childrensBook");
 	const [seed, setSeed] = useState(randomSeed());
 	const [image] = useAtom(imageAtom);
-	const [images, setImages] = useAtom(imagesAtom);
 	const [running, setRunning] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	const [saved, setSaved] = useResettableState(false, 3000);
 
 	const { send, writeFile } = useSDK<unknown, string>(APP_ID, {
 		onMessage(message) {
@@ -83,15 +75,14 @@ export function LivePainting() {
 			}
 		},
 	});
-	const { changeLanguage } = useLocalizedPath();
 
 	const saveImage = useCallback(async () => {
 		const id = v4();
-		const url = await writeFile(`images/${id}.png`, image.split(";base64,").pop()!, {
+		await writeFile(`images/${id}.png`, image.split(";base64,").pop()!, {
 			encoding: "base64",
 		});
-		setImages(previousImages => [...previousImages, { id, dataUrl: image, url }]);
-	}, [image, setImages, writeFile]);
+		setSaved(true);
+	}, [image, writeFile, setSaved]);
 
 	useEffect(() => {
 		async function handleSave(event: KeyboardEvent) {
@@ -334,73 +325,16 @@ export function LivePainting() {
 						height: 44,
 					}}
 				>
-					<Box sx={{ flex: 1, overflowX: "auto" }}>
-						<Box sx={{ display: "flex", gap: 1 }}>
-							{images.map(image_ => (
-								<Tooltip
-									key={image_.id}
-									disableInteractive={false}
-									title={
-										<Box sx={{ position: "relative" }}>
-											<IconButton
-												aria-label={t("labels:delete")}
-												size="sm"
-												color="danger"
-												variant="solid"
-												sx={{ position: "absolute", top: 0, right: 0 }}
-												onClick={() => {
-													setImages(previousState =>
-														previousState.filter(
-															({ id }) => id !== image_.id
-														)
-													);
-												}}
-											>
-												<DeleteIcon />
-											</IconButton>
-											<Box
-												component="img"
-												src={`${LOCAL_PROTOCOL}://${image_.url}`}
-												alt=""
-												sx={{ height: 300, width: "auto" }}
-											/>
-										</Box>
-									}
-								>
-									<Box
-										component="img"
-										src={`${LOCAL_PROTOCOL}://${image_.url}`}
-										alt=""
-										sx={{ height: 36, width: "auto" }}
-									/>
-								</Tooltip>
-							))}
-						</Box>
-					</Box>
+					<Box sx={{ flex: 1 }} />
 
-					<Dropdown>
-						<MenuButton slots={{ root: IconButton }}>
-							<MoreVertIcon />
-						</MenuButton>
-						<Menu>
-							<MenuItem onClick={saveImage}>
-								<ListItemDecorator sx={{ color: "inherit" }}>
-									<SaveIcon />
-								</ListItemDecorator>
-								{t("labels:saveImage")}
-							</MenuItem>
-							<MenuItem
-								onClick={() => {
-									setImages([]);
-								}}
-							>
-								<ListItemDecorator sx={{ color: "inherit" }}>
-									<ImageRemoveIcon />
-								</ListItemDecorator>
-								{t("labels:removeAllImages")}
-							</MenuItem>
-						</Menu>
-					</Dropdown>
+					<Button
+						color={saved ? "success" : "neutral"}
+						variant="soft"
+						startDecorator={saved ? <CheckIcon /> : <SaveIcon />}
+						onClick={saveImage}
+					>
+						{saved ? t("labels:saved") : t("labels:save")}
+					</Button>
 				</Box>
 			</Sheet>
 			<Sheet

@@ -286,3 +286,31 @@ export interface MarketplaceSettings {
  * represents a unique identifier mapped to its corresponding value (e.g., an API key).
  */
 export type KeysSettings = Record<string, string>;
+
+/**
+ * Defines the structure for inventory settings, specifically categorizing files by type.
+ *
+ * This interface is used to manage and access files that the application interacts with,
+ * organizing them into distinct categories based on their type. Each category consists of
+ * an array of objects, where each object represents a file in that category and contains
+ * information about the file's path and a URL for accessing it.
+ *
+ * @interface
+ * @property {Object} files - An object containing arrays of file information, categorized by file type.
+ * @property {Array<{filePath: string; url: string}>} files.image - An array of objects representing image files,
+ *           each containing the file's path (`filePath`) and a URL (`url`) for access.
+ * @property {Array<{filePath: string; url: string}>} files.markdown - An array of objects representing markdown files,
+ *           similar to `files.image` but for markdown (.md) files.
+ * @property {Array<{filePath: string; url: string}>} files.audio - An array of objects for audio files,
+ *           organizing files that are primarily meant to be listened to (e.g., mp3, wav).
+ * @property {Array<{filePath: string; url: string}>} files.other - An array for files that do not fit into
+ *           the above categories, serving as a catch-all for miscellaneous file types.
+ */
+export interface InventorySettings {
+	files: {
+		image: { filePath: string; id: string }[];
+		markdown: { filePath: string; id: string }[];
+		audio: { filePath: string; id: string }[];
+		other: { filePath: string; id: string }[];
+	};
+}

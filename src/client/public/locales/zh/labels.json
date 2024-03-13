@@ -1,5 +1,6 @@
 {
   "accessibility": "可访问性",
+  "analyzingImages": "正在分析您的图片",
   "artStyle": "艺术风格",
   "back": "返回",
   "brushSize": "笔刷大小",
@@ -55,8 +56,8 @@
   "readStory": "阅读故事",
   "removeAllImages": "移除所有图片",
   "save": "保存",
-  "saved": "已保存",
   "saveImage": "保存图片",
+  "saved": "已保存",
   "security": "安全",
   "sideBySide": "并排",
   "start": "开始",

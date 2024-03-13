@@ -1,5 +1,6 @@
 {
   "accessibility": "Accesibilidad",
+  "analyzingImages": "Analizando tus imágenes",
   "artStyle": "Estilo artístico",
   "back": "Atrás",
   "brushSize": "Tamaño Pincel",
@@ -55,8 +56,8 @@
   "readStory": "Leer Historia",
   "removeAllImages": "Eliminar todas las imágenes",
   "save": "Guardar",
-  "saved": "Guardado",
   "saveImage": "Guardar imagen",
+  "saved": "Guardado",
   "security": "Seguridad",
   "sideBySide": "Lado a Lado",
   "start": "Iniciar",

@@ -1,11 +1,11 @@
-import { LOCAL_PROTOCOL } from "#/constants";
-import type { ImageItem } from "#/types";
-
 export function capitalizeFirstLetter(text: string) {
 	return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-export function replaceImagePlaceholders(markdown: string, images: ImageItem[]): string {
+export function replaceImagePlaceholders(
+	markdown: string,
+	images: { filePath: string; id: string }[]
+): string {
 	// Regular expression to find all image placeholders in the format ![...](index)
 	const regex = /!\[(.*?)]\((\d+)\)/g;
 
@@ -17,11 +17,4 @@ export function replaceImagePlaceholders(markdown: string, images: ImageItem[]):
 		// If an image exists at this index, replace with its URL and preserve the original alt text
 		return image ? `![${altText}](./${Number.parseInt(index, 10) + 1}.png)` : match;
 	});
-}
-
-export function localFile(
-	filePath: string,
-	{ localProtocol = LOCAL_PROTOCOL }: { localProtocol?: string } = {}
-) {
-	return `${localProtocol}://${filePath}`;
 }

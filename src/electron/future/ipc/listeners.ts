@@ -5,10 +5,10 @@ import { ipcMain } from "electron";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
-import { readFilesRecursively } from "@/main";
 import { keyStore, userStore } from "@/stores";
 import { clone, lfs } from "@/utils/git";
 import { getCaptainData } from "@/utils/path-helpers";
+import { readFilesRecursively } from "@/utils/read-files-recursively";
 
 ipcMain.on(buildKey([ID.USER], { suffix: ":language" }), (_event, language) => {
 	userStore.set("language", language);
