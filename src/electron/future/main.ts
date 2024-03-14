@@ -2,36 +2,22 @@ import fsp from "node:fs/promises";
 import path from "path";
 import url from "url";
 
-// The @xenova/transformers package is imported directly from GitHub as it includes
-// certain functionalities that are not available in the npm published version. This package
-// may not have complete type definitions, which can cause TypeScript to raise compilation errors.
-// The use of `@ts-ignore` is necessary here to bypass these TypeScript errors.
-// However, this is a known issue and has been accounted for in our usage of the library.
-// See package.json for the specific version and source of the @xenova/transformers package.
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { env } from "@xenova/transformers";
 import type { BrowserWindow, BrowserWindowConstructorOptions } from "electron";
 import { app, globalShortcut, ipcMain, Menu, protocol, screen } from "electron";
-import { globby } from "globby";
-import matter from "gray-matter";
 
 import { version } from "../../../package.json";
 
-import { appSettingsStore, userStore } from "./stores";
-import { initialize, populateFromDocuments, reset } from "./utils/vector-store";
+import { appSettingsStore } from "./stores";
 
 import { buildKey } from "#/build-key";
 import { LOCAL_PROTOCOL } from "#/constants";
 import { DownloadState, ID } from "#/enums";
 import { isProduction } from "#/flags";
-
-import { CustomHuggingFaceTransformersEmbeddings } from "@/langchain/custom-hugging-face-transformers-embeddings";
-import { VectorStore } from "@/services/vector-store";
 import { isCoreApp, isCoreView } from "@/utils/core";
 import { createWindow } from "@/utils/create-window";
 import { loadURL } from "@/utils/load-window";
 import { getCaptainData } from "@/utils/path-helpers";
+import { initialize, populateFromDocuments, reset } from "@/utils/vector-store";
 
 /**
  * Creates and displays the installer window with predefined dimensions.
