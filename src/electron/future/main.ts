@@ -3,7 +3,6 @@ import fsp from "node:fs/promises";
 import path from "path";
 import url from "url";
 
-import { HuggingFaceTransformersEmbeddings } from "@langchain/community/embeddings/hf_transformers";
 import { env } from "@xenova/transformers";
 import type { BrowserWindowConstructorOptions } from "electron";
 import { app, ipcMain, BrowserWindow, Menu, protocol, screen, globalShortcut } from "electron";
@@ -18,12 +17,13 @@ import { buildKey } from "#/build-key";
 import { LOCAL_PROTOCOL, VECTOR_STORE_COLLECTION } from "#/constants";
 import { DownloadState, ID } from "#/enums";
 import { isProduction } from "#/flags";
+import { apps } from "@/apps";
+import { CustomHuggingFaceTransformersEmbeddings } from "@/langchain/custom-hugging-face-transformers-embeddings";
 import { VectorStore } from "@/services/vector-store";
 import { isCoreApp, isCoreView } from "@/utils/core";
 import { createWindow } from "@/utils/create-window";
 import { loadURL } from "@/utils/load-window";
 import { getCaptainData, getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
-import { CustomHuggingFaceTransformersEmbeddings } from "@/langchain/custom-hugging-face-transformers-embeddings";
 
 /**
  * Creates and displays the installer window with predefined dimensions.
@@ -321,9 +321,6 @@ async function populateVectorStoreFromDocuments() {
 
 	return vectorStore.upsert(VECTOR_STORE_COLLECTION, documents);
 }
-
-// Cache for apps that are opened
-const apps: Record<string, BrowserWindow | null> = {};
 
 async function runStartup(withDashboard?: boolean) {
 	env.localModelPath = getCaptainDownloads("llm/embeddings");

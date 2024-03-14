@@ -10,6 +10,7 @@ import { execa } from "execa";
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import type { VectorStoreDocument } from "#/types/vector-store";
+import { apps } from "@/apps";
 import { userStore } from "@/stores";
 import {
 	getCaptainData,
@@ -220,28 +221,15 @@ export const functions: FunctionTree = {
 	},
 };
 
-export function handleCaptainAction(message: {
-	action: string;
-	payload: VectorStoreDocument["payload"];
-}) {
-	switch (message.action) {
-		case "function": {
-			try {
-				const { id: functionPath, parameters } = message.payload;
-				const function_ = getProperty(functions, functionPath);
-				if (typeof function_ === "function") {
-					function_(parameters ?? {});
-				}
-			} catch (error) {
-				console.log(error);
-			}
-
-			break;
+export function handleCaptainAction(payload: VectorStoreDocument["payload"]) {
+	try {
+		const { id: functionPath, parameters } = payload;
+		const function_ = getProperty(functions, functionPath);
+		if (typeof function_ === "function") {
+			function_(parameters ?? {});
 		}
-
-		default: {
-			break;
-		}
+	} catch (error) {
+		console.log(error);
 	}
 }
 
@@ -251,17 +239,9 @@ ipcMain.on(
 		console.log(message);
 		switch (message.action) {
 			case "function": {
-				try {
-					const { id: functionPath, parameters } = message.payload as {
-						id: string;
-						parameters: Record<string, unknown>;
-					};
-					const function_ = getProperty(functions, functionPath);
-					if (typeof function_ === "function") {
-						function_(parameters);
-					}
-				} catch (error) {
-					console.log(error);
+				handleCaptainAction(message.payload as VectorStoreDocument["payload"]);
+				if (apps.prompt) {
+					apps.prompt.blur();
 				}
 
 				break;
