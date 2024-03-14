@@ -12,6 +12,7 @@ import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import type { StoryRequest } from "#/types/story";
 import type { VectorStoreDocument } from "#/types/vector-store";
+import { apps } from "@/apps";
 import { captionImages, createStory, maxTokenMap } from "@/ipc/story";
 import { userStore } from "@/stores";
 import {
@@ -333,7 +334,10 @@ ipcMain.on(
 					console.log(error);
 				}
 
-				event.sender.close();
+				if (apps.prompt) {
+					apps.prompt.blur();
+				}
+
 				break;
 			}
 
