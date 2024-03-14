@@ -1,3 +1,10 @@
+# [1.0.0-alpha.17](https://github.com/blib-la/captain/compare/v1.0.0-alpha.16...v1.0.0-alpha.17) (2024-03-14)
+
+
+### Features
+
+* installer populates vector store ([#76](https://github.com/blib-la/captain/issues/76)) ([e7b1a08](https://github.com/blib-la/captain/commit/e7b1a080269b619c582a2e05e8fad536548ee311))
+
 # [1.0.0-alpha.16](https://github.com/blib-la/captain/compare/v1.0.0-alpha.15...v1.0.0-alpha.16) (2024-03-13)
 
 
