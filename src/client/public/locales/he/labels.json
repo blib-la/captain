@@ -11,6 +11,7 @@
   "delete": "מחק",
   "deleted": "נמחק",
   "downloading": "מוריד",
+  "finishing": "סיום",
   "formLabel": {
     "characters": "דמויות",
     "customStyle": "סגנון מותאם אישית",
@@ -28,6 +29,7 @@
     "manga": "מנגה",
     "realism": "ריאליזם"
   },
+  "installationSuccess": "ההתקנה הושלמה",
   "length": {
     "long": "ארוך",
     "medium": "בינוני",
@@ -49,6 +51,7 @@
     "customStyle": "הסיפור צריך להיות מוזר ומאוד מצחיק, לכלול מסתורין ללא סגירה",
     "prompt": "אני רוצה לצייר תמונה"
   },
+  "preparation": "הקפטן מתכונן",
   "privacy": "פרטיות",
   "prompt": "בקשה",
   "promptInfo": "ההקלדה צריכה להיות באנגלית.",
@@ -61,6 +64,7 @@
   "security": "ביטחון",
   "sideBySide": "צד לצד",
   "start": "התחל",
+  "starting": "הקפטן מתחיל",
   "stop": "עצור",
   "style": {
     "adventure": "הרפתקה",
@@ -70,9 +74,5 @@
     "sciFi": "מדע בדיוני"
   },
   "submitButtonText": "שלח",
-  "unpacking": "פותח",
-  "finishing": "סיום",
-  "starting": "הקפטן מתחיל",
-  "preparation": "הקפטן מתכונן",
-  "installationSuccess": "ההתקנה הושלמה"
+  "unpacking": "פותח"
 }

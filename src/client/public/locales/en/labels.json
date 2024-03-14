@@ -11,6 +11,7 @@
   "delete": "Delete",
   "deleted": "Deleted",
   "downloading": "Downloading",
+  "finishing": "Finishing",
   "formLabel": {
     "characters": "Characters",
     "customStyle": "Custom Style",
@@ -28,6 +29,7 @@
     "manga": "Manga",
     "realism": "Realism"
   },
+  "installationSuccess": "Installation complete",
   "length": {
     "long": "Long",
     "medium": "Medium",
@@ -49,6 +51,7 @@
     "customStyle": "The story should be quirky and very funny, include a mystery without closure",
     "prompt": "I want to paint a picture"
   },
+  "preparation": "Captain is being prepared",
   "privacy": "Privacy",
   "prompt": "Prompt",
   "promptInfo": "The prompt should be written in English.",
@@ -61,6 +64,7 @@
   "security": "Security",
   "sideBySide": "Side by Side",
   "start": "Start",
+  "starting": "Captain is starting",
   "stop": "Stop",
   "style": {
     "adventure": "Adventure",
@@ -70,9 +74,5 @@
     "sciFi": "Science Fiction"
   },
   "submitButtonText": "Submit",
-  "unpacking": "Unpacking",
-  "finishing": "Finishing",
-  "starting": "Captain is starting",
-  "preparation": "Captain is being prepared",
-  "installationSuccess": "Installation complete"
+  "unpacking": "Unpacking"
 }

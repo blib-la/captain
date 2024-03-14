@@ -11,6 +11,7 @@
   "delete": "Verwijderen",
   "deleted": "Verwijderd",
   "downloading": "Downloaden",
+  "finishing": "Afronding",
   "formLabel": {
     "characters": "Personages",
     "customStyle": "Aangepaste Stijl",
@@ -28,6 +29,7 @@
     "manga": "Manga",
     "realism": "Realisme"
   },
+  "installationSuccess": "Installatie voltooid",
   "length": {
     "long": "Lang",
     "medium": "Middel",
@@ -49,6 +51,7 @@
     "customStyle": "Het verhaal moet eigenzinnig en erg grappig zijn, inclusief een mysterie zonder afsluiting",
     "prompt": "Ik wil een afbeelding schilderen"
   },
+  "preparation": "Captain wordt voorbereid",
   "privacy": "Privacy",
   "prompt": "Prompt",
   "promptInfo": "De prompt moet in het Engels geschreven zijn.",
@@ -61,6 +64,7 @@
   "security": "Beveiliging",
   "sideBySide": "Zij aan Zij",
   "start": "Start",
+  "starting": "Captain wordt gestart",
   "stop": "Stop",
   "style": {
     "adventure": "Avontuur",
@@ -70,9 +74,5 @@
     "sciFi": "Sciencefiction"
   },
   "submitButtonText": "Indienen",
-  "unpacking": "Uitpakken",
-  "finishing": "Afronding",
-  "starting": "Captain wordt gestart",
-  "preparation": "Captain wordt voorbereid",
-  "installationSuccess": "Installatie voltooid"
+  "unpacking": "Uitpakken"
 }

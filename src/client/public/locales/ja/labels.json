@@ -11,6 +11,7 @@
   "delete": "削除",
   "deleted": "削除済み",
   "downloading": "ダウンロード中",
+  "finishing": "完成",
   "formLabel": {
     "characters": "キャラクター",
     "customStyle": "カスタムスタイル",
@@ -28,6 +29,7 @@
     "manga": "マンガ",
     "realism": "リアリズム"
   },
+  "installationSuccess": "インストール完了",
   "length": {
     "long": "長編",
     "medium": "中編",
@@ -49,6 +51,7 @@
     "customStyle": "物語は風変わりでとても面白く、結末のないミステリーを含めるべきです",
     "prompt": "絵を描きたい"
   },
+  "preparation": "キャプテンの準備中",
   "privacy": "プライバシー",
   "prompt": "プロンプト",
   "promptInfo": "プロンプトは英語で記入してください。",
@@ -61,6 +64,7 @@
   "security": "セキュリティ",
   "sideBySide": "並列",
   "start": "開始",
+  "starting": "キャプテンがスタートします",
   "stop": "停止",
   "style": {
     "adventure": "冒険",
@@ -70,9 +74,5 @@
     "sciFi": "SF"
   },
   "submitButtonText": "送信",
-  "unpacking": "解凍中",
-  "finishing": "完成",
-  "starting": "キャプテンがスタートします",
-  "preparation": "キャプテンの準備中",
-  "installationSuccess": "インストール完了"
+  "unpacking": "解凍中"
 }

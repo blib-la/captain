@@ -11,6 +11,7 @@
   "delete": "Eliminar",
   "deleted": "Eliminado",
   "downloading": "Descargando",
+  "finishing": "Finalizando",
   "formLabel": {
     "characters": "Personajes",
     "customStyle": "Estilo personalizado",
@@ -28,6 +29,7 @@
     "manga": "Manga",
     "realism": "Realismo"
   },
+  "installationSuccess": "Instalación completa",
   "length": {
     "long": "Largo",
     "medium": "Medio",
@@ -49,6 +51,7 @@
     "customStyle": "La historia debe ser peculiar y muy divertida, incluir un misterio sin resolver",
     "prompt": "Quiero pintar una imagen"
   },
+  "preparation": "El capitán se está preparando",
   "privacy": "Privacidad",
   "prompt": "Prompt",
   "promptInfo": "El prompt debe estar escrito en inglés.",
@@ -61,6 +64,7 @@
   "security": "Seguridad",
   "sideBySide": "Lado a Lado",
   "start": "Iniciar",
+  "starting": "El capitán está empezando",
   "stop": "Detener",
   "style": {
     "adventure": "Aventura",
@@ -70,9 +74,5 @@
     "sciFi": "Ciencia Ficción"
   },
   "submitButtonText": "Enviar",
-  "unpacking": "Desempaquetando",
-  "finishing": "Finalizando",
-  "starting": "El capitán está empezando",
-  "preparation": "El capitán se está preparando",
-  "installationSuccess": "Instalación completa"
+  "unpacking": "Desempaquetando"
 }

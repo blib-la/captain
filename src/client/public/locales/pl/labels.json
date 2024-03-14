@@ -11,6 +11,7 @@
   "delete": "Usuń",
   "deleted": "Usunięto",
   "downloading": "Pobieranie",
+  "finishing": "Zakończenie",
   "formLabel": {
     "characters": "Postacie",
     "customStyle": "Styl własny",
@@ -28,6 +29,7 @@
     "manga": "Manga",
     "realism": "Realizm"
   },
+  "installationSuccess": "Instalacja zakończona",
   "length": {
     "long": "Długa",
     "medium": "Średnia",
@@ -49,6 +51,7 @@
     "customStyle": "Historia powinna być osobliwa i bardzo zabawna, zawierać tajemnicę bez zakończenia",
     "prompt": "Chcę namalować obraz"
   },
+  "preparation": "Kapitan jest przygotowywany",
   "privacy": "Prywatność",
   "prompt": "Prompt",
   "promptInfo": "Prompt powinien być napisany po angielsku.",
@@ -61,6 +64,7 @@
   "security": "Bezpieczeństwo",
   "sideBySide": "Obok Siebie",
   "start": "Start",
+  "starting": "Kapitan jest uruchamiany",
   "stop": "Stop",
   "style": {
     "adventure": "Przygoda",
@@ -70,9 +74,5 @@
     "sciFi": "Science Fiction"
   },
   "submitButtonText": "Prześlij",
-  "unpacking": "Rozpakowywanie",
-  "finishing": "Zakończenie",
-  "starting": "Kapitan jest uruchamiany",
-  "preparation": "Kapitan jest przygotowywany",
-  "installationSuccess": "Instalacja zakończona"
+  "unpacking": "Rozpakowywanie"
 }
