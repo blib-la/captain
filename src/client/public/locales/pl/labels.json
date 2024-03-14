@@ -46,7 +46,8 @@
   "overlay": "Nakładka",
   "placeholder": {
     "characters": "Imię chłopca to Erin, a jego psa to Ruffy",
-    "customStyle": "Historia powinna być osobliwa i bardzo zabawna, zawierać tajemnicę bez zakończenia"
+    "customStyle": "Historia powinna być osobliwa i bardzo zabawna, zawierać tajemnicę bez zakończenia",
+    "prompt": "Chcę namalować obraz"
   },
   "privacy": "Prywatność",
   "prompt": "Prompt",
@@ -69,5 +70,9 @@
     "sciFi": "Science Fiction"
   },
   "submitButtonText": "Prześlij",
-  "unpacking": "Rozpakowywanie"
+  "unpacking": "Rozpakowywanie",
+  "finishing": "Zakończenie",
+  "starting": "Kapitan jest uruchamiany",
+  "preparation": "Kapitan jest przygotowywany",
+  "installationSuccess": "Instalacja zakończona"
 }

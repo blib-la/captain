@@ -46,7 +46,8 @@
   "overlay": "Superposición",
   "placeholder": {
     "characters": "El nombre del chico es Erin y el de su perro es Ruffy",
-    "customStyle": "La historia debe ser peculiar y muy divertida, incluir un misterio sin resolver"
+    "customStyle": "La historia debe ser peculiar y muy divertida, incluir un misterio sin resolver",
+    "prompt": "Quiero pintar una imagen"
   },
   "privacy": "Privacidad",
   "prompt": "Prompt",
@@ -69,5 +70,9 @@
     "sciFi": "Ciencia Ficción"
   },
   "submitButtonText": "Enviar",
-  "unpacking": "Desempaquetando"
+  "unpacking": "Desempaquetando",
+  "finishing": "Finalizando",
+  "starting": "El capitán está empezando",
+  "preparation": "El capitán se está preparando",
+  "installationSuccess": "Instalación completa"
 }

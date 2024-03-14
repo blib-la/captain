@@ -46,7 +46,8 @@
   "overlay": "Overlay",
   "placeholder": {
     "characters": "De naam van de jongen is Erin en de naam van zijn hond is Ruffy",
-    "customStyle": "Het verhaal moet eigenzinnig en erg grappig zijn, inclusief een mysterie zonder afsluiting"
+    "customStyle": "Het verhaal moet eigenzinnig en erg grappig zijn, inclusief een mysterie zonder afsluiting",
+    "prompt": "Ik wil een afbeelding schilderen"
   },
   "privacy": "Privacy",
   "prompt": "Prompt",
@@ -69,5 +70,9 @@
     "sciFi": "Sciencefiction"
   },
   "submitButtonText": "Indienen",
-  "unpacking": "Uitpakken"
+  "unpacking": "Uitpakken",
+  "finishing": "Afronding",
+  "starting": "Captain wordt gestart",
+  "preparation": "Captain wordt voorbereid",
+  "installationSuccess": "Installatie voltooid"
 }

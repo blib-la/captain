@@ -46,7 +46,8 @@
   "overlay": "叠加",
   "placeholder": {
     "characters": "男孩的名字是Erin，他的狗的名字是Ruffy",
-    "customStyle": "故事应该是古怪且非常有趣的，包括一个没有结局的谜团"
+    "customStyle": "故事应该是古怪且非常有趣的，包括一个没有结局的谜团",
+    "prompt": "我想画一幅画"
   },
   "privacy": "隐私",
   "prompt": "提示",
@@ -69,5 +70,9 @@
     "sciFi": "科幻"
   },
   "submitButtonText": "提交",
-  "unpacking": "解压中"
+  "unpacking": "解压中",
+  "finishing": "完成",
+  "starting": "船长即将启动",
+  "preparation": "船长正在准备",
+  "installationSuccess": "安装成功"
 }

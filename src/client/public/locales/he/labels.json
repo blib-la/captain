@@ -46,7 +46,8 @@
   "overlay": "שכבה",
   "placeholder": {
     "characters": "שם הילד הוא ארין ושם הכלב שלו הוא ראפי",
-    "customStyle": "הסיפור צריך להיות מוזר ומאוד מצחיק, לכלול מסתורין ללא סגירה"
+    "customStyle": "הסיפור צריך להיות מוזר ומאוד מצחיק, לכלול מסתורין ללא סגירה",
+    "prompt": "אני רוצה לצייר תמונה"
   },
   "privacy": "פרטיות",
   "prompt": "בקשה",
@@ -69,5 +70,9 @@
     "sciFi": "מדע בדיוני"
   },
   "submitButtonText": "שלח",
-  "unpacking": "פותח"
+  "unpacking": "פותח",
+  "finishing": "סיום",
+  "starting": "הקפטן מתחיל",
+  "preparation": "הקפטן מתכונן",
+  "installationSuccess": "ההתקנה הושלמה"
 }

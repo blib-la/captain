@@ -46,7 +46,8 @@
   "overlay": "オーバーレイ",
   "placeholder": {
     "characters": "少年の名前はエリン、彼の犬の名前はラフィです",
-    "customStyle": "物語は風変わりでとても面白く、結末のないミステリーを含めるべきです"
+    "customStyle": "物語は風変わりでとても面白く、結末のないミステリーを含めるべきです",
+    "prompt": "絵を描きたい"
   },
   "privacy": "プライバシー",
   "prompt": "プロンプト",
@@ -69,5 +70,9 @@
     "sciFi": "SF"
   },
   "submitButtonText": "送信",
-  "unpacking": "解凍中"
+  "unpacking": "解凍中",
+  "finishing": "完成",
+  "starting": "キャプテンがスタートします",
+  "preparation": "キャプテンの準備中",
+  "installationSuccess": "インストール完了"
 }
