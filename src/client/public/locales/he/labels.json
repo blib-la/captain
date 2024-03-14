@@ -1,5 +1,6 @@
 {
   "accessibility": "נגישות",
+  "analyzingImages": "מנתח תמונות",
   "artStyle": "סגנון אומנותי",
   "back": "חזרה",
   "brushSize": "גודל מברשת",
@@ -59,8 +60,8 @@
   "readStory": "קרא סיפור",
   "removeAllImages": "הסר את כל התמונות",
   "save": "שמור",
-  "saved": "נשמר",
   "saveImage": "שמור תמונה",
+  "saved": "נשמר",
   "security": "ביטחון",
   "sideBySide": "צד לצד",
   "start": "התחל",

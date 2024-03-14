@@ -4,13 +4,11 @@ import type { ReactNode } from "react";
 import type { Components } from "react-markdown";
 import ReactMarkdown from "react-markdown";
 
-import type { ImageItem } from "#/types";
-
 interface ComponentProperties {
 	children?: ReactNode;
 }
 
-export function components(images: ImageItem[]): Partial<Components> {
+export function components(images: string[]): Partial<Components> {
 	return {
 		h1: ({ children }: ComponentProperties) => (
 			<Typography level="h1" component="h1" my={2}>
@@ -71,7 +69,7 @@ export function components(images: ImageItem[]): Partial<Components> {
 				images[index] && (
 					<Box
 						component="img"
-						src={images[index].dataUrl}
+						src={images[index]}
 						alt={alt}
 						sx={{
 							my: 1,
@@ -101,7 +99,7 @@ export function components(images: ImageItem[]): Partial<Components> {
 	};
 }
 
-export function Markdown({ markdown, images }: { markdown: string; images: ImageItem[] }) {
+export function Markdown({ markdown, images }: { markdown: string; images: string[] }) {
 	return (
 		<Box sx={{ "*": { userSelect: "text" } }}>
 			<ReactMarkdown components={components(images)}>{markdown}</ReactMarkdown>

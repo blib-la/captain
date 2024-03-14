@@ -1,4 +1,4 @@
-import { extractH1Headings, getActionArguments } from "../string";
+import { extractH1Headings, getFileType } from "../string";
 
 describe("extractH1Headings", () => {
 	it("extracts multiple H1 headings", () => {
@@ -30,49 +30,27 @@ This is an H3 heading.`;
 	});
 });
 
-describe("getActionArguments", () => {
-	it("parses command and captainId", () => {
-		expect(getActionArguments("focus:color-mode-settings")).toEqual({
-			command: "focus",
-			captainId: "color-mode-settings",
-			value: undefined,
-			options: undefined,
-		});
+describe("getFileType", () => {
+	it("identifies markdown files", () => {
+		expect(getFileType("example.md")).toBe("markdown");
 	});
 
-	it("parses command, captainId, and value", () => {
-		expect(getActionArguments("click:language-settings:English")).toEqual({
-			command: "click",
-			captainId: "language-settings",
-			value: "English",
-			options: undefined,
-		});
+	it("identifies image files", () => {
+		const imageExtensions = [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp", ".svg"];
+		for (const extension of imageExtensions) {
+			expect(getFileType(`example${extension}`)).toBe("image");
+		}
 	});
 
-	it("parses command, captainId, value, and options", () => {
-		expect(getActionArguments("type:feedback-form:this app is amazing|submit")).toEqual({
-			command: "type",
-			captainId: "feedback-form",
-			value: "this app is amazing",
-			options: "submit",
-		});
+	it("identifies audio files", () => {
+		const audioExtensions = [".mp3", ".wav", ".aac", ".ogg", ".flac"];
+		for (const extension of audioExtensions) {
+			expect(getFileType(`song${extension}`)).toBe("audio");
+		}
 	});
 
-	it("handles special characters in value", () => {
-		expect(getActionArguments("type:feedback-form:this app: amazing|submit")).toEqual({
-			command: "type",
-			captainId: "feedback-form",
-			value: "this app: amazing",
-			options: "submit",
-		});
-	});
-
-	it("parses multiple options correctly", () => {
-		expect(getActionArguments("type:feedback-form:this app is amazing|submit|urgent")).toEqual({
-			command: "type",
-			captainId: "feedback-form",
-			value: "this app is amazing",
-			options: "submit|urgent",
-		});
+	it("defaults to other for unknown extensions", () => {
+		expect(getFileType("example.txt")).toBe("other");
+		expect(getFileType("archive.zip")).toBe("other");
 	});
 });

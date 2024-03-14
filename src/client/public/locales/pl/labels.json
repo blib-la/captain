@@ -1,5 +1,6 @@
 {
   "accessibility": "Dostępność",
+  "analyzingImages": "nalizowanie Obrazów",
   "artStyle": "Styl artystyczny",
   "back": "Wstecz",
   "brushSize": "Rozmiar Pędzla",
@@ -59,8 +60,8 @@
   "readStory": "Czytaj Historię",
   "removeAllImages": "Usuń wszystkie obrazy",
   "save": "Zapisz",
-  "saved": "Zapisano",
   "saveImage": "Zapisz obraz",
+  "saved": "Zapisano",
   "security": "Bezpieczeństwo",
   "sideBySide": "Obok Siebie",
   "start": "Start",

@@ -2,7 +2,13 @@ import Store from "electron-store";
 
 import { buildKey } from "#/build-key";
 import { KEY } from "#/enums";
-import type { DownloadsSettings, KeysSettings, MarketplaceSettings, UserSettings } from "@/types";
+import type {
+	DownloadsSettings,
+	InventorySettings,
+	KeysSettings,
+	MarketplaceSettings,
+	UserSettings,
+} from "@/types";
 
 // Ensure that core settings are loaded before the stores are instantiated.
 import "@/core-setup";
@@ -51,7 +57,9 @@ export const downloadsStore = new Store<DownloadsSettings>({
  * resources and integrate them into their workflows. The inventory store is a pivotal component
  * in bridging the gap between acquisition (via downloads) and utilization of marketplace items.
  */
-export const inventoryStore = new Store({ name: buildKey([KEY.STORE, KEY.INVENTORY]) });
+export const inventoryStore = new Store<InventorySettings>({
+	name: buildKey([KEY.STORE, KEY.INVENTORY]),
+});
 
 /**
  * The `keyStore` is specifically tailored for the secure handling of sensitive data, like API keys,

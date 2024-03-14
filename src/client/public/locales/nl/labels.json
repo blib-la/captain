@@ -1,5 +1,6 @@
 {
   "accessibility": "Toegankelijkheid",
+  "analyzingImages": "Jouw afbeeldingen analyseren",
   "artStyle": "Kunststijl",
   "back": "Terug",
   "brushSize": "Penseelgrootte",
@@ -59,8 +60,8 @@
   "readStory": "Verhaal Lezen",
   "removeAllImages": "Alle afbeeldingen verwijderen",
   "save": "Opslaan",
-  "saved": "Opgeslagen",
   "saveImage": "Afbeelding opslaan",
+  "saved": "Opgeslagen",
   "security": "Beveiliging",
   "sideBySide": "Zij aan Zij",
   "start": "Start",

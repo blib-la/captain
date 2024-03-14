@@ -1,5 +1,6 @@
 {
   "accessibility": "アクセシビリティ",
+  "analyzingImages": "画像を分析中",
   "artStyle": "アートスタイル",
   "back": "戻る",
   "brushSize": "ブラシサイズ",
@@ -59,8 +60,8 @@
   "readStory": "ストーリー閲覧",
   "removeAllImages": "すべての画像を削除",
   "save": "保存",
-  "saved": "保存済み",
   "saveImage": "画像を保存",
+  "saved": "保存済み",
   "security": "セキュリティ",
   "sideBySide": "並列",
   "start": "開始",

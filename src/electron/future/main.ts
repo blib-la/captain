@@ -1,10 +1,20 @@
-import type { Dirent } from "node:fs";
 import fsp from "node:fs/promises";
 import path from "path";
 import url from "url";
 
-import type { BrowserWindowConstructorOptions } from "electron";
-import { app, ipcMain, BrowserWindow, Menu, protocol, screen, globalShortcut } from "electron";
+// The @xenova/transformers package is imported directly from GitHub as it includes
+// certain functionalities that are not available in the npm published version. This package
+// may not have complete type definitions, which can cause TypeScript to raise compilation errors.
+// The use of `@ts-ignore` is necessary here to bypass these TypeScript errors.
+// However, this is a known issue and has been accounted for in our usage of the library.
+// See package.json for the specific version and source of the @xenova/transformers package.
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { env } from "@xenova/transformers";
+import type { BrowserWindow, BrowserWindowConstructorOptions } from "electron";
+import { app, globalShortcut, ipcMain, Menu, protocol, screen } from "electron";
+import { globby } from "globby";
+import matter from "gray-matter";
 
 import { version } from "../../../package.json";
 
@@ -15,6 +25,9 @@ import { buildKey } from "#/build-key";
 import { LOCAL_PROTOCOL } from "#/constants";
 import { DownloadState, ID } from "#/enums";
 import { isProduction } from "#/flags";
+
+import { CustomHuggingFaceTransformersEmbeddings } from "@/langchain/custom-hugging-face-transformers-embeddings";
+import { VectorStore } from "@/services/vector-store";
 import { isCoreApp, isCoreView } from "@/utils/core";
 import { createWindow } from "@/utils/create-window";
 import { loadURL } from "@/utils/load-window";
@@ -167,66 +180,6 @@ export function initLocalProtocol() {
 	});
 }
 
-/**
- * Recursively reads and collects file entries within a specified directory, filtering by file type if specified.
- * This enhanced version of the function allows for the specification of desired file types, returning only files
- * that match the provided types within the directory and all its subdirectories. The function returns a flat array
- * of Dirent objects representing the filtered directory entries. These entries can include files that match the specified
- * types, directories, or other filesystem objects present in the directory tree.
- *
- * @param {string} directory - The absolute path to the directory to be recursively read. Using an absolute path
- * avoids ambiguity in the filesystem's location.
- * @param {object} [options] - Optional parameters for file reading.
- * @param {string[]} [options.fileTypes] - An array of desired file extension types to filter the files by (e.g., ['.txt', '.jpg']).
- * Extensions should be specified with the dot for consistency (e.g., not 'txt' but '.txt').
- *
- * @returns {Promise<Dirent[]>} - A promise that resolves with an array of Dirent objects. Each object represents
- * a directory entry matching the specified file types or any directory entry if no types are specified.
- *
- * This function leverages Node.js's File System Promises API to asynchronously read directory contents with
- * the `withFileTypes` option to obtain Dirent instances directly. This method efficiently distinguishes between
- * files and directories without additional filesystem calls.
- *
- * The function recursively searches through all directories, aggregating file entries. If the `fileTypes` option
- * is provided, it filters the files to include only those with extensions matching the specified types.
- *
- * Implementing recursion with asynchronous filesystem operations allows for effective handling of complex directory
- * structures, though deep recursion levels should be approached with caution to avoid potential performance bottlenecks
- * or stack overflow errors in cases of extremely large or deep directory trees.
- *
- * Note: The function requires `fs.promises` and `path` modules from Node.js.
- *
- * @example
- * const directoryPath = '/path/to/directory';
- * readFilesRecursively(directoryPath, { fileTypes: ['.txt', '.md'] })
- *   .then(files => {
- *     files.forEach(file => {
- *       console.log(file.name);
- *     });
- *   })
- *   .catch(error => {
- *     console.error('An error occurred:', error);
- *   });
- */
-export async function readFilesRecursively(
-	directory: string,
-	{ fileTypes }: { fileTypes?: string[] } = {}
-): Promise<Dirent[]> {
-	let files: Dirent[] = [];
-	const items = await fsp.readdir(directory, { withFileTypes: true });
-
-	for (const item of items) {
-		const fullPath = path.join(directory, item.name);
-		if (item.isDirectory()) {
-			files = [...files, ...(await readFilesRecursively(fullPath, { fileTypes }))];
-		} else if (!fileTypes || fileTypes.includes(path.extname(item.name))) {
-			files.push(item);
-		}
-	}
-
-	return files;
-}
-
 async function createCoreAppWindow(id: string, options: BrowserWindowConstructorOptions = {}) {
 	const appWindow = await createWindow(id, {
 		minWidth: 800,
@@ -328,24 +281,6 @@ export async function main() {
 	if (isProduction) {
 		Menu.setApplicationMenu(null);
 	}
-
-	userStore.onDidChange("language", language => {
-		if (language) {
-			const windows_ = BrowserWindow.getAllWindows();
-			for (const window_ of windows_) {
-				window_.webContents.send("language", language);
-			}
-		}
-	});
-
-	userStore.onDidChange("theme", theme => {
-		if (theme) {
-			const windows_ = BrowserWindow.getAllWindows();
-			for (const window_ of windows_) {
-				window_.webContents.send("theme", theme);
-			}
-		}
-	});
 
 	ipcMain.on(
 		buildKey([ID.APP], { suffix: ":open" }),

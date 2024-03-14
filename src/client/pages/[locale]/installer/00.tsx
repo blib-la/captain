@@ -1,6 +1,6 @@
 import { AppFrame } from "@captn/joy/app-frame";
+import { CustomScrollbars } from "@captn/joy/custom-scrollbars";
 import { TitleBar } from "@captn/joy/title-bar";
-import { CustomScrollbars } from "@captn/react/custom-scrollbars";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Box from "@mui/joy/Box";
 import IconButton from "@mui/joy/IconButton";

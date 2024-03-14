@@ -1,4 +1,4 @@
-import { handleCaptainAction, performElementAction } from "../action";
+import { handleCaptainAction } from "../action";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
@@ -64,43 +64,5 @@ describe("handleCaptainAction", () => {
 			appId: response.payload.id,
 			action: response.payload.action,
 		});
-	});
-});
-
-describe("performElementAction", () => {
-	// Setup a DOM element for testing
-	beforeAll(() => {
-		document.body.innerHTML = `<div data-captainid="test-element"></div>`;
-	});
-
-	it("executes the action on an element when found", () => {
-		const mockAction = jest.fn();
-		performElementAction("test-element", mockAction);
-		expect(mockAction).toHaveBeenCalledTimes(1);
-		expect(mockAction).toHaveBeenCalledWith(expect.any(HTMLElement));
-	});
-
-	it("does not execute the action when the element is not found", () => {
-		const mockAction = jest.fn();
-		performElementAction("nonexistent-element", mockAction);
-		expect(mockAction).not.toHaveBeenCalled();
-	});
-
-	it("logs an error when the action function throws", () => {
-		const mockAction = jest.fn().mockImplementation(() => {
-			throw new Error("Test error");
-		});
-		const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
-
-		performElementAction("test-element", mockAction);
-		expect(consoleErrorSpy).toHaveBeenCalledWith(
-			expect.stringContaining(
-				"Error performing action on element with captainId=test-element:"
-			),
-			expect.any(Error)
-		);
-
-		// Clean up
-		consoleErrorSpy.mockRestore();
 	});
 });

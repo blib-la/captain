@@ -7,7 +7,7 @@ export interface FormInput {
 }
 
 export interface StoryRequest {
-	images: string[];
+	imageDescriptions: string;
 	locale: string;
 	options: FormInput;
 	maxTokens?: number;

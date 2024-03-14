@@ -1,15 +1,14 @@
 import { AppFrame } from "@captn/joy/app-frame";
-import { CustomScrollbars } from "@captn/joy/custom-scrollbars";
 import { TitleBar } from "@captn/joy/title-bar";
-import BrushIcon from "@mui/icons-material/Brush";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import Box from "@mui/joy/Box";
 import Typography from "@mui/joy/Typography";
 import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
 
-import { LivePainting } from "@/apps/live-painting";
+import { Story } from "@/apps/story";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
-
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["common", "labels"]);
 
@@ -17,8 +16,8 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 		<AppFrame
 			titleBar={
 				<TitleBar>
-					<Typography level="title-md" component="h1" startDecorator={<BrushIcon />}>
-						{t("labels:livePainting")}
+					<Typography level="title-md" component="h1" startDecorator={<MenuBookIcon />}>
+						{t("labels:createStory")}
 					</Typography>
 				</TitleBar>
 			}
@@ -26,9 +25,9 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			<Head>
 				<title>{t("labels:livePainting")}</title>
 			</Head>
-			<CustomScrollbars>
-				<LivePainting />
-			</CustomScrollbars>
+			<Box sx={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column" }}>
+				<Story />
+			</Box>
 		</AppFrame>
 	);
 }
