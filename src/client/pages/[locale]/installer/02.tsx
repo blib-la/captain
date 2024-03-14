@@ -6,7 +6,6 @@ import LinearProgress from "@mui/joy/LinearProgress";
 import Typography from "@mui/joy/Typography";
 import type { Progress } from "electron-dl";
 import type { InferGetStaticPropsType } from "next";
-import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import type { ReactNode } from "react";
 import { useCallback, useEffect, useState } from "react";
@@ -19,10 +18,6 @@ import { Illustration } from "@/organisms/illustration";
 import { QuoteLoop } from "@/organisms/quote-loop";
 
 function useInstallProgress() {
-	const {
-		i18n: { language: locale },
-	} = useTranslation();
-	const router = useRouter();
 	const [status, setStatus] = useState(DownloadState.IDLE);
 	const [progress, setProgress] = useState<Progress>({
 		percent: 0,
