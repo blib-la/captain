@@ -12,6 +12,7 @@
   "delete": "Supprimer",
   "deleted": "Supprimé",
   "downloading": "Téléchargement",
+  "finishing": "Fin",
   "formLabel": {
     "characters": "Personnages",
     "customStyle": "Style personnalisé",
@@ -29,6 +30,7 @@
     "manga": "Manga",
     "realism": "Réalisme"
   },
+  "installationSuccess": "Installation terminée",
   "length": {
     "long": "Long",
     "medium": "Moyen",
@@ -47,8 +49,10 @@
   "overlay": "Superposition",
   "placeholder": {
     "characters": "Le nom du garçon est Erin et celui de son chien est Ruffy",
-    "customStyle": "L'histoire doit être excentrique et très drôle, inclure un mystère sans clôture"
+    "customStyle": "L'histoire doit être excentrique et très drôle, inclure un mystère sans clôture",
+    "prompt": "Je veux peindre une image"
   },
+  "preparation": "Le capitaine est en préparation",
   "privacy": "Confidentialité",
   "prompt": "Prompt",
   "promptInfo": "Le prompt doit être rédigé en anglais.",
@@ -61,6 +65,7 @@
   "security": "Sécurité",
   "sideBySide": "Côte à Côte",
   "start": "Démarrer",
+  "starting": "Le capitaine démarre",
   "stop": "Arrêter",
   "style": {
     "adventure": "Aventure",

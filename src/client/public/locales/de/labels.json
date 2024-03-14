@@ -12,6 +12,7 @@
   "delete": "Löschen",
   "deleted": "Gelöscht",
   "downloading": "Herunterladen",
+  "finishing": "Abschluss",
   "formLabel": {
     "characters": "Charaktere",
     "customStyle": "Eigener Stil",
@@ -29,6 +30,7 @@
     "manga": "Manga",
     "realism": "Realismus"
   },
+  "installtionSuccess": "Installation fertig",
   "length": {
     "long": "Lang",
     "medium": "Mittel",
@@ -47,8 +49,10 @@
   "overlay": "Überlagerung",
   "placeholder": {
     "characters": "Der Name des Jungen ist Erin und sein Hund heißt Ruffy",
-    "customStyle": "Die Geschichte sollte skurril und sehr lustig sein, ein Mysterium ohne Abschluss beinhalten"
+    "customStyle": "Die Geschichte sollte skurril und sehr lustig sein, ein Mysterium ohne Abschluss beinhalten",
+    "prompt": "Ich möchte ein Bild malen"
   },
+  "preparation": "Captain wird vorbereitet",
   "privacy": "Datenschutz",
   "prompt": "Prompt",
   "promptInfo": "Der Prompt sollte in Englisch geschrieben werden.",
@@ -61,7 +65,8 @@
   "security": "Sicherheit",
   "sideBySide": "Nebeneinander",
   "start": "Start",
-  "stop": "Stop",
+  "starting": "Captain wird gestartet",
+  "stop": "Stopp",
   "style": {
     "adventure": "Abenteuer",
     "custom": "Eigener",

@@ -12,6 +12,7 @@
   "delete": "מחק",
   "deleted": "נמחק",
   "downloading": "מוריד",
+  "finishing": "סיום",
   "formLabel": {
     "characters": "דמויות",
     "customStyle": "סגנון מותאם אישית",
@@ -29,6 +30,7 @@
     "manga": "מנגה",
     "realism": "ריאליזם"
   },
+  "installationSuccess": "ההתקנה הושלמה",
   "length": {
     "long": "ארוך",
     "medium": "בינוני",
@@ -47,8 +49,10 @@
   "overlay": "שכבה",
   "placeholder": {
     "characters": "שם הילד הוא ארין ושם הכלב שלו הוא ראפי",
-    "customStyle": "הסיפור צריך להיות מוזר ומאוד מצחיק, לכלול מסתורין ללא סגירה"
+    "customStyle": "הסיפור צריך להיות מוזר ומאוד מצחיק, לכלול מסתורין ללא סגירה",
+    "prompt": "אני רוצה לצייר תמונה"
   },
+  "preparation": "הקפטן מתכונן",
   "privacy": "פרטיות",
   "prompt": "בקשה",
   "promptInfo": "ההקלדה צריכה להיות באנגלית.",
@@ -61,6 +65,7 @@
   "security": "ביטחון",
   "sideBySide": "צד לצד",
   "start": "התחל",
+  "starting": "הקפטן מתחיל",
   "stop": "עצור",
   "style": {
     "adventure": "הרפתקה",

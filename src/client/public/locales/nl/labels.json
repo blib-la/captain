@@ -12,6 +12,7 @@
   "delete": "Verwijderen",
   "deleted": "Verwijderd",
   "downloading": "Downloaden",
+  "finishing": "Afronding",
   "formLabel": {
     "characters": "Personages",
     "customStyle": "Aangepaste Stijl",
@@ -29,6 +30,7 @@
     "manga": "Manga",
     "realism": "Realisme"
   },
+  "installationSuccess": "Installatie voltooid",
   "length": {
     "long": "Lang",
     "medium": "Middel",
@@ -47,8 +49,10 @@
   "overlay": "Overlay",
   "placeholder": {
     "characters": "De naam van de jongen is Erin en de naam van zijn hond is Ruffy",
-    "customStyle": "Het verhaal moet eigenzinnig en erg grappig zijn, inclusief een mysterie zonder afsluiting"
+    "customStyle": "Het verhaal moet eigenzinnig en erg grappig zijn, inclusief een mysterie zonder afsluiting",
+    "prompt": "Ik wil een afbeelding schilderen"
   },
+  "preparation": "Captain wordt voorbereid",
   "privacy": "Privacy",
   "prompt": "Prompt",
   "promptInfo": "De prompt moet in het Engels geschreven zijn.",
@@ -61,6 +65,7 @@
   "security": "Beveiliging",
   "sideBySide": "Zij aan Zij",
   "start": "Start",
+  "starting": "Captain wordt gestart",
   "stop": "Stop",
   "style": {
     "adventure": "Avontuur",

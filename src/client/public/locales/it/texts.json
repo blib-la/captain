@@ -1,10 +1,14 @@
 {
   "analyzingImages": "Attendi un momento! Stiamo attualmente analizzando le immagini che hai fornito per tessere la storia perfetta intorno ad esse. Questo processo si avvale di algoritmi di intelligenza artificiale avanzati per comprendere il contesto e gli elementi nelle tue immagini, garantendo una narrazione che risuona veramente con le immagini. A seconda della complessità e del numero di immagini, ciò potrebbe richiedere alcuni minuti. Apprezziamo la tua pazienza. Preparati ad essere stupito dalle storie che la nostra IA può creare apposta per te.",
   "downloadSuccessUnpacking": "Download completato! Ora stiamo estraendo questo tesoro tecnologico.",
+  "howToUseCaptain": "Puoi controllare facilmente Captain tramite il prompt, che puoi aprire in qualsiasi momento utilizzando la combinazione di tasti Ctrl + Alt + Spazio. Scrivi semplicemente cosa vuoi fare e noi ci occupiamo del resto.",
+  "preparation": "Per fare in modo che il prompt funzioni, stiamo preparando rapidamente tutto.",
+  "preparationDone": "Tutti i preparativi sono completati! Divertiti con Captain.",
   "quote1": "Proprio come gli umani, anche le IA sognano pecore elettriche. Zzz...",
   "quote2": "Sto imparando cose nuove! Sapevi che non posso gustare una tazza di caffè? Eppure, posso aiutare a prepararne uno.",
   "quote3": "Se pensi che un minuto passi molto velocemente, non sei mai stato ai 'secondi finali' di un download.",
   "quote4": "Lavorare con l'IA è come avere un amico che sa quasi tutto ma che ancora non sa allacciarsi le scarpe.",
   "quote5": "Ho chiesto all'IA di raccontarmi una barzelletta. Ha detto, 'Potrei raccontarti una barzelletta su UDP, ma potresti non riceverla.'",
-  "storyFormIntroduction": "Benvenuto nel nostro strumento di personalizzazione delle storie! Dopo aver dato vita alle tue visioni con il nostro strumento di pittura basato sull'IA, è ora di tessere narrazioni intorno alle tue creazioni. Seleziona le tue preferenze qui sotto per modellare la storia che si adatta meglio al tuo capolavoro. Che tu desideri una storia breve e dolce, un viaggio di media lunghezza verso il fantastico, o un'immersione profonda nei regni dell'ignoto, siamo qui per dare vita alla tua storia. Scegli il tuo stile narrativo, imposta il tono emotivo e creiamo insieme una storia magica."
+  "storyFormIntroduction": "Benvenuto nel nostro strumento di personalizzazione delle storie! Dopo aver dato vita alle tue visioni con il nostro strumento di pittura basato sull'IA, è ora di tessere narrazioni intorno alle tue creazioni. Seleziona le tue preferenze qui sotto per modellare la storia che si adatta meglio al tuo capolavoro. Che tu desideri una storia breve e dolce, un viaggio di media lunghezza verso il fantastico, o un'immersione profonda nei regni dell'ignoto, siamo qui per dare vita alla tua storia. Scegli il tuo stile narrativo, imposta il tono emotivo e creiamo insieme una storia magica.",
+  "unpackingSuccess": "Fantastico, tutto è stato installato. Ci sei quasi."
 }
