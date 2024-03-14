@@ -1,5 +1,6 @@
 import { AppFrame } from "@captn/joy/app-frame";
 import { TitleBar } from "@captn/joy/title-bar";
+import Alert from "@mui/joy/Alert";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import CircularProgress from "@mui/joy/CircularProgress";
@@ -59,18 +60,26 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	const { t } = useTranslation(["labels", "texts"]);
 	const [loading, setLoading] = useState(true);
 	const [starting, setStarting] = useState(false);
+	const [error, setError] = useState(null);
+
+	let buttonText;
 
 	useEffect(() => {
 		const unsubscribeInitialized = window.ipc.on(
 			buildKey([ID.INSTALL], { suffix: ":initialized" }),
 			() => {
 				setLoading(false);
+				setError(null);
 			}
 		);
 
-		const unsubscribeError = window.ipc.on(buildKey([ID.INSTALL], { suffix: ":error" }), () => {
-			setLoading(true);
-		});
+		const unsubscribeError = window.ipc.on(
+			buildKey([ID.INSTALL], { suffix: ":error" }),
+			error => {
+				setLoading(false);
+				setError(error);
+			}
+		);
 
 		window.ipc.send(buildKey([ID.INSTALL], { suffix: ":initialize" }));
 
@@ -79,6 +88,14 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			unsubscribeError();
 		};
 	}, []);
+
+	if (loading) {
+		buttonText = t("labels:preparation");
+	} else if (starting) {
+		buttonText = t("labels:starting");
+	} else {
+		buttonText = t("labels:start");
+	}
 
 	return (
 		<AppFrame titleBar={<TitleBar disableMaximize />}>
@@ -113,9 +130,13 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 							{t("texts:howToUseCaptain")}
 						</Typography>
 
-						<Typography level="body-lg" sx={{ my: 2, textAlign: "center" }}>
-							{loading ? t("texts:preparation") : t("texts:preparationDone")}
-						</Typography>
+						{error ? (
+							<Alert color="danger">{error}</Alert>
+						) : (
+							<Typography level="body-lg" sx={{ my: 2, textAlign: "center" }}>
+								{loading ? t("texts:preparation") : t("texts:preparationDone")}
+							</Typography>
+						)}
 					</Box>
 				</Box>
 
@@ -130,17 +151,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 								window.ipc.send(buildKey([ID.APP], { suffix: ":ready" }), true);
 							}}
 						>
-							{(() => {
-								if (loading) {
-									return t("labels:preparation");
-								}
-
-								if (starting) {
-									return t("labels:starting");
-								}
-
-								return t("labels:start");
-							})()}
+							{buttonText}
 						</Button>
 					</Box>
 				</Box>
