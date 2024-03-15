@@ -11,6 +11,7 @@
   "dashboard": "Painel de Controle",
   "delete": "Excluir",
   "deleted": "Excluído",
+  "download": "Baixar",
   "downloading": "Baixando",
   "finishing": "Conclusão",
   "formLabel": {
@@ -60,8 +61,8 @@
   "readStory": "Ler História",
   "removeAllImages": "Remover Todas as Imagens",
   "save": "Salvar",
-  "saveImage": "Salvar Imagem",
   "saved": "Salvo",
+  "saveImage": "Salvar Imagem",
   "security": "Segurança",
   "sideBySide": "Lado a Lado",
   "start": "Iniciar",

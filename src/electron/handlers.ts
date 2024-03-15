@@ -14,6 +14,15 @@ export const handlers = {
 			);
 		},
 	},
+	downloadStore: {
+		get<T>(key: string, defaultValue?: T): Promise<T> {
+			return ipcRenderer.invoke(
+				buildKey([ID.STORE, ID.DOWNLOADS], { suffix: ":get" }),
+				key,
+				defaultValue
+			);
+		},
+	},
 	writeFile(name: string, content: string, options: { encoding?: BufferEncoding } = {}) {
 		return ipcRenderer.invoke(
 			buildKey([ID.FILE], { suffix: ":write" }),

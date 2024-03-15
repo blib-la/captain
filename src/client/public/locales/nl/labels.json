@@ -11,6 +11,7 @@
   "dashboard": "Dashboard",
   "delete": "Verwijderen",
   "deleted": "Verwijderd",
+  "download": "Downloaden",
   "downloading": "Downloaden",
   "finishing": "Afronding",
   "formLabel": {
@@ -60,8 +61,8 @@
   "readStory": "Verhaal Lezen",
   "removeAllImages": "Alle afbeeldingen verwijderen",
   "save": "Opslaan",
-  "saveImage": "Afbeelding opslaan",
   "saved": "Opgeslagen",
+  "saveImage": "Afbeelding opslaan",
   "security": "Beveiliging",
   "sideBySide": "Zij aan Zij",
   "start": "Start",

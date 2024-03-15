@@ -9,7 +9,8 @@ import { v4 } from "uuid";
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import { getFileType } from "#/string";
-import { inventoryStore } from "@/stores";
+import { inventoryStore, downloadsStore } from "@/stores";
+import type { DownloadStatus } from "@/types";
 import { getCaptainData } from "@/utils/path-helpers";
 
 ipcMain.on(WINDOW_CLOSE_KEY, () => {
@@ -147,4 +148,9 @@ ipcMain.handle(
 ipcMain.handle(
 	buildKey([ID.STORE, ID.INVENTORY], { suffix: ":get" }),
 	(_event, key: string, defaultValue: unknown) => inventoryStore.get(key, defaultValue)
+);
+
+ipcMain.handle(
+	buildKey([ID.STORE, ID.DOWNLOADS], { suffix: ":get" }),
+	(_event, key: string, defaultValue: DownloadStatus) => downloadsStore.get(key, defaultValue)
 );

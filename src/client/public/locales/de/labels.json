@@ -11,6 +11,7 @@
   "dashboard": "Dashboard",
   "delete": "Löschen",
   "deleted": "Gelöscht",
+  "download": "Herunterladen",
   "downloading": "Herunterladen",
   "finishing": "Abschluss",
   "formLabel": {
@@ -60,8 +61,8 @@
   "readStory": "Erzählung lesen",
   "removeAllImages": "Alle Bilder entfernen",
   "save": "Speichern",
-  "saveImage": "Bild speichern",
   "saved": "Gespeichert",
+  "saveImage": "Bild speichern",
   "security": "Sicherheit",
   "sideBySide": "Nebeneinander",
   "start": "Start",
