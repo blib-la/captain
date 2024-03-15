@@ -13,6 +13,7 @@ import { buildKey } from "#/build-key";
 import { LOCAL_PROTOCOL } from "#/constants";
 import { DownloadState, ID } from "#/enums";
 import { isProduction } from "#/flags";
+import { apps } from "@/apps";
 import { isCoreApp, isCoreView } from "@/utils/core";
 import { createWindow } from "@/utils/create-window";
 import { loadURL } from "@/utils/load-window";
@@ -220,9 +221,6 @@ async function createAppWindow(id: string, options: BrowserWindowConstructorOpti
 	await appWindow.loadURL(appUrl);
 	return appWindow;
 }
-
-// Cache for apps that are opened
-const apps: Record<string, BrowserWindow | null> = {};
 
 async function runStartup() {
 	apps.prompt = await createPromptWindow();
