@@ -5,7 +5,7 @@ import { globby } from "globby";
 // Add keys to be moved
 const keys = [];
 const originFile = "labels.json";
-const targetFile = "texts.json";
+const targetFile = "common.json";
 const move = false;
 
 const pattern = `src/client/public/locales/*/${originFile}`;
@@ -27,7 +27,9 @@ try {
 					json[key] = undefined;
 				}
 
-				await fsp.writeFile(filePath, JSON.stringify(json, null, 2));
+				if (move) {
+					await fsp.writeFile(filePath, JSON.stringify(json, null, 2));
+				}
 
 				return partial;
 			})
