@@ -204,30 +204,19 @@ export async function createStory(
 		onError,
 	}: { onChunk(story: string): void; onDone(story: string): void; onError(error: Error): void }
 ) {
-	const window_ = BrowserWindow.getFocusedWindow();
-	if (!window_) {
-		return;
-	}
-
 	const apiKey = keyStore.get("openAiApiKey");
 
 	if (!apiKey) {
-		window_.webContents.send(
-			buildKey([ID.STORY], { suffix: ":error" }),
-			`Missing OpenAI API Key`
-		);
+		onError(new Error("Missing OpenAI API Key"));
 		return;
 	}
 
-	// All good we can try to write the story
 	const openai = new OpenAI({
 		apiKey,
 	});
 
 	try {
 		const userPromptStory = buildUserPrompt(imageDescriptions, { options, locale });
-
-		// Debugging helper to check what has been passed down byu the user
 
 		const streamStory = await openai.chat.completions.create({
 			model: "gpt-4-turbo-preview",
