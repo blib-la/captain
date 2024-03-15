@@ -1,3 +1,10 @@
+# [1.0.0-alpha.18](https://github.com/blib-la/captain/compare/v1.0.0-alpha.17...v1.0.0-alpha.18) (2024-03-15)
+
+
+### Features
+
+* download model ([#79](https://github.com/blib-la/captain/issues/79)) ([da212b4](https://github.com/blib-la/captain/commit/da212b4b7efa5a95bcfc93420c54175270d9ebb4))
+
 # [1.0.0-alpha.17](https://github.com/blib-la/captain/compare/v1.0.0-alpha.16...v1.0.0-alpha.17) (2024-03-14)
 
 
