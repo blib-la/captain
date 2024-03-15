@@ -384,7 +384,7 @@ export function LivePainting() {
 									action: "cloneRepositories:start",
 									payload: [
 										{
-											repository: "blib-la/captain-test-model",
+											repository: "Blib-la/sd-turbo-fp16",
 											destination: "stable-diffusion/checkpoints",
 											label: "SD Turbo",
 										},
