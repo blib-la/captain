@@ -11,6 +11,7 @@
   "dashboard": "仪表板",
   "delete": "删除",
   "deleted": "已删除",
+  "download": "下载",
   "downloading": "下载中",
   "finishing": "完成",
   "formLabel": {
@@ -60,8 +61,8 @@
   "readStory": "阅读故事",
   "removeAllImages": "移除所有图片",
   "save": "保存",
-  "saveImage": "保存图片",
   "saved": "已保存",
+  "saveImage": "保存图片",
   "security": "安全",
   "sideBySide": "并排",
   "start": "开始",

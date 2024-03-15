@@ -4,6 +4,7 @@ import BrushIcon from "@mui/icons-material/Brush";
 import CasinoIcon from "@mui/icons-material/Casino";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
+import DownloadIcon from "@mui/icons-material/Download";
 import PaletteIcon from "@mui/icons-material/Palette";
 import PlayIcon from "@mui/icons-material/PlayArrow";
 import SaveIcon from "@mui/icons-material/Save";
@@ -34,6 +35,7 @@ import type { IllustrationStyles } from "./text-to-image";
 import { illustrationStyles } from "./text-to-image";
 
 import { randomSeed } from "#/number";
+import type { Repository } from "#/types";
 import { APP_ID } from "@/apps/live-painting/constants";
 import { FlagUs } from "@/atoms/flags/us";
 import { useResettableState } from "@/ions/hooks/resettable-state";
@@ -52,6 +54,11 @@ export function LivePainting() {
 	const [running, setRunning] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [saved, setSaved] = useResettableState(false, 3000);
+
+	const [checkpoints, setCheckpoints] = useState<Repository[]>([]);
+	const [vae, setVae] = useState<Repository[]>([]);
+	const [isDownloading, setIsDownloading] = useState(false);
+	const hasModelAndVae = checkpoints.length > 0 && vae.length > 0;
 
 	const { send, writeFile } = useSDK<unknown, string>(APP_ID, {
 		onMessage(message) {
@@ -83,6 +90,39 @@ export function LivePainting() {
 		});
 		setSaved(true);
 	}, [image, writeFile, setSaved]);
+
+	useEffect(() => {
+		window.ipc.inventoryStore
+			.get<Repository[]>("stable-diffusion.checkpoints", [])
+			.then(checkpoints => {
+				setCheckpoints(checkpoints);
+			});
+
+		window.ipc.inventoryStore.get<Repository[]>("stable-diffusion.vae", []).then(vae => {
+			setVae(vae);
+		});
+
+		const unsubscribeCheckpoints = window.ipc.on(
+			"stable-diffusion.checkpoints",
+			checkpoints => {
+				setCheckpoints(checkpoints);
+			}
+		);
+
+		const unsubscribeVae = window.ipc.on("stable-diffusion.vae", vae => {
+			setVae(vae);
+		});
+		return () => {
+			unsubscribeCheckpoints();
+			unsubscribeVae();
+		};
+	}, []);
+
+	useEffect(() => {
+		if (hasModelAndVae) {
+			setIsDownloading(false);
+		}
+	}, [hasModelAndVae]);
 
 	useEffect(() => {
 		async function handleSave(event: KeyboardEvent) {
@@ -147,6 +187,8 @@ export function LivePainting() {
 					{running ? (
 						<Button
 							disabled={isLoading}
+							color="danger"
+							variant="soft"
 							startDecorator={isLoading ? <CircularProgress /> : <StopIcon />}
 							onClick={() => {
 								setIsLoading(true);
@@ -157,7 +199,9 @@ export function LivePainting() {
 						</Button>
 					) : (
 						<Button
-							disabled={isLoading}
+							disabled={isLoading || !hasModelAndVae}
+							color="success"
+							variant="soft"
 							startDecorator={isLoading ? <CircularProgress /> : <PlayIcon />}
 							onClick={() => {
 								setIsLoading(true);
@@ -297,9 +341,6 @@ export function LivePainting() {
 							<CasinoIcon />
 						</IconButton>
 					</Tooltip>
-					<Select variant="plain" defaultValue="sd-turbo">
-						<Option value="sd-turbo">SD Turbo</Option>
-					</Select>
 
 					<Tooltip title={t("labels:clear")}>
 						<IconButton
@@ -325,6 +366,41 @@ export function LivePainting() {
 						height: 44,
 					}}
 				>
+					{hasModelAndVae ? (
+						<Select variant="plain" defaultValue={checkpoints[0].id}>
+							{checkpoints.map(checkpoint => (
+								<Option key={checkpoint.id} value={checkpoint.id}>
+									{checkpoint.label}
+								</Option>
+							))}
+						</Select>
+					) : (
+						<Button
+							disabled={isDownloading}
+							startDecorator={isDownloading ? <CircularProgress /> : <DownloadIcon />}
+							onClick={() => {
+								setIsDownloading(true);
+								send({
+									action: "cloneRepositories:start",
+									payload: [
+										{
+											repository: "Blib-la/sd-turbo-fp16",
+											destination: "stable-diffusion/checkpoints",
+											label: "SD Turbo",
+										},
+										{
+											repository: "madebyollin/taesd",
+											destination: "stable-diffusion/vae",
+											label: "Taesd",
+										},
+									],
+								});
+							}}
+						>
+							{t("labels:download")}
+						</Button>
+					)}
+
 					<Box sx={{ flex: 1 }} />
 
 					<Button

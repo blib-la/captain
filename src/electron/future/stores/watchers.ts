@@ -36,6 +36,16 @@ export function watchStores() {
 			if (images) {
 				sendToAllWindows("images", images);
 			}
+		}),
+		inventoryStore.onDidChange<any>("stable-diffusion.checkpoints", checkpoints => {
+			if (checkpoints) {
+				sendToAllWindows("stable-diffusion.checkpoints", checkpoints);
+			}
+		}),
+		inventoryStore.onDidChange<any>("stable-diffusion.vae", vae => {
+			if (vae) {
+				sendToAllWindows("stable-diffusion.vae", vae);
+			}
 		})
 	);
 

@@ -11,6 +11,7 @@
   "dashboard": "Pulpit",
   "delete": "Usuń",
   "deleted": "Usunięto",
+  "download": "Pobierz",
   "downloading": "Pobieranie",
   "finishing": "Zakończenie",
   "formLabel": {
@@ -60,8 +61,8 @@
   "readStory": "Czytaj Historię",
   "removeAllImages": "Usuń wszystkie obrazy",
   "save": "Zapisz",
-  "saveImage": "Zapisz obraz",
   "saved": "Zapisano",
+  "saveImage": "Zapisz obraz",
   "security": "Bezpieczeństwo",
   "sideBySide": "Obok Siebie",
   "start": "Start",

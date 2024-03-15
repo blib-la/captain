@@ -11,6 +11,7 @@
   "dashboard": "Cruscotto",
   "delete": "Elimina",
   "deleted": "Eliminato",
+  "download": "Scarica",
   "downloading": "Scaricamento",
   "finishing": "Conclusione",
   "formLabel": {
@@ -60,8 +61,8 @@
   "readStory": "Leggi Storia",
   "removeAllImages": "Rimuovi tutte le immagini",
   "save": "Salva",
-  "saveImage": "Salva immagine",
   "saved": "Salvato",
+  "saveImage": "Salva immagine",
   "security": "Sicurezza",
   "sideBySide": "Fianco a Fianco",
   "start": "Avvia",

@@ -3,3 +3,9 @@ export interface ImageItem {
 	dataUrl: string;
 	url: string;
 }
+
+export interface Repository {
+	modelPath: string;
+	id: string;
+	label: string;
+}

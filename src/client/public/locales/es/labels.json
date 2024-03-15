@@ -11,6 +11,7 @@
   "dashboard": "Tablero",
   "delete": "Eliminar",
   "deleted": "Eliminado",
+  "download": "Descargar",
   "downloading": "Descargando",
   "finishing": "Finalizando",
   "formLabel": {
@@ -60,8 +61,8 @@
   "readStory": "Leer Historia",
   "removeAllImages": "Eliminar todas las imágenes",
   "save": "Guardar",
-  "saveImage": "Guardar imagen",
   "saved": "Guardado",
+  "saveImage": "Guardar imagen",
   "security": "Seguridad",
   "sideBySide": "Lado a Lado",
   "start": "Iniciar",

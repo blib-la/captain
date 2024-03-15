@@ -59,6 +59,7 @@ export const downloadsStore = new Store<DownloadsSettings>({
  */
 export const inventoryStore = new Store<InventorySettings>({
 	name: buildKey([KEY.STORE, KEY.INVENTORY]),
+	watch: true,
 });
 
 /**

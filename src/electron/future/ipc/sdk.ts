@@ -9,12 +9,14 @@ import { execa } from "execa";
 import type { Except } from "type-fest";
 
 import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
+import { DownloadState, ID } from "#/enums";
 import type { StoryRequest } from "#/types/story";
 import type { VectorStoreDocument } from "#/types/vector-store";
 import { apps } from "@/apps";
 import { captionImages, createStory, maxTokenMap } from "@/ipc/story";
-import { userStore } from "@/stores";
+import { downloadsStore, inventoryStore, userStore } from "@/stores";
+import { pushToStore } from "@/stores/utils";
+import { clone } from "@/utils/git";
 import {
 	getCaptainData,
 	getCaptainDownloads,
@@ -196,6 +198,52 @@ ipcMain.on(
 					);
 				} catch (error) {
 					console.error(error);
+				}
+
+				break;
+			}
+
+			case "cloneRepositories:start": {
+				const models = message.payload as {
+					repository: string;
+					destination: string;
+					label: string;
+				}[];
+
+				const promises: Promise<void>[] = [];
+
+				for (const model of models) {
+					const { repository, destination, label } = model;
+
+					downloadsStore.set(repository, DownloadState.ACTIVE);
+
+					promises.push(
+						clone(repository, destination, {
+							onProgress(progress) {
+								console.log(progress);
+							},
+							onCompleted() {
+								downloadsStore.set(repository, DownloadState.DONE);
+
+								const keyPath = destination.replaceAll("/", ".");
+
+								pushToStore(inventoryStore, keyPath, {
+									id: repository,
+									modelPath: getCaptainDownloads(destination, repository),
+									label,
+								});
+
+								downloadsStore.delete(repository);
+							},
+						})
+					);
+
+					try {
+						await Promise.all(promises);
+					} catch (error) {
+						// TODO: add "onError" into "clone" to properly catch the error
+						console.log(error);
+					}
 				}
 
 				break;

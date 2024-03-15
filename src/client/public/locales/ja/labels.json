@@ -11,6 +11,7 @@
   "dashboard": "ダッシュボード",
   "delete": "削除",
   "deleted": "削除済み",
+  "download": "ダウンロード",
   "downloading": "ダウンロード中",
   "finishing": "完成",
   "formLabel": {
@@ -60,8 +61,8 @@
   "readStory": "ストーリー閲覧",
   "removeAllImages": "すべての画像を削除",
   "save": "保存",
-  "saveImage": "画像を保存",
   "saved": "保存済み",
+  "saveImage": "画像を保存",
   "security": "セキュリティ",
   "sideBySide": "並列",
   "start": "開始",

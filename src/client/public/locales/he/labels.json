@@ -11,6 +11,7 @@
   "dashboard": "לוח בקרה",
   "delete": "מחק",
   "deleted": "נמחק",
+  "download": "הורדה",
   "downloading": "מוריד",
   "finishing": "סיום",
   "formLabel": {
@@ -60,8 +61,8 @@
   "readStory": "קרא סיפור",
   "removeAllImages": "הסר את כל התמונות",
   "save": "שמור",
-  "saveImage": "שמור תמונה",
   "saved": "נשמר",
+  "saveImage": "שמור תמונה",
   "security": "ביטחון",
   "sideBySide": "צד לצד",
   "start": "התחל",

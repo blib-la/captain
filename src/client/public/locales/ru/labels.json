@@ -11,6 +11,7 @@
   "dashboard": "Панель управления",
   "delete": "Удалить",
   "deleted": "Удалено",
+  "download": "Скачать",
   "downloading": "Загрузка",
   "finishing": "Завершение",
   "formLabel": {
@@ -60,8 +61,8 @@
   "readStory": "Читать Историю",
   "removeAllImages": "Удалить все изображения",
   "save": "Сохранить",
-  "saveImage": "Сохранить изображение",
   "saved": "Сохранено",
+  "saveImage": "Сохранить изображение",
   "security": "Безопасность",
   "sideBySide": "Бок о Бок",
   "start": "Старт",
