@@ -12,6 +12,7 @@ import { buildKey } from "#/build-key";
 import { DownloadState, ID } from "#/enums";
 import type { StoryRequest } from "#/types/story";
 import type { VectorStoreDocument } from "#/types/vector-store";
+import { apps } from "@/apps";
 import { captionImages, createStory, maxTokenMap } from "@/ipc/story";
 import { downloadsStore, inventoryStore, userStore } from "@/stores";
 import { pushToStore } from "@/stores/utils";
@@ -381,7 +382,10 @@ ipcMain.on(
 					console.log(error);
 				}
 
-				event.sender.close();
+				if (apps.prompt) {
+					apps.prompt.blur();
+				}
+
 				break;
 			}
 
