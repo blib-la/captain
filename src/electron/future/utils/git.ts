@@ -60,7 +60,7 @@ export async function clone(repository: string, destination: string, options?: G
 			await process;
 
 			options?.onProgress?.({
-				percent: 100,
+				percent: 1,
 				transferredBytes: 0,
 				totalBytes: 0,
 			});
