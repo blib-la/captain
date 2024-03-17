@@ -54,7 +54,16 @@ let cache = "";
 
 ipcMain.on(
 	APP_MESSAGE_KEY,
-	(event, { message, appId }: { message: SDKMessage<string>; appId: string }) => {
+	(
+		event,
+		{
+			message,
+			appId,
+		}: {
+			message: SDKMessage<{ model_type: string; model_path: string; vae_path: string }>;
+			appId: string;
+		}
+	) => {
 		if (message.action !== "livePainting:start") {
 			return;
 		}
@@ -67,11 +76,14 @@ ipcMain.on(
 
 		const pythonBinaryPath = getCaptainData("python-embedded/python.exe");
 		const scriptPath = getDirectory("python/live-painting/main.py");
+		const { model_type, model_path, vae_path } = message.payload;
 		const scriptArguments = [
 			"--model_path",
-			getCaptainDownloads("stable-diffusion/checkpoints/stabilityai/sd-turbo"),
+			getCaptainDownloads("stable-diffusion/checkpoints", model_path),
+			"--model_type",
+			model_type,
 			"--vae_path",
-			getCaptainDownloads("stable-diffusion/vae/madebyollin/taesd"),
+			getCaptainDownloads("stable-diffusion/vae", vae_path),
 			"--input_image_path",
 			getCaptainTemporary("live-painting/input.png"),
 			"--output_image_path",

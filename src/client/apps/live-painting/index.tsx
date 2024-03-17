@@ -49,9 +49,21 @@ export function LivePainting() {
 	const [brushSizeOpen, setBrushSizeOpen] = useState(false);
 	const [prompt, setPrompt] = useState("");
 	const [illustrationStyle, setIllustrationStyle] = useState<IllustrationStyles>("childrensBook");
-	const [seed, setSeed] = useState(randomSeed());
+	const [settings, setSettings] = useState({
+		seed: randomSeed(),
+		strength: 0.95,
+		steps: 3,
+		guidance_scale: 1,
+	});
+	const [modelSettings, setModelSettings] = useState({
+		id: "sd-turbo",
+		model_type: "stable-diffusion",
+		model_path: "stabilityai/sd-turbo",
+		vae_path: "madebyollin/taesd",
+	});
 	const [image] = useAtom(imageAtom);
 	const [running, setRunning] = useState(false);
+	const [shouldRestart, setShouldRestart] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [saved, setSaved] = useResettableState(false, 3000);
 
@@ -144,11 +156,22 @@ export function LivePainting() {
 				action: "livePainting:settings",
 				payload: {
 					prompt: [prompt, illustrationStyles[illustrationStyle]].join(", "),
-					seed,
+					...settings,
+					// Attempted model switch
+					// model_type: modelSettings.model_type,
+					// model_path: modelSettings.model_path,
+					// vae_path: modelSettings.vae_path,
 				},
 			});
 		}
-	}, [send, prompt, seed, running, illustrationStyle]);
+	}, [send, prompt, settings, running, illustrationStyle]);
+
+	useEffect(() => {
+		if (shouldRestart) {
+			setIsLoading(true);
+			send({ action: "livePainting:start", payload: modelSettings });
+		}
+	}, [shouldRestart, send, modelSettings]);
 
 	useEffect(() => {
 		function beforeUnload() {
@@ -205,7 +228,7 @@ export function LivePainting() {
 							startDecorator={isLoading ? <CircularProgress /> : <PlayIcon />}
 							onClick={() => {
 								setIsLoading(true);
-								send({ action: "livePainting:start", payload: APP_ID });
+								send({ action: "livePainting:start", payload: modelSettings });
 							}}
 						>
 							{t("labels:start")}
@@ -335,7 +358,10 @@ export function LivePainting() {
 							aria-label={t("labels:randomize")}
 							sx={{ flexShrink: 0 }}
 							onClick={() => {
-								setSeed(randomSeed());
+								setSettings(previousState => ({
+									...previousState,
+									seed: randomSeed(),
+								}));
 							}}
 						>
 							<CasinoIcon />
@@ -367,12 +393,50 @@ export function LivePainting() {
 					}}
 				>
 					{hasModelAndVae ? (
-						<Select variant="plain" defaultValue={checkpoints[0].id}>
-							{checkpoints.map(checkpoint => (
+						<Select
+							variant="plain"
+							value={modelSettings.id}
+							onChange={(_event, value) => {
+								send({ action: "livePainting:stop", payload: APP_ID });
+								setIsLoading(true);
+								setShouldRestart(true);
+								switch (value) {
+									case "sd-turbo": {
+										setModelSettings({
+											id: "sd-turbo",
+											model_path: "stabilityai/sd-turbo",
+											model_type: "stable-diffusion",
+											vae_path: "madebyollin/taesd",
+										});
+										break;
+									}
+
+									case "sdxl-turbo": {
+										setModelSettings({
+											id: "sdxl-turbo",
+											model_path:
+												"stabilityai/sdxl-turbo/sd_xl_turbo_1.0_fp16.safetensors",
+											model_type: "stable-diffusion-xl",
+											vae_path: "madebyollin/taesdxl",
+										});
+										break;
+									}
+
+									default: {
+										break;
+									}
+								}
+							}}
+						>
+							{/*
+							checkpoints.map(checkpoint => (
 								<Option key={checkpoint.id} value={checkpoint.id}>
 									{checkpoint.label}
 								</Option>
-							))}
+							))
+							*/}
+							<Option value="sdxl-turbo">SDXL Turbo</Option>
+							<Option value="sd-turbo">SD Turbo</Option>
 						</Select>
 					) : (
 						<Button
@@ -400,6 +464,58 @@ export function LivePainting() {
 							{t("labels:download")}
 						</Button>
 					)}
+					<Button
+						sx={{ flexShrink: 0 }}
+						onClick={() => {
+							setSettings(previousState => ({
+								...previousState,
+								strength: 1,
+								steps: 2,
+								guidance_scale: 0.5,
+							}));
+						}}
+					>
+						Fast
+					</Button>
+					<Button
+						sx={{ flexShrink: 0 }}
+						onClick={() => {
+							setSettings(previousState => ({
+								...previousState,
+								strength: 0.95,
+								steps: 3,
+								guidance_scale: 1,
+							}));
+						}}
+					>
+						Default
+					</Button>
+					<Button
+						sx={{ flexShrink: 0 }}
+						onClick={() => {
+							setSettings(previousState => ({
+								...previousState,
+								strength: 0.9,
+								steps: 4,
+								guidance_scale: 1.25,
+							}));
+						}}
+					>
+						Precise
+					</Button>
+					<Button
+						sx={{ flexShrink: 0 }}
+						onClick={() => {
+							setSettings(previousState => ({
+								...previousState,
+								strength: 0.85,
+								steps: 5,
+								guidance_scale: 1.5,
+							}));
+						}}
+					>
+						Extreme
+					</Button>
 
 					<Box sx={{ flex: 1 }} />
 

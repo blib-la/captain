@@ -29,6 +29,8 @@ def suppress_print(debug=False):
 with suppress_print():
     from diffusers import (
         StableDiffusionImg2ImgPipeline,
+        StableDiffusionXLImg2ImgPipeline,
+        StableDiffusionPipeline,
         AutoencoderTiny,
         EulerAncestralDiscreteScheduler,
     )
@@ -44,12 +46,45 @@ import torch
 from diffusers.utils import load_image
 from sfast.compilers.diffusion_pipeline_compiler import compile, CompilationConfig
 import argparse
+from collections import OrderedDict
 
 
 # Torch optimizations
 torch.set_grad_enabled(False)
 torch.backends.cuda.matmul.allow_tf32 = True
 torch.backends.cudnn.allow_tf32 = True
+
+IMG2IMG_PIPELINES_MAPPING = OrderedDict([
+    ("stable-diffusion", StableDiffusionImg2ImgPipeline),
+    ("stable-diffusion-xl", StableDiffusionXLImg2ImgPipeline),
+])
+
+def get_pipeline(model_path, model_type):
+    # Determine the pipeline class based on the model_type
+    print(f">>>>>>>>> Using model {model_path} as type {model_type}.")
+
+    PipelineClass = IMG2IMG_PIPELINES_MAPPING.get(model_type)
+    if not PipelineClass:
+        raise ValueError(f"Unsupported model type: {model_type}")
+
+    # Determine the loading method based on the model_path
+    if model_path.endswith(".safetensors"):
+        print("------ received safetensors")
+        pipeline = PipelineClass.from_single_file(
+            model_path,
+            torch_dtype=torch.float16,
+        )
+    else:
+        print("------ received pretrained")
+        pipeline = PipelineClass.from_pretrained(
+            model_path,
+            torch_dtype=torch.float16,
+            variant="fp16",
+            safety_checker=None,
+            requires_safety_checker=False,
+        )
+
+    return pipeline
 
 
 def parse_args():
@@ -58,6 +93,12 @@ def parse_args():
         "--model_path",
         type=str,
         help="Path to the model directory or identifier.",
+        required=True,
+    )
+    parser.add_argument(
+        "--model_type",
+        type=str,
+        help="Type of model to use for diffusion.",
         required=True,
     )
     parser.add_argument(
@@ -154,14 +195,9 @@ def calculate_min_inference_steps(steps, strength):
     return math.ceil(steps / strength)
 
 
-def prepare_pipeline(model_path, vae_path, disable_stablefast=False):
-    pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
-        model_path,
-        torch_dtype=torch.float16,
-        variant="fp16",
-        safety_checker=None,
-        requires_safety_checker=False,
-    )
+def prepare_pipeline(model_path, model_type, vae_path, disable_stablefast=False):
+    print(f"+++++++ Using model {model_path} as type {model_type}.")
+    pipe = get_pipeline(model_path, model_type)
 
     pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(pipe.scheduler.config)
     pipe.safety_checker = None
@@ -236,10 +272,21 @@ def main(pipe, input_image_path, output_image_path, shutdown_event):
     # Initial/default values for parameters
     prompt = "a captain with white beard, teal hat and uniform"
     seed = 1
-    strength = 0.95
-    steps = 3
-    guidance_scale = 1.5
-
+    strength = 1
+    steps = 1
+    guidance_scale = 0.0
+    guidance_scale = 0.0
+    # Attempted model switch
+    # model_path = None
+    # model_type = None
+    # vae_path = None
+    # Attempted model switch
+    # last_model_type = None
+    # last_model_path = None
+    # last_vae_path = None
+    last_strength = None
+    last_steps = None
+    last_guidance_scale = None
     last_prompt = None
     last_seed = None
     last_input_image = None
@@ -259,6 +306,9 @@ def main(pipe, input_image_path, output_image_path, shutdown_event):
             while not params_queue.empty():
                 parameters = params_queue.get_nowait()
                 prompt = parameters.get("prompt", prompt)
+                # model_path = parameters.get("model_path", model_path)
+                # model_type = parameters.get("model_type", model_type)
+                # vae_path = parameters.get("vae_path", vae_path)
                 seed = parameters.get("seed", seed)
                 strength = parameters.get("strength", strength)
                 guidance_scale = parameters.get("guidance_scale", guidance_scale)
@@ -270,14 +320,35 @@ def main(pipe, input_image_path, output_image_path, shutdown_event):
         # Get the current modified time of the input image
         current_input_image = os.path.getmtime(input_image_path)
 
+        # Attempted model switch
+        # reload_pipeline = (
+        #     model_type != last_model_type
+        #     or model_path != last_model_path
+        #     or vae_path != last_vae_path
+        # )
+
+        # if reload_pipeline:
+        #     last_model_type = model_type
+        #     last_model_path = model_path
+        #     last_vae_path = vae_path
+        #     pipe = prepare_pipeline(model_path, model_type, vae_path, True)
+        #     warmup(pipe, input_image_path)
+
+
         # Determine if image generation should be triggered
         trigger_generation = (
-            prompt != last_prompt
+            strength != last_strength
+            or steps != last_steps
+            or guidance_scale != last_guidance_scale
+            or prompt != last_prompt
             or seed != last_seed
             or current_input_image != last_input_image
         )
 
         if trigger_generation:
+            last_guidance_scale = guidance_scale
+            last_steps = steps
+            last_strength = strength
             last_prompt = prompt
             last_seed = seed
             last_input_image = current_input_image
@@ -333,7 +404,7 @@ if __name__ == "__main__":
 
         with suppress_print(args.debug):
             pipe = prepare_pipeline(
-                args.model_path, args.vae_path, args.disable_stablefast
+                args.model_path, args.model_type, args.vae_path, args.disable_stablefast
             )
             warmup(pipe, args.input_image_path)
 
