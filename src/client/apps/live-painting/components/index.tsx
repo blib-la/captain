@@ -31,12 +31,12 @@ import {
 import type { Except } from "type-fest";
 import { v4 } from "uuid";
 
+import { APP_ID } from "../constants";
+import { StyledColorInput } from "../styled";
 import type { IllustrationStyles } from "../text-to-image";
 import { illustrationStyles } from "../text-to-image";
 
 import type { Repository } from "#/types";
-import { APP_ID } from "@/apps/live-painting/constants";
-import { StyledColorInput } from "@/apps/live-painting/styled";
 import { FlagUs } from "@/atoms/flags/us";
 import { useResettableState } from "@/ions/hooks/resettable-state";
 import { getContrastColor } from "@/ions/utils/color";
