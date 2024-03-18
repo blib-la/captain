@@ -22,6 +22,6 @@ export async function clearDirectory(path: string) {
 			await fsp.unlink(filePath);
 		}
 	} catch (error) {
-		console.error(`Error clearing log files: ${error}`);
+		console.error(`Error deleting files: ${error}`);
 	}
 }
