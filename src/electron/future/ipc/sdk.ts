@@ -69,7 +69,7 @@ ipcMain.on(
 		const scriptPath = getDirectory("python/live-painting/main.py");
 		const scriptArguments = [
 			"--model_path",
-			getCaptainDownloads("stable-diffusion/checkpoints/stabilityai/sd-turbo"),
+			getCaptainDownloads("stable-diffusion/checkpoints/stabilityai/sd-turb/fp16"),
 			"--vae_path",
 			getCaptainDownloads("stable-diffusion/vae/madebyollin/taesd"),
 			"--input_image_path",
