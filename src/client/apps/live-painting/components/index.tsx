@@ -37,6 +37,7 @@ import type { IllustrationStyles } from "../text-to-image";
 import { illustrationStyles } from "../text-to-image";
 
 import type { Repository } from "#/types";
+import { useRequiredModels } from "@/apps/live-painting/required-models-alert";
 import { FlagUs } from "@/atoms/flags/us";
 import { useResettableState } from "@/ions/hooks/resettable-state";
 import { getContrastColor } from "@/ions/utils/color";
@@ -363,10 +364,11 @@ export interface RunButtonProperties {
 
 export function RunButton({ isLoading, isRunning, onStart, onStop }: RunButtonProperties) {
 	const { t } = useTranslation(["common", "labels"]);
+	const hasModelAndVae = useRequiredModels();
 
 	return isRunning ? (
 		<Button
-			disabled={isLoading}
+			disabled={isLoading || !hasModelAndVae}
 			color="danger"
 			variant="soft"
 			startDecorator={isLoading ? <CircularProgress /> : <StopIcon />}
@@ -378,7 +380,7 @@ export function RunButton({ isLoading, isRunning, onStart, onStop }: RunButtonPr
 		</Button>
 	) : (
 		<Button
-			disabled={isLoading}
+			disabled={isLoading || !hasModelAndVae}
 			color="success"
 			variant="soft"
 			startDecorator={isLoading ? <CircularProgress /> : <PlayIcon />}

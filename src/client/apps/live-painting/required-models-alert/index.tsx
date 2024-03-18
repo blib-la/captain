@@ -4,6 +4,7 @@ import Button from "@mui/joy/Button";
 import LinearProgress from "@mui/joy/LinearProgress";
 import Snackbar from "@mui/joy/Snackbar";
 import Typography from "@mui/joy/Typography";
+import { getProperty } from "dot-prop";
 import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
 
@@ -33,6 +34,76 @@ export const allRequiredDownloads: DownloadTask[] = [
 	},
 ];
 
+export function useRequiredModels() {
+	const [isCompleted, setIsCompleted] = useState(false);
+
+	useEffect(() => {
+		const unsubscribeAllInventory = window.ipc.on(
+			"allInventory",
+			(inventory: Record<string, unknown>) => {
+				const done = allRequiredDownloads.every(item => {
+					const keyPath = item.destination.replaceAll("/", ".");
+					const inventoryCollection = getProperty<
+						Record<string, unknown>,
+						string,
+						{
+							id: string;
+						}[]
+					>(inventory, keyPath);
+					if (Array.isArray(inventoryCollection)) {
+						return inventoryCollection.some(
+							inventoryItem => inventoryItem.id === item.id
+						);
+					}
+
+					return false;
+				});
+				setIsCompleted(done);
+			}
+		);
+
+		return () => {
+			unsubscribeAllInventory();
+		};
+	}, []);
+
+	useEffect(() => {
+		Promise.all(
+			allRequiredDownloads.map(async requiredDownload => {
+				const keyPath = requiredDownload.destination.replaceAll("/", ".");
+				const value = await window.ipc.inventoryStore.get<
+					{
+						id: string;
+						modelPath: string;
+						label: string;
+					}[]
+				>(keyPath);
+				return value?.some(({ id }) => id === requiredDownload.id);
+			})
+		).then(results => {
+			setIsCompleted(results.every(Boolean));
+		});
+		for (const requiredDownload of allRequiredDownloads) {
+			const keyPath = requiredDownload.destination.replaceAll("/", ".");
+			window.ipc.inventoryStore
+				.get<
+					{
+						id: string;
+						modelPath: string;
+						label: string;
+					}[]
+				>(keyPath)
+				.then(value => {
+					if (value?.some(({ id }) => id === requiredDownload.id)) {
+						console.log(requiredDownload.id);
+					}
+				});
+		}
+	}, []);
+
+	return isCompleted;
+}
+
 export function RequiredModelsAlert({ inline, appId }: { inline?: boolean; appId: string }) {
 	const { t } = useTranslation(["common", "labels"]);
 	const [downloadCount, setDownloadCount] = useState(0);
@@ -48,11 +119,53 @@ export function RequiredModelsAlert({ inline, appId }: { inline?: boolean; appId
 		const unsubscribeDownloadComplete = window.ipc.on("downloadComplete", () => {
 			setDownloadCount(previousState => previousState + 1);
 		});
+		/*		Const unsubscribeAllInventory = window.ipc.on(
+			"allInventory",
+			(inventory: Record<string, unknown>) => {
+				const done = allRequiredDownloads.every(item => {
+					const keyPath = item.destination.replaceAll("/", ".");
+					const inventoryCollection = getProperty<
+						Record<string, unknown>,
+						string,
+						{
+							id: string;
+						}[]
+					>(inventory, keyPath);
+					if (Array.isArray(inventoryCollection)) {
+						return inventoryCollection.some(
+							inventoryItem => inventoryItem.id === item.id
+						);
+					}
+
+					return false;
+				});
+				setIsCompleted(done);
+			}
+		); */
+
 		return () => {
 			unsubscribeDownload();
 			unsubscribeDownloadComplete();
+			/* UnsubscribeAllInventory(); */
 		};
 	}, []);
+
+	useEffect(() => {
+		const unsubscribeAllDownloads = window.ipc.on("allDownloads", downloads => {
+			const activities = requiredDownloads
+				.map(downloadItem => ({
+					id: downloadItem.id,
+					state: downloads[downloadItem.id],
+				}))
+				.filter(activity => Boolean(activity.state));
+			if (activities.length > 0) {
+				setIsDownloading(true);
+			}
+		});
+		return () => {
+			unsubscribeAllDownloads();
+		};
+	}, [requiredDownloads]);
 
 	useEffect(() => {
 		if (downloadCount >= requiredDownloads.length) {
@@ -82,9 +195,11 @@ export function RequiredModelsAlert({ inline, appId }: { inline?: boolean; appId
 		}
 	}, []);
 
+	const isCompleted_ = useRequiredModels();
+
 	return (
 		<Snackbar
-			open={!isCompleted}
+			open={!isCompleted && !isCompleted_}
 			variant="soft"
 			color="warning"
 			startDecorator={<WarningIcon />}
