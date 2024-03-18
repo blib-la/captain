@@ -1,25 +1,15 @@
-import fsp from "node:fs/promises";
-
 import * as winston from "winston";
 
-import { createDirectory } from "@/utils/fs";
+import { createDirectory, clearDirectory } from "@/utils/fs";
 import { getCaptainData } from "@/utils/path-helpers";
 
-// Make sure the logs directory exists
-await createDirectory(getCaptainData("logs"));
-
-async function clear(path: string) {
-	try {
-		const files = await fsp.readdir(path);
-		for (const file of files) {
-			const filePath = `${path}/${file}`;
-			await fsp.unlink(filePath);
-		}
-	} catch (error) {
-		console.error(`Error clearing log files: ${error}`);
-	}
-}
-
+/**
+ * Creates and configures a Winston logger with file and console transports.
+ * File transports log error and combined logs to specified files within the user's log directory.
+ * In non-production environments, logs are also output to the console.
+ *
+ * @returns {winston.Logger} A Winston Logger instance.
+ */
 function create() {
 	const logger = winston.createLogger({
 		level: "info",
@@ -56,7 +46,7 @@ const logsPath = getCaptainData("logs");
 await createDirectory(logsPath);
 
 // Delete old logs
-await clear(logsPath);
+await clearDirectory(logsPath);
 
 // Create logger
 const logger = create();

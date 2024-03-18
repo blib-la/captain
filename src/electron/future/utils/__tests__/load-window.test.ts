@@ -1,9 +1,5 @@
 import type { BrowserWindow } from "electron";
 
-// Adjust the import path
-// Adjust the import path
-
-// Mock Electron's BrowserWindow
 jest.mock("electron", () => ({
 	BrowserWindow: jest.fn().mockImplementation(() => ({
 		loadURL: jest.fn().mockResolvedValue(null),
@@ -18,7 +14,7 @@ jest.mock("@/utils/locale", () => ({
 }));
 
 jest.mock("@/services/logger", () => ({
-	clear: jest.fn(),
+	create: jest.fn(),
 }));
 
 describe("loadURL", () => {
