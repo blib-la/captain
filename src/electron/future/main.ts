@@ -3,7 +3,7 @@ import path from "path";
 import url from "url";
 
 import type { BrowserWindow, BrowserWindowConstructorOptions } from "electron";
-import { app, globalShortcut, ipcMain, Menu, protocol, screen } from "electron";
+import { app, globalShortcut, ipcMain, Menu, protocol, screen, Tray } from "electron";
 
 import { version } from "../../../package.json";
 
@@ -18,7 +18,7 @@ import logger from "@/services/logger";
 import { isCoreApp, isCoreView } from "@/utils/core";
 import { createWindow } from "@/utils/create-window";
 import { loadURL } from "@/utils/load-window";
-import { getCaptainData } from "@/utils/path-helpers";
+import { getCaptainData, getDirectory } from "@/utils/path-helpers";
 import { initialize, populateFromDocuments, reset } from "@/utils/vector-store";
 
 /**
@@ -252,6 +252,8 @@ async function runStartup() {
 	logger.info(`runStartup(): focused core window`);
 }
 
+let tray = null;
+
 /**
  * Initializes the application by determining its current state based on version and setup status.
  * It awaits Electron's readiness before proceeding with either launching the main application window
@@ -271,7 +273,18 @@ export async function main() {
 	logger.info(`main(): started`);
 
 	await app.whenReady();
-
+	tray = new Tray(getDirectory("icon.png"));
+	const contextMenu = Menu.buildFromTemplate([
+		{
+			label: "Quit Captain",
+			type: "normal",
+			click() {
+				app.quit();
+			},
+		},
+	]);
+	tray.setToolTip("Captain");
+	tray.setContextMenu(contextMenu);
 	logger.info(`main(): app is ready`);
 
 	// Initialize the local protocol to allow serving files from disk
