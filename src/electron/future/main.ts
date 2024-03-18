@@ -3,7 +3,7 @@ import path from "path";
 import url from "url";
 
 import type { BrowserWindow, BrowserWindowConstructorOptions } from "electron";
-import { app, globalShortcut, ipcMain, Menu, protocol, screen } from "electron";
+import { app, globalShortcut, ipcMain, Menu, protocol, screen, Tray } from "electron";
 
 import { version } from "../../../package.json";
 
@@ -14,10 +14,11 @@ import { LOCAL_PROTOCOL } from "#/constants";
 import { DownloadState, ID } from "#/enums";
 import { isProduction } from "#/flags";
 import { apps } from "@/apps";
+import logger from "@/services/logger";
 import { isCoreApp, isCoreView } from "@/utils/core";
 import { createWindow } from "@/utils/create-window";
 import { loadURL } from "@/utils/load-window";
-import { getCaptainData } from "@/utils/path-helpers";
+import { getCaptainData, getDirectory } from "@/utils/path-helpers";
 import { initialize, populateFromDocuments, reset } from "@/utils/vector-store";
 
 /**
@@ -49,6 +50,7 @@ async function createInstallerWindow(): Promise<BrowserWindow> {
  *
  */
 async function createPromptWindow() {
+	logger.info(`createPromptWindow(): started`);
 	const window_ = await createWindow("main", {
 		width: 750,
 		height: 112,
@@ -64,7 +66,11 @@ async function createPromptWindow() {
 		resizable: false,
 		show: false,
 	});
+	logger.info(`createPromptWindow(): created main window`);
+
 	await loadURL(window_, "prompt");
+	logger.info(`createPromptWindow(): loaded prompt`);
+
 	window_.on("show", () => {
 		window_.focus();
 		globalShortcut.register("Escape", async () => {
@@ -82,6 +88,7 @@ async function createPromptWindow() {
 	window_.on("blur", () => {
 		window_.hide();
 	});
+	logger.info(`createPromptWindow(): added window listener`);
 
 	ipcMain.on(buildKey([ID.WINDOW], { suffix: ":resize" }), (_event, { height, width }) => {
 		if (width && height) {
@@ -91,12 +98,14 @@ async function createPromptWindow() {
 			window_.setResizable(false);
 		}
 	});
+	logger.info(`createPromptWindow(): added ipc listener: resize`);
 
 	const promptShortcut = "Control+Alt+Space";
 	globalShortcut.register(promptShortcut, async () => {
 		console.log(promptShortcut);
 		window_.show();
 	});
+	logger.info(`createPromptWindow(): added global shortcut listener`);
 
 	app.on("will-quit", () => {
 		// Unregister a shortcut.
@@ -106,6 +115,8 @@ async function createPromptWindow() {
 		// Unregister all shortcuts.
 		globalShortcut.unregisterAll();
 	});
+	logger.info(`createPromptWindow(): added app listener: will-quit`);
+
 	return window_;
 }
 
@@ -223,14 +234,25 @@ async function createAppWindow(id: string, options: BrowserWindowConstructorOpti
 }
 
 async function runStartup() {
+	logger.info(`runStartup(): started`);
+
 	apps.prompt = await createPromptWindow();
+	logger.info(`runStartup(): created prompt window`);
+
 	apps.core = await createCoreWindow();
+	logger.info(`runStartup(): created core window`);
+
 	await loadURL(apps.core, `core/dashboard`);
+	logger.info(`runStartup(): loaded core/dashboard`);
+
 	apps.core.on("close", () => {
 		apps.core = null;
 	});
 	apps.core.focus();
+	logger.info(`runStartup(): focused core window`);
 }
+
+let tray = null;
 
 /**
  * Initializes the application by determining its current state based on version and setup status.
@@ -248,10 +270,27 @@ async function runStartup() {
  * - In production mode, it removes the default application menu to align with the custom UI design.
  */
 export async function main() {
+	logger.info(`main(): started`);
+
 	await app.whenReady();
+	tray = new Tray(getDirectory("icon.png"));
+	const contextMenu = Menu.buildFromTemplate([
+		{
+			label: "Quit Captain",
+			type: "normal",
+			click() {
+				app.quit();
+			},
+		},
+	]);
+	tray.setToolTip("Captain");
+	tray.setContextMenu(contextMenu);
+	logger.info(`main(): app is ready`);
 
 	// Initialize the local protocol to allow serving files from disk
 	initLocalProtocol();
+
+	logger.info(`main(): local protocol initialized`);
 
 	const lastAppVersion = appSettingsStore.get("version");
 	const appStatus = appSettingsStore.get("status");
@@ -261,9 +300,13 @@ export async function main() {
 		(appStatus === DownloadState.DONE && process.env.TEST_APP_STATUS !== "IDLE") ||
 		process.env.TEST_APP_STATUS === "DONE";
 
+	logger.info(`main(): app is upToDate ${isUpToDate} and ready ${isReady}`);
+
 	// Remove the default application menu in production
 	if (isProduction) {
 		Menu.setApplicationMenu(null);
+
+		logger.info(`main(): removed default application menu`);
 	}
 
 	ipcMain.on(
@@ -291,11 +334,14 @@ export async function main() {
 		}
 	);
 
+	logger.info(`main(): listened to :open`);
+
 	if (isUpToDate && isReady) {
 		// Start the vector store and fill it with data
 		await initialize();
 		await reset();
 		await populateFromDocuments();
+		logger.info(`main(): initialized vector store`);
 
 		// Start app
 		await runStartup();

@@ -12,6 +12,7 @@ files:
       - resources/python/**/*
       - resources/actions/**/*
       - resources/7zip/**/*
+      - resources/icon.png
 publish: null
 nsis:
   oneClick: false
@@ -22,3 +23,4 @@ asarUnpack:
   - "resources/python/**/*"
   - "resources/actions/**/*"
   - "resources/7zip/**/*"
+  - "resources/icon.png"
