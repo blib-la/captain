@@ -11,6 +11,7 @@ import { v4 } from "uuid";
 import { getCaptainData } from "../utils/path-helpers";
 
 import type { SearchOptions, VectorStoreDocument } from "#/types/vector-store";
+import logger from "@/services/logger";
 
 interface ServiceReadyConfig {
 	maxRetries?: number;
@@ -115,7 +116,7 @@ class VectorStore {
 				const response = await axios.get(healthEndpoint, { timeout });
 
 				if (response.status === 200) {
-					console.log("Qdrant is ready.");
+					logger.info("vector-store: Qdrant is ready");
 					return;
 				}
 			} catch {}

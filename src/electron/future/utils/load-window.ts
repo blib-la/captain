@@ -1,6 +1,7 @@
 import type { BrowserWindow } from "electron";
 
 import { isProduction } from "#/flags";
+import logger from "@/services/logger";
 import { getLocale } from "@/utils/locale";
 
 /**
@@ -17,10 +18,14 @@ import { getLocale } from "@/utils/locale";
 export async function loadURL(window_: BrowserWindow, pathname: string) {
 	const locale = getLocale();
 
-	if (isProduction) {
-		await window_.loadURL(`app://./${locale}/${pathname}`);
-	} else {
-		const port = process.argv[2];
-		await window_.loadURL(`http://localhost:${port}/${locale}/${pathname}`);
+	try {
+		if (isProduction) {
+			await window_.loadURL(`app://./${locale}/${pathname}`);
+		} else {
+			const port = process.argv[2];
+			await window_.loadURL(`http://localhost:${port}/${locale}/${pathname}`);
+		}
+	} catch (error) {
+		logger.error(`loadURL(): ${error}`);
 	}
 }

@@ -11,6 +11,7 @@ import Typography from "@mui/joy/Typography";
 import { evaluate } from "mathjs";
 import type { RefObject } from "react";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
@@ -19,6 +20,7 @@ import { Captain } from "@/atoms/logo/captain";
 import { handleCaptainAction } from "@/ions/handlers/action";
 import { useResizeObserver } from "@/ions/hooks/resize-observer";
 import { useVectorStore } from "@/ions/hooks/vector-store";
+import { makeStaticProperties } from "@/ions/i18n/get-static";
 
 export function useAutoFocusIPC<T extends HTMLElement>(reference: RefObject<T>) {
 	useEffect(() => {
@@ -43,6 +45,8 @@ export function useAutoSizerWindow<T extends HTMLElement>(reference: RefObject<T
 }
 
 export default function Page() {
+	const { t } = useTranslation(["labels", "texts"]);
+
 	const frameReference = useRef<HTMLDivElement | null>(null);
 	const promptReference = useRef<HTMLInputElement | null>(null);
 	const [value, setValue] = useState("");
@@ -73,7 +77,7 @@ export default function Page() {
 				}}
 			>
 				<Input
-					placeholder="I want to draw something..."
+					placeholder={t("labels:placeholder.prompt")}
 					endDecorator={
 						<Box
 							sx={{
@@ -220,3 +224,7 @@ export default function Page() {
 		</Box>
 	);
 }
+
+export const getStaticProps = makeStaticProperties(["common", "texts", "labels"]);
+
+export { getStaticPaths } from "@/ions/i18n/get-static";

@@ -1,6 +1,7 @@
 import { app } from "electron";
 
 import { main } from "@/main";
+import logger from "@/services/logger";
 import { watchStores } from "@/stores/watchers";
 
 // Import core setup module.
@@ -56,7 +57,7 @@ let unsubscribe: (() => Promise<void>) | undefined;
 // Initialize the application by calling the main function.
 // Upon completion, log to the console indicating the application has started.
 main().then(() => {
-	console.log("Application started successfully.");
+	logger.info("Application started successfully");
 	unsubscribe = watchStores();
 });
 
