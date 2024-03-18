@@ -9,9 +9,9 @@ import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import Sheet from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
 import { evaluate } from "mathjs";
+import { useTranslation } from "next-i18next";
 import type { RefObject } from "react";
 import { useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
@@ -45,7 +45,7 @@ export function useAutoSizerWindow<T extends HTMLElement>(reference: RefObject<T
 }
 
 export default function Page() {
-	const { t } = useTranslation(["labels", "texts"]);
+	const { t } = useTranslation(["texts"]);
 
 	const frameReference = useRef<HTMLDivElement | null>(null);
 	const promptReference = useRef<HTMLInputElement | null>(null);
@@ -55,6 +55,7 @@ export default function Page() {
 
 	useAutoFocusIPC(promptReference);
 	useAutoSizerWindow(frameReference);
+	console.log(t("labels:placeholder.prompt"));
 
 	return (
 		<Box
@@ -225,6 +226,6 @@ export default function Page() {
 	);
 }
 
-export const getStaticProps = makeStaticProperties(["common", "texts", "labels"]);
+export const getStaticProps = makeStaticProperties(["common", "labels"]);
 
 export { getStaticPaths } from "@/ions/i18n/get-static";
