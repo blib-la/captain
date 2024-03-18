@@ -1,6 +1,6 @@
 {
   "name": "captain",
-  "version": "1.0.0-alpha.18",
+  "version": "1.0.0-alpha.19",
   "private": true,
   "description": "The Captain of AI",
   "license": "AGPL 3.0",
@@ -157,7 +157,8 @@
     "typescript": "^5.4.2",
     "use-debounce": "^10.0.0",
     "uuid": "^9.0.1",
-    "webpack": "^5.90.3"
+    "webpack": "^5.90.3",
+    "winston": "^3.12.0"
   },
   "optionalDependencies": {
     "@swc/core-darwin-arm64": "^1.4.6",
