@@ -19,23 +19,30 @@ function create() {
 			}),
 			winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
 		),
-		transports: [
+		transports: [],
+	});
+
+	// In production, log to files
+	if (process.env.NODE_ENV === "production") {
+		logger.add(
 			new winston.transports.File({
 				filename: getCaptainData("logs", "error.log"),
 				level: "error",
-			}),
-			new winston.transports.File({ filename: getCaptainData("logs", "combined.log") }),
-		],
-	});
-
-	// If we're not in production, log to the `console`
-	if (process.env.NODE_ENV !== "production") {
+			})
+		);
 		logger.add(
-			new winston.transports.Console({
-				format: winston.format.simple(),
+			new winston.transports.File({
+				filename: getCaptainData("logs", "combined.log"),
 			})
 		);
 	}
+
+	// Always log to the console
+	logger.add(
+		new winston.transports.Console({
+			format: winston.format.simple(),
+		})
+	);
 
 	return logger;
 }
