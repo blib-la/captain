@@ -78,7 +78,7 @@ export default function Page() {
 				}}
 			>
 				<Input
-					placeholder={t("labels:placeholder.prompt")}
+					placeholder="I want to..."
 					endDecorator={
 						<Box
 							sx={{
