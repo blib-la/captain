@@ -55,7 +55,6 @@ export default function Page() {
 
 	useAutoFocusIPC(promptReference);
 	useAutoSizerWindow(frameReference);
-	console.log(t("labels:placeholder.prompt"));
 
 	return (
 		<Box
