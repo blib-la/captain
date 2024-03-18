@@ -17,6 +17,10 @@ jest.mock("@/utils/locale", () => ({
 	getLocale: jest.fn(),
 }));
 
+jest.mock("@/services/logger", () => ({
+	clear: jest.fn(),
+}));
+
 describe("loadURL", () => {
 	let windowMock: BrowserWindow;
 
