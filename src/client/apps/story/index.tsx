@@ -31,6 +31,7 @@ export function Story() {
 
 	const [story, setStory] = useState("");
 	const [generating, setGenerating] = useState(false);
+	const [hasOpenAiApiKey, setHasOpenAiApiKey] = useState(false);
 
 	const saveStory = useCallback(
 		async (story_: string) => {
@@ -73,6 +74,8 @@ export function Story() {
 			});
 	}, [setImages]);
 
+	const isDisabled = selectedImages.length === 0 || !hasOpenAiApiKey;
+
 	useSDK<unknown, { done: boolean; story: string }>(APP_ID, {
 		async onMessage(message) {
 			console.log(message);
@@ -103,6 +106,16 @@ export function Story() {
 			unsubscribe();
 		};
 	}, [loadImages, setImages]);
+
+	useEffect(() => {
+		window.ipc.send("hasOpenAiApiKey");
+		const unsubscribe = window.ipc.on("openAiApiKey", (hasKey: boolean) => {
+			setHasOpenAiApiKey(hasKey);
+		});
+		return () => {
+			unsubscribe();
+		};
+	}, []);
 
 	if (story) {
 		return (
@@ -154,6 +167,8 @@ export function Story() {
 				</Grid>
 				<Grid xs={1} sx={{ display: "flex" }}>
 					<StoryForm
+						disabled={isDisabled}
+						hasOpenAiApiKey={hasOpenAiApiKey}
 						onSubmit={() => {
 							setGenerating(true);
 						}}
