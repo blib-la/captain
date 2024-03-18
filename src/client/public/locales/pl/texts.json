@@ -1,6 +1,8 @@
 {
+  "activateFullPower": "Aby aktywować pełną moc naszej aplikacji do malowania na żywo, proszę pobrać brakujące pliki.",
   "analyzingImages": "Prosimy o cierpliwość! Obecnie analizujemy przesłane przez Ciebie obrazy, aby stworzyć idealną historię, która je otacza. Proces ten wykorzystuje zaawansowane algorytmy AI do zrozumienia kontekstu i elementów na Twoich obrazach, zapewniając narrację, która naprawdę rezonuje z wizualiami. W zależności od złożoności i liczby obrazów, może to zająć od 20 sekund do 2 minut. Doceniamy Twoją cierpliwość. Przygotuj się na zdumienie historiami, które nasze AI może stworzyć specjalnie dla Ciebie.",
   "downloadSuccessUnpacking": "Pobieranie zakończone sukcesem! Teraz rozpakowujemy ten skarb technologii.",
+  "essentialModelDownloads": "Wymagane niezbędne pobrania modeli!",
   "howToUseCaptain": "Captain możesz łatwo kontrolować za pomocą prompta, który w każdej chwili możesz otworzyć za pomocą skrótu klawiszowego Ctrl + Alt + Spacja. Wpisz po prostu, co chcesz zrobić, a my zajmiemy się resztą.",
   "preparation": "Aby prompt działał, szybko przygotowujemy wszystko.",
   "preparationDone": "Wszystkie przygotowania są zakończone! Miłej zabawy z Captain.",

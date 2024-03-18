@@ -1,6 +1,8 @@
 {
+  "activateFullPower": "Para activar todo el potencial de nuestra aplicación de pintura en vivo, por favor descargue los archivos faltantes.",
   "analyzingImages": "¡Espera un momento! Actualmente estamos analizando las imágenes que has proporcionado para tejer la historia perfecta a su alrededor. Este proceso utiliza algoritmos de IA avanzados para comprender el contexto y los elementos en tus imágenes, asegurando una narrativa que realmente resuene con las visuales. Dependiendo de la complejidad y el número de imágenes, esto podría tomar unos minutos. Agradecemos tu paciencia. Prepárate para sorprenderte con las historias que nuestra IA puede crear justo para ti.",
   "downloadSuccessUnpacking": "¡Descarga exitosa! Ahora, desempaquemos este cofre del tesoro tecnológico.",
+  "essentialModelDownloads": "¡Descargas esenciales de modelos necesarias!",
   "howToUseCaptain": "Puedes controlar fácilmente a Captain a través del prompt, el cual puedes abrir en cualquier momento usando la combinación de teclas Ctrl + Alt + Espacio. Simplemente escribe lo que deseas hacer y nosotros nos encargamos del resto.",
   "preparation": "Para que el prompt funcione, estamos preparando todo rápidamente.",
   "preparationDone": "¡Todas las preparaciones están completas! Disfruta usando a Captain.",

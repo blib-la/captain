@@ -1,6 +1,8 @@
 {
+  "activateFullPower": "Um die volle Leistung unserer Live-Mal-App zu aktivieren, bitte lade die fehlenden Dateien herunter.",
   "analyzingImages": "Bleib dran! Wir analysieren gerade die von dir bereitgestellten Bilder, um die perfekte Geschichte darum zu weben. Dieser Prozess nutzt fortschrittliche KI-Algorithmen, um den Kontext und die Elemente in deinen Bildern zu verstehen und eine Erzählung zu gewährleisten, die wirklich mit den Bildern harmoniert. Abhängig von der Komplexität und Anzahl der Bilder kann dies einige Minuten dauern. Wir schätzen deine Geduld. Mach dich bereit, von den Geschichten, die unsere KI speziell für dich kreieren kann, erstaunt zu werden.",
   "downloadSuccessUnpacking": "Download erfolgreich! Jetzt packen wir diesen Schatz der Technologie aus.",
+  "essentialModelDownloads": "Wichtige Modell-Downloads erforderlich!",
   "howToUseCaptain": "Captain kannst du ganz einfach über den Prompt steuern, welchen du mit der Tastenkombination Strg + Alt + Leertaste jederzeit öffnen kannst. Schreibe dann einfach, was du machen möchtest und wir erledigen den Rest.",
   "preparation": "Damit der Prompt funktioniert, bereiten wir noch kurz alles vor.",
   "preparationDone": "Alle Vorbereitungen sind abgeschlossen! Viel Spaß mit Captain.",

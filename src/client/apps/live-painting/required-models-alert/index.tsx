@@ -119,34 +119,10 @@ export function RequiredModelsAlert({ inline, appId }: { inline?: boolean; appId
 		const unsubscribeDownloadComplete = window.ipc.on("downloadComplete", () => {
 			setDownloadCount(previousState => previousState + 1);
 		});
-		/*		Const unsubscribeAllInventory = window.ipc.on(
-			"allInventory",
-			(inventory: Record<string, unknown>) => {
-				const done = allRequiredDownloads.every(item => {
-					const keyPath = item.destination.replaceAll("/", ".");
-					const inventoryCollection = getProperty<
-						Record<string, unknown>,
-						string,
-						{
-							id: string;
-						}[]
-					>(inventory, keyPath);
-					if (Array.isArray(inventoryCollection)) {
-						return inventoryCollection.some(
-							inventoryItem => inventoryItem.id === item.id
-						);
-					}
-
-					return false;
-				});
-				setIsCompleted(done);
-			}
-		); */
 
 		return () => {
 			unsubscribeDownload();
 			unsubscribeDownloadComplete();
-			/* UnsubscribeAllInventory(); */
 		};
 	}, []);
 
@@ -238,16 +214,16 @@ export function RequiredModelsAlert({ inline, appId }: { inline?: boolean; appId
 		>
 			<Box>
 				<Typography level="title-lg" component="h2" sx={{ mb: 2 }}>
-					Essential Model Downloads Needed!
+					{t("texts:essentialModelDownloads")}
 				</Typography>
-				<Typography>
-					To activate the full power of our live-painting app, please download the missing
-					files.
-				</Typography>
+				<Typography>{t("texts:activateFullPower")}</Typography>
 
-				<Typography sx={{ mt: 1 }}>Click &quot;Download&quot; to start!</Typography>
+				<Typography sx={{ mt: 1 }}>{t("labels:clickDownloadToStart")}</Typography>
 				<Typography sx={{ mt: 1 }}>
-					Downloaded {downloadCount} of {requiredDownloads.length}
+					{t("labels:downloadedOf", {
+						downloaded: downloadCount,
+						downloads: requiredDownloads.length,
+					})}
 				</Typography>
 				<LinearProgress
 					determinate
