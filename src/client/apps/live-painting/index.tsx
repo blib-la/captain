@@ -33,6 +33,7 @@ import type { IllustrationStyles } from "./text-to-image";
 import { illustrationStyles } from "./text-to-image";
 
 import { randomSeed } from "#/number";
+import { RequiredModelsAlert } from "@/apps/live-painting/required-models-alert";
 
 export function LivePainting() {
 	const { t } = useTranslation(["common", "labels"]);
@@ -89,6 +90,7 @@ export function LivePainting() {
 
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
+			<RequiredModelsAlert appId={APP_ID} />
 			<StyledStickyHeader>
 				{/* Left Side of the header */}
 				<StyledButtonWrapper>
