@@ -94,16 +94,34 @@ currently only works with this base setup:
 
 ## First steps
 
+### Download models
+
+Captain needs the models to use AI on your computer, so you have full control over everything.
+That's why you need to download them in order to use the "Live Painting" app.
+
 ### Navigate Captain with a Prompt
 
-You can interact with Captain by using the **Prompt**. This is a special windows that you can open
-by using the keyboard-shortcut: **CTRL + ALT + Space**.
+You can interact with Captain by using the **Prompt**. This is a special window that you can open by
+using the keyboard-shortcut: **CTRL + ALT + Space**.
 
 When the **Prompt** is open, you can start build-in AI apps or change the settings of Captain:
 
 -   `I want to draw something`: Select _Live Painting_ to start drawing
 -   `Create a story`: Select _Generate a Story_ to generate stories based on the images you created
 -   `Switch to dark mode`
+
+### Generate a Story
+
+Captain currently has no AI that can write text locally, so we rely on GPT-4 from OpenAI. Captain
+consumes GPT via the API, which means that your data will not be used for training.
+
+In order to use the app, you need to:
+
+1. Create an [OpenAI API Key](https://platform.openai.com/api-keys)
+2. Open the **Prompt** and type "Settings"
+3. Enter your `OpenAI API Key`
+
+Now you can generate stories by opening the `Generate a story` app.
 
 ## Community
 
