@@ -1,3 +1,10 @@
+# [1.0.0-alpha.21](https://github.com/blib-la/captain/compare/v1.0.0-alpha.20...v1.0.0-alpha.21) (2024-03-19)
+
+
+### Features
+
+* add download notice for essential models ([#84](https://github.com/blib-la/captain/issues/84)) ([f48a629](https://github.com/blib-la/captain/commit/f48a629ec171a47f7c44d05e47a57c8deb7d69cc))
+
 # [1.0.0-alpha.20](https://github.com/blib-la/captain/compare/v1.0.0-alpha.19...v1.0.0-alpha.20) (2024-03-19)
 
 
