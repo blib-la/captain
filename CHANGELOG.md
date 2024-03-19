@@ -1,3 +1,31 @@
+# [1.0.0-alpha.24](https://github.com/blib-la/captain/compare/v1.0.0-alpha.23...v1.0.0-alpha.24) (2024-03-19)
+
+
+### Bug Fixes
+
+* **live-painting:** generate input image when nothing exists yet ([#90](https://github.com/blib-la/captain/issues/90)) ([89c9db3](https://github.com/blib-la/captain/commit/89c9db310d7776de2c4b37fbef0673d29a6c9c77))
+
+# [1.0.0-alpha.23](https://github.com/blib-la/captain/compare/v1.0.0-alpha.22...v1.0.0-alpha.23) (2024-03-19)
+
+
+### Bug Fixes
+
+* path to taesd ([#89](https://github.com/blib-la/captain/issues/89)) ([e25734c](https://github.com/blib-la/captain/commit/e25734c1ce97a5148c75b08c86e92b7499d35843))
+
+# [1.0.0-alpha.22](https://github.com/blib-la/captain/compare/v1.0.0-alpha.21...v1.0.0-alpha.22) (2024-03-19)
+
+
+### Bug Fixes
+
+* use correct path to downloaded checkpoint ([#88](https://github.com/blib-la/captain/issues/88)) ([1071844](https://github.com/blib-la/captain/commit/1071844d7e5dd07a0c0e91580c25ad7ceec50445))
+
+# [1.0.0-alpha.21](https://github.com/blib-la/captain/compare/v1.0.0-alpha.20...v1.0.0-alpha.21) (2024-03-19)
+
+
+### Features
+
+* add download notice for essential models ([#84](https://github.com/blib-la/captain/issues/84)) ([f48a629](https://github.com/blib-la/captain/commit/f48a629ec171a47f7c44d05e47a57c8deb7d69cc))
+
 # [1.0.0-alpha.20](https://github.com/blib-la/captain/compare/v1.0.0-alpha.19...v1.0.0-alpha.20) (2024-03-19)
 
 
