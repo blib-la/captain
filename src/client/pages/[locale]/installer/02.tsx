@@ -47,9 +47,9 @@ function useInstallProgress() {
 			}
 		);
 		const unsubscribeCancelled = window.ipc.on(
-			buildKey([ID.INSTALL], { suffix: ":cancelled" }),
+			buildKey([ID.INSTALL], { suffix: ":canceled" }),
 			() => {
-				setStatus(DownloadState.CANCELLED);
+				setStatus(DownloadState.CANCELED);
 			}
 		);
 		const unsubscribeCompleted = window.ipc.on(

@@ -38,10 +38,10 @@ ipcMain.on(
 					},
 					onCancel() {
 						window_.webContents.send(
-							buildKey([ID.INSTALL], { suffix: ":cancelled" }),
+							buildKey([ID.INSTALL], { suffix: ":canceled" }),
 							true
 						);
-						appSettingsStore.set("status", DownloadState.CANCELLED);
+						appSettingsStore.set("status", DownloadState.CANCELED);
 					},
 					async onCompleted(file) {
 						const targetPath = getCaptainData(destination);

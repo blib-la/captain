@@ -67,9 +67,9 @@ export enum DownloadState {
 	FAILED = "FAILED",
 
 	/**
-	 * The download has been cancelled by rhe user and did not complete.
+	 * The download has been canceled by rhe user and did not complete.
 	 */
-	CANCELLED = "CANCELLED",
+	CANCELED = "CANCELED",
 
 	/**
 	 * The download is being unpacked.
