@@ -1,3 +1,10 @@
+# [1.0.0-alpha.20](https://github.com/blib-la/captain/compare/v1.0.0-alpha.19...v1.0.0-alpha.20) (2024-03-19)
+
+
+### Features
+
+* check for openAI API key ([#86](https://github.com/blib-la/captain/issues/86)) ([fda5afb](https://github.com/blib-la/captain/commit/fda5afb8d2b2ec47ff21a12698d01fe8d3354682))
+
 # [1.0.0-alpha.19](https://github.com/blib-la/captain/compare/v1.0.0-alpha.18...v1.0.0-alpha.19) (2024-03-18)
 
 
