@@ -73,7 +73,7 @@ ipcMain.on(
 				"stable-diffusion/checkpoints/stabilityai/sd-turbo/fp16/sd-turbo-fp16"
 			),
 			"--vae_path",
-			getCaptainDownloads("stable-diffusion/vae/madebyollin/taesd"),
+			getCaptainDownloads("stable-diffusion/vae/madebyollin/taesd/taesd"),
 			"--input_image_path",
 			getCaptainTemporary("live-painting/input.png"),
 			"--output_image_path",
