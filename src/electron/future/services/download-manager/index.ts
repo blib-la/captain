@@ -54,10 +54,7 @@ export class DownloadManager {
 			return;
 		}
 
-		const queue = [...this.downloadQueue].sort(
-			(a, b) => (a.createdAt || 0) - (b.createdAt || 0)
-		);
-		const nextItem = queue.find(item => item.state === DownloadState.WAITING);
+		const nextItem = this.downloadQueue.find(item => item.state === DownloadState.WAITING);
 		if (!nextItem) {
 			console.log("No more items to process");
 			return;
@@ -77,14 +74,8 @@ export class DownloadManager {
 				directory: item.destination,
 				onStarted: () => {
 					this.currentDownloads += 1;
-
 					item.state = DownloadState.STARTED;
 					apps.core?.webContents.send(DownloadEvent.STARTED, item.id);
-				},
-				onCancel: () => {
-					item.state = DownloadState.CANCELLED;
-					apps.core?.webContents.send(DownloadEvent.CANCELLED, item.id);
-					this.processQueue();
 				},
 				onCompleted: async file => {
 					item.state = DownloadState.COMPLETED;
@@ -120,7 +111,6 @@ export class DownloadManager {
 				},
 			});
 		} catch (error) {
-			console.log("catcher", error);
 			item.state = DownloadState.ERROR;
 			apps.core?.webContents.send(DownloadEvent.ERROR, item.id, error);
 			this.processQueue();

@@ -15,9 +15,15 @@ import { unpack } from "@/utils/unpack";
 
 const testDownloadFile = "https://example.com/test.jpg";
 
-jest.mock("electron-dl", () => ({
-	download: jest.fn(),
-}));
+jest.mock("electron-dl", () => {
+	const originalModule = jest.requireActual("electron-dl");
+
+	// Return the original module but override the download function
+	return {
+		...originalModule,
+		download: jest.fn(),
+	};
+});
 
 jest.mock("@/utils/unpack", () => ({
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -356,7 +362,9 @@ describe("DownloadManager", () => {
 		downloadManager.addToQueue(item);
 
 		// Allow the mock download and potential unpacking to be processed
-		await new Promise(resolve => setImmediate(resolve));
+		await new Promise(resolve => {
+			setImmediate(resolve);
+		});
 
 		// Verify unpack was called with the correct arguments
 		expect(unpack).toHaveBeenCalledWith(
@@ -394,7 +402,9 @@ describe("DownloadManager", () => {
 		downloadManager.addToQueue(item);
 
 		// Wait for the mock download and unpack operation to be processed
-		await new Promise(resolve => setImmediate(resolve));
+		await new Promise(resolve => {
+			setImmediate(resolve);
+		});
 
 		// Verify that an error event was sent due to unpack failure
 		expect(apps.core?.webContents.send).toHaveBeenCalledWith(
@@ -405,61 +415,5 @@ describe("DownloadManager", () => {
 
 		// Ensure the 'unpack' mock is cleared if you are re-mocking in the same test suite
 		jest.clearAllMocks();
-	});
-
-	it.skip("should correctly handle download cancellation", async () => {
-		// Mock the download function to simulate the ability to cancel
-		(download as jest.Mock).mockImplementation((_window, _url, options) => {
-			const promise = new Promise<void>((resolve, reject) => {
-				// Simulate download started
-				options.onStarted();
-				const cancelId = setTimeout(() => {
-					options.onCompleted({ path: `test/path/${options.directory}` });
-					resolve();
-				}, 100);
-
-				// Setup the onCancel handler to simulate cancellation
-				options.onCancel = () => {
-					clearTimeout(cancelId);
-					reject(new Error("Download cancelled"));
-				};
-			});
-
-			// Simulate providing a way to cancel the download
-			return {
-				promise,
-				cancel: () => options.onCancel(),
-			};
-		});
-
-		// Create a download item and add it to the queue
-		const item: DownloadItem = {
-			id: v4(),
-			source: testDownloadFile,
-			destination: "test/download-manager/cancel",
-			label: "Cancellable Download",
-			createdAt: Date.now(),
-			state: DownloadState.WAITING,
-		};
-		downloadManager.addToQueue(item);
-
-		// Cancel the download shortly after it starts
-		setTimeout(() => {
-			//
-			// downloadManager.cancelDownload(item.id);
-		}, 50);
-
-		// Wait for the cancellation to be processed
-		await new Promise(resolve => {
-			setTimeout(resolve, 200);
-		});
-
-		// Verify that the item's state is updated to CANCELLED
-		const updatedItem = downloadManager.getDownloadQueue().find(index => index.id === item.id);
-		expect(updatedItem?.state).toBe(DownloadState.CANCELLED);
-
-		// Optionally, verify that the next item in the queue (if any) has started
-		// This part depends on the implementation details of your DownloadManager,
-		// specifically how it handles proceeding to the next item after cancellation.
 	});
 });

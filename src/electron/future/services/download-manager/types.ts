@@ -43,5 +43,4 @@ export interface DownloadItem {
 	 * Current state of the download. Optional.
 	 */
 	state?: DownloadState;
-	cancel?: () => void; // Add this line
 }
