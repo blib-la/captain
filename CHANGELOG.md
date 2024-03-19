@@ -1,3 +1,10 @@
+# [1.0.0-alpha.24](https://github.com/blib-la/captain/compare/v1.0.0-alpha.23...v1.0.0-alpha.24) (2024-03-19)
+
+
+### Bug Fixes
+
+* **live-painting:** generate input image when nothing exists yet ([#90](https://github.com/blib-la/captain/issues/90)) ([89c9db3](https://github.com/blib-la/captain/commit/89c9db310d7776de2c4b37fbef0673d29a6c9c77))
+
 # [1.0.0-alpha.23](https://github.com/blib-la/captain/compare/v1.0.0-alpha.22...v1.0.0-alpha.23) (2024-03-19)
 
 
