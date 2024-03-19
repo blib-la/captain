@@ -38,7 +38,7 @@ Bring your ideas to life using Captain's intuitive UI. Just type in what you wan
 Captain's core apps transform your thoughts into vivid artworks and captivating stories.
 
 <p align="center">
-    <a href="https://www.youtube.com/watch?v=tf2OSggA0f8"><img src="https://github.com/blib-la/captain/assets/492378/cba7f6ab-e997-4325-9cce-87ae6dad4703" alt="Captain Promo featuring Live Painting and Story Creation" /></a>
+    <a href="https://www.youtube.com/watch?v=tf2OSggA0f8"><img src="https://github.com/blib-la/captain/assets/492378/dcff212a-8bfd-4657-9298-5d4e919461c7" alt="Captain Promo featuring Live Painting and Story Creation" /></a>
 </p>
 
 ---
