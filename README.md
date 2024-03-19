@@ -5,9 +5,9 @@
 <h1 align="center">Captain</h1>
 
 <div align="center">
-    <img alt="Status: ALPHA" src="https://img.shields.io/badge/Status-ALPHA-purple">
-    <img alt="License: AGPL 3.0" src="https://img.shields.io/badge/License-AGPL%203.0-blue">
-    <img alt="Data Privacy: Protected" src="https://img.shields.io/badge/Data%20Privacy-Protected-cyan">
+    <img alt="Status: ALPHA" src="https://img.shields.io/badge/Status-ALPHA-purple?style=for-the-badge">
+    <img alt="License: AGPL 3.0" src="https://img.shields.io/badge/License-AGPL%203.0-blue?style=for-the-badge">
+    <img alt="Data Privacy: Protected" src="https://img.shields.io/badge/Data%20Privacy-Protected-cyan?style=for-the-badge">
 </div>
 
 <p align="center">
@@ -26,8 +26,8 @@ applications effortlessly on your own computer.
 <!-- releasesstop -->
 
 <div align="center">
-  <img alt="MacOS" src="https://img.shields.io/badge/MacOS-Coming Soon-white">
-  <img alt="Linux" src="https://img.shields.io/badge/Linux-Coming Soon-yellow">
+  <img alt="MacOS" src="https://img.shields.io/badge/MacOS-Coming Soon-white?style=for-the-badge">
+  <img alt="Linux" src="https://img.shields.io/badge/Linux-Coming Soon-yellow?style=for-the-badge">
 </div>
 
 ---
