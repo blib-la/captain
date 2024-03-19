@@ -53,6 +53,9 @@ import "@/ipc/testing";
 // Import the vector store
 import "@/ipc/vector-store";
 
+// Import keys
+import "@/ipc/keys";
+
 let unsubscribe: (() => Promise<void>) | undefined;
 // Initialize the application by calling the main function.
 // Upon completion, log to the console indicating the application has started.

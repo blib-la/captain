@@ -1,3 +1,17 @@
+# [1.0.0-alpha.20](https://github.com/blib-la/captain/compare/v1.0.0-alpha.19...v1.0.0-alpha.20) (2024-03-19)
+
+
+### Features
+
+* check for openAI API key ([#86](https://github.com/blib-la/captain/issues/86)) ([fda5afb](https://github.com/blib-la/captain/commit/fda5afb8d2b2ec47ff21a12698d01fe8d3354682))
+
+# [1.0.0-alpha.19](https://github.com/blib-la/captain/compare/v1.0.0-alpha.18...v1.0.0-alpha.19) (2024-03-18)
+
+
+### Features
+
+* added winston for logging ([#85](https://github.com/blib-la/captain/issues/85)) ([e9da428](https://github.com/blib-la/captain/commit/e9da4280525cef2c1b96deb328b252b98979725f))
+
 # [1.0.0-alpha.18](https://github.com/blib-la/captain/compare/v1.0.0-alpha.17...v1.0.0-alpha.18) (2024-03-15)
 
 

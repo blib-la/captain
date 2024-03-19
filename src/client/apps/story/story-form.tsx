@@ -1,5 +1,7 @@
 import { CustomScrollbars } from "@captn/joy/custom-scrollbars";
 import { useSDK } from "@captn/react/use-sdk";
+import WarningIcon from "@mui/icons-material/Warning";
+import Alert from "@mui/joy/Alert";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import FormControl from "@mui/joy/FormControl";
@@ -19,7 +21,15 @@ import { APP_ID } from "./constants";
 
 import type { FormInput } from "#/types/story";
 
-export function StoryForm({ onSubmit }: { onSubmit?(): void }) {
+export function StoryForm({
+	hasOpenAiApiKey,
+	disabled,
+	onSubmit,
+}: {
+	onSubmit?(): void;
+	disabled?: boolean;
+	hasOpenAiApiKey?: boolean;
+}) {
 	const {
 		t,
 		i18n: { language: locale },
@@ -57,6 +67,19 @@ export function StoryForm({ onSubmit }: { onSubmit?(): void }) {
 		>
 			<Box sx={{ flex: 1, position: "relative" }}>
 				<CustomScrollbars>
+					{!hasOpenAiApiKey && (
+						<Alert
+							color="warning"
+							variant="soft"
+							startDecorator={<WarningIcon />}
+							slotProps={{ startDecorator: { sx: { alignSelf: "flexStart" } } }}
+							sx={{ mb: 2 }}
+						>
+							<Typography>
+								{t("common:pages.dataset.enterKeyToUseGPTVision")}
+							</Typography>
+						</Alert>
+					)}
 					<Typography sx={{ mb: 2 }}>{t("texts:storyFormIntroduction")}</Typography>
 					<FormControl required>
 						<FormLabel>{t("labels:formLabel.length")}</FormLabel>
@@ -153,7 +176,7 @@ export function StoryForm({ onSubmit }: { onSubmit?(): void }) {
 				</CustomScrollbars>
 			</Box>
 			<Box>
-				<Button fullWidth type="submit" color="primary" variant="solid">
+				<Button fullWidth disabled={disabled} type="submit" color="primary" variant="solid">
 					{t("labels:submitButtonText")}
 				</Button>
 			</Box>
