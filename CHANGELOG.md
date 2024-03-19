@@ -1,3 +1,10 @@
+# [1.0.0-alpha.22](https://github.com/blib-la/captain/compare/v1.0.0-alpha.21...v1.0.0-alpha.22) (2024-03-19)
+
+
+### Bug Fixes
+
+* use correct path to downloaded checkpoint ([#88](https://github.com/blib-la/captain/issues/88)) ([1071844](https://github.com/blib-la/captain/commit/1071844d7e5dd07a0c0e91580c25ad7ceec50445))
+
 # [1.0.0-alpha.21](https://github.com/blib-la/captain/compare/v1.0.0-alpha.20...v1.0.0-alpha.21) (2024-03-19)
 
 
