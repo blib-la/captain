@@ -1,3 +1,17 @@
+# [1.0.0-alpha.26](https://github.com/blib-la/captain/compare/v1.0.0-alpha.25...v1.0.0-alpha.26) (2024-03-19)
+
+
+### Features
+
+* communicate existence of openaiapikey ([#93](https://github.com/blib-la/captain/issues/93)) ([3cd2efb](https://github.com/blib-la/captain/commit/3cd2efb80ba8568225a2b84e04d75a5ed7abfd27))
+
+# [1.0.0-alpha.25](https://github.com/blib-la/captain/compare/v1.0.0-alpha.24...v1.0.0-alpha.25) (2024-03-19)
+
+
+### Features
+
+* a generated story can be closed ([#92](https://github.com/blib-la/captain/issues/92)) ([902be83](https://github.com/blib-la/captain/commit/902be83dc6fe4f0b03cb269510125c7851eb846c))
+
 # [1.0.0-alpha.24](https://github.com/blib-la/captain/compare/v1.0.0-alpha.23...v1.0.0-alpha.24) (2024-03-19)
 
 

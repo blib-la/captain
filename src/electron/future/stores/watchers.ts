@@ -4,14 +4,14 @@ import { BrowserWindow } from "electron";
 
 import { downloadsStore, inventoryStore, userStore } from "@/stores";
 
-function sendToFocusedWindow<T>(key: string, value: T) {
+export function sendToFocusedWindow<T>(key: string, value: T) {
 	const window_ = BrowserWindow.getFocusedWindow();
 	if (window_) {
 		window_.webContents.send(key, value);
 	}
 }
 
-function sendToAllWindows<T>(key: string, value: T) {
+export function sendToAllWindows<T>(key: string, value: T) {
 	const windows_ = BrowserWindow.getAllWindows();
 	for (const window_ of windows_) {
 		window_.webContents.send(key, value);
