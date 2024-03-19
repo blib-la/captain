@@ -1,16 +1,21 @@
-# Captain: Your Local AI Hub (currently in BETA)
-
-Captain simplifies AI on your desktop. It's a free, open-source application that requires no complex
-setup — just a single .exe file. It provides a variety of AI tools and features a multi-language UI.
-
-[![Discord](https://img.shields.io/discord/1091306623819059300?color=7289da&label=Discord&logo=discord&logoColor=fff&style=for-the-badge)](https://discord.com/invite/m3TBB9XEkb)
-
-Captain currently supports English, German, Spanish, French, Italian, Japanese, Dutch, Polish,
-Portuguese, Russian, and Chinese.
-
 <p align="center">
     <img src="./docs/logo.png" alt="Download Captain" width="300">
 </p>
+
+<h1 align="center">Captain</h1>
+
+<div align="center">
+    <img alt="Status: ALPHA" src="https://img.shields.io/badge/Status-ALPHA-purple?style=for-the-badge">
+    <img alt="License: AGPL 3.0" src="https://img.shields.io/badge/License-AGPL%203.0-blue?style=for-the-badge">
+    <a href="https://discord.com/invite/m3TBB9XEkb"><img alt="Discord" src="https://img.shields.io/discord/1091306623819059300?color=7289da&label=Discord&logo=discord&logoColor=fff&style=for-the-badge"></a>
+</div>
+
+<p align="center">
+Explore, create, and innovate with Captain, your all-in-one platform to build and use AI
+applications effortlessly on your own computer.
+</p>
+
+---
 
 <!-- releases -->
 <p align="center">
@@ -20,91 +25,115 @@ Portuguese, Russian, and Chinese.
 </p>
 <!-- releasesstop -->
 
-## Coming soon: Live Painting with AI, on your Computer
+<div align="center">
+  <img alt="MacOS" src="https://img.shields.io/badge/MacOS-Coming Soon-white?style=for-the-badge">
+  <img alt="Linux" src="https://img.shields.io/badge/Linux-Coming Soon-white?style=for-the-badge">
+</div>
+
+---
+
+## Captain in Action
+
+Bring your ideas to life using Captain's intuitive UI. Just type in what you want to do and let
+Captain's core apps transform your thoughts into vivid artworks and captivating stories.
 
 <p align="center">
-    <a href="https://www.youtube.com/watch?v=EbZMRe1Xgww"><img src="https://github.com/blib-la/captain/assets/1148334/24ffe548-6348-4517-9921-3a234f1e2705" alt="captain promo" /></a>
+    <a href="https://www.youtube.com/watch?v=tf2OSggA0f8"><img src="https://github.com/blib-la/captain/assets/492378/dcff212a-8bfd-4657-9298-5d4e919461c7" alt="Captain Promo featuring Live Painting and Story Creation" /></a>
 </p>
 
-https://github.com/blib-la/captain/assets/1148334/e9f9419e-f6d7-4f35-96a7-667c18b799e2
+---
+
+<h2>Table of Contents</h2>
 
 <!-- toc -->
 
-- [Key Features](#key-features)
 - [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
   * [Installation](#installation)
-  * [Detailed User Guide](#detailed-user-guide)
-- [Important Note: Installation Warning for Unsigned App](#important-note-installation-warning-for-unsigned-app)
-- [Community and Support](#community-and-support)
-- [Contribute to Captain](#contribute-to-captain)
+- [First steps](#first-steps)
+  * [Download models](#download-models)
+  * [Navigate Captain with a Prompt](#navigate-captain-with-a-prompt)
+  * [Generate a Story](#generate-a-story)
+- [Community](#community)
+- [Contribute](#contribute)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 
 <!-- tocstop -->
 
-## Key Features
-
--   **Versatile AI Tool Integration**: Seamlessly connect with various AI tools and models for
-    diverse functionalities.
--   **Local and Online Modes**: Operate fully offline after initial model downloads or connect with
-    online AI services like OpenAI's GPT and RunPod.
--   **Self-Contained Application**: Enjoy the simplicity of a single `.exe` file with no need for
-    installing Python dependencies or other software.
--   **Open Source and Free**: Accessible AI for everyone, with the full source code available for
-    modification and extension.
--   **Dynamic AI Model Marketplace**: Easily download and update Stable Diffusion checkpoints, LoRAs
-    or other models directly through the in-app marketplace.
--   **Image Captioning** : Start with state-of-the-art automatic captioning powered by multiple AI
-    methods.
+---
 
 ## Getting Started
 
+### Prerequisites
+
+This is an alpha-release that has a focus on the hardware that we own ourselves, so Captain
+currently only works with this base setup:
+
+-   Windows with a NVIDIA GPU
+-   [NVIDIA CUDA Toolkit for Windows](https://developer.nvidia.com/cuda-downloads?target_os=Windows&target_arch=x86_64)
+    installed
+-   [Latest NVIDIA driver](https://www.nvidia.com/download/index.aspx) installed for your GPU
+
 ### Installation
 
-1. Download `Captain.exe` from our official repository.
-2. Run the executable to launch Captain.
-3. Decide where Captain should be installed in the Installation wizard.
+1. Download `Captain.exe` using the button above or from the
+   [releases](https://github.com/blib-la/captain/releases)
+2. Run `Captain.exe` to launch the Installation Wizard
+    1. Installation Warning for Unsigned App: As Captain is currently in ALPHA, it's releases are
+       not validated by Microsoft. This doesn't indicate any security issue and since Captain is
+       open source, you can review the source code at any time yourself
+    2. Click on "More Info"
+    3. You'll then see the option to "Run anyway". Click it to proceed with the installation.
+3. Decide where Captain should be installed
+4. Run Captain, which will launch the Installer
+5. Follow the steps, some of them take longer as Captain needs to download some large files
+6. When everything is downloaded, Captain will initialize and then start
+    1. When you are asked to allow [Qdrant](https://qdrant.tech/) to access your network, just allow
+       it, as Captain needs Qdrant to work
 
-### Detailed User Guide
+🎉 Congrats, you are done with the installation.
 
-For a comprehensive walkthrough of Captain's captioning feature and detailed instructions on how to
-make the most of Captain, please refer to our dedicated User Guide.
+## First steps
 
-[Read the Full Guide](./docs/GUIDE.md)
+### Download models
 
-This guide will assist you in navigating the captioning capabilities of Captain, ensuring you can
-leverage the power of local AI with confidence and ease.
+Captain needs the models to use AI on your computer, so you have full control over everything.
+That's why you need to download them in order to use the "Live Painting" app.
 
-## Important Note: Installation Warning for Unsigned App
+![blibla_captain_download_essential_models](https://github.com/blib-la/captain/assets/492378/ed2e0ad0-fe75-42b9-96ab-686e7360ed8f)
 
-As Captain is currently an unsigned application, you may encounter a warning during the installation
-process. This is a standard notification for unsigned apps and does not indicate any security issue
-with Captain. Since Captain is open source, you can review the source code to ensure its safety.
+### Navigate Captain with a Prompt
 
-If you receive a warning, please follow these steps to proceed with the installation:
+You can interact with Captain by using the **Prompt**. This is a special window that you can open by
+using the keyboard-shortcut: **CTRL + ALT + Space**.
 
-1. **Windows Users**:
+When the **Prompt** is open, you can start build-in AI apps or change the settings of Captain:
 
--   When the warning appears, click on "More info".
--   You'll then see the option to "Run anyway". Click it to proceed with the installation.
+-   `I want to draw something`: Select _Live Painting_ to start drawing
+-   `Create a story`: Select _Generate a Story_ to generate stories based on the images you created
+-   `Switch to dark mode`
 
-2. **Mac Users** (if applicable in the future):
+### Generate a Story
 
--   Right-click (or Ctrl-click) the downloaded file and select "Open".
--   In the warning dialog that appears, click "Open" to proceed.
+Captain currently has no AI that can write text locally, so we rely on GPT-4 from OpenAI. Captain
+consumes GPT via the API, which means that your data will not be used for training.
 
-Rest assured, the integrity and security of Captain are paramount to us. If you have any concerns or
-questions, please feel free to review our source code or contact us directly.
+In order to use the app, you need to:
 
-Enjoy the powerful capabilities of Captain, and thank you for your trust and support!
+1. Create an [OpenAI API Key](https://platform.openai.com/api-keys)
+2. Open the **Prompt** and type "Settings"
+3. Enter your `OpenAI API Key`
 
-## Community and Support
+Now you can generate stories by opening the `Generate a story` app.
 
-Encounter an issue or have suggestions? Head to our
-[issue tracker](https://github.com/blib-la/captain/issues) or engage with the community. Your
-feedback helps Captain sail smoothly!
+## Community
 
-## Contribute to Captain
+Let's connect and tell us what you think about Captain:
+
+[![Discord](https://img.shields.io/discord/1091306623819059300?color=7289da&label=Discord&logo=discord&logoColor=fff&style=for-the-badge)](https://discord.com/invite/m3TBB9XEkb)
+
+## Contribute
 
 Join us on deck! If you're looking to contribute, our
 [Contribution Guidelines](./.github/CONTRIBUTING.md) will help you get started.
@@ -117,7 +146,3 @@ Captain is proudly open source, available under the [AGPL 3.0 License](./LICENSE
 
 Hats off to our contributors, community, and everyone who supports Captain. Together, we're
 navigating the exciting waters of AI.
-
----
-
-Embark on your AI journey with Captain at the helm!
