@@ -14,8 +14,10 @@ import type { StoryRequest } from "#/types/story";
 import type { VectorStoreDocument } from "#/types/vector-store";
 import { apps } from "@/apps";
 import { captionImages, createStory, maxTokenMap } from "@/ipc/story";
+import logger from "@/services/logger";
 import { downloadsStore, inventoryStore, userStore } from "@/stores";
 import { pushToStore } from "@/stores/utils";
+import { createDirectory } from "@/utils/fs";
 import { clone } from "@/utils/git";
 import {
 	getCaptainData,
@@ -54,14 +56,23 @@ let cache = "";
 
 ipcMain.on(
 	APP_MESSAGE_KEY,
-	(event, { message, appId }: { message: SDKMessage<string>; appId: string }) => {
+	async (event, { message, appId }: { message: SDKMessage<string>; appId: string }) => {
 		if (message.action !== "livePainting:start") {
 			return;
 		}
 
+		createDirectory(getCaptainTemporary("live-painting"));
+
+		await fsp.writeFile(
+			getCaptainTemporary("live-painting/input.png"),
+			"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4//8/AwAI/AL+p5qgoAAAAABJRU5ErkJggg==",
+			"base64"
+		);
+
 		const channel = `${appId}:${APP_MESSAGE_KEY}`;
 		if (process_) {
 			event.sender.send(channel, { action: "livePainting:started", payload: true });
+			logger.info(`livePatinting: started`);
 			return;
 		}
 
@@ -85,6 +96,7 @@ ipcMain.on(
 		process_ = execa(pythonBinaryPath, ["-u", scriptPath, ...scriptArguments]);
 
 		if (process_.stdout && process_.stderr) {
+			logger.info(`livePatinting: processing data`);
 			process_.stdout.on("data", async data => {
 				const dataString = data.toString();
 
@@ -155,12 +167,16 @@ ipcMain.on(
 						});
 					}
 				} catch {
+					logger.info(`livePatinting: Received non-JSON data: ${dataString}`);
 					console.log("Received non-JSON data:", dataString);
 				}
 			});
 
+			logger.info(`livePatinting: processing stderr`);
 			process_.stderr.on("livePainting:data", data => {
 				console.error(`error: ${data}`);
+
+				logger.info(`livePatinting: error: ${data}`);
 
 				event.sender.send(channel, { action: "livePainting:error", payload: data });
 			});
@@ -195,7 +211,7 @@ ipcMain.on(
 					const decodedImageData = Buffer.from(base64Data, "base64");
 
 					await fsp.writeFile(
-						getCaptainData("temp/live-painting/input.png"),
+						getCaptainTemporary("live-painting/input.png"),
 						decodedImageData
 					);
 				} catch (error) {
