@@ -2,7 +2,7 @@ import { USER_LANGUAGE_KEY, USER_THEME_KEY } from "@captn/utils/constants";
 import type { Unsubscribe } from "conf/dist/source/types";
 import { BrowserWindow } from "electron";
 
-import { inventoryStore, userStore } from "@/stores";
+import { downloadsStore, inventoryStore, userStore } from "@/stores";
 
 function sendToFocusedWindow<T>(key: string, value: T) {
 	const window_ = BrowserWindow.getFocusedWindow();
@@ -46,6 +46,12 @@ export function watchStores() {
 			if (vae) {
 				sendToAllWindows("stable-diffusion.vae", vae);
 			}
+		}),
+		inventoryStore.onDidAnyChange(inventory => {
+			sendToAllWindows("allInventory", inventory);
+		}),
+		downloadsStore.onDidAnyChange(downloads => {
+			sendToAllWindows("allDownloads", downloads);
 		})
 	);
 

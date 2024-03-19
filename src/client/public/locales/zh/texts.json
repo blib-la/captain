@@ -1,6 +1,8 @@
 {
+  "activateFullPower": "要激活我们的实时绘画应用程序的全部功能，请下载缺失的文件。",
   "analyzingImages": "请稍候！我们当前正在分析您提供的图片，以围绕它们编织出完美的故事。这一过程利用先进的AI算法来理解您图片中的内容和元素，确保叙述与视觉效果真正相协调。根据图片的复杂性和数量，这可能需要20秒到2分钟的时间。我们感谢您的耐心等待。准备好被我们的AI为您创造的故事所惊艳吧。",
   "downloadSuccessUnpacking": "下载成功！现在正在解压这项技术宝藏。",
+  "essentialModelDownloads": "需要下载基本模型！",
   "howToUseCaptain": "你可以通过提示符轻松控制Captain，随时使用Ctrl + Alt + 空格键组合打开它。只需写下你想做的事情，我们会处理剩下的。",
   "preparation": "为了让提示符工作，我们正在快速准备一切。",
   "preparationDone": "所有准备工作都完成了！享受Captain吧。",

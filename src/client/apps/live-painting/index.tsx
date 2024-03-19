@@ -1,6 +1,7 @@
 import { useSDK } from "@captn/react/use-sdk";
 import BrushIcon from "@mui/icons-material/Brush";
 import CasinoIcon from "@mui/icons-material/Casino";
+import ClearIcon from "@mui/icons-material/Clear";
 import Box from "@mui/joy/Box";
 import Sheet from "@mui/joy/Sheet";
 import Switch from "@mui/joy/Switch";
@@ -12,7 +13,6 @@ import { useEffect, useState } from "react";
 import { clearCounterAtom, imageAtom, livePaintingOptionsAtom } from "./atoms";
 import {
 	ColorInputButton,
-	ModelSelect,
 	PopupSlider,
 	PromptSheet,
 	RunButton,
@@ -33,6 +33,7 @@ import type { IllustrationStyles } from "./text-to-image";
 import { illustrationStyles } from "./text-to-image";
 
 import { randomSeed } from "#/number";
+import { RequiredModelsAlert } from "@/apps/live-painting/required-models-alert";
 
 export function LivePainting() {
 	const { t } = useTranslation(["common", "labels"]);
@@ -89,6 +90,7 @@ export function LivePainting() {
 
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
+			<RequiredModelsAlert appId={APP_ID} />
 			<StyledStickyHeader>
 				{/* Left Side of the header */}
 				<StyledButtonWrapper>
@@ -158,13 +160,11 @@ export function LivePainting() {
 							setClearCounter(previousState => previousState + 1);
 						}}
 					>
-						<CasinoIcon />
+						<ClearIcon />
 					</TooltipButton>
 				</StyledButtonWrapper>
 				{/* Right Side of the header */}
 				<StyledButtonWrapper>
-					{/* Select the model to be used for image generation */}
-					<ModelSelect />
 					<Box sx={{ flex: 1 }} />
 					{/* Save the image to disk (includes a control + s listener) */}
 					<SaveButton image={image} />

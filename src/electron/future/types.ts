@@ -162,7 +162,7 @@ export interface DownloadStatus {
  * A record mapping unique identifiers (e.g., URLs) to their corresponding download status.
  * This facilitates tracking multiple downloads simultaneously.
  */
-export type DownloadsSettings = Record<string, DownloadStatus>;
+export type DownloadsSettings = Record<string, unknown>;
 
 /**
  * Represents a preview of a marketplace entry, which can be either text or an image.
