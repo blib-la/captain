@@ -27,7 +27,7 @@ applications effortlessly on your own computer.
 
 <div align="center">
   <img alt="MacOS" src="https://img.shields.io/badge/MacOS-Coming Soon-white?style=for-the-badge">
-  <img alt="Linux" src="https://img.shields.io/badge/Linux-Coming Soon-yellow?style=for-the-badge">
+  <img alt="Linux" src="https://img.shields.io/badge/Linux-Coming Soon-white?style=for-the-badge">
 </div>
 
 ---
