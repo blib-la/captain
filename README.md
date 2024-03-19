@@ -12,7 +12,7 @@
 
 <p align="center">
 Explore, create, and innovate with Captain, your all-in-one platform to build and use AI
-applications effortlessly on your own computer.
+apps effortlessly on your own computer.
 </p>
 
 ---
