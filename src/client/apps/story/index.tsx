@@ -1,9 +1,12 @@
 import { CustomScrollbars } from "@captn/joy/custom-scrollbars";
 import { useSDK } from "@captn/react/use-sdk";
 import { localFile } from "@captn/utils/string";
+import ClearIcon from "@mui/icons-material/Clear";
 import Box from "@mui/joy/Box";
 import Grid from "@mui/joy/Grid";
+import IconButton from "@mui/joy/IconButton";
 import LinearProgress from "@mui/joy/LinearProgress";
+import Sheet from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
 import dayjs from "dayjs";
 import { useAtom } from "jotai";
@@ -121,6 +124,16 @@ export function Story() {
 		return (
 			<CustomScrollbars>
 				<Box sx={{ p: 2 }}>
+					<Sheet sx={{ display: "flex", justifyContent: "flex-end" }}>
+						<IconButton
+							aria-label={t("labels:close")}
+							onClick={() => {
+								setStory("");
+							}}
+						>
+							<ClearIcon />
+						</IconButton>
+					</Sheet>
 					<Markdown
 						markdown={story}
 						images={selectedImages.map(image => localFile(image.filePath))}
