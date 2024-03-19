@@ -1,3 +1,10 @@
+# [1.0.0-alpha.23](https://github.com/blib-la/captain/compare/v1.0.0-alpha.22...v1.0.0-alpha.23) (2024-03-19)
+
+
+### Bug Fixes
+
+* path to taesd ([#89](https://github.com/blib-la/captain/issues/89)) ([e25734c](https://github.com/blib-la/captain/commit/e25734c1ce97a5148c75b08c86e92b7499d35843))
+
 # [1.0.0-alpha.22](https://github.com/blib-la/captain/compare/v1.0.0-alpha.21...v1.0.0-alpha.22) (2024-03-19)
 
 
