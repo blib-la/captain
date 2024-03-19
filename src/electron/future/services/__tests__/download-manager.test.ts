@@ -11,11 +11,18 @@ import type { DownloadItem } from "../download-manager/types";
 
 import { apps } from "@/apps";
 import { getCaptainDownloads } from "@/utils/path-helpers";
+import { unpack } from "@/utils/unpack";
 
 const testDownloadFile = "https://example.com/test.jpg";
 
 jest.mock("electron-dl", () => ({
 	download: jest.fn(),
+}));
+
+jest.mock("@/utils/unpack", () => ({
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	unpack: jest.fn().mockResolvedValue(),
 }));
 
 apps.prompt = {
@@ -34,6 +41,7 @@ describe("DownloadManager", () => {
 	let downloadManager: DownloadManager;
 
 	beforeEach(async () => {
+		jest.clearAllMocks(); // Resets the state of all mocks
 		DownloadManager.resetInstance();
 		downloadManager = DownloadManager.getInstance();
 		const testDirectory = getCaptainDownloads("test");
@@ -325,6 +333,78 @@ describe("DownloadManager", () => {
 		expect(
 			spySend.mock.calls.filter(call => call[0] === DownloadEvent.PROGRESS).length
 		).toBeGreaterThan(1);
+	});
+
+	it("should correctly handle the unzip process after download completion", async () => {
+		(download as jest.Mock).mockImplementation((_window, _url, options) =>
+			Promise.resolve().then(() => {
+				options.onStarted();
+				options.onCompleted({ path: `test/path/success.zip` });
+			})
+		);
+
+		const item: DownloadItem = {
+			id: v4(),
+			source: "https://example.com/success.zip",
+			destination: "test/download-manager/unzip",
+			label: "Zip Download",
+			createdAt: Date.now(),
+			state: DownloadState.WAITING,
+			unzip: true, // Flag indicating this item should be unzipped after download
+		};
+
+		downloadManager.addToQueue(item);
+
+		// Allow the mock download and potential unpacking to be processed
+		await new Promise(resolve => setImmediate(resolve));
+
+		// Verify unpack was called with the correct arguments
+		expect(unpack).toHaveBeenCalledWith(
+			expect.any(String), // The path to the unpacking tool, which might vary
+			`test/path/success.zip`, // The downloaded file path
+			expect.any(String), // The destination directory, which might be derived in the method
+			true // The expected value for the `deleteAfterUnpack` argument
+		);
+
+		// Verify that the COMPLETED event is sent after unpacking
+		expect(apps.core?.webContents.send).toHaveBeenCalledWith(DownloadEvent.COMPLETED, item.id);
+	});
+
+	it("should handle errors during the unzip process", async () => {
+		(unpack as jest.Mock).mockRejectedValueOnce(new Error("Unpack failed"));
+
+		// Adjust the download mock to simulate a successful download
+		(download as jest.Mock).mockImplementation((_window, _url, options) =>
+			Promise.resolve().then(() => {
+				options.onStarted();
+				options.onCompleted({ path: `test/path/failure.zip` });
+			})
+		);
+
+		const item: DownloadItem = {
+			id: v4(),
+			source: "https://example.com/failure.zip",
+			destination: "test/download-manager/unzip-failure",
+			label: "Failed Zip Download",
+			createdAt: Date.now(),
+			state: DownloadState.WAITING,
+			unzip: true,
+		};
+
+		downloadManager.addToQueue(item);
+
+		// Wait for the mock download and unpack operation to be processed
+		await new Promise(resolve => setImmediate(resolve));
+
+		// Verify that an error event was sent due to unpack failure
+		expect(apps.core?.webContents.send).toHaveBeenCalledWith(
+			DownloadEvent.ERROR,
+			item.id,
+			expect.any(Error)
+		);
+
+		// Ensure the 'unpack' mock is cleared if you are re-mocking in the same test suite
+		jest.clearAllMocks();
 	});
 
 	it.skip("should correctly handle download cancellation", async () => {

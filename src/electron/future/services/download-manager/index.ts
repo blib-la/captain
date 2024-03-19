@@ -63,13 +63,7 @@ export class DownloadManager {
 			return;
 		}
 
-		try {
-			await this.startDownload(nextItem);
-		} catch (error) {
-			console.log(error);
-			nextItem.state = DownloadState.ERROR;
-			apps.core?.webContents.send(DownloadEvent.ERROR, nextItem.id, error);
-		}
+		await this.startDownload(nextItem);
 	}
 
 	private async startDownload(item: DownloadItem): Promise<void> {
@@ -99,17 +93,13 @@ export class DownloadManager {
 						queueItem => queueItem.id !== item.id
 					);
 
-					console.log(this.downloadQueue.length, file.path);
-
 					// Check if more downloads can be started
-					await this.processQueue();
+					this.processQueue();
 					if (item.unzip) {
 						try {
 							await unpack(
-								// Location of 7zip
 								getDirectory("7zip/win/7za.exe"),
 								file.path,
-								// Location of folder where downloads are stored when done
 								getCaptainDownloads(item.destination, item.id),
 								true
 							);
@@ -130,7 +120,7 @@ export class DownloadManager {
 				},
 			});
 		} catch (error) {
-			console.log(error);
+			console.log("catcher", error);
 			item.state = DownloadState.ERROR;
 			apps.core?.webContents.send(DownloadEvent.ERROR, item.id, error);
 			this.processQueue();
