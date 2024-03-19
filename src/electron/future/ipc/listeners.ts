@@ -6,6 +6,7 @@ import { ipcMain } from "electron";
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import { keyStore, userStore } from "@/stores";
+import { sendToAllWindows } from "@/stores/watchers";
 import { clone, lfs } from "@/utils/git";
 import { getCaptainData } from "@/utils/path-helpers";
 import { readFilesRecursively } from "@/utils/read-files-recursively";
@@ -16,6 +17,7 @@ ipcMain.on(buildKey([ID.USER], { suffix: ":language" }), (_event, language) => {
 
 ipcMain.on(buildKey([ID.KEYS], { suffix: ":set-openAiApiKey" }), (_event, openAiApiKey) => {
 	keyStore.set("openAiApiKey", openAiApiKey);
+	sendToAllWindows("hasOpenAiApiKey", Boolean(keyStore.get("openAiApiKey")));
 });
 
 ipcMain.on(buildKey([ID.KEYS], { suffix: ":get-openAiApiKey" }), event => {

@@ -112,7 +112,7 @@ export function Story() {
 
 	useEffect(() => {
 		window.ipc.send("hasOpenAiApiKey");
-		const unsubscribe = window.ipc.on("openAiApiKey", (hasKey: boolean) => {
+		const unsubscribe = window.ipc.on("hasOpenAiApiKey", (hasKey: boolean) => {
 			setHasOpenAiApiKey(hasKey);
 		});
 		return () => {
