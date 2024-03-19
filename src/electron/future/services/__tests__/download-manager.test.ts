@@ -218,7 +218,6 @@ describe("DownloadManager", () => {
 				new Promise<void>(resolve => {
 					downloadsStarted++;
 					options.onStarted();
-					// Use setTimeout to simulate a short download duration
 					setTimeout(() => {
 						options.onCompleted({ path: `test/path/${options.directory}` });
 						resolve();
@@ -255,6 +254,7 @@ describe("DownloadManager", () => {
 	});
 
 	it("should correctly report download progress", async () => {
+		const totalBytes = 5000;
 		(download as jest.Mock).mockImplementation(
 			(_window, _url, options) =>
 				new Promise<void>(resolve => {
@@ -262,7 +262,6 @@ describe("DownloadManager", () => {
 					const totalProgress = 1;
 					let progress = 0;
 					const steps = 5;
-					const totalBytes = 5000;
 					const intervalId = setInterval(() => {
 						progress += totalProgress / steps;
 						options.onProgress({
@@ -300,7 +299,7 @@ describe("DownloadManager", () => {
 		expect(spySend).toHaveBeenCalledWith(DownloadEvent.PROGRESS, item.id, {
 			percent: expect.any(Number),
 			transferredBytes: expect.any(Number),
-			totalBytes: 5000, // Match this with the mocked totalBytes above
+			totalBytes,
 		});
 
 		expect(spySend.mock.calls.some(call => call[0] === DownloadEvent.PROGRESS)).toBe(true);
