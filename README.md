@@ -7,7 +7,7 @@
 <div align="center">
     <img alt="Status: ALPHA" src="https://img.shields.io/badge/Status-ALPHA-purple?style=for-the-badge">
     <img alt="License: AGPL 3.0" src="https://img.shields.io/badge/License-AGPL%203.0-blue?style=for-the-badge">
-    <img alt="Data Privacy: Protected" src="https://img.shields.io/badge/Data%20Privacy-Protected-cyan?style=for-the-badge">
+    <a href="https://discord.com/invite/m3TBB9XEkb"><img alt="Discord" src="https://img.shields.io/discord/1091306623819059300?color=7289da&label=Discord&logo=discord&logoColor=fff&style=for-the-badge"></a>
 </div>
 
 <p align="center">
