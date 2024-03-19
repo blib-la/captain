@@ -101,6 +101,8 @@ currently only works with this base setup:
 Captain needs the models to use AI on your computer, so you have full control over everything.
 That's why you need to download them in order to use the "Live Painting" app.
 
+![blibla_captain_download_essential_models](https://github.com/blib-la/captain/assets/492378/ed2e0ad0-fe75-42b9-96ab-686e7360ed8f)
+
 ### Navigate Captain with a Prompt
 
 You can interact with Captain by using the **Prompt**. This is a special window that you can open by
