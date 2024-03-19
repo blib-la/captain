@@ -47,15 +47,17 @@ Captain's core apps transform your thoughts into vivid artworks and captivating 
 
 <!-- toc -->
 
--   [Getting Started](#getting-started)
-    -   [Prerequisites](#prerequisites)
-    -   [Installation](#installation)
--   [First steps](#first-steps)
-    -   [Navigate Captain with a Prompt](#navigate-captain-with-a-prompt)
--   [Community](#community)
--   [Contribute](#contribute)
--   [License](#license)
--   [Acknowledgments](#acknowledgments)
+- [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
+- [First steps](#first-steps)
+  * [Download models](#download-models)
+  * [Navigate Captain with a Prompt](#navigate-captain-with-a-prompt)
+  * [Generate a Story](#generate-a-story)
+- [Community](#community)
+- [Contribute](#contribute)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
 
 <!-- tocstop -->
 
