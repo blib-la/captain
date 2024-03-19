@@ -63,12 +63,11 @@ ipcMain.on(
 
 		createDirectory(getCaptainTemporary("live-painting"));
 
-		const decodedImageData = Buffer.from(
+		await fsp.writeFile(
+			getCaptainTemporary("live-painting/input.png"),
 			"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4//8/AwAI/AL+p5qgoAAAAABJRU5ErkJggg==",
 			"base64"
 		);
-
-		await fsp.writeFile(getCaptainTemporary("live-painting/input.png"), decodedImageData);
 
 		const channel = `${appId}:${APP_MESSAGE_KEY}`;
 		if (process_) {
