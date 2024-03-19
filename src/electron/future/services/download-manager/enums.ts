@@ -1,0 +1,15 @@
+export enum DownloadEvent {
+	STARTED = "STARTED",
+	CANCELLED = "CANCELLED",
+	COMPLETED = "COMPLETED",
+	PROGRESS = "PROGRESS",
+	ERROR = "ERROR",
+}
+
+export enum DownloadState {
+	WAITING = "WAITING",
+	STARTED = "STARTED",
+	CANCELLED = "CANCELLED",
+	COMPLETED = "COMPLETED",
+	ERROR = "ERROR",
+}
