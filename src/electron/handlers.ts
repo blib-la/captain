@@ -37,6 +37,18 @@ export const handlers = {
 	readFile(name: string, encoding?: BufferEncoding) {
 		return ipcRenderer.invoke(buildKey([ID.FILE], { suffix: ":read" }), name, encoding);
 	},
+	downloadFiles(
+		data: {
+			label: string;
+			appId: string;
+			id: string;
+			source: string;
+			destination: string;
+			unzip?: boolean;
+		}[]
+	): Promise<string> {
+		return ipcRenderer.invoke(buildKey([ID.FILE, ID.DOWNLOADS], { suffix: ":start" }), data);
+	},
 	getFilePath() {
 		return ipcRenderer.invoke(buildKey([ID.FILE], { prefix: "path:", suffix: ":get" }));
 	},

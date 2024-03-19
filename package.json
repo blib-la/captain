@@ -38,10 +38,10 @@
     "sharp": "0.33.2"
   },
   "devDependencies": {
-    "@captn/joy": "^0.7.0",
-    "@captn/react": "^0.7.0",
-    "@captn/theme": "^0.7.0",
-    "@captn/utils": "^0.7.0",
+    "@captn/joy": "^0.8.0",
+    "@captn/react": "^0.8.0",
+    "@captn/theme": "^0.8.0",
+    "@captn/utils": "^0.8.0",
     "@commitlint/cli": "^19.0.3",
     "@commitlint/config-conventional": "^19.0.3",
     "@dnd-kit/core": "^6.1.0",

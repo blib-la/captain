@@ -1,6 +1,8 @@
 {
+  "activateFullPower": "To activate the full power of our live-painting app, please download the missing files.",
   "analyzingImages": "Hang tight! We're currently analyzing the images you've provided to weave the perfect story around them. This process taps into advanced AI algorithms to understand the context and elements in your images, ensuring a narrative that truly resonates with the visuals. Depending on the complexity and number of images, this could take a few minutes. We appreciate your patience. Get ready to be amazed by the stories our AI can create just for you.",
   "downloadSuccessUnpacking": "Download successful! Now, let's unpack this treasure chest of technology.",
+  "essentialModelDownloads": "Essential Model Downloads Needed!",
   "howToUseCaptain": "You can easily control Captain via the prompt, which you can open at any time using the Ctrl + Alt + Space keyboard shortcut. Just write what you want to do, and we'll take care of the rest.",
   "preparation": "To make the prompt work, we're just quickly preparing everything.",
   "preparationDone": "All preparations are complete! Enjoy using Captain.",

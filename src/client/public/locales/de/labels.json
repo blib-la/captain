@@ -5,6 +5,7 @@
   "back": "Zurück",
   "brushSize": "Pinselgröße",
   "clear": "Löschen",
+  "clickDownloadToStart": "Klicke auf \"Herunterladen\", um zu starten!",
   "close": "Schließen",
   "color": "Farbe",
   "createStory": "Erzählung erstellen",
@@ -12,6 +13,7 @@
   "delete": "Löschen",
   "deleted": "Gelöscht",
   "download": "Herunterladen",
+  "downloadedOf": "{{downloaded}} von {{downloads}} heruntergeladen",
   "downloading": "Herunterladen",
   "finishing": "Abschluss",
   "formLabel": {
@@ -31,7 +33,7 @@
     "manga": "Manga",
     "realism": "Realismus"
   },
-  "installtionSuccess": "Installation fertig",
+  "installationSuccess": "Installation fertig",
   "length": {
     "long": "Lang",
     "medium": "Mittel",
@@ -61,8 +63,8 @@
   "readStory": "Erzählung lesen",
   "removeAllImages": "Alle Bilder entfernen",
   "save": "Speichern",
-  "saved": "Gespeichert",
   "saveImage": "Bild speichern",
+  "saved": "Gespeichert",
   "security": "Sicherheit",
   "sideBySide": "Nebeneinander",
   "start": "Start",
