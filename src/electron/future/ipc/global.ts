@@ -259,7 +259,7 @@ ipcMain.handle(
 					}
 				},
 				onCancel() {
-					downloadsStore.set(item.id, DownloadState.CANCELLED);
+					downloadsStore.set(item.id, DownloadState.CANCELED);
 				},
 			}).catch(() => {
 				downloadsStore.set(item.id, DownloadState.FAILED);
