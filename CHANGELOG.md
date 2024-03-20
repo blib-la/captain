@@ -1,3 +1,10 @@
+# [1.0.0-alpha.27](https://github.com/blib-la/captain/compare/v1.0.0-alpha.26...v1.0.0-alpha.27) (2024-03-20)
+
+
+### Features
+
+* download manager ([#91](https://github.com/blib-la/captain/issues/91)) ([a792c16](https://github.com/blib-la/captain/commit/a792c16a6795aef629a5521994db6936f5f0f9ee))
+
 # [1.0.0-alpha.26](https://github.com/blib-la/captain/compare/v1.0.0-alpha.25...v1.0.0-alpha.26) (2024-03-19)
 
 
