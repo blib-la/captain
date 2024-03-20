@@ -6,7 +6,7 @@ import { download } from "electron-dl";
 import { v4 } from "uuid";
 
 import { DownloadManager } from "../download-manager";
-import { DownloadEvent, DownloadState } from "../download-manager/enums"; // Adjust the import path based on your project structure
+import { DownloadEvent, DownloadState } from "../download-manager/enums";
 import type { DownloadItem } from "../download-manager/types";
 
 import { apps } from "@/apps";
@@ -46,7 +46,7 @@ describe("DownloadManager", () => {
 	let downloadManager: DownloadManager;
 
 	beforeEach(async () => {
-		jest.clearAllMocks(); // Resets the state of all mocks
+		jest.clearAllMocks();
 		DownloadManager.resetInstance();
 		downloadManager = DownloadManager.getInstance();
 		const testDirectory = getCaptainDownloads("test");
