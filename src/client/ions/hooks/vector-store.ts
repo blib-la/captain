@@ -22,9 +22,9 @@ import type { SearchOptions, VectorStoreResponse } from "#/types/vector-store";
  * // searchResults will contain an array of search responses where each item has a score above 0.5
  */
 export function useVectorStore(value: string, { score_threshold }: SearchOptions = {}) {
-	const [query] = useDebounce(value, 300); // Debounce the search value to limit the search calls
+	const [query] = useDebounce(value, 300);
 	const [results, setResults] = useState<VectorStoreResponse[]>([]); // State to store the search results
-	// Effect to handle the actual search querying when the debounced query or score_threshold changes
+
 	useEffect(() => {
 		if (query.trim()) {
 			// Only proceed with a non-empty query

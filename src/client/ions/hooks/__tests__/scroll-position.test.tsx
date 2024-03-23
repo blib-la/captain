@@ -1,7 +1,7 @@
 import { act, fireEvent, render } from "@testing-library/react";
 import React, { useRef } from "react";
 
-import { useScrollPosition } from "../scroll-position"; // Adjust your import path
+import { useScrollPosition } from "../scroll-position";
 import "@testing-library/jest-dom";
 
 class ResizeObserver {
@@ -11,7 +11,6 @@ class ResizeObserver {
 }
 
 global.ResizeObserver = ResizeObserver;
-// Test component that uses your hook
 function TestComponent() {
 	const reference = useRef<HTMLDivElement>(null);
 	const scroll = useScrollPosition(reference);
@@ -34,7 +33,6 @@ function TestComponent() {
 
 describe("useScrollPosition", () => {
 	beforeEach(() => {
-		// Mock properties before each test
 		Object.defineProperty(HTMLElement.prototype, "scrollWidth", {
 			configurable: true,
 			value: 300,
@@ -55,7 +53,7 @@ describe("useScrollPosition", () => {
 
 	it("should update scroll position on scroll event", async () => {
 		const { getByTestId } = render(<TestComponent />);
-		const scrollableDiv = getByTestId("scrollable-div"); // Add this data-testid to your scrollable div
+		const scrollableDiv = getByTestId("scrollable-div");
 
 		// Check initial state
 		expect(getByTestId("scrollable")).toHaveTextContent("true");

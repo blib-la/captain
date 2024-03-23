@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
 import Box from "@mui/joy/Box";
+import type { ReactNode } from "react";
 
 export function AutoGrid({ children, minWidth }: { children?: ReactNode; minWidth: number }) {
 	return (

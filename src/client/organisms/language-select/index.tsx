@@ -133,7 +133,6 @@ export function LanguageSelectList() {
 		i18n: { language: locale },
 	} = useTranslation(["common"]);
 	const { locales } = nexti18Next.i18n;
-	// Const locale = "en";
 	const localeRegex = new RegExp(`/(${locales.join("|")})/`);
 	const asPath_ = (asPath as string).replace(localeRegex, "/");
 

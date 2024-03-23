@@ -7,7 +7,6 @@ import { useKeyboardControlledImagesNavigation } from "../keyboard-controlled-im
 describe("useKeyboardControlledImagesNavigation", () => {
 	it("should handle keyboard navigation correctly", async () => {
 		const onBeforeChangeMock = jest.fn();
-		// Render the hook that we are testing
 		renderHook(
 			() => useKeyboardControlledImagesNavigation({ onBeforeChange: onBeforeChangeMock }),
 			{
@@ -15,12 +14,10 @@ describe("useKeyboardControlledImagesNavigation", () => {
 			}
 		);
 
-		// Set initial state for images and selectedImage
 		act(() => {
 			fireEvent.keyDown(window, { key: "ArrowRight", altKey: true });
 		});
 
-		// Assertions
 		await waitFor(() => {
 			expect(onBeforeChangeMock).toHaveBeenCalledTimes(1);
 		});
@@ -28,7 +25,6 @@ describe("useKeyboardControlledImagesNavigation", () => {
 			fireEvent.keyDown(window, { key: "ArrowLeft", altKey: true });
 		});
 
-		// Assertions
 		await waitFor(() => {
 			expect(onBeforeChangeMock).toHaveBeenCalledTimes(2);
 		});
@@ -36,7 +32,6 @@ describe("useKeyboardControlledImagesNavigation", () => {
 			fireEvent.keyDown(window, { key: "ArrowUp", altKey: true });
 		});
 
-		// Assertions
 		await waitFor(() => {
 			expect(onBeforeChangeMock).toHaveBeenCalledTimes(3);
 		});
@@ -44,7 +39,6 @@ describe("useKeyboardControlledImagesNavigation", () => {
 			fireEvent.keyDown(window, { key: "ArrowDown", altKey: true });
 		});
 
-		// Assertions
 		await waitFor(() => {
 			expect(onBeforeChangeMock).toHaveBeenCalledTimes(4);
 		});
@@ -52,7 +46,6 @@ describe("useKeyboardControlledImagesNavigation", () => {
 	it("should not respond with alt key", async () => {
 		const onBeforeChangeMock = jest.fn();
 
-		// Render the hook that we are testing
 		renderHook(
 			() => useKeyboardControlledImagesNavigation({ onBeforeChange: onBeforeChangeMock }),
 			{
@@ -60,12 +53,10 @@ describe("useKeyboardControlledImagesNavigation", () => {
 			}
 		);
 
-		// Set initial state for images and selectedImage
 		act(() => {
 			fireEvent.keyDown(window, { key: "ArrowRight" });
 		});
 
-		// Assertions
 		await waitFor(() => {
 			expect(onBeforeChangeMock).not.toHaveBeenCalled();
 		});
@@ -73,7 +64,6 @@ describe("useKeyboardControlledImagesNavigation", () => {
 	it("should not respond to other keys", async () => {
 		const onBeforeChangeMock = jest.fn();
 
-		// Render the hook that we are testing
 		renderHook(
 			() => useKeyboardControlledImagesNavigation({ onBeforeChange: onBeforeChangeMock }),
 			{
@@ -81,12 +71,10 @@ describe("useKeyboardControlledImagesNavigation", () => {
 			}
 		);
 
-		// Set initial state for images and selectedImage
 		act(() => {
 			fireEvent.keyDown(window, { key: "Enter", altKey: true });
 		});
 
-		// Assertions
 		await waitFor(() => {
 			expect(onBeforeChangeMock).not.toHaveBeenCalled();
 		});

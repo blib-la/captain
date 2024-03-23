@@ -18,8 +18,6 @@ describe("capitalizeFirstLetter", () => {
 	});
 });
 
-// Import the function to test
-
 describe("replaceImagePlaceholders", () => {
 	it("replaces all image placeholders with corresponding URLs", () => {
 		// Define a sample array of images

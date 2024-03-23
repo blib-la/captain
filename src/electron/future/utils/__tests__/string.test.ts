@@ -1,4 +1,4 @@
-import { parseJsonFromString } from "../string"; // Adjust the import path
+import { parseJsonFromString } from "../string";
 
 describe("parseJsonFromString", () => {
 	it("parses JSON correctly from a string without code blocks", () => {

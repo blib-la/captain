@@ -1,19 +1,17 @@
-// UseColumns.test.tsx
 import { extendTheme, ThemeProvider } from "@mui/joy/styles";
 import { render } from "@testing-library/react";
 import React from "react";
 import "@testing-library/jest-dom";
 
-import { useColumns } from "../columns"; // Adjust the import path as necessary
+import { useColumns } from "../columns";
 
-// Mock component to utilize the useColumns hook
 function MockComponent({ xs, sm, md, lg }: { xs: number; sm: number; md: number; lg: number }) {
 	const columns = useColumns({ xs, sm, md, lg });
 	return <div data-testid="column-count">{columns}</div>;
 }
 
 describe("useColumns", () => {
-	const theme = extendTheme(); // Use your custom theme if you have one
+	const theme = extendTheme();
 
 	function renderWithTheme(properties: { xs: number; sm: number; md: number; lg: number }) {
 		return render(

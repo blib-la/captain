@@ -17,7 +17,6 @@ ipcMain.on(
 		}
 
 		try {
-			// Iterate over each download object
 			const items: Promise<void>[] = [];
 			for (const { url, destination, unzip } of data) {
 				await download(window_, url, {

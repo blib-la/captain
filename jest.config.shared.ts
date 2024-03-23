@@ -1,7 +1,5 @@
 import { defaults } from "jest-config";
 
-// Adjust the import path to your tsconfig.json file
-
 const jestConfig = {
 	...defaults,
 	roots: ["<rootDir>/src/shared"],
