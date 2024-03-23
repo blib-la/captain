@@ -108,7 +108,7 @@ That's why you need to download them in order to use the "Live Painting" app.
 You can interact with Captain by using the **Prompt**. This is a special window that you can open by
 using the keyboard-shortcut: **CTRL + ALT + Space**.
 
-When the **Prompt** is open, you can start build-in AI apps or change the settings of Captain:
+When the **Prompt** is open, you can start built-in AI apps or change the settings of Captain:
 
 -   `I want to draw something`: Select _Live Painting_ to start drawing
 -   `Create a story`: Select _Generate a Story_ to generate stories based on the images you created
