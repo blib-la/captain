@@ -1,6 +1,6 @@
 import { renderHook, act } from "@testing-library/react";
 
-import { useResettableState } from "../resettable-state"; // Adjust the import path based on your file structure
+import { useResettableState } from "../resettable-state";
 
 describe("useResettableState hook", () => {
 	jest.useFakeTimers();

@@ -18,6 +18,7 @@ nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
   artifactName: "${productName}-Setup-${version}.${ext}"
+  # include: build/installer.nsh
 asar: true
 asarUnpack:
   - "resources/python/**/*"

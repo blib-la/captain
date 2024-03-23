@@ -1,5 +1,3 @@
-// Import humanizeString from "humanize-string";
-
 export const adjectives = [
 	"quick",
 	"lazy",
@@ -340,7 +338,6 @@ export function generateRandomName(
 	{
 		length = dictionaries.length,
 		separator = "-",
-		// Humanize,
 	}: {
 		humanize?: boolean;
 		length?: number;
@@ -349,7 +346,6 @@ export function generateRandomName(
 ): string {
 	const nameParts = [];
 	for (let index = 0; index < length; index++) {
-		// Select a random dictionary and a random word from that dictionary
 		const dictionary = dictionaries[index];
 		const word = dictionary[Math.floor(Math.random() * dictionary.length)];
 		nameParts.push(word);

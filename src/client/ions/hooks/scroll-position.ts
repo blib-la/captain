@@ -34,7 +34,7 @@ export function useScrollPosition(
 	}, [reference]);
 
 	useEffect(() => {
-		checkScroll(); // Initial check
+		checkScroll();
 
 		const currentReference = reference.current;
 		if (currentReference) {

@@ -6,7 +6,6 @@ interface Size {
 	height: number | undefined;
 }
 
-// Hook
 export function useResizeObserver<T extends HTMLElement>(reference: RefObject<T>): Size {
 	const [size, setSize] = useState<Size>({ width: undefined, height: undefined });
 
@@ -20,10 +19,8 @@ export function useResizeObserver<T extends HTMLElement>(reference: RefObject<T>
 				return;
 			}
 
-			// For simplicity, we'll only consider the first entry
 			const entry = entries[0];
 
-			// Use contentRect for border-box size
 			setSize({
 				width: entry.contentRect.width,
 				height: entry.contentRect.height,
@@ -34,7 +31,6 @@ export function useResizeObserver<T extends HTMLElement>(reference: RefObject<T>
 
 		observer.observe(reference.current);
 
-		// Cleanup function
 		return () => {
 			observer.disconnect();
 		};

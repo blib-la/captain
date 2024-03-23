@@ -1,7 +1,7 @@
 import { app } from "electron";
 
 import i18next from "../../../../../next-i18next.config";
-import { getLocale } from "../locale"; // Adjust the import path
+import { getLocale } from "../locale";
 
 import { userStore } from "@/stores";
 

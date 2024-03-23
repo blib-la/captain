@@ -57,11 +57,8 @@ export function extractH1Headings(markdownText: string): string[] {
  * // Returns: { command: "type", captainId: "feedback-form", value: "this app is amazing", options: "submit" }
  */
 export function getActionArguments(action: string) {
-	// Directly destructure the action string into components,
-	// using rest syntax to catch all remaining parts after splitting by ":".
 	const [command, captainId, ...rest] = action.split(":");
 
-	// Initialize 'value' and 'options' to undefined for cases where they might not be set.
 	let value: string | undefined;
 	let options: string | undefined;
 
