@@ -1,4 +1,3 @@
 {
-  "upgrade": true,
-  "reject": ["@types/node", "codemirror", "next", "sharp", "semantic-release"]
+  "reject": ["codemirror", "next", "sharp", "semantic-release", "@semantic-release/github"]
 }
