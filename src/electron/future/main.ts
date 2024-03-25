@@ -302,7 +302,6 @@ export async function main() {
 
 	logger.info(`main(): app is upToDate ${isUpToDate} and ready ${isReady}`);
 
-	// Remove the default application menu in production
 	if (isProduction) {
 		Menu.setApplicationMenu(null);
 
@@ -340,7 +339,6 @@ export async function main() {
 		app.on("second-instance", async () => {
 			apps.core ||= await createCoreWindow();
 
-			// Someone tried to run a second instance, we should focus our window.
 			if (apps.core) {
 				if (apps.core.isMinimized()) {
 					apps.core.restore();
@@ -368,7 +366,6 @@ export async function main() {
 		app.on("second-instance", async () => {
 			apps.core ||= await createCoreWindow();
 
-			// Someone tried to run a second instance, we should focus our window.
 			if (installerWindow.isMinimized()) {
 				installerWindow.restore();
 			}

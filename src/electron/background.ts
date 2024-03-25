@@ -65,8 +65,6 @@ const gotTheLock = app.requestSingleInstanceLock();
 let unsubscribe: (() => Promise<void>) | undefined;
 
 if (gotTheLock || isTest) {
-	// Initialize the application by calling the main function.
-	// Upon completion, log to the console indicating the application has started.
 	main().then(() => {
 		logger.info("Application started successfully");
 		unsubscribe = watchStores();
