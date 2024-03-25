@@ -1,5 +1,6 @@
 import { app } from "electron";
 
+import { isDevelopment } from "#/flags";
 import { main } from "@/main";
 import logger from "@/services/logger";
 import { watchStores } from "@/stores/watchers";
@@ -56,21 +57,36 @@ import "@/ipc/vector-store";
 // Import keys
 import "@/ipc/keys";
 
-let unsubscribe: (() => Promise<void>) | undefined;
-// Initialize the application by calling the main function.
-// Upon completion, log to the console indicating the application has started.
-main().then(() => {
-	logger.info("Application started successfully");
-	unsubscribe = watchStores();
-});
+// Obtain a lock to check if the app is locked (primary instance)
+// If false, we close the app, as we want to prevent multiple instances of our app
+// https://github.com/electron/electron/blob/v30.0.0-nightly.20240221/docs/api/app.md#apprequestsingleinstancelockadditionaldata
+const gotTheLock = app.requestSingleInstanceLock();
 
-// Listen for the 'window-all-closed' event on the Electron app object.
-// This event is emitted when all windows of the application have been closed.
-// In response, quit the application to free up resources, adhering to typical desktop application
-// behavior.
-app.on("window-all-closed", () => {
+let unsubscribe: (() => Promise<void>) | undefined;
+
+if (gotTheLock || isDevelopment) {
+	// Initialize the application by calling the main function.
+	// Upon completion, log to the console indicating the application has started.
+	main().then(() => {
+		logger.info("Application started successfully");
+		unsubscribe = watchStores();
+	});
+
+	// Listen for the 'window-all-closed' event on the Electron app object.
+	// This event is emitted when all windows of the application have been closed.
+	// In response, quit the application to free up resources, adhering to typical desktop application
+	// behavior.
+	app.on("window-all-closed", () => {
+		app.quit();
+		if (unsubscribe) {
+			unsubscribe();
+		}
+	});
+} else {
+	// The app is locked, so we force quit the new instance
+	console.log("App is locked by another instance. Closing app");
 	app.quit();
 	if (unsubscribe) {
 		unsubscribe();
 	}
-});
+}

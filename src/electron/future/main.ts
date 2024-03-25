@@ -271,6 +271,18 @@ let tray = null;
  */
 export async function main() {
 	logger.info(`main(): started`);
+	app.on("second-instance", async () => {
+		apps.core ||= await createCoreWindow();
+
+		// Someone tried to run a second instance, we should focus our window.
+		if (apps.core) {
+			if (apps.core.isMinimized()) {
+				apps.core.restore();
+			}
+
+			apps.core.focus();
+		}
+	});
 
 	await app.whenReady();
 	tray = new Tray(getDirectory("icon.png"));
