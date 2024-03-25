@@ -9,7 +9,7 @@ import { app } from "electron";
 import { isDevelopment, isTest } from "#/flags";
 
 export const resourcesDirectory =
-	isDevelopment || isTest
+	isTest || isDevelopment
 		? path.join(process.cwd(), "resources")
 		: path.join(app.getPath("exe"), "..", "resources", "app.asar.unpacked", "resources");
 
