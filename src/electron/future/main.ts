@@ -271,18 +271,6 @@ let tray = null;
  */
 export async function main() {
 	logger.info(`main(): started`);
-	app.on("second-instance", async () => {
-		apps.core ||= await createCoreWindow();
-
-		// Someone tried to run a second instance, we should focus our window.
-		if (apps.core) {
-			if (apps.core.isMinimized()) {
-				apps.core.restore();
-			}
-
-			apps.core.focus();
-		}
-	});
 
 	await app.whenReady();
 	tray = new Tray(getDirectory("icon.png"));
@@ -349,6 +337,18 @@ export async function main() {
 	logger.info(`main(): listened to :open`);
 
 	if (isUpToDate && isReady) {
+		app.on("second-instance", async () => {
+			apps.core ||= await createCoreWindow();
+
+			// Someone tried to run a second instance, we should focus our window.
+			if (apps.core) {
+				if (apps.core.isMinimized()) {
+					apps.core.restore();
+				}
+
+				apps.core.focus();
+			}
+		});
 		// Start the vector store and fill it with data
 		await initialize();
 		await reset();
@@ -364,6 +364,17 @@ export async function main() {
 
 		// Create and show installer window
 		const installerWindow = await createInstallerWindow();
+
+		app.on("second-instance", async () => {
+			apps.core ||= await createCoreWindow();
+
+			// Someone tried to run a second instance, we should focus our window.
+			if (installerWindow.isMinimized()) {
+				installerWindow.restore();
+			}
+
+			installerWindow.focus();
+		});
 
 		// When the installer is done we open the prompt window
 		ipcMain.on(buildKey([ID.APP], { suffix: ":ready" }), async () => {
