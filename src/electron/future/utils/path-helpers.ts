@@ -6,11 +6,12 @@ import path from "path";
 
 import { app } from "electron";
 
-import { isDevelopment } from "#/flags";
+import { isDevelopment, isTest } from "#/flags";
 
-export const resourcesDirectory = isDevelopment
-	? path.join(process.cwd(), "resources")
-	: path.join(app.getPath("exe"), "..", "resources", "app.asar.unpacked", "resources");
+export const resourcesDirectory =
+	isDevelopment || isTest
+		? path.join(process.cwd(), "resources")
+		: path.join(app.getPath("exe"), "..", "resources", "app.asar.unpacked", "resources");
 
 /**
  * Combines the resources directory path with additional subpaths.
