@@ -181,7 +181,7 @@ export function InstallScreen({ percent, status }: { percent: number; status: Do
 		case DownloadState.DONE: {
 			return (
 				<InstallStep
-					heading={t("labels:installtionSuccess")}
+					heading={t("labels:installationSuccess")}
 					illustration="/illustrations/minimalistic/discovery.svg"
 				>
 					<Box
