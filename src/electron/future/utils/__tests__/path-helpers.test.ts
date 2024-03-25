@@ -24,6 +24,7 @@ jest.mock("electron", () => ({
 
 jest.mock("#/flags", () => ({
 	isDevelopment: jest.requireActual("#/flags").isDevelopment,
+	isTest: jest.requireActual("#/flags").isTest,
 }));
 
 describe("Path Utilities", () => {
@@ -41,6 +42,7 @@ describe("Path Utilities", () => {
 	it("correctly sets resourcesDirectory in development mode", async () => {
 		jest.mock("#/flags", () => ({
 			isDevelopment: true,
+			isTest: true,
 		}));
 		const expectedDevelopmentPath = path.join(process.cwd(), "resources");
 		const { resourcesDirectory } = await import("../path-helpers");
@@ -50,6 +52,7 @@ describe("Path Utilities", () => {
 	it("correctly sets resourcesDirectory in production mode", async () => {
 		jest.mock("#/flags", () => ({
 			isDevelopment: false,
+			isTest: false,
 		}));
 
 		const { resourcesDirectory } = await import("../path-helpers");
