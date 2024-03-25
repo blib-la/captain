@@ -24,7 +24,7 @@ jest.mock("electron", () => ({
 
 jest.mock("#/flags", () => ({
 	isDevelopment: jest.requireActual("#/flags").isDevelopment,
-	isTest: jest.requireActual("#/flags").isDevelopment,
+	isTest: jest.requireActual("#/flags").isTest,
 }));
 
 describe("Path Utilities", () => {
