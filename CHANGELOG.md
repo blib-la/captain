@@ -1,3 +1,10 @@
+# [1.0.0-alpha.28](https://github.com/blib-la/captain/compare/v1.0.0-alpha.27...v1.0.0-alpha.28) (2024-03-25)
+
+
+### Bug Fixes
+
+* label on installation success is wrong ([#98](https://github.com/blib-la/captain/issues/98)) ([54f711f](https://github.com/blib-la/captain/commit/54f711f6656af1c6ae76b47f0cb1f9d0522a8689))
+
 # [1.0.0-alpha.27](https://github.com/blib-la/captain/compare/v1.0.0-alpha.26...v1.0.0-alpha.27) (2024-03-20)
 
 
