@@ -1,3 +1,10 @@
+# [1.0.0-alpha.29](https://github.com/blib-la/captain/compare/v1.0.0-alpha.28...v1.0.0-alpha.29) (2024-03-25)
+
+
+### Bug Fixes
+
+* app should only have one instance ([#99](https://github.com/blib-la/captain/issues/99)) ([c7e9d11](https://github.com/blib-la/captain/commit/c7e9d112864307a0de4f6b4a29c26262216d5c2e))
+
 # [1.0.0-alpha.28](https://github.com/blib-la/captain/compare/v1.0.0-alpha.27...v1.0.0-alpha.28) (2024-03-25)
 
 
