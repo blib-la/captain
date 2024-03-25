@@ -1,6 +1,5 @@
 import { app } from "electron";
 
-import { isDevelopment } from "#/flags";
 import { main } from "@/main";
 import logger from "@/services/logger";
 import { watchStores } from "@/stores/watchers";
@@ -64,7 +63,7 @@ const gotTheLock = app.requestSingleInstanceLock();
 
 let unsubscribe: (() => Promise<void>) | undefined;
 
-if (gotTheLock || isDevelopment) {
+if (gotTheLock) {
 	// Initialize the application by calling the main function.
 	// Upon completion, log to the console indicating the application has started.
 	main().then(() => {
