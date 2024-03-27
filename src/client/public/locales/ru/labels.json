@@ -15,6 +15,7 @@
   "download": "Скачать",
   "downloadedOf": "Загружено {{downloaded}} из {{downloads}}",
   "downloading": "Загрузка",
+  "downloads": "Загрузки",
   "finishing": "Завершение",
   "formLabel": {
     "characters": "Персонажи",

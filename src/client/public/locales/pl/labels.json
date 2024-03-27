@@ -15,6 +15,7 @@
   "download": "Pobierz",
   "downloadedOf": "Pobrano {{downloaded}} z {{downloads}}",
   "downloading": "Pobieranie",
+  "downloads": "Pobrania",
   "finishing": "Zakończenie",
   "formLabel": {
     "characters": "Postacie",

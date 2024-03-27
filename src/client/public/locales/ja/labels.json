@@ -15,6 +15,7 @@
   "download": "ダウンロード",
   "downloadedOf": "{{downloaded}} / {{downloads}} ダウンロード済み",
   "downloading": "ダウンロード中",
+  "downloads": "ダウンロード",
   "finishing": "完成",
   "formLabel": {
     "characters": "キャラクター",

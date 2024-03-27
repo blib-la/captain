@@ -15,6 +15,7 @@
   "download": "下载",
   "downloadedOf": "已下载 {{downloaded}} 个，共 {{downloads}} 个",
   "downloading": "下载中",
+  "downloads": "下载",
   "finishing": "完成",
   "formLabel": {
     "characters": "角色",
