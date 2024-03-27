@@ -1,14 +1,15 @@
 import fs from "node:fs";
 import fsp from "node:fs/promises";
 
+import { DownloadEvent } from "@captn/utils/constants";
 import type { BrowserWindow } from "electron";
 import { download } from "electron-dl";
 import { v4 } from "uuid";
 
 import { DownloadManager } from "../download-manager";
-import { DownloadEvent, DownloadState } from "../download-manager/enums";
-import type { DownloadItem } from "../download-manager/types";
 
+import { DownloadState } from "#/enums";
+import type { DownloadItem } from "#/types/download-manager";
 import { apps } from "@/apps";
 import { getCaptainDownloads } from "@/utils/path-helpers";
 import { unpack } from "@/utils/unpack";
@@ -81,7 +82,7 @@ describe("DownloadManager", () => {
 			destination: "test/download-manager",
 			label: "Test File",
 			createdAt: Date.now(),
-			state: DownloadState.WAITING,
+			state: DownloadState.IDLE,
 		};
 
 		downloadManager.addToQueue(item);
@@ -120,7 +121,7 @@ describe("DownloadManager", () => {
 			destination: `test/download-manager/${index}`,
 			label: `Test File ${index}`,
 			createdAt: Date.now(),
-			state: DownloadState.WAITING,
+			state: DownloadState.IDLE,
 		}));
 
 		for (const item of items) {
@@ -157,7 +158,7 @@ describe("DownloadManager", () => {
 			destination: "test/download-manager/fail",
 			label: "Failing Download",
 			createdAt: Date.now(),
-			state: DownloadState.WAITING,
+			state: DownloadState.IDLE,
 		};
 
 		downloadManager.addToQueue(item);
@@ -167,7 +168,7 @@ describe("DownloadManager", () => {
 		});
 
 		const updatedItem = downloadManager.getDownloadQueue().find(index => index.id === item.id);
-		expect(updatedItem?.state).toBe(DownloadState.ERROR);
+		expect(updatedItem?.state).toBe(DownloadState.FAILED);
 
 		expect(apps.core?.webContents.send).toHaveBeenCalledWith(
 			DownloadEvent.ERROR,
@@ -196,7 +197,7 @@ describe("DownloadManager", () => {
 			destination: "test/download-manager/item1",
 			label: "Test File 1",
 			createdAt: Date.now(),
-			state: DownloadState.WAITING,
+			state: DownloadState.IDLE,
 		};
 
 		downloadManager.addToQueue(item);
@@ -231,7 +232,7 @@ describe("DownloadManager", () => {
 			destination: `test/download-manager/item${index}`,
 			label: `Test File ${index}`,
 			createdAt: Date.now(),
-			state: DownloadState.WAITING,
+			state: DownloadState.IDLE,
 		}));
 
 		for (const item of items) {
@@ -285,7 +286,7 @@ describe("DownloadManager", () => {
 			destination: "test/download-manager/progress",
 			label: "Progressive Download",
 			createdAt: Date.now(),
-			state: DownloadState.WAITING,
+			state: DownloadState.IDLE,
 		};
 
 		const spySend = jest.spyOn(apps.core!.webContents, "send");
@@ -322,7 +323,7 @@ describe("DownloadManager", () => {
 			destination: "test/download-manager/unzip",
 			label: "Zip Download",
 			createdAt: Date.now(),
-			state: DownloadState.WAITING,
+			state: DownloadState.IDLE,
 			unzip: true,
 		};
 
@@ -358,7 +359,7 @@ describe("DownloadManager", () => {
 			destination: "test/download-manager/unzip-failure",
 			label: "Failed Zip Download",
 			createdAt: Date.now(),
-			state: DownloadState.WAITING,
+			state: DownloadState.IDLE,
 			unzip: true,
 		};
 

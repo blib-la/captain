@@ -1,4 +1,4 @@
-import type { DownloadState } from "./enums";
+import type { DownloadState } from "#/enums";
 
 /**
  * Represents an item to be downloaded, including its source, destination, and other metadata.

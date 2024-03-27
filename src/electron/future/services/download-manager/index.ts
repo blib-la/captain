@@ -1,10 +1,10 @@
+import { DOWNLOADS_MESSAGE_KEY, DownloadEvent } from "@captn/utils/constants";
 import { download } from "electron-dl";
 
-import { DownloadEvent, DownloadState } from "./enums";
-import type { DownloadItem } from "./types";
-
+import { DownloadState } from "#/enums";
+import type { DownloadItem } from "#/types/download-manager";
 import { apps } from "@/apps";
-import { getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
+import { getCaptainDownloads, getCaptainTemporary, getDirectory } from "@/utils/path-helpers";
 import { unpack } from "@/utils/unpack";
 
 /**
@@ -93,11 +93,15 @@ export class DownloadManager {
 	 * @param item The DownloadItem object to add to the queue.
 	 */
 	public addToQueue(item: DownloadItem): void {
-		item.state = DownloadState.WAITING;
+		item.state = DownloadState.IDLE;
 		const isDuplicate = this.downloadQueue.some(existingItem => existingItem.id === item.id);
 		if (!isDuplicate) {
 			this.downloadQueue.push(item);
 			this.processQueue();
+			apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
+				action: DownloadEvent.QUEUED,
+				payload: item,
+			});
 		}
 	}
 
@@ -111,7 +115,7 @@ export class DownloadManager {
 			return;
 		}
 
-		const nextItem = this.downloadQueue.find(item => item.state === DownloadState.WAITING);
+		const nextItem = this.downloadQueue.find(item => item.state === DownloadState.IDLE);
 		if (!nextItem) {
 			console.log("No more items to process");
 			return;
@@ -133,14 +137,19 @@ export class DownloadManager {
 				overwrite: true,
 				showBadge: true,
 				showProgressBar: true,
-				directory: item.destination,
+				directory: item.unzip
+					? getCaptainTemporary(item.destination, item.id)
+					: getCaptainDownloads(item.destination, item.id),
 				onStarted: () => {
 					this.currentDownloads += 1;
-					item.state = DownloadState.STARTED;
-					apps.core?.webContents.send(DownloadEvent.STARTED, item.id);
+					item.state = DownloadState.ACTIVE;
+					apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
+						action: DownloadEvent.STARTED,
+						payload: item,
+					});
 				},
 				onCompleted: async file => {
-					item.state = DownloadState.COMPLETED;
+					item.state = DownloadState.DONE;
 					this.currentDownloads -= 1;
 					this.downloadQueue = this.downloadQueue.filter(
 						queueItem => queueItem.id !== item.id
@@ -150,31 +159,51 @@ export class DownloadManager {
 					this.processQueue();
 					if (item.unzip) {
 						try {
+							apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
+								action: DownloadEvent.UNPACKING,
+								payload: item,
+							});
 							await unpack(
 								getDirectory("7zip/win/7za.exe"),
 								file.path,
 								getCaptainDownloads(item.destination, item.id),
 								true
 							);
-							apps.core?.webContents.send(DownloadEvent.COMPLETED, item.id);
-						} catch (error) {
-							apps.core?.webContents.send(DownloadEvent.ERROR, item.id, error);
+							apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
+								action: DownloadEvent.COMPLETED,
+								payload: item,
+							});
+						} catch {
+							apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
+								action: DownloadEvent.ERROR,
+								payload: item,
+							});
 						}
 					} else {
-						apps.core?.webContents.send(DownloadEvent.COMPLETED, item.id);
+						apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
+							action: DownloadEvent.COMPLETED,
+							payload: item,
+						});
 					}
 				},
 				onProgress({ percent, transferredBytes, totalBytes }) {
-					apps.core?.webContents.send(DownloadEvent.PROGRESS, item.id, {
-						percent,
-						transferredBytes,
-						totalBytes,
+					apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
+						action: DownloadEvent.PROGRESS,
+						payload: {
+							...item,
+							percent,
+							transferredBytes,
+							totalBytes,
+						},
 					});
 				},
 			});
-		} catch (error) {
-			item.state = DownloadState.ERROR;
-			apps.core?.webContents.send(DownloadEvent.ERROR, item.id, error);
+		} catch {
+			item.state = DownloadState.FAILED;
+			apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
+				action: DownloadEvent.ERROR,
+				payload: item,
+			});
 			this.processQueue();
 		}
 	}

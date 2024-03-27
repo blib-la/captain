@@ -1,3 +1,5 @@
+import { CustomScrollbars } from "@captn/joy/custom-scrollbars";
+import { DownloadEvent, DOWNLOADS_MESSAGE_KEY } from "@captn/utils/constants";
 import BuildCircleIcon from "@mui/icons-material/BuildCircle";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DownloadingIcon from "@mui/icons-material/Downloading";
@@ -16,16 +18,17 @@ import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { DownloadState } from "#/enums";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 
-export interface DownloadItem {
+export interface DownloadListItemProperties {
 	id: string;
 	percent: number;
 	label: string;
 	state: DownloadState;
+	createdAt: number;
 }
 
 const iconMap: Record<DownloadState, ReactNode> = {
@@ -45,7 +48,7 @@ const iconColors: Record<DownloadState, ColorPaletteProp> = {
 	[DownloadState.UNPACKING]: "green",
 } as const;
 
-export function DownloadListItem({ label, percent, state }: DownloadItem) {
+export function DownloadListItem({ label, percent, state }: DownloadListItemProperties) {
 	return (
 		<ListItem variant="outlined" sx={{ py: 3 }}>
 			<ListItemDecorator>
@@ -79,71 +82,140 @@ export function DownloadListItem({ label, percent, state }: DownloadItem) {
 
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["common", "labels"]);
-	const [downloads, setDownloads] = useState<DownloadItem[]>([
-		{
-			percent: 0.3,
-			id: "1",
-			label: "Active Download Example",
-			state: DownloadState.ACTIVE,
-		},
-		{
-			percent: 0,
-			id: "2",
-			label: "Pending Download Example",
-			state: DownloadState.IDLE,
-		},
-		{
-			percent: 0,
-			id: "3",
-			label: "Failed Download Example",
-			state: DownloadState.FAILED,
-		},
-		{
-			percent: 0.4,
-			id: "4",
-			label: "Canceled Download Example",
-			state: DownloadState.CANCELED,
-		},
-		{
-			percent: 1,
-			id: "5",
-			label: "Completed Download Example",
-			state: DownloadState.DONE,
-		},
-		{
-			percent: 1,
-			id: "6",
-			label: "Unpacking Download Example",
-			state: DownloadState.UNPACKING,
-		},
-	]);
+	const [downloads, setDownloads] = useState<DownloadListItemProperties[]>([]);
 
+	useEffect(() => {
+		function addOrUpdateDownload(item: DownloadListItemProperties) {
+			setDownloads(previousState => {
+				const itemExists = previousState.some(download => download.id === item.id);
+				if (itemExists) {
+					return previousState.map(download =>
+						download.id === item.id ? item : download
+					);
+				}
+
+				return [item, ...previousState].sort(
+					(a, b) =>
+						// This directly returns -1, 0, or 1 based on the comparison without separate if statements
+						b.createdAt - a.createdAt
+				);
+			});
+		}
+
+		window.ipc.on(DOWNLOADS_MESSAGE_KEY, message => {
+			switch (message.action) {
+				case DownloadEvent.QUEUED: {
+					addOrUpdateDownload({
+						createdAt: message.payload.createdAt,
+						id: message.payload.id,
+						label: message.payload.label,
+						percent: 0,
+						state: DownloadState.IDLE,
+					});
+					break;
+				}
+
+				case DownloadEvent.STARTED: {
+					addOrUpdateDownload({
+						createdAt: message.payload.createdAt,
+						id: message.payload.id,
+						label: message.payload.label,
+						percent: 0,
+						state: DownloadState.ACTIVE,
+					});
+					break;
+				}
+
+				case DownloadEvent.COMPLETED: {
+					addOrUpdateDownload({
+						createdAt: message.payload.createdAt,
+						id: message.payload.id,
+						label: message.payload.label,
+						percent: 1,
+						state: DownloadState.DONE,
+					});
+					break;
+				}
+
+				case DownloadEvent.ERROR: {
+					addOrUpdateDownload({
+						createdAt: message.payload.createdAt,
+						id: message.payload.id,
+						label: message.payload.label,
+						percent: 0,
+						state: DownloadState.FAILED,
+					});
+					break;
+				}
+
+				case DownloadEvent.CANCELED: {
+					addOrUpdateDownload({
+						createdAt: message.payload.createdAt,
+						id: message.payload.id,
+						label: message.payload.label,
+						percent: 0,
+						state: DownloadState.CANCELED,
+					});
+					break;
+				}
+
+				case DownloadEvent.UNPACKING: {
+					addOrUpdateDownload({
+						createdAt: message.payload.createdAt,
+						id: message.payload.id,
+						label: message.payload.label,
+						percent: 1,
+						state: DownloadState.UNPACKING,
+					});
+					break;
+				}
+
+				case DownloadEvent.PROGRESS: {
+					addOrUpdateDownload({
+						createdAt: message.payload.createdAt,
+						id: message.payload.id,
+						label: message.payload.label,
+						percent: message.payload.percent,
+						state: DownloadState.ACTIVE,
+					});
+					break;
+				}
+
+				default: {
+					break;
+				}
+			}
+		});
+	}, []);
 	return (
 		<>
 			<Head>
 				<title>{t("labels:downloads")}</title>
 			</Head>
-			<Box sx={{ p: 2 }}>
-				<List
-					sx={{
-						"--List-gap": "8px",
-						[`& .${sheetClasses.root}`]: {
-							p: 0.5,
-							lineHeight: 0,
-						},
-					}}
-				>
-					{downloads.map(download => (
-						<DownloadListItem
-							key={download.id}
-							id={download.id}
-							percent={download.percent * 100}
-							label={download.label}
-							state={download.state}
-						/>
-					))}
-				</List>
-			</Box>
+			<CustomScrollbars>
+				<Box sx={{ p: 2 }}>
+					<List
+						sx={{
+							"--List-gap": "8px",
+							[`& .${sheetClasses.root}`]: {
+								p: 0.5,
+								lineHeight: 0,
+							},
+						}}
+					>
+						{downloads.map(download => (
+							<DownloadListItem
+								key={download.id}
+								id={download.id}
+								createdAt={download.createdAt}
+								percent={download.percent * 100}
+								label={download.label}
+								state={download.state}
+							/>
+						))}
+					</List>
+				</Box>
+			</CustomScrollbars>
 		</>
 	);
 }
