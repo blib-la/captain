@@ -10,6 +10,7 @@ import { v4 } from "uuid";
 import { DownloadManager } from "../download-manager";
 
 import { apps } from "@/apps";
+import { sendToAllWindows } from "@/stores/watchers";
 import { getCaptainDownloads } from "@/utils/path-helpers";
 import { unpack } from "@/utils/unpack";
 
@@ -23,6 +24,26 @@ jest.mock("electron-dl", () => {
 		download: jest.fn(),
 	};
 });
+
+jest.mock("@/stores", () => ({
+	inventoryStore: {
+		get: jest.fn(),
+		set: jest.fn(),
+	},
+}));
+
+jest.mock("@/stores/utils", () => {
+	const originalModule = jest.requireActual("@/stores/utils");
+
+	return {
+		...originalModule,
+		pushToStore: jest.fn(),
+	};
+});
+
+jest.mock("@/stores/watchers", () => ({
+	sendToAllWindows: jest.fn(),
+}));
 
 jest.mock("@/utils/unpack", () => ({
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -169,7 +190,7 @@ describe("DownloadManager", () => {
 		const updatedItem = downloadManager.getDownloadQueue().find(index => index.id === item.id);
 		expect(updatedItem?.state).toBe(DownloadState.FAILED);
 
-		expect(apps.core?.webContents.send).toHaveBeenCalledWith(DOWNLOADS_MESSAGE_KEY, {
+		expect(sendToAllWindows).toHaveBeenCalledWith(DOWNLOADS_MESSAGE_KEY, {
 			action: DownloadEvent.ERROR,
 			payload: { ...item, state: DownloadState.FAILED },
 		});
@@ -287,7 +308,7 @@ describe("DownloadManager", () => {
 			state: DownloadState.IDLE,
 		};
 
-		const spySend = jest.spyOn(apps.core!.webContents, "send");
+		const spySend = jest.spyOn({ sendToAllWindows }, "sendToAllWindows");
 
 		downloadManager.addToQueue(item);
 
@@ -306,11 +327,12 @@ describe("DownloadManager", () => {
 			},
 		});
 
-		expect(spySend.mock.calls.some(call => call[1].action === DownloadEvent.PROGRESS)).toBe(
-			true
-		);
 		expect(
-			spySend.mock.calls.filter(call => call[1].action === DownloadEvent.PROGRESS).length
+			spySend.mock.calls.some((call: any) => call[1].action === DownloadEvent.PROGRESS)
+		).toBe(true);
+		expect(
+			spySend.mock.calls.filter((call: any) => call[1].action === DownloadEvent.PROGRESS)
+				.length
 		).toBeGreaterThan(1);
 	});
 
@@ -345,7 +367,7 @@ describe("DownloadManager", () => {
 			true
 		);
 
-		expect(apps.core?.webContents.send).toHaveBeenCalledWith(DOWNLOADS_MESSAGE_KEY, {
+		expect(sendToAllWindows).toHaveBeenCalledWith(DOWNLOADS_MESSAGE_KEY, {
 			action: DownloadEvent.COMPLETED,
 			payload: { ...item, state: DownloadState.DONE },
 		});
@@ -377,7 +399,7 @@ describe("DownloadManager", () => {
 			setImmediate(resolve);
 		});
 
-		expect(apps.core?.webContents.send).toHaveBeenCalledWith(DOWNLOADS_MESSAGE_KEY, {
+		expect(sendToAllWindows).toHaveBeenCalledWith(DOWNLOADS_MESSAGE_KEY, {
 			action: DownloadEvent.ERROR,
 			payload: { ...item, state: DownloadState.FAILED },
 		});
