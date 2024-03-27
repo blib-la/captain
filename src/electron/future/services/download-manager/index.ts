@@ -100,7 +100,7 @@ export class DownloadManager {
 			this.processQueue();
 			apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
 				action: DownloadEvent.QUEUED,
-				payload: item,
+				payload: { ...item, state: DownloadState.IDLE },
 			});
 		}
 	}
@@ -145,7 +145,7 @@ export class DownloadManager {
 					item.state = DownloadState.ACTIVE;
 					apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
 						action: DownloadEvent.STARTED,
-						payload: item,
+						payload: { ...item, state: DownloadState.ACTIVE },
 					});
 				},
 				onCompleted: async file => {
@@ -161,7 +161,7 @@ export class DownloadManager {
 						try {
 							apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
 								action: DownloadEvent.UNPACKING,
-								payload: item,
+								payload: { ...item, state: DownloadState.UNPACKING },
 							});
 							await unpack(
 								getDirectory("7zip/win/7za.exe"),
@@ -171,18 +171,18 @@ export class DownloadManager {
 							);
 							apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
 								action: DownloadEvent.COMPLETED,
-								payload: item,
+								payload: { ...item, state: DownloadState.DONE },
 							});
 						} catch {
 							apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
 								action: DownloadEvent.ERROR,
-								payload: item,
+								payload: { ...item, state: DownloadState.FAILED },
 							});
 						}
 					} else {
 						apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
 							action: DownloadEvent.COMPLETED,
-							payload: item,
+							payload: { ...item, state: DownloadState.DONE },
 						});
 					}
 				},
@@ -191,6 +191,7 @@ export class DownloadManager {
 						action: DownloadEvent.PROGRESS,
 						payload: {
 							...item,
+							state: DownloadState.ACTIVE,
 							percent,
 							transferredBytes,
 							totalBytes,
