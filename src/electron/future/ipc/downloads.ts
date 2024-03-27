@@ -1,7 +1,7 @@
+import type { DownloadItem } from "@captn/utils/constants";
 import { DOWNLOADS_MESSAGE_KEY } from "@captn/utils/constants";
 import { ipcMain } from "electron";
 
-import type { DownloadItem } from "#/types/download-manager";
 import { apps } from "@/apps";
 import { DownloadManager } from "@/services/download-manager";
 
@@ -11,6 +11,7 @@ interface DownloadMessage {
 	action: "download";
 	payload: DownloadItem;
 }
+
 interface DownloadQueueMessage {
 	action: "getAll";
 }

@@ -1,15 +1,14 @@
 import fs from "node:fs";
 import fsp from "node:fs/promises";
 
-import { DOWNLOADS_MESSAGE_KEY, DownloadEvent } from "@captn/utils/constants";
+import type { DownloadItem } from "@captn/utils/constants";
+import { DOWNLOADS_MESSAGE_KEY, DownloadEvent, DownloadState } from "@captn/utils/constants";
 import type { BrowserWindow } from "electron";
 import { download } from "electron-dl";
 import { v4 } from "uuid";
 
 import { DownloadManager } from "../download-manager";
 
-import { DownloadState } from "#/enums";
-import type { DownloadItem } from "#/types/download-manager";
 import { apps } from "@/apps";
 import { getCaptainDownloads } from "@/utils/path-helpers";
 import { unpack } from "@/utils/unpack";

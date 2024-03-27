@@ -1,5 +1,6 @@
 import { CustomScrollbars } from "@captn/joy/custom-scrollbars";
-import { DownloadEvent, DOWNLOADS_MESSAGE_KEY } from "@captn/utils/constants";
+import type { DownloadItem } from "@captn/utils/constants";
+import { DownloadEvent, DOWNLOADS_MESSAGE_KEY, DownloadState } from "@captn/utils/constants";
 import BuildCircleIcon from "@mui/icons-material/BuildCircle";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DownloadingIcon from "@mui/icons-material/Downloading";
@@ -20,7 +21,6 @@ import { useTranslation } from "next-i18next";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 
-import { DownloadState } from "#/enums";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 
 export interface DownloadListItemProperties {
@@ -106,13 +106,21 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			switch (message.action) {
 				case "getAll": {
 					setDownloads(
-						message.payload.map(download => ({
-							createdAt: download.createdAt,
-							id: download.id,
-							label: download.label,
-							percent: download.percent ?? 0,
-							state: download.state,
-						}))
+						message.payload.map(
+							(
+								download: DownloadItem & {
+									percent?: number;
+									transferredBytes?: number;
+									totalBytes?: number;
+								}
+							) => ({
+								createdAt: download.createdAt,
+								id: download.id,
+								label: download.label,
+								percent: download.percent ?? 0,
+								state: download.state,
+							})
+						)
 					);
 					break;
 				}

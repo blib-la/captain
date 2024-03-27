@@ -2,6 +2,7 @@ import fsp from "node:fs/promises";
 import path from "path";
 import url from "url";
 
+import { DownloadState } from "@captn/utils/constants";
 import type { BrowserWindow, BrowserWindowConstructorOptions } from "electron";
 import { app, globalShortcut, ipcMain, Menu, protocol, screen, Tray } from "electron";
 
@@ -11,7 +12,7 @@ import { appSettingsStore } from "./stores";
 
 import { buildKey } from "#/build-key";
 import { LOCAL_PROTOCOL } from "#/constants";
-import { DownloadState, ID } from "#/enums";
+import { ID } from "#/enums";
 import { isProduction } from "#/flags";
 import { apps } from "@/apps";
 import logger from "@/services/logger";

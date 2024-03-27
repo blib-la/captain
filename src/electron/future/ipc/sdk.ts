@@ -1,6 +1,6 @@
 import fsp from "node:fs/promises";
 
-import { APP_MESSAGE_KEY } from "@captn/utils/constants";
+import { APP_MESSAGE_KEY, DownloadState } from "@captn/utils/constants";
 import { getProperty } from "dot-prop";
 import type { IpcMainEvent } from "electron";
 import { ipcMain } from "electron";
@@ -9,7 +9,7 @@ import { execa } from "execa";
 import type { Except } from "type-fest";
 
 import { buildKey } from "#/build-key";
-import { DownloadState, ID } from "#/enums";
+import { ID } from "#/enums";
 import type { StoryRequest } from "#/types/story";
 import type { VectorStoreDocument } from "#/types/vector-store";
 import { apps } from "@/apps";

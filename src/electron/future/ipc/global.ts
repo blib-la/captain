@@ -2,13 +2,18 @@ import { existsSync } from "node:fs";
 import fsp from "node:fs/promises";
 import path from "node:path";
 
-import { WINDOW_CLOSE_KEY, WINDOW_MAXIMIZE_KEY, WINDOW_MINIMIZE_KEY } from "@captn/utils/constants";
+import {
+	WINDOW_CLOSE_KEY,
+	WINDOW_MAXIMIZE_KEY,
+	WINDOW_MINIMIZE_KEY,
+	DownloadState,
+} from "@captn/utils/constants";
 import { BrowserWindow, dialog, ipcMain } from "electron";
 import { download } from "electron-dl";
 import { v4 } from "uuid";
 
 import { buildKey } from "#/build-key";
-import { DownloadState, ID } from "#/enums";
+import { ID } from "#/enums";
 import { getFileType } from "#/string";
 import { apps } from "@/apps";
 import { inventoryStore, downloadsStore } from "@/stores";

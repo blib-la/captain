@@ -1,8 +1,7 @@
-import { DOWNLOADS_MESSAGE_KEY, DownloadEvent } from "@captn/utils/constants";
+import type { DownloadItem } from "@captn/utils/constants";
+import { DOWNLOADS_MESSAGE_KEY, DownloadEvent, DownloadState } from "@captn/utils/constants";
 import { download } from "electron-dl";
 
-import { DownloadState } from "#/enums";
-import type { DownloadItem } from "#/types/download-manager";
 import { apps } from "@/apps";
 import { getCaptainDownloads, getCaptainTemporary, getDirectory } from "@/utils/path-helpers";
 import { unpack } from "@/utils/unpack";
