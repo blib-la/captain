@@ -90,7 +90,7 @@ export function LivePainting() {
 
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
-			<RequiredModelsAlert appId={APP_ID} />
+			<RequiredModelsAlert />
 			<StyledStickyHeader>
 				{/* Left Side of the header */}
 				<StyledButtonWrapper>

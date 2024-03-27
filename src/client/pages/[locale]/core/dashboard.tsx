@@ -17,7 +17,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 				<title>{t("labels:dashboard")}</title>
 			</Head>
 			<Box sx={{ p: 2 }}>
-				<RequiredModelsAlert inline appId="core" />
+				<RequiredModelsAlert inline />
 				<Alert color="primary" variant="soft" sx={{ m: 4, p: 4 }}>
 					<Typography level="title-lg">{t("texts:howToUseCaptain")}</Typography>
 				</Alert>

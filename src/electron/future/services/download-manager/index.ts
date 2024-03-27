@@ -3,6 +3,9 @@ import { DOWNLOADS_MESSAGE_KEY, DownloadEvent, DownloadState } from "@captn/util
 import { download } from "electron-dl";
 
 import { apps } from "@/apps";
+import { inventoryStore } from "@/stores";
+import { pushToStore } from "@/stores/utils";
+import { sendToAllWindows } from "@/stores/watchers";
 import { getCaptainDownloads, getCaptainTemporary, getDirectory } from "@/utils/path-helpers";
 import { unpack } from "@/utils/unpack";
 
@@ -96,11 +99,12 @@ export class DownloadManager {
 		const isDuplicate = this.downloadQueue.some(existingItem => existingItem.id === item.id);
 		if (!isDuplicate) {
 			this.downloadQueue.push(item);
-			this.processQueue();
-			apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
+			console.log("DOWNLOAD QUEUE", this.downloadQueue.length, item);
+			sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
 				action: DownloadEvent.QUEUED,
 				payload: item,
 			});
+			this.processQueue();
 		}
 	}
 
@@ -120,6 +124,8 @@ export class DownloadManager {
 			return;
 		}
 
+		console.log("DOWNLOAD STARTING", nextItem);
+		this.currentDownloads += 1;
 		await this.startDownload(nextItem);
 	}
 
@@ -139,10 +145,9 @@ export class DownloadManager {
 				directory: item.unzip
 					? getCaptainTemporary(item.destination, item.id)
 					: getCaptainDownloads(item.destination, item.id),
-				onStarted: () => {
-					this.currentDownloads += 1;
+				onStarted() {
 					item.state = DownloadState.ACTIVE;
-					apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
+					sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
 						action: DownloadEvent.STARTED,
 						payload: item,
 					});
@@ -170,28 +175,38 @@ export class DownloadManager {
 								true
 							);
 							item.state = DownloadState.DONE;
-							apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
+							sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
 								action: DownloadEvent.COMPLETED,
 								payload: item,
 							});
+							const modelPath = getCaptainDownloads(item.destination, item.id);
+							const keyPath = item.destination.replaceAll("/", ".");
+							pushToStore(inventoryStore, keyPath, {
+								id: item.id,
+								modelPath,
+								label: item.label,
+							});
 						} catch {
 							item.state = DownloadState.FAILED;
-							apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
+							this.currentDownloads -= 1;
+							sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
 								action: DownloadEvent.ERROR,
 								payload: item,
 							});
+							this.processQueue();
 						}
 					} else {
 						item.state = DownloadState.DONE;
-						apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
+						sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
 							action: DownloadEvent.COMPLETED,
 							payload: item,
 						});
 					}
 				},
-				onProgress({ percent, transferredBytes, totalBytes }) {
+				onProgress: ({ percent, transferredBytes, totalBytes }) => {
+					console.log(this.currentDownloads, percent);
 					item.state = DownloadState.ACTIVE;
-					apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
+					sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
 						action: DownloadEvent.PROGRESS,
 						payload: {
 							...item,
@@ -204,7 +219,8 @@ export class DownloadManager {
 			});
 		} catch {
 			item.state = DownloadState.FAILED;
-			apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
+			this.currentDownloads -= 1;
+			sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
 				action: DownloadEvent.ERROR,
 				payload: item,
 			});

@@ -94,15 +94,12 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 					);
 				}
 
-				return [item, ...previousState].sort(
-					(a, b) =>
-						// This directly returns -1, 0, or 1 based on the comparison without separate if statements
-						b.createdAt - a.createdAt
-				);
+				return [item, ...previousState].sort((a, b) => b.createdAt - a.createdAt);
 			});
 		}
 
 		const unsubscribeDownloads = window.ipc.on(DOWNLOADS_MESSAGE_KEY, message => {
+			console.log(message.action, message.payload.label, message.payload.percent);
 			switch (message.action) {
 				case "getAll": {
 					setDownloads(
