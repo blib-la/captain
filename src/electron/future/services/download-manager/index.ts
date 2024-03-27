@@ -100,7 +100,7 @@ export class DownloadManager {
 			this.processQueue();
 			apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
 				action: DownloadEvent.QUEUED,
-				payload: { ...item, state: DownloadState.IDLE },
+				payload: item,
 			});
 		}
 	}
@@ -145,7 +145,7 @@ export class DownloadManager {
 					item.state = DownloadState.ACTIVE;
 					apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
 						action: DownloadEvent.STARTED,
-						payload: { ...item, state: DownloadState.ACTIVE },
+						payload: item,
 					});
 				},
 				onCompleted: async file => {
@@ -159,9 +159,10 @@ export class DownloadManager {
 					this.processQueue();
 					if (item.unzip) {
 						try {
+							item.state = DownloadState.UNPACKING;
 							apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
 								action: DownloadEvent.UNPACKING,
-								payload: { ...item, state: DownloadState.UNPACKING },
+								payload: item,
 							});
 							await unpack(
 								getDirectory("7zip/win/7za.exe"),
@@ -169,29 +170,32 @@ export class DownloadManager {
 								getCaptainDownloads(item.destination, item.id),
 								true
 							);
+							item.state = DownloadState.DONE;
 							apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
 								action: DownloadEvent.COMPLETED,
-								payload: { ...item, state: DownloadState.DONE },
+								payload: item,
 							});
 						} catch {
+							item.state = DownloadState.FAILED;
 							apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
 								action: DownloadEvent.ERROR,
-								payload: { ...item, state: DownloadState.FAILED },
+								payload: item,
 							});
 						}
 					} else {
+						item.state = DownloadState.DONE;
 						apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
 							action: DownloadEvent.COMPLETED,
-							payload: { ...item, state: DownloadState.DONE },
+							payload: item,
 						});
 					}
 				},
 				onProgress({ percent, transferredBytes, totalBytes }) {
+					item.state = DownloadState.ACTIVE;
 					apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
 						action: DownloadEvent.PROGRESS,
 						payload: {
 							...item,
-							state: DownloadState.ACTIVE,
 							percent,
 							transferredBytes,
 							totalBytes,

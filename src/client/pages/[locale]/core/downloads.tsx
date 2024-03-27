@@ -102,8 +102,21 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			});
 		}
 
-		window.ipc.on(DOWNLOADS_MESSAGE_KEY, message => {
+		const unsubscribeDownloads = window.ipc.on(DOWNLOADS_MESSAGE_KEY, message => {
 			switch (message.action) {
+				case "getAll": {
+					setDownloads(
+						message.payload.map(download => ({
+							createdAt: download.createdAt,
+							id: download.id,
+							label: download.label,
+							percent: download.percent ?? 0,
+							state: download.state,
+						}))
+					);
+					break;
+				}
+
 				case DownloadEvent.QUEUED: {
 					addOrUpdateDownload({
 						createdAt: message.payload.createdAt,
@@ -186,6 +199,12 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 				}
 			}
 		});
+
+		window.ipc.send(DOWNLOADS_MESSAGE_KEY, { action: "getAll" });
+
+		return () => {
+			unsubscribeDownloads();
+		};
 	}, []);
 	return (
 		<>
