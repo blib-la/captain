@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import fsp from "node:fs/promises";
 
-import { DownloadEvent } from "@captn/utils/constants";
+import { DOWNLOADS_MESSAGE_KEY, DownloadEvent } from "@captn/utils/constants";
 import type { BrowserWindow } from "electron";
 import { download } from "electron-dl";
 import { v4 } from "uuid";
@@ -170,11 +170,10 @@ describe("DownloadManager", () => {
 		const updatedItem = downloadManager.getDownloadQueue().find(index => index.id === item.id);
 		expect(updatedItem?.state).toBe(DownloadState.FAILED);
 
-		expect(apps.core?.webContents.send).toHaveBeenCalledWith(
-			DownloadEvent.ERROR,
-			item.id,
-			expect.any(Error)
-		);
+		expect(apps.core?.webContents.send).toHaveBeenCalledWith(DOWNLOADS_MESSAGE_KEY, {
+			action: DownloadEvent.ERROR,
+			payload: { ...item, state: DownloadState.FAILED },
+		});
 	});
 
 	it("should accurately report the queue size at various stages", async () => {
@@ -297,15 +296,22 @@ describe("DownloadManager", () => {
 			setTimeout(resolve, 100);
 		});
 
-		expect(spySend).toHaveBeenCalledWith(DownloadEvent.PROGRESS, item.id, {
-			percent: expect.any(Number),
-			transferredBytes: expect.any(Number),
-			totalBytes,
+		expect(spySend).toHaveBeenCalledWith(DOWNLOADS_MESSAGE_KEY, {
+			action: DownloadEvent.PROGRESS,
+			payload: {
+				...item,
+				state: DownloadState.ACTIVE,
+				percent: expect.any(Number),
+				transferredBytes: expect.any(Number),
+				totalBytes,
+			},
 		});
 
-		expect(spySend.mock.calls.some(call => call[0] === DownloadEvent.PROGRESS)).toBe(true);
+		expect(spySend.mock.calls.some(call => call[1].action === DownloadEvent.PROGRESS)).toBe(
+			true
+		);
 		expect(
-			spySend.mock.calls.filter(call => call[0] === DownloadEvent.PROGRESS).length
+			spySend.mock.calls.filter(call => call[1].action === DownloadEvent.PROGRESS).length
 		).toBeGreaterThan(1);
 	});
 
@@ -340,7 +346,10 @@ describe("DownloadManager", () => {
 			true
 		);
 
-		expect(apps.core?.webContents.send).toHaveBeenCalledWith(DownloadEvent.COMPLETED, item.id);
+		expect(apps.core?.webContents.send).toHaveBeenCalledWith(DOWNLOADS_MESSAGE_KEY, {
+			action: DownloadEvent.COMPLETED,
+			payload: { ...item, state: DownloadState.DONE },
+		});
 	});
 
 	it("should handle errors during the unzip process", async () => {
@@ -359,7 +368,7 @@ describe("DownloadManager", () => {
 			destination: "test/download-manager/unzip-failure",
 			label: "Failed Zip Download",
 			createdAt: Date.now(),
-			state: DownloadState.IDLE,
+			state: DownloadState.FAILED,
 			unzip: true,
 		};
 
@@ -369,11 +378,10 @@ describe("DownloadManager", () => {
 			setImmediate(resolve);
 		});
 
-		expect(apps.core?.webContents.send).toHaveBeenCalledWith(
-			DownloadEvent.ERROR,
-			item.id,
-			expect.any(Error)
-		);
+		expect(apps.core?.webContents.send).toHaveBeenCalledWith(DOWNLOADS_MESSAGE_KEY, {
+			action: DownloadEvent.ERROR,
+			payload: { ...item, state: DownloadState.FAILED },
+		});
 
 		jest.clearAllMocks();
 	});
