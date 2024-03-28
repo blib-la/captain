@@ -15,6 +15,7 @@
   "download": "Download",
   "downloadedOf": "Downloaded {{downloaded}} of {{downloads}}",
   "downloading": "Downloading",
+  "downloads": "Downloads",
   "finishing": "Finishing",
   "formLabel": {
     "characters": "Characters",

@@ -1,8 +1,9 @@
+import { DownloadState } from "@captn/utils/constants";
 import { BrowserWindow, ipcMain } from "electron";
 import { download } from "electron-dl";
 
 import { buildKey } from "#/build-key";
-import { DownloadState, ID } from "#/enums";
+import { ID } from "#/enums";
 import { appSettingsStore } from "@/stores";
 import { getCaptainData, getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
 import { unpack } from "@/utils/unpack";

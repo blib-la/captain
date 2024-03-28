@@ -1,5 +1,6 @@
 import { AppFrame } from "@captn/joy/app-frame";
 import { TitleBar } from "@captn/joy/title-bar";
+import { DownloadState } from "@captn/utils/constants";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import LinearProgress from "@mui/joy/LinearProgress";
@@ -11,7 +12,7 @@ import type { ReactNode } from "react";
 import { useCallback, useEffect, useState } from "react";
 
 import { buildKey } from "#/build-key";
-import { DownloadState, ID } from "#/enums";
+import { ID } from "#/enums";
 import { I18nLink } from "@/atoms/i18n-link";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 import { Illustration } from "@/organisms/illustration";

@@ -1,3 +1,4 @@
+import { useRequiredDownloads } from "@captn/react/use-required-downloads";
 import { useSDK } from "@captn/react/use-sdk";
 import { ClickAwayListener } from "@mui/base";
 import CheckIcon from "@mui/icons-material/Check";
@@ -31,13 +32,12 @@ import {
 import type { Except } from "type-fest";
 import { v4 } from "uuid";
 
-import { APP_ID } from "../constants";
+import { allRequiredDownloads, APP_ID } from "../constants";
 import { StyledColorInput } from "../styled";
 import type { IllustrationStyles } from "../text-to-image";
 import { illustrationStyles } from "../text-to-image";
 
 import type { Repository } from "#/types";
-import { useRequiredModels } from "@/apps/live-painting/required-models-alert";
 import { FlagUs } from "@/atoms/flags/us";
 import { useResettableState } from "@/ions/hooks/resettable-state";
 import { getContrastColor } from "@/ions/utils/color";
@@ -364,7 +364,7 @@ export interface RunButtonProperties {
 
 export function RunButton({ isLoading, isRunning, onStart, onStop }: RunButtonProperties) {
 	const { t } = useTranslation(["common", "labels"]);
-	const hasModelAndVae = useRequiredModels();
+	const { isCompleted: hasModelAndVae } = useRequiredDownloads(allRequiredDownloads);
 
 	return isRunning ? (
 		<Button

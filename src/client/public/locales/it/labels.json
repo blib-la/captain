@@ -15,6 +15,7 @@
   "download": "Scarica",
   "downloadedOf": "Scaricati {{downloaded}} di {{downloads}}",
   "downloading": "Scaricamento",
+  "downloads": "Download",
   "finishing": "Conclusione",
   "formLabel": {
     "characters": "Personaggi",

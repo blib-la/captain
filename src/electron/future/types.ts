@@ -1,4 +1,4 @@
-import type { DownloadState } from "#/enums";
+import type { DownloadState } from "@captn/utils/constants";
 
 /**
  * Primary settings necessary for basic application functionality and user accessibility.

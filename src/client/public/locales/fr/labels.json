@@ -15,6 +15,7 @@
   "download": "Télécharger",
   "downloadedOf": "Téléchargé {{downloaded}} sur {{downloads}}",
   "downloading": "Téléchargement",
+  "downloads": "Téléchargements",
   "finishing": "Fin",
   "formLabel": {
     "characters": "Personnages",

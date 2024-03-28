@@ -1,10 +1,12 @@
+import type { DownloadItem } from "@captn/utils/constants";
+import { DOWNLOADS_MESSAGE_KEY, DownloadEvent, DownloadState } from "@captn/utils/constants";
 import { download } from "electron-dl";
 
-import { DownloadEvent, DownloadState } from "./enums";
-import type { DownloadItem } from "./types";
-
 import { apps } from "@/apps";
-import { getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
+import { inventoryStore } from "@/stores";
+import { pushToStore } from "@/stores/utils";
+import { sendToAllWindows } from "@/stores/watchers";
+import { getCaptainDownloads, getCaptainTemporary, getDirectory } from "@/utils/path-helpers";
 import { unpack } from "@/utils/unpack";
 
 /**
@@ -93,10 +95,15 @@ export class DownloadManager {
 	 * @param item The DownloadItem object to add to the queue.
 	 */
 	public addToQueue(item: DownloadItem): void {
-		item.state = DownloadState.WAITING;
+		item.state = DownloadState.IDLE;
 		const isDuplicate = this.downloadQueue.some(existingItem => existingItem.id === item.id);
 		if (!isDuplicate) {
 			this.downloadQueue.push(item);
+			console.log("DOWNLOAD QUEUE", this.downloadQueue.length, item);
+			sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
+				action: DownloadEvent.QUEUED,
+				payload: item,
+			});
 			this.processQueue();
 		}
 	}
@@ -111,12 +118,14 @@ export class DownloadManager {
 			return;
 		}
 
-		const nextItem = this.downloadQueue.find(item => item.state === DownloadState.WAITING);
+		const nextItem = this.downloadQueue.find(item => item.state === DownloadState.IDLE);
 		if (!nextItem) {
 			console.log("No more items to process");
 			return;
 		}
 
+		console.log("DOWNLOAD STARTING", nextItem);
+		this.currentDownloads += 1;
 		await this.startDownload(nextItem);
 	}
 
@@ -133,14 +142,18 @@ export class DownloadManager {
 				overwrite: true,
 				showBadge: true,
 				showProgressBar: true,
-				directory: item.destination,
-				onStarted: () => {
-					this.currentDownloads += 1;
-					item.state = DownloadState.STARTED;
-					apps.core?.webContents.send(DownloadEvent.STARTED, item.id);
+				directory: item.unzip
+					? getCaptainTemporary(item.destination, item.id)
+					: getCaptainDownloads(item.destination, item.id),
+				onStarted() {
+					item.state = DownloadState.ACTIVE;
+					sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
+						action: DownloadEvent.STARTED,
+						payload: item,
+					});
 				},
 				onCompleted: async file => {
-					item.state = DownloadState.COMPLETED;
+					item.state = DownloadState.DONE;
 					this.currentDownloads -= 1;
 					this.downloadQueue = this.downloadQueue.filter(
 						queueItem => queueItem.id !== item.id
@@ -150,31 +163,67 @@ export class DownloadManager {
 					this.processQueue();
 					if (item.unzip) {
 						try {
+							item.state = DownloadState.UNPACKING;
+							apps.core?.webContents.send(DOWNLOADS_MESSAGE_KEY, {
+								action: DownloadEvent.UNPACKING,
+								payload: item,
+							});
 							await unpack(
 								getDirectory("7zip/win/7za.exe"),
 								file.path,
 								getCaptainDownloads(item.destination, item.id),
 								true
 							);
-							apps.core?.webContents.send(DownloadEvent.COMPLETED, item.id);
-						} catch (error) {
-							apps.core?.webContents.send(DownloadEvent.ERROR, item.id, error);
+							item.state = DownloadState.DONE;
+							sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
+								action: DownloadEvent.COMPLETED,
+								payload: item,
+							});
+							const modelPath = getCaptainDownloads(item.destination, item.id);
+							const keyPath = item.destination.replaceAll("/", ".");
+							pushToStore(inventoryStore, keyPath, {
+								id: item.id,
+								modelPath,
+								label: item.label,
+							});
+						} catch {
+							item.state = DownloadState.FAILED;
+							this.currentDownloads -= 1;
+							sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
+								action: DownloadEvent.ERROR,
+								payload: item,
+							});
+							this.processQueue();
 						}
 					} else {
-						apps.core?.webContents.send(DownloadEvent.COMPLETED, item.id);
+						item.state = DownloadState.DONE;
+						sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
+							action: DownloadEvent.COMPLETED,
+							payload: item,
+						});
 					}
 				},
-				onProgress({ percent, transferredBytes, totalBytes }) {
-					apps.core?.webContents.send(DownloadEvent.PROGRESS, item.id, {
-						percent,
-						transferredBytes,
-						totalBytes,
+				onProgress: ({ percent, transferredBytes, totalBytes }) => {
+					console.log(this.currentDownloads, percent);
+					item.state = DownloadState.ACTIVE;
+					sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
+						action: DownloadEvent.PROGRESS,
+						payload: {
+							...item,
+							percent,
+							transferredBytes,
+							totalBytes,
+						},
 					});
 				},
 			});
-		} catch (error) {
-			item.state = DownloadState.ERROR;
-			apps.core?.webContents.send(DownloadEvent.ERROR, item.id, error);
+		} catch {
+			item.state = DownloadState.FAILED;
+			this.currentDownloads -= 1;
+			sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
+				action: DownloadEvent.ERROR,
+				payload: item,
+			});
 			this.processQueue();
 		}
 	}

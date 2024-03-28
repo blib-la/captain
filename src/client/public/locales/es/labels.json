@@ -15,6 +15,7 @@
   "download": "Descargar",
   "downloadedOf": "Descargados {{downloaded}} de {{downloads}}",
   "downloading": "Descargando",
+  "downloads": "Descargas",
   "finishing": "Finalizando",
   "formLabel": {
     "characters": "Personajes",
