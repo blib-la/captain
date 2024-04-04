@@ -58,7 +58,6 @@ export async function populateFromDocuments() {
 		imagePaths.map(async imagePath => {
 			const exif = await exifr.parse(imagePath);
 			const { name } = path.parse(imagePath);
-			console.log({ exif });
 			return {
 				content: exif.Description,
 				payload: {
