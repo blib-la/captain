@@ -8,10 +8,9 @@ import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 import { v4 } from "uuid";
 
-import { getCaptainData } from "../utils/path-helpers";
-
-import type { SearchOptions, VectorStoreDocument } from "#/types/vector-store";
+import type { ScrollOptions, SearchOptions, VectorStoreDocument } from "#/types/vector-store";
 import logger from "@/services/logger";
+import { getCaptainData } from "@/utils/path-helpers";
 
 interface ServiceReadyConfig {
 	maxRetries?: number;
@@ -19,7 +18,7 @@ interface ServiceReadyConfig {
 	timeout?: number;
 }
 
-class VectorStore {
+export class VectorStore {
 	private static instance: VectorStore | null = null;
 	private client: QdrantClient | null = null;
 	private process: ExecaChildProcess<string> | undefined;
@@ -233,11 +232,23 @@ class VectorStore {
 		await this.ensureCollection(collectionName);
 
 		const queryVector = await this.embeddings.embedDocuments([query]);
-		const searchResults = await this.client?.search(collectionName, {
+		return this.client?.search(collectionName, {
 			vector: queryVector[0],
 			...options,
 		});
-		return searchResults;
+	}
+
+	/**
+	 * Scrolls for documents in the specified collection based on the given query.
+	 *
+	 * @param {string} collectionName - The name of the collection to search in.
+	 * @param {ScrollOptions} [options] - Optional scroll parameters.
+	 * @returns {Promise<any>} A promise that resolves with the search results.
+	 */
+	public async scroll(collectionName: string, options?: ScrollOptions) {
+		await this.ensureCollection(collectionName);
+
+		return this.client!.scroll(collectionName, options);
 	}
 
 	/**
@@ -293,5 +304,3 @@ class VectorStore {
 		return this.client?.deleteCollection(collectionName);
 	}
 }
-
-export { VectorStore };

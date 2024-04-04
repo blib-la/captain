@@ -1,5 +1,5 @@
+import type { Schemas as QdrantSchemas } from "@qdrant/js-client-rest";
 import type { Except } from "type-fest";
-
 /**
  * Defines the structure of a document stored in the vector store, which can represent actions, settings, or any other type of data that needs to be indexed and searchable.
  */
@@ -38,6 +38,10 @@ export type VectorStoreDocument = {
 		 * An optional URL or path to an icon that represents the document or its action visually. Used in UI elements to enhance user experience.
 		 */
 		icon?: string;
+		/**
+		 * An optional color for the background of the icon.
+		 */
+		iconColor?: string;
 
 		/**
 		 * An optional brief description of the document or its action. This can be used in UI elements to provide users with more context.
@@ -76,16 +80,13 @@ export type VectorStoreResponse = Except<VectorStoreDocument, "content"> & {
  * which serve to filter search results based on relevance scoring. The options can be
  * expanded to include additional search parameters as needed.
  */
-export type SearchOptions = {
-	/**
-	 * The minimum score that a document must have to be included in the search results.
-	 * Documents with scores below this threshold will be excluded. This allows clients
-	 * to fine-tune the sensitivity of search results to ensure that only the most
-	 * relevant documents are returned.
-	 *
-	 * If this property is omitted, a default threshold may be applied, or all documents
-	 * regardless of score may be included in the search results, depending on the
-	 * implementation of the vector store's search functionality.
-	 */
-	score_threshold?: number;
-};
+export type SearchOptions = Partial<QdrantSchemas["SearchRequest"]>;
+
+/**
+ * Defines the options that can be used to customize scroll behavior in the vector store.
+ *
+ * This configuration allows clients to set criteria such as ordering,
+ * which serve to sort results. The options can be expanded to include additional search parameters
+ * as needed.
+ */
+export type ScrollOptions = Partial<QdrantSchemas["ScrollRequest"]>;

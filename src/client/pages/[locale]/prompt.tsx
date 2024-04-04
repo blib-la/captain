@@ -45,13 +45,16 @@ export function useAutoSizerWindow<T extends HTMLElement>(reference: RefObject<T
 }
 
 export default function Page() {
-	const { t } = useTranslation(["texts"]);
-
+	const {
+		i18n: { language },
+	} = useTranslation();
 	const frameReference = useRef<HTMLDivElement | null>(null);
 	const promptReference = useRef<HTMLInputElement | null>(null);
 	const [value, setValue] = useState("");
 	const [evaluationResult, setEvaluationResult] = useState("");
-	const suggestions = useVectorStore(value);
+	const suggestions = useVectorStore(value, {
+		filter: { must: [{ key: "language", match: { value: language } }] },
+	});
 
 	useAutoFocusIPC(promptReference);
 	useAutoSizerWindow(frameReference);

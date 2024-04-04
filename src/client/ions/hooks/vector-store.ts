@@ -3,7 +3,13 @@ import { useDebounce } from "use-debounce";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
-import type { SearchOptions, VectorStoreResponse } from "#/types/vector-store";
+import type {
+	SearchOptions,
+	ScrollOptions,
+	VectorStoreResponse,
+	VectorStoreDocument,
+} from "#/types/vector-store";
+import { useObject } from "@/ions/hooks/object";
 
 /**
  * Custom React hook to interact with the vector store, providing search functionality.
@@ -12,7 +18,7 @@ import type { SearchOptions, VectorStoreResponse } from "#/types/vector-store";
  * excessive querying. It sends the debounced query to the vector store and manages the state of
  * the search results, providing real-time feedback as the user types.
  *
- * @param {string} value The initial search query string.
+ * @param {string} query The initial search query string.
  * @param {SearchOptions} [{ score_threshold }={}] The search options including score threshold to filter the results.
  * @returns {VectorStoreResponse[]} The search results as an array of VectorStoreResponse objects.
  *
@@ -21,25 +27,24 @@ import type { SearchOptions, VectorStoreResponse } from "#/types/vector-store";
  * const searchResults = useVectorStore('search term', { score_threshold: 0.5 });
  * // searchResults will contain an array of search responses where each item has a score above 0.5
  */
-export function useVectorStore(value: string, { score_threshold }: SearchOptions = {}) {
-	const [query] = useDebounce(value, 300);
+export function useVectorStore(query: string, { score_threshold, filter }: SearchOptions = {}) {
+	const [query_] = useDebounce(query, 300);
 	const [results, setResults] = useState<VectorStoreResponse[]>([]); // State to store the search results
+	const filter_ = useObject(filter, 100);
 
 	useEffect(() => {
-		if (query.trim()) {
+		if (query_?.trim()) {
 			// Only proceed with a non-empty query
 			window.ipc.send(buildKey([ID.VECTOR_STORE], { suffix: ":search" }), {
-				query,
-				options: { score_threshold },
+				query: query_,
+				options: { score_threshold, filter: filter_ },
 			});
 		} else {
-			setResults([]); // Clear results if query is empty
+			setResults([]);
 		}
-	}, [query, score_threshold]);
+	}, [query_, score_threshold, filter_]);
 
-	// Effect to subscribe to vector store search results and errors
 	useEffect(() => {
-		// Subscription to receive search results
 		const unsubscribeResult = window.ipc.on(
 			buildKey([ID.VECTOR_STORE], { suffix: ":result" }),
 			data => {
@@ -47,7 +52,6 @@ export function useVectorStore(value: string, { score_threshold }: SearchOptions
 				setResults(data);
 			}
 		);
-		// Subscription to handle any search errors
 		const unsubscribeError = window.ipc.on(
 			buildKey([ID.VECTOR_STORE], { suffix: ":error" }),
 			error => {
@@ -55,7 +59,6 @@ export function useVectorStore(value: string, { score_threshold }: SearchOptions
 			}
 		);
 
-		// Cleanup function to unsubscribe from ipc channels when the component unmounts
 		return () => {
 			unsubscribeResult();
 			unsubscribeError();
@@ -63,4 +66,43 @@ export function useVectorStore(value: string, { score_threshold }: SearchOptions
 	}, []);
 
 	return results;
+}
+
+export function useVectorScroll({ order_by, with_payload, filter }: ScrollOptions = {}) {
+	const [results, setResults] = useState<VectorStoreResponse[]>([]); // State to store the search results
+	const filter_ = useObject(filter, 100);
+
+	useEffect(() => {
+		// Only proceed with a non-empty query
+		window.ipc.send(buildKey([ID.VECTOR_STORE], { suffix: ":scroll" }), {
+			options: { order_by, with_payload, filter: filter_ },
+		});
+	}, [order_by, with_payload, filter_]);
+
+	useEffect(() => {
+		const unsubscribeResult = window.ipc.on(
+			buildKey([ID.VECTOR_STORE], { suffix: ":scrollResult" }),
+			data => {
+				console.log("Search result received:", data);
+				setResults(data);
+			}
+		);
+		const unsubscribeError = window.ipc.on(
+			buildKey([ID.VECTOR_STORE], { suffix: ":error" }),
+			error => {
+				console.error("Search error:", error);
+			}
+		);
+
+		return () => {
+			unsubscribeResult();
+			unsubscribeError();
+		};
+	}, []);
+
+	return results;
+}
+
+export function vectorUpsert(documents: VectorStoreDocument[]) {
+	window.ipc.send(buildKey([ID.VECTOR_STORE], { suffix: ":upsert" }), documents);
 }

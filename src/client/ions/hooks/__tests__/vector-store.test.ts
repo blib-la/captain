@@ -1,5 +1,4 @@
 import { renderHook } from "@testing-library/react";
-import { useDebounce } from "use-debounce";
 
 import { useVectorStore } from "../vector-store";
 
@@ -7,7 +6,7 @@ import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 
 jest.mock("use-debounce", () => ({
-	useDebounce: jest.fn(),
+	useDebounce: jest.fn().mockImplementation(value => [value]),
 }));
 
 describe("useVectorStore", () => {
@@ -34,7 +33,6 @@ describe("useVectorStore", () => {
 		const query = "test query";
 		const options = { score_threshold: 0.5 };
 		const expectedKey = buildKey([ID.VECTOR_STORE], { suffix: ":search" });
-		(useDebounce as jest.Mock).mockReturnValue([query]);
 
 		renderHook(() => useVectorStore(query, options));
 

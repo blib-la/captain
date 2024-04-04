@@ -16,7 +16,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	return (
 		<AppFrame
 			titleBar={
-				<TitleBar>
+				<TitleBar color="orange" variant="solid">
 					<Typography level="title-md" component="h1" startDecorator={<BrushIcon />}>
 						{t("labels:livePainting")}
 					</Typography>

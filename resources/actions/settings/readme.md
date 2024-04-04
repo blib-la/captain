@@ -2,32 +2,40 @@
 id: settings
 label: Settings
 language: en
+fileId: settings
+type: app
+path: /en/core/settings
+dateCreated: 2024-04-04T16:15:44.647976
+creatorID: Blibla
+tags:
+    - settings
+    - preferences
+    - configuration
+    - keys
+license: AGPL 3.0
+accessLevel: private
+description: "Configure Captain to match your needs."
+icon: Settings
+iconColor: "#717676"
 ---
 
-# Settings Overview
-
-This document serves as an index and overview of the various settings available in our application. Each section is accompanied by a link to a detailed guide on how to use and configure the respective settings.
-
-## Table of Contents
-
-- [Color Mode](color_mode.md) - Customize the visual theme of the application according to your preference or system default.
-- [Language](language.md) - Set your preferred language for the application interface.
-- [OpenAI API Integration](openai_api.md) - Enter your OpenAI API key to enable integration with OpenAI services.
-
-## Detailed Settings Guides
-
-The following guides provide detailed instructions on configuring each specific setting:
-
-### [Color Mode Settings](color_mode.md)
-Adjust the color theme of your application interface. Options include Light, Dark, or System themes.
-
-### [Language Settings](language.md)
-Change the language of the application interface. A variety of languages are supported to provide a comfortable user experience.
-
-### [OpenAI API Settings](openai_api.md)
-Integrate OpenAI's powerful AI capabilities by entering your unique API key.
-
-For more information on each setting, please refer to the individual markdown files linked above. If you need further assistance, please visit the Help section or contact support.
-
-## Keywords
-settings, configuration, customization, user preferences, visual theme, language selection, API integration, OpenAI
+Adjust the language settings.
+I want dark mode enabled.
+Change API keys for OpenAI integration.
+How can I switch the language?
+Enable light theme for the app.
+Update preferences for visual theme.
+Set application to system default color mode.
+Configure OpenAI API settings.
+Personalize my app experience with preferences.
+Modify configuration for better usability.
+Show me how to enter OpenAI API keys.
+Switch to dark mode for nighttime use.
+Select my preferred language.
+Access advanced settings options.
+Save my custom settings configuration.
+Guide to customizing application interface.
+Steps for changing the app's visual theme.
+Activate dark theme in Captain.
+Update user preferences and keys.
+Customize interface language.

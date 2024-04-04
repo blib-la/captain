@@ -1,5 +1,7 @@
 import path from "node:path";
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { env } from "@xenova/transformers";
 import axios from "axios";
 import dotenv from "dotenv";
@@ -150,5 +152,31 @@ describe("VectorStore Integration Tests", () => {
 
 		expect(searchResults!.length).toBe(1);
 		expect(searchResults![0].payload).toMatchObject(document2.payload);
+	}, 10_000);
+
+	it("should paginate through documents with the scroll method", async () => {
+		// Assuming the collection is already populated with documents
+
+		// Initial scroll to start the pagination process
+		const initialScrollResults = await vectorStore.scroll(collectionName, { limit: 1 });
+		expect(initialScrollResults.points).toBeDefined();
+		expect(initialScrollResults.points).toHaveLength(1);
+		// Validate structure of a point
+		expect(initialScrollResults.points[0].id).toBeDefined();
+		expect(initialScrollResults.points[0].payload).toBeDefined();
+
+		// Check for the presence of next_page_offset for pagination
+		expect(initialScrollResults.next_page_offset).toBeDefined();
+
+		// Use next_page_offset for the next scroll operation
+		const nextScrollResults = await vectorStore.scroll(collectionName, {
+			limit: 1,
+			offset: initialScrollResults.next_page_offset,
+		});
+
+		expect(nextScrollResults.points).toBeDefined();
+		expect(nextScrollResults.points).toHaveLength(1);
+		// Ensure the document in the second scroll is not the same as in the first scroll
+		expect(nextScrollResults.points[0].id).not.toEqual(initialScrollResults.points[0].id);
 	}, 10_000);
 });

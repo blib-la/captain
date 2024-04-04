@@ -56,6 +56,7 @@ export async function populateFromDocuments() {
 				content,
 				payload: {
 					id: data.id,
+					type: data.type,
 					language: data.language,
 					action: data.action,
 					label: data.label,
@@ -63,6 +64,7 @@ export async function populateFromDocuments() {
 					parameters: data.parameters,
 					function: data.function,
 					icon: data.icon,
+					iconColor: data.iconColor,
 				},
 			};
 		})

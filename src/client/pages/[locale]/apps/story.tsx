@@ -15,7 +15,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	return (
 		<AppFrame
 			titleBar={
-				<TitleBar>
+				<TitleBar color="yellow" variant="solid">
 					<Typography level="title-md" component="h1" startDecorator={<MenuBookIcon />}>
 						{t("labels:createStory")}
 					</Typography>
