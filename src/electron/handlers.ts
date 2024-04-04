@@ -23,12 +23,18 @@ export const handlers = {
 			);
 		},
 	},
-	writeFile(name: string, content: string, options: { encoding?: BufferEncoding } = {}) {
+	writeFile(
+		name: string,
+		content: string,
+		options: { encoding?: BufferEncoding } = {},
+		context?: string
+	) {
 		return ipcRenderer.invoke(
 			buildKey([ID.FILE], { suffix: ":write" }),
 			name,
 			content,
-			options
+			options,
+			context
 		);
 	},
 	copyFile(source: string, destination: string) {

@@ -13,9 +13,11 @@ import { download } from "electron-dl";
 import { v4 } from "uuid";
 
 import { buildKey } from "#/build-key";
+import { VECTOR_STORE_COLLECTION } from "#/constants";
 import { ID } from "#/enums";
 import { getFileType } from "#/string";
 import { apps } from "@/apps";
+import { VectorStore } from "@/services/vector-store";
 import { inventoryStore, downloadsStore } from "@/stores";
 import { pushToStore } from "@/stores/utils";
 import { getCaptainData, getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
@@ -101,12 +103,13 @@ ipcMain.handle(buildKey([ID.FILE], { prefix: "path:", suffix: ":get" }), async (
 ipcMain.handle(
 	buildKey([ID.FILE], { suffix: ":write" }),
 	async (
-		_event,
+		event,
 		subpath: string,
 		content: string,
 		options: {
 			encoding?: BufferEncoding;
-		} = {}
+		} = {},
+		context?: string
 	) => {
 		const filePath = getCaptainData("files", subpath);
 		const { dir: directory } = path.parse(filePath);
@@ -120,11 +123,21 @@ ipcMain.handle(
 		// Write the file content
 		await fsp.writeFile(filePath, content, options);
 		const id = v4();
-		const keyPath = `files.${fileType}`;
-		// Update the application's file inventory
-		const files = inventoryStore.get<string, { filePath: string; id: string }[]>(keyPath, []);
-		files.push({ filePath, id });
-		inventoryStore.set(keyPath, files);
+		try {
+			const vectorStore = VectorStore.getInstance;
+
+			const operations = await vectorStore.upsert(VECTOR_STORE_COLLECTION, [
+				{
+					id,
+					content: context ?? content,
+					payload: { id, label: fileType, type: fileType, language: "en" },
+				},
+			]);
+
+			event.sender.send(buildKey([ID.VECTOR_STORE], { suffix: ":saved" }), operations);
+		} catch (error) {
+			event.sender.send(buildKey([ID.VECTOR_STORE], { suffix: ":error" }), error);
+		}
 
 		return { filePath, fileType };
 	}
@@ -135,14 +148,12 @@ ipcMain.handle(
 	async (_event, source: string, destination: string) => {
 		const filePath = getCaptainData("files", destination);
 		const { dir: directory } = path.parse(filePath);
-		console.log("COPY FILE 1", { source, filePath });
 
 		// Ensure the directory exists, creating it if necessary
 		if (!existsSync(directory)) {
 			await fsp.mkdir(directory, { recursive: true });
 		}
 
-		console.log("COPY FILE 2", { source, filePath });
 		// Copy the file
 		await fsp.copyFile(source, filePath);
 	}

@@ -27,6 +27,7 @@ import {
 	type InputHTMLAttributes,
 	useCallback,
 	useEffect,
+	useRef,
 	useState,
 } from "react";
 import type { Except } from "type-fest";
@@ -240,17 +241,33 @@ export function ModelSelect() {
 	);
 }
 
-export function SaveButton({ image }: { image: string }) {
+export function SaveButton({ image, prompt }: { image: string; prompt: string }) {
 	const { t } = useTranslation(["common", "labels"]);
 	const [saved, setSaved] = useResettableState(false, 3000);
+	const promptCache = useRef(prompt);
+	const imageCache = useRef(image);
 	const { writeFile } = useSDK<unknown, string>(APP_ID, {});
 	const saveImage = useCallback(async () => {
 		const id = v4();
-		await writeFile(`images/${id}.png`, image.split(";base64,").pop()!, {
-			encoding: "base64",
-		});
+		console.log(promptCache.current);
+		await writeFile(
+			`images/${id}.png`,
+			image.split(";base64,").pop()!,
+			{
+				encoding: "base64",
+			},
+			promptCache.current
+		);
 		setSaved(true);
 	}, [image, writeFile, setSaved]);
+
+	useEffect(() => {
+		if (imageCache.current !== image) {
+			promptCache.current = prompt;
+		}
+
+		imageCache.current = image;
+	}, [image, prompt]);
 
 	useEffect(() => {
 		async function handleSave(event: KeyboardEvent) {

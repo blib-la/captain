@@ -35,6 +35,11 @@ export type VectorStoreDocument = {
 		action?: string;
 
 		/**
+		 * The type of entry that is stored, e.g. app, image, audio.
+		 */
+		type: string;
+
+		/**
 		 * An optional URL or path to an icon that represents the document or its action visually. Used in UI elements to enhance user experience.
 		 */
 		icon?: string;

@@ -167,7 +167,10 @@ export function LivePainting() {
 				<StyledButtonWrapper>
 					<Box sx={{ flex: 1 }} />
 					{/* Save the image to disk (includes a control + s listener) */}
-					<SaveButton image={image} />
+					<SaveButton
+						image={image}
+						prompt={[prompt, illustrationStyles[illustrationStyle]].join(", ")}
+					/>
 				</StyledButtonWrapper>
 			</StyledStickyHeader>
 			{/* Main Area includes the drawing and rendering area */}
