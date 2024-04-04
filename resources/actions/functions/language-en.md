@@ -8,7 +8,7 @@ language: en
 description: "Instantly switch the application's language to English for a seamless user experience."
 dateCreated: 2024-04-04T16:15:44.647976
 creatorID: Blibla
-icon: FlagEn
+icon: Flag
 iconColor: "#717676"
 ---
 
