@@ -9,7 +9,6 @@ import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import Sheet from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
 import { evaluate } from "mathjs";
-import { useTranslation } from "next-i18next";
 import type { RefObject } from "react";
 import { useEffect, useRef, useState } from "react";
 
@@ -46,16 +45,12 @@ export function useAutoSizerWindow<T extends HTMLElement>(reference: RefObject<T
 }
 
 export default function Page() {
-	const {
-		i18n: { language },
-	} = useTranslation();
 	const frameReference = useRef<HTMLDivElement | null>(null);
 	const promptReference = useRef<HTMLInputElement | null>(null);
 	const [value, setValue] = useState("");
 	const [evaluationResult, setEvaluationResult] = useState("");
 	const suggestions = useVectorStore(value, {
-		//
-		// filter: { must: [{ key: "language", match: { value: language } }] },
+		filter: { must_not: [{ key: "type", match: { value: "image" } }] },
 	});
 
 	useAutoFocusIPC(promptReference);

@@ -10,6 +10,7 @@ import {
 } from "@captn/utils/constants";
 import { BrowserWindow, dialog, ipcMain } from "electron";
 import { download } from "electron-dl";
+import { execa } from "execa";
 import { v4 } from "uuid";
 
 import { buildKey } from "#/build-key";
@@ -84,6 +85,14 @@ ipcMain.handle(buildKey([ID.FILE], { prefix: "path:", suffix: ":get" }), async (
 	}
 });
 
+async function writePngMetaData(filePath: string, description: string) {
+	const pythonBinaryPath = getCaptainData("python-embedded/python.exe");
+	const scriptPath = getDirectory("python/png/main.py");
+	const scriptArguments = ["--image_path", filePath, "--description", description];
+
+	return execa(pythonBinaryPath, ["-u", scriptPath, ...scriptArguments]);
+}
+
 /**
  * Handles an IPC event to write content to a file at a specified subpath within the application's data directory.
  * This handler determines the file's directory and type, ensures the directory exists (creating it if necessary),
@@ -122,6 +131,14 @@ ipcMain.handle(
 
 		// Write the file content
 		await fsp.writeFile(filePath, content, options);
+		if (fileType === "image" && context) {
+			try {
+				await writePngMetaData(filePath, context);
+			} catch (error) {
+				console.log(error);
+			}
+		}
+
 		const id = v4();
 		try {
 			const vectorStore = VectorStore.getInstance;
