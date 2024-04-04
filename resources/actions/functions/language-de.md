@@ -1,12 +1,15 @@
 ---
-id: userStore.set
+id: "userStore.set"
 label: Switch to German
-icon: flagDe
 action: function
 parameters:
     language: de
 language: en    
 description: "Instantly switch the application's language to German for a seamless user experience."
+dateCreated: 2024-04-04T16:15:44.647976
+creatorID: Blibla
+icon: FlagDe
+iconColor: "#717676"
 ---
 
 # Switch Application Language to English

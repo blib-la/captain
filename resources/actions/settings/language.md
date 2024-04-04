@@ -3,6 +3,13 @@ id: settings
 label: Language Settings
 action: focus:language-settings
 language: en
+icon: Settings
+fileId: "settings:language"
+type: "app:shortcut"
+path: /en/core/settings
+dateCreated: 2024-04-04T16:15:44.647976
+creatorID: Blibla
+iconColor: "#717676"
 ---
 
 # Language Settings

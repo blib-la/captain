@@ -1,12 +1,15 @@
 ---
-id: userStore.set
+id: "userStore.set"
 label: Switch to Light mode
-icon: sun
 action: function
 parameters:
     theme: light
 language: en
 description: "Change your app's theme to Light mode with one click."
+dateCreated: 2024-04-04T16:15:44.647976
+creatorID: Blibla
+icon: Sun
+iconColor: "#717676"
 ---
 
 # Switch to Light Mode

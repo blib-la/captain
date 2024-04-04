@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
+import { DynamicIcon } from "@/atoms/icons/dynamic";
 import { Logo } from "@/atoms/logo";
 import { Captain } from "@/atoms/logo/captain";
 import { handleCaptainAction } from "@/ions/handlers/action";
@@ -53,7 +54,8 @@ export default function Page() {
 	const [value, setValue] = useState("");
 	const [evaluationResult, setEvaluationResult] = useState("");
 	const suggestions = useVectorStore(value, {
-		filter: { must: [{ key: "language", match: { value: language } }] },
+		//
+		// filter: { must: [{ key: "language", match: { value: language } }] },
 	});
 
 	useAutoFocusIPC(promptReference);
@@ -207,7 +209,13 @@ export default function Page() {
 										}}
 									>
 										<ListItemDecorator>
-											<Logo sx={{ color: "currentColor" }} />
+											{suggestion.payload.icon ? (
+												<DynamicIcon icon={suggestion.payload.icon} />
+											) : (
+												<Logo
+													sx={{ fontSize: 24, color: "currentColor" }}
+												/>
+											)}
 										</ListItemDecorator>
 										<ListItemContent>
 											<Typography level="h4" component="div">

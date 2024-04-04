@@ -320,6 +320,11 @@ export async function main() {
 				apps.core.on("close", () => {
 					apps.core = null;
 				});
+
+				if (apps.core.isMinimized()) {
+					apps.core.restore();
+				}
+
 				apps.core.focus();
 			} else {
 				apps[appId] ||= await (isCoreApp(appId)
@@ -329,6 +334,10 @@ export async function main() {
 					apps[appId] = null;
 					// TODO Needs to ensure that all processes opened by this window are closed
 				});
+				if (apps[appId]!.isMinimized()) {
+					apps[appId]!.restore();
+				}
+
 				apps[appId]!.focus();
 			}
 		}

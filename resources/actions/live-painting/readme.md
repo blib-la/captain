@@ -20,7 +20,7 @@ iconColor: "#D3410C"
 ---
 
 I want to draw an image with AI.
-Make art from my sketch.
+Make live art from my sketch.
 Create an image from my doodle.
 Let's live paint a picture together.
 Turn my drawing into digital art.
@@ -36,6 +36,6 @@ I’m looking to design art with AI.
 Draw a masterpiece with AI input.
 How to make a painting with AI collaboration?
 I desire to produce art in fantasy style with AI.
-Let me paint digitally with AI suggestions.
+Let me paint digitally with live AI generations.
 Craft an image based on my basic doodles.
 I aim to live paint with AI enhancements.
