@@ -21,7 +21,6 @@ ipcMain.on(
 	async (_event, message: DownloadMessage | DownloadQueueMessage) => {
 		switch (message.action) {
 			case "download": {
-				console.log("REQUEST DOWNLOAD", message.payload);
 				downloadManager.addToQueue(message.payload);
 				break;
 			}

@@ -58,7 +58,7 @@ ipcMain.on(
 		const parsedFiles = fileContents
 			.map(({ content, path: path_, name }) => {
 				const json = JSON.parse(content);
-				console.log(json);
+
 				return {
 					json,
 					path: path_,

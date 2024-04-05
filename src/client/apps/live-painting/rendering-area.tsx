@@ -11,7 +11,6 @@ export function RenderingArea() {
 
 	useSDK<unknown, string>(APP_ID, {
 		onMessage(message) {
-			console.log(message);
 			switch (message.action) {
 				case "livePainting:generated": {
 					setImage(message.payload);

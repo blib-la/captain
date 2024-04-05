@@ -53,7 +53,6 @@ export function LivePainting() {
 
 	const { send } = useSDK<unknown, string>(APP_ID, {
 		onMessage(message) {
-			console.log(message);
 			switch (message.action) {
 				case "livePainting:started": {
 					setIsRunning(true);

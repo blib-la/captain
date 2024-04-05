@@ -249,7 +249,6 @@ export function SaveButton({ image, prompt }: { image: string; prompt: string })
 	const { writeFile } = useSDK<unknown, string>(APP_ID, {});
 	const saveImage = useCallback(async () => {
 		const id = v4();
-		console.log(promptCache.current);
 		await writeFile(
 			`images/${id}.png`,
 			image.split(";base64,").pop()!,

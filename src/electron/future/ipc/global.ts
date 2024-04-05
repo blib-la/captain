@@ -256,7 +256,6 @@ ipcMain.handle(
 				overwrite: true,
 				directory: getCaptainDownloads(),
 				onProgress(progress) {
-					console.log(progress);
 					if (apps[item.appId]) {
 						apps[item.appId]?.webContents.send("download", progress);
 					}

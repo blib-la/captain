@@ -78,7 +78,6 @@ export function Story() {
 
 	useSDK<unknown, { done: boolean; story: string }>(APP_ID, {
 		async onMessage(message) {
-			console.log(message);
 			setStory(message.payload.story);
 			if (message.payload.done) {
 				setGenerating(false);
@@ -96,10 +95,8 @@ export function Story() {
 			}
 		},
 	});
-	console.log("r");
 
 	useEffect(() => {
-		console.log({ images_ });
 		setImages(
 			images_.map(({ id, payload: { filePath } }) => ({
 				id: id!.toString(),

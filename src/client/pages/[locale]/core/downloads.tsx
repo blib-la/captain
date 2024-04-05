@@ -99,7 +99,6 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 		}
 
 		const unsubscribeDownloads = window.ipc.on(DOWNLOADS_MESSAGE_KEY, message => {
-			console.log(message.action, message.payload.label, message.payload.percent);
 			switch (message.action) {
 				case "getAll": {
 					setDownloads(

@@ -48,7 +48,6 @@ export function useVectorStore(query: string, { score_threshold, filter }: Searc
 		const unsubscribeResult = window.ipc.on(
 			buildKey([ID.VECTOR_STORE], { suffix: ":result" }),
 			data => {
-				console.log("Search result received:", data);
 				setResults(data);
 			}
 		);
@@ -83,7 +82,6 @@ export function useVectorScroll({ order_by, with_payload, filter }: ScrollOption
 		const unsubscribeResult = window.ipc.on(
 			buildKey([ID.VECTOR_STORE], { suffix: ":scrollResult" }),
 			data => {
-				console.log("Search result received:", data);
 				setResults(data);
 			}
 		);

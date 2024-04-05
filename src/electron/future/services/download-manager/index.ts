@@ -99,7 +99,6 @@ export class DownloadManager {
 		const isDuplicate = this.downloadQueue.some(existingItem => existingItem.id === item.id);
 		if (!isDuplicate) {
 			this.downloadQueue.push(item);
-			console.log("DOWNLOAD QUEUE", this.downloadQueue.length, item);
 			sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
 				action: DownloadEvent.QUEUED,
 				payload: item,
@@ -203,8 +202,7 @@ export class DownloadManager {
 						});
 					}
 				},
-				onProgress: ({ percent, transferredBytes, totalBytes }) => {
-					console.log(this.currentDownloads, percent);
+				onProgress({ percent, transferredBytes, totalBytes }) {
 					item.state = DownloadState.ACTIVE;
 					sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
 						action: DownloadEvent.PROGRESS,

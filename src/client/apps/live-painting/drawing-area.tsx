@@ -17,7 +17,6 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 
 	const { send } = useSDK<unknown, string>(APP_ID, {
 		onMessage(message) {
-			console.log(message);
 			switch (message.action) {
 				case "livePainting:generated": {
 					break;

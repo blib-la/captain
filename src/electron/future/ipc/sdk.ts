@@ -237,9 +237,6 @@ ipcMain.on(
 
 					promises.push(
 						clone(repository, destination, {
-							onProgress(progress) {
-								console.log(progress);
-							},
 							onCompleted() {
 								downloadsStore.set(repository, DownloadState.DONE);
 
@@ -309,14 +306,12 @@ ipcMain.on(
 								console.log(error);
 							},
 							onChunk(story) {
-								console.log(story);
 								event.sender.send(channel, {
 									action: "story:create",
 									payload: { story, done: false },
 								});
 							},
 							onDone(story) {
-								console.log(story);
 								event.sender.send(channel, {
 									action: "story:create",
 									payload: { story, done: true },

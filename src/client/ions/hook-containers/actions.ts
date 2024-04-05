@@ -17,11 +17,9 @@ export function ActionListeners() {
 
 	useEffect(() => {
 		const unsubscribeLanguage = window.ipc.on(USER_LANGUAGE_KEY, async (locale: string) => {
-			console.log("foo");
 			await changeLanguage(locale);
 		});
 		const unsubscribeTheme = window.ipc.on(USER_THEME_KEY, (mode: Mode) => {
-			console.log("bar");
 			setMode(mode);
 		});
 
