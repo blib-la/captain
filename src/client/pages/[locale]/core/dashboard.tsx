@@ -1,3 +1,4 @@
+import { useVectorScroll } from "@captn/react/use-vector-store";
 import Alert from "@mui/joy/Alert";
 import Box from "@mui/joy/Box";
 import List from "@mui/joy/List";
@@ -14,14 +15,13 @@ import { RequiredModelsAlert } from "@/apps/live-painting/required-models-alert"
 import { DynamicIcon } from "@/atoms/icons/dynamic";
 import { Logo } from "@/atoms/logo";
 import { handleCaptainAction } from "@/ions/handlers/action";
-import { useVectorScroll } from "@/ions/hooks/vector-store";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 import { getContrastColor } from "@/ions/utils/color";
 
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["common", "labels"]);
 
-	const items = useVectorScroll({
+	const { data: items } = useVectorScroll({
 		with_payload: true,
 		filter: { must: [{ key: "type", match: { value: "app" } }] },
 	});

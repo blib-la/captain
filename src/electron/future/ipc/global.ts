@@ -6,7 +6,9 @@ import {
 	WINDOW_CLOSE_KEY,
 	WINDOW_MAXIMIZE_KEY,
 	WINDOW_MINIMIZE_KEY,
+	VECTOR_STORE_SAVED_KEY,
 	DownloadState,
+	ERROR_KEY,
 } from "@captn/utils/constants";
 import { BrowserWindow, dialog, ipcMain } from "electron";
 import { download } from "electron-dl";
@@ -180,9 +182,9 @@ ipcMain.handle(
 
 			const operations = await vectorStore.upsert(VECTOR_STORE_COLLECTION, documents);
 
-			event.sender.send(buildKey([ID.VECTOR_STORE], { suffix: ":saved" }), operations);
+			event.sender.send(VECTOR_STORE_SAVED_KEY, operations);
 		} catch (error) {
-			event.sender.send(buildKey([ID.VECTOR_STORE], { suffix: ":error" }), error);
+			event.sender.send(ERROR_KEY, error);
 		}
 
 		return { filePath, fileType };

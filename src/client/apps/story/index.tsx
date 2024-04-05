@@ -1,5 +1,6 @@
 import { CustomScrollbars } from "@captn/joy/custom-scrollbars";
 import { useSDK } from "@captn/react/use-sdk";
+import { useVectorScroll } from "@captn/react/use-vector-store";
 import { localFile } from "@captn/utils/string";
 import ClearIcon from "@mui/icons-material/Clear";
 import Box from "@mui/joy/Box";
@@ -21,7 +22,6 @@ import { Markdown } from "./markdown";
 import { StoryForm } from "./story-form";
 
 import { extractH1Headings } from "#/string";
-import { useVectorScroll } from "@/ions/hooks/vector-store";
 import { replaceImagePlaceholders } from "@/ions/utils/string";
 import { Lottie } from "@/organisms/lottie";
 
@@ -69,7 +69,7 @@ export function Story() {
 		[locale, selectedImages]
 	);
 
-	const images_ = useVectorScroll({
+	const { data: images_ } = useVectorScroll({
 		with_payload: true,
 		filter: { must: [{ key: "type", match: { value: "image" } }] },
 	});

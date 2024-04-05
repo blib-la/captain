@@ -1,3 +1,4 @@
+import { useVectorStore } from "@captn/react/use-vector-store";
 import Box from "@mui/joy/Box";
 import Chip, { type ChipProps } from "@mui/joy/Chip";
 import Input from "@mui/joy/Input";
@@ -19,7 +20,6 @@ import { Logo } from "@/atoms/logo";
 import { Captain } from "@/atoms/logo/captain";
 import { handleCaptainAction } from "@/ions/handlers/action";
 import { useResizeObserver } from "@/ions/hooks/resize-observer";
-import { useVectorStore } from "@/ions/hooks/vector-store";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 
 export function useAutoFocusIPC<T extends HTMLElement>(reference: RefObject<T>) {
@@ -49,7 +49,7 @@ export default function Page() {
 	const promptReference = useRef<HTMLInputElement | null>(null);
 	const [value, setValue] = useState("");
 	const [evaluationResult, setEvaluationResult] = useState("");
-	const suggestions = useVectorStore(value, {
+	const { data: suggestions } = useVectorStore(value, {
 		filter: {
 			must_not: [
 				{ key: "type", match: { value: "image" } },
