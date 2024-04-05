@@ -70,7 +70,7 @@ export function useVectorStore(query: string, { score_threshold, filter }: Searc
 
 export function useVectorScroll({ order_by, with_payload, filter }: ScrollOptions = {}) {
 	const [results, setResults] = useState<VectorStoreResponse[]>([]); // State to store the search results
-	const filter_ = useObject(filter, 100);
+	const filter_ = useObject(filter, 1000);
 
 	useEffect(() => {
 		// Only proceed with a non-empty query

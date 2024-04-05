@@ -63,6 +63,11 @@ export type VectorStoreDocument = {
 		 * The label or title of the document. Used in search results or UI elements to display a human-readable name for the document.
 		 */
 		label: string;
+
+		/**
+		 * The absolute path to the file.
+		 */
+		filePath?: string;
 	};
 };
 

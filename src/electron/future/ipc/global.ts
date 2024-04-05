@@ -147,7 +147,7 @@ ipcMain.handle(
 				{
 					id,
 					content: context ?? content,
-					payload: { id, label: fileType, type: fileType, language: "en" },
+					payload: { id, label: fileType, type: fileType, language: "en", filePath },
 				},
 			]);
 

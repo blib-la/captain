@@ -65,6 +65,7 @@ export async function populateFromDocuments() {
 					type: "image",
 					language: "en",
 					label: "Image",
+					filePath: imagePath,
 				},
 			};
 		})
