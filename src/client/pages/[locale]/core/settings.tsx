@@ -93,6 +93,11 @@ export function OpenAISettings() {
 								fullWidth
 								aria-label={t("common:openAiApiKey")}
 								value={openAiApiKey}
+								slotProps={{
+									input: {
+										"data-captainid": "openai-api-key",
+									},
+								}}
 								onBlur={event => {
 									window.ipc.send(
 										buildKey([ID.KEYS], { suffix: ":set-openAiApiKey" }),
