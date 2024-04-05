@@ -50,7 +50,12 @@ export default function Page() {
 	const [value, setValue] = useState("");
 	const [evaluationResult, setEvaluationResult] = useState("");
 	const suggestions = useVectorStore(value, {
-		filter: { must_not: [{ key: "type", match: { value: "image" } }] },
+		filter: {
+			must_not: [
+				{ key: "type", match: { value: "image" } },
+				{ key: "type", match: { value: "markdown" } },
+			],
+		},
 	});
 
 	useAutoFocusIPC(promptReference);

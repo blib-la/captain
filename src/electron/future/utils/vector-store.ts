@@ -15,9 +15,12 @@ import { globby } from "globby";
 import matter from "gray-matter";
 
 import { VECTOR_STORE_COLLECTION } from "#/constants";
+import { extractH1Headings } from "#/string";
+import type { VectorStoreDocument } from "#/types/vector-store";
 import { CustomHuggingFaceTransformersEmbeddings } from "@/langchain/custom-hugging-face-transformers-embeddings";
 import { VectorStore } from "@/services/vector-store";
 import { getCaptainData, getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
+import { splitDocument } from "@/utils/split-documents";
 
 export async function initialize() {
 	env.localModelPath = getCaptainDownloads("llm/embeddings");
@@ -42,6 +45,10 @@ export async function reset() {
 export async function populateFromDocuments() {
 	const imagePaths = await globby(["**/*.png"], {
 		cwd: getCaptainData("files/images"),
+		absolute: true,
+	});
+	const storyPaths = await globby(["**/*.md"], {
+		cwd: getCaptainData("files/stories"),
 		absolute: true,
 	});
 	const documentPaths = await globby(["**/*.md"], {
@@ -70,6 +77,26 @@ export async function populateFromDocuments() {
 			};
 		})
 	);
+	const stories_: VectorStoreDocument[] = [];
+	for (const storyPath of storyPaths) {
+		const content = await fsp.readFile(storyPath, "utf8");
+		const { dir } = path.parse(storyPath);
+		const chunks = await splitDocument("md", content, { chunkSize: 200, chunkOverlap: 10 });
+		for (const chunk of chunks) {
+			stories_.push({
+				content: chunk,
+				payload: {
+					id: dir.replaceAll("\\", "/").split("/").pop()!,
+					label: extractH1Headings(content)[0] || "Story",
+					type: "markdown",
+					language: "en",
+					filePath: storyPath,
+				},
+			});
+		}
+	}
+
+	const stories = await Promise.all(stories_);
 
 	const documents = await Promise.all(
 		[...documentPaths, ...corePaths].map(async documentPath => {
@@ -94,5 +121,5 @@ export async function populateFromDocuments() {
 	);
 	const vectorStore = VectorStore.getInstance;
 
-	return vectorStore.upsert(VECTOR_STORE_COLLECTION, [...documents, ...images]);
+	return vectorStore.upsert(VECTOR_STORE_COLLECTION, [...documents, ...images, ...stories]);
 }

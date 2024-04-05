@@ -16,12 +16,14 @@ import { v4 } from "uuid";
 import { buildKey } from "#/build-key";
 import { VECTOR_STORE_COLLECTION } from "#/constants";
 import { ID } from "#/enums";
-import { getFileType } from "#/string";
+import { extractH1Headings, getFileType } from "#/string";
+import type { VectorStoreDocument } from "#/types/vector-store";
 import { apps } from "@/apps";
 import { VectorStore } from "@/services/vector-store";
 import { inventoryStore, downloadsStore } from "@/stores";
 import { pushToStore } from "@/stores/utils";
 import { getCaptainData, getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
+import { splitDocument } from "@/utils/split-documents";
 import { unpack } from "@/utils/unpack";
 
 ipcMain.on(WINDOW_CLOSE_KEY, () => {
@@ -142,14 +144,41 @@ ipcMain.handle(
 		const id = v4();
 		try {
 			const vectorStore = VectorStore.getInstance;
-
-			const operations = await vectorStore.upsert(VECTOR_STORE_COLLECTION, [
-				{
-					id,
+			let label = fileType;
+			const documents: VectorStoreDocument[] = [];
+			if (fileType === "markdown") {
+				// For markdown, we use the H1 if it exists
+				label = extractH1Headings(content)[0] || fileType;
+				const chunks = await splitDocument("md", content, {
+					chunkSize: 200,
+					chunkOverlap: 10,
+				});
+				for (const chunk of chunks) {
+					documents.push({
+						content: chunk,
+						payload: {
+							id,
+							label,
+							type: "markdown",
+							language: "en",
+							filePath,
+						},
+					});
+				}
+			} else {
+				documents.push({
 					content: context ?? content,
-					payload: { id, label: fileType, type: fileType, language: "en", filePath },
-				},
-			]);
+					payload: {
+						id,
+						label,
+						type: fileType,
+						language: "en",
+						filePath,
+					},
+				});
+			}
+
+			const operations = await vectorStore.upsert(VECTOR_STORE_COLLECTION, documents);
 
 			event.sender.send(buildKey([ID.VECTOR_STORE], { suffix: ":saved" }), operations);
 		} catch (error) {
