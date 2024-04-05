@@ -33,11 +33,12 @@ const nextConfig = {
 	images: {
 		unoptimized: true,
 	},
+	modularizeImports: {
+		"@mui/icons-material": {
+			transform: "@mui/icons-material/{{member}}",
+		},
+	},
 	webpack(config, { isServer }) {
-		if (!isServer) {
-			// Config.target = "electron-renderer"; // <-- this causes the issue
-		}
-
 		config.module.rules = [...config.module.rules, ...rules];
 		config.resolve.extensions = [...config.resolve.extensions, ".ts", ".tsx"];
 		return config;
