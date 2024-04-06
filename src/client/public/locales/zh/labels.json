@@ -1,6 +1,9 @@
 {
   "accessibility": "可访问性",
+  "action": "操作",
   "analyzingImages": "正在分析您的图片",
+  "app": "应用",
+  "art": "艺术",
   "artStyle": "艺术风格",
   "back": "返回",
   "brushSize": "笔刷大小",
@@ -16,6 +19,7 @@
   "downloadedOf": "已下载 {{downloaded}} 个，共 {{downloads}} 个",
   "downloading": "下载中",
   "downloads": "下载",
+  "explorer": "资源管理器",
   "finishing": "完成",
   "formLabel": {
     "characters": "角色",
@@ -34,6 +38,7 @@
     "manga": "漫画",
     "realism": "现实主义"
   },
+  "image": "图片",
   "installationSuccess": "安装成功",
   "length": {
     "long": "长",
@@ -41,6 +46,7 @@
     "short": "短"
   },
   "livePainting": "实时绘画",
+  "markdown": "Markdown",
   "maximize": "最大化",
   "minimize": "最小化",
   "mood": {
@@ -66,11 +72,13 @@
   "save": "保存",
   "saveImage": "保存图片",
   "saved": "已保存",
+  "seacrh": "搜索",
   "security": "安全",
   "sideBySide": "并排",
   "start": "开始",
   "starting": "船长即将启动",
   "stop": "停止",
+  "story": "故事",
   "style": {
     "adventure": "冒险",
     "custom": "自定义",
@@ -79,5 +87,7 @@
     "sciFi": "科幻"
   },
   "submitButtonText": "提交",
+  "text": "文本",
+  "undefined": "未知",
   "unpacking": "解压中"
 }

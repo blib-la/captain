@@ -5,7 +5,7 @@ action: focus:language-settings
 language: en
 icon: Settings
 fileId: "settings:language"
-type: "app:shortcut"
+type: "app-shortcut"
 path: /en/core/settings
 dateCreated: 2024-04-04T16:15:44.647976
 creatorID: Blibla

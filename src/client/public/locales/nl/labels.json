@@ -1,6 +1,9 @@
 {
   "accessibility": "Toegankelijkheid",
+  "action": "Actie",
   "analyzingImages": "Jouw afbeeldingen analyseren",
+  "app": "App",
+  "art": "Kunst",
   "artStyle": "Kunststijl",
   "back": "Terug",
   "brushSize": "Penseelgrootte",
@@ -16,6 +19,7 @@
   "downloadedOf": "{{downloaded}} van {{downloads}} gedownload",
   "downloading": "Downloaden",
   "downloads": "Downloads",
+  "explorer": "Verkenner",
   "finishing": "Afronding",
   "formLabel": {
     "characters": "Personages",
@@ -34,6 +38,7 @@
     "manga": "Manga",
     "realism": "Realisme"
   },
+  "image": "Afbeelding",
   "installationSuccess": "Installatie voltooid",
   "length": {
     "long": "Lang",
@@ -41,6 +46,7 @@
     "short": "Kort"
   },
   "livePainting": "Live Schilderen",
+  "markdown": "Markdown",
   "maximize": "Maximaliseren",
   "minimize": "Minimaliseren",
   "mood": {
@@ -66,11 +72,13 @@
   "save": "Opslaan",
   "saveImage": "Afbeelding opslaan",
   "saved": "Opgeslagen",
+  "seacrh": "Zoeken",
   "security": "Beveiliging",
   "sideBySide": "Zij aan Zij",
   "start": "Start",
   "starting": "Captain wordt gestart",
   "stop": "Stop",
+  "story": "Verhaal",
   "style": {
     "adventure": "Avontuur",
     "custom": "Aangepast",
@@ -79,5 +87,7 @@
     "sciFi": "Sciencefiction"
   },
   "submitButtonText": "Indienen",
+  "text": "Tekst",
+  "undefined": "Onbekend",
   "unpacking": "Uitpakken"
 }

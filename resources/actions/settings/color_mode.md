@@ -4,7 +4,7 @@ label: Color Mode Settings
 action: focus:color-mode-settings
 language: en
 fileId: "settings:color-mode"
-type: "app:shortcut"
+type: "app-shortcut"
 path: /en/core/settings
 dateCreated: 2024-04-04T16:15:44.647976
 creatorID: Blibla

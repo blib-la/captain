@@ -5,6 +5,7 @@ action: function
 parameters:
     theme: light
 language: en
+type: function
 description: "Change your app's theme to Light mode with one click."
 dateCreated: 2024-04-04T16:15:44.647976
 creatorID: Blibla

@@ -23,7 +23,13 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 
 	const { data: items } = useVectorScroll({
 		with_payload: true,
-		filter: { must: [{ key: "type", match: { value: "app" } }] },
+		filter: {
+			must: [{ key: "type", match: { value: "app" } }],
+			must_not: [
+				{ key: "id", match: { value: "dashboard" } },
+				{ key: "id", match: { value: "settings" } },
+			],
+		},
 	});
 
 	return (

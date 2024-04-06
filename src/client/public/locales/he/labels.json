@@ -1,6 +1,9 @@
 {
   "accessibility": "נגישות",
+  "action": "פעולה",
   "analyzingImages": "מנתח תמונות",
+  "app": "אפליקציה",
+  "art": "אמנות",
   "artStyle": "סגנון אומנותי",
   "back": "חזרה",
   "brushSize": "גודל מברשת",
@@ -16,6 +19,7 @@
   "downloadedOf": "הורדו {{downloaded}} מתוך {{downloads}}",
   "downloading": "מוריד",
   "downloads": "הורדות",
+  "explorer": "מציאן",
   "finishing": "סיום",
   "formLabel": {
     "characters": "דמויות",
@@ -34,6 +38,7 @@
     "manga": "מנגה",
     "realism": "ריאליזם"
   },
+  "image": "תמונה",
   "installationSuccess": "ההתקנה הושלמה",
   "length": {
     "long": "ארוך",
@@ -41,6 +46,7 @@
     "short": "קצר"
   },
   "livePainting": "ציור חי",
+  "markdown": "Markdown",
   "maximize": "הגדל",
   "minimize": "מזער",
   "mood": {
@@ -66,11 +72,13 @@
   "save": "שמור",
   "saveImage": "שמור תמונה",
   "saved": "נשמר",
+  "seacrh": "חיפוש",
   "security": "ביטחון",
   "sideBySide": "צד לצד",
   "start": "התחל",
   "starting": "הקפטן מתחיל",
   "stop": "עצור",
+  "story": "סיפור",
   "style": {
     "adventure": "הרפתקה",
     "custom": "מותאם אישית",
@@ -79,5 +87,7 @@
     "sciFi": "מדע בדיוני"
   },
   "submitButtonText": "שלח",
+  "text": "טקסט",
+  "undefined": "לא ידוע",
   "unpacking": "פותח"
 }

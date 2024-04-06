@@ -1,6 +1,9 @@
 {
   "accessibility": "アクセシビリティ",
+  "action": "アクション",
   "analyzingImages": "画像を分析中",
+  "app": "アプリ",
+  "art": "アート",
   "artStyle": "アートスタイル",
   "back": "戻る",
   "brushSize": "ブラシサイズ",
@@ -16,6 +19,7 @@
   "downloadedOf": "{{downloaded}} / {{downloads}} ダウンロード済み",
   "downloading": "ダウンロード中",
   "downloads": "ダウンロード",
+  "explorer": "エクスプローラー",
   "finishing": "完成",
   "formLabel": {
     "characters": "キャラクター",
@@ -34,6 +38,7 @@
     "manga": "マンガ",
     "realism": "リアリズム"
   },
+  "image": "画像",
   "installationSuccess": "インストール完了",
   "length": {
     "long": "長編",
@@ -41,6 +46,7 @@
     "short": "短編"
   },
   "livePainting": "ライブペインティング",
+  "markdown": "Markdown",
   "maximize": "最大化",
   "minimize": "最小化",
   "mood": {
@@ -66,11 +72,13 @@
   "save": "保存",
   "saveImage": "画像を保存",
   "saved": "保存済み",
+  "seacrh": "検索",
   "security": "セキュリティ",
   "sideBySide": "並列",
   "start": "開始",
   "starting": "キャプテンがスタートします",
   "stop": "停止",
+  "story": "物語",
   "style": {
     "adventure": "冒険",
     "custom": "カスタム",
@@ -79,5 +87,7 @@
     "sciFi": "SF"
   },
   "submitButtonText": "送信",
+  "text": "テキスト",
+  "undefined": "不明",
   "unpacking": "解凍中"
 }

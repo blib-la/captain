@@ -1,6 +1,9 @@
 {
   "accessibility": "Dostępność",
+  "action": "Akcja",
   "analyzingImages": "nalizowanie Obrazów",
+  "app": "Aplikacja",
+  "art": "Sztuka",
   "artStyle": "Styl artystyczny",
   "back": "Wstecz",
   "brushSize": "Rozmiar Pędzla",
@@ -16,6 +19,7 @@
   "downloadedOf": "Pobrano {{downloaded}} z {{downloads}}",
   "downloading": "Pobieranie",
   "downloads": "Pobrania",
+  "explorer": "Eksplorator",
   "finishing": "Zakończenie",
   "formLabel": {
     "characters": "Postacie",
@@ -34,6 +38,7 @@
     "manga": "Manga",
     "realism": "Realizm"
   },
+  "image": "Obraz",
   "installationSuccess": "Instalacja zakończona",
   "length": {
     "long": "Długa",
@@ -41,6 +46,7 @@
     "short": "Krótka"
   },
   "livePainting": "Malowanie na Żywo",
+  "markdown": "Markdown",
   "maximize": "Zmaksymalizuj",
   "minimize": "Zminimalizuj",
   "mood": {
@@ -66,11 +72,13 @@
   "save": "Zapisz",
   "saveImage": "Zapisz obraz",
   "saved": "Zapisano",
+  "seacrh": "Szukaj",
   "security": "Bezpieczeństwo",
   "sideBySide": "Obok Siebie",
   "start": "Start",
   "starting": "Kapitan jest uruchamiany",
   "stop": "Stop",
+  "story": "Historia",
   "style": {
     "adventure": "Przygoda",
     "custom": "Niestandardowe",
@@ -79,5 +87,7 @@
     "sciFi": "Science Fiction"
   },
   "submitButtonText": "Prześlij",
+  "text": "Tekst",
+  "undefined": "Nieznany",
   "unpacking": "Rozpakowywanie"
 }

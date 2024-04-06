@@ -1,6 +1,9 @@
 {
   "accessibility": "Accessibilità",
+  "action": "Azione",
   "analyzingImages": "Analizzando le tue immagini",
+  "app": "App",
+  "art": "Arte",
   "artStyle": "Stile artistico",
   "back": "Indietro",
   "brushSize": "Dimensione Pennello",
@@ -16,6 +19,7 @@
   "downloadedOf": "Scaricati {{downloaded}} di {{downloads}}",
   "downloading": "Scaricamento",
   "downloads": "Download",
+  "explorer": "Esploratore",
   "finishing": "Conclusione",
   "formLabel": {
     "characters": "Personaggi",
@@ -34,6 +38,7 @@
     "manga": "Manga",
     "realism": "Realismo"
   },
+  "image": "Immagine",
   "installationSuccess": "Installazione completata",
   "length": {
     "long": "Lungo",
@@ -41,6 +46,7 @@
     "short": "Breve"
   },
   "livePainting": "Pittura Dal Vivo",
+  "markdown": "Markdown",
   "maximize": "Massimizza",
   "minimize": "Minimizza",
   "mood": {
@@ -66,11 +72,13 @@
   "save": "Salva",
   "saveImage": "Salva immagine",
   "saved": "Salvato",
+  "seacrh": "Cerca",
   "security": "Sicurezza",
   "sideBySide": "Fianco a Fianco",
   "start": "Avvia",
   "starting": "Il capitano sta iniziando",
   "stop": "Ferma",
+  "story": "Storia",
   "style": {
     "adventure": "Avventura",
     "custom": "Personalizzato",
@@ -79,5 +87,7 @@
     "sciFi": "Fantascienza"
   },
   "submitButtonText": "Invia",
+  "text": "Testo",
+  "undefined": "Sconosciuto",
   "unpacking": "Estrazione"
 }

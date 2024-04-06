@@ -4,18 +4,31 @@ import { createElement } from "react";
 
 const Brush = dynamic(() => import("@mui/icons-material/Brush"));
 const DarkMode = dynamic(() => import("@mui/icons-material/DarkMode"));
+const Dashboard = dynamic(() => import("@mui/icons-material/Dashboard"));
 const Flag = dynamic(() => import("@mui/icons-material/Flag"));
+const Folder = dynamic(() => import("@mui/icons-material/Folder"));
+const Image = dynamic(() => import("@mui/icons-material/Image"));
 const LightMode = dynamic(() => import("@mui/icons-material/LightMode"));
+const TextSnippet = dynamic(() => import("@mui/icons-material/TextSnippet"));
 const MenuBook = dynamic(() => import("@mui/icons-material/MenuBook"));
 const Settings = dynamic(() => import("@mui/icons-material/Settings"));
+const QuestionMark = dynamic(() => import("@mui/icons-material/QuestionMark"));
 
 const iconCache: Record<string, any> = {
 	Brush,
 	DarkMode,
+	Dashboard,
 	Flag,
+	Folder,
+	Image,
 	LightMode,
 	MenuBook,
+	QuestionMark,
 	Settings,
+	TextSnippet,
+	markdown: TextSnippet,
+	image: Image,
+	none: QuestionMark,
 };
 
 export function DynamicIcon({ icon, ...rest }: { icon: string } & SvgIconProps) {

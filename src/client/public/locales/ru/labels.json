@@ -1,6 +1,9 @@
 {
   "accessibility": "Доступность",
+  "action": "Действие",
   "analyzingImages": "Анализ изображений",
+  "app": "Приложение",
+  "art": "Искусство",
   "artStyle": "Стиль искусства",
   "back": "Назад",
   "brushSize": "Размер Кисти",
@@ -16,6 +19,7 @@
   "downloadedOf": "Загружено {{downloaded}} из {{downloads}}",
   "downloading": "Загрузка",
   "downloads": "Загрузки",
+  "explorer": "Проводник",
   "finishing": "Завершение",
   "formLabel": {
     "characters": "Персонажи",
@@ -34,6 +38,7 @@
     "manga": "Манга",
     "realism": "Реализм"
   },
+  "image": "Изображение",
   "installationSuccess": "Установка завершена",
   "length": {
     "long": "Длинная",
@@ -41,6 +46,7 @@
     "short": "Короткая"
   },
   "livePainting": "Живая Живопись",
+  "markdown": "Markdown",
   "maximize": "Развернуть",
   "minimize": "Свернуть",
   "mood": {
@@ -66,11 +72,13 @@
   "save": "Сохранить",
   "saveImage": "Сохранить изображение",
   "saved": "Сохранено",
+  "seacrh": "Поиск",
   "security": "Безопасность",
   "sideBySide": "Бок о Бок",
   "start": "Старт",
   "starting": "Капитан запускается",
   "stop": "Стоп",
+  "story": "История",
   "style": {
     "adventure": "Приключение",
     "custom": "Особенный",
@@ -79,5 +87,7 @@
     "sciFi": "Научная фантастика"
   },
   "submitButtonText": "Отправить",
+  "text": "Текст",
+  "undefined": "Неизвестно",
   "unpacking": "Распаковка"
 }

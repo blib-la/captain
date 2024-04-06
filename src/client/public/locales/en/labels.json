@@ -1,6 +1,9 @@
 {
   "accessibility": "Accessibility",
+  "action": "Action",
   "analyzingImages": "Analyzing Your Images",
+  "app": "App",
+  "art": "Art",
   "artStyle": "Art Style",
   "back": "Back",
   "brushSize": "Brush Size",
@@ -16,6 +19,7 @@
   "downloadedOf": "Downloaded {{downloaded}} of {{downloads}}",
   "downloading": "Downloading",
   "downloads": "Downloads",
+  "explorer": "Explorer",
   "finishing": "Finishing",
   "formLabel": {
     "characters": "Characters",
@@ -34,6 +38,7 @@
     "manga": "Manga",
     "realism": "Realism"
   },
+  "image": "Image",
   "installationSuccess": "Installation complete",
   "length": {
     "long": "Long",
@@ -41,6 +46,7 @@
     "short": "Short"
   },
   "livePainting": "Live Painting",
+  "markdown": "Markdown",
   "maximize": "Maximize",
   "minimize": "Minimize",
   "mood": {
@@ -66,11 +72,13 @@
   "save": "Save",
   "saveImage": "Save Image",
   "saved": "Saved",
+  "seacrh": "Search",
   "security": "Security",
   "sideBySide": "Side by Side",
   "start": "Start",
   "starting": "Captain is starting",
   "stop": "Stop",
+  "story": "Story",
   "style": {
     "adventure": "Adventure",
     "custom": "Custom",
@@ -79,5 +87,7 @@
     "sciFi": "Science Fiction"
   },
   "submitButtonText": "Submit",
+  "text": "Text",
+  "undefined": "Unknown",
   "unpacking": "Unpacking"
 }
