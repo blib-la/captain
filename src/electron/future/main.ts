@@ -1,10 +1,12 @@
 import fsp from "node:fs/promises";
 import path from "path";
-import url from "url";
 
 import { DownloadState } from "@captn/utils/constants";
 import type { BrowserWindow, BrowserWindowConstructorOptions } from "electron";
 import { app, globalShortcut, ipcMain, Menu, protocol, screen, Tray } from "electron";
+import serve from "electron-serve";
+import type electronServe from "electron-serve";
+import { globbySync } from "globby";
 
 import { version } from "../../../package.json";
 
@@ -185,8 +187,8 @@ async function createCoreAppWindow(id: string, options: BrowserWindowConstructor
 		frame: false,
 		...options,
 		webPreferences: {
-			preload: path.join(__dirname, "app-preload.js"),
 			...options.webPreferences,
+			preload: path.join(__dirname, "app-preload.js"),
 		},
 	});
 
@@ -204,30 +206,58 @@ async function createCoreWindow(options: BrowserWindowConstructorOptions = {}) {
 		frame: false,
 		...options,
 		webPreferences: {
-			preload: path.join(__dirname, "preload.js"),
 			...options.webPreferences,
+			preload: path.join(__dirname, "preload.js"),
 		},
 	});
 }
 
-async function createAppWindow(id: string, options: BrowserWindowConstructorOptions = {}) {
+// Discover all installed apps based on the presence of an 'index.html' in their respective directories.
+const installedApps = globbySync([`${getCaptainData("apps").replaceAll("\\", "/")}/*/index.html`]);
+
+const appLoaders: Record<string, electronServe.loadURL> = {};
+
+// Register a custom protocol for each installed app, allowing them to be served statically.
+for (const installedApp of installedApps) {
+	const { dir } = path.parse(installedApp);
+	const id = dir.split("/").pop()!;
+
+	appLoaders[id] = serve({
+		directory: getCaptainData(`apps`, id),
+		scheme: "captn",
+		hostname: id,
+		file: "index",
+	});
+}
+
+/**
+ * Asynchronously creates and opens a new application window for a specified app,
+ * loading its content via a custom, namespaced protocol.
+ *
+ * @param {string} id - The unique identifier for the app.
+ * @param {BrowserWindowConstructorOptions} [options={}] - Optional configuration options for the new BrowserWindow instance.
+ * @returns {Promise<BrowserWindow>} A promise that resolves to the created BrowserWindow instance.
+ */
+async function createAppWindow(
+	id: string,
+	options: BrowserWindowConstructorOptions = {}
+): Promise<BrowserWindow> {
+	console.log(id, { options });
 	const appWindow = await createWindow(id, {
 		frame: false,
 		...options,
 		webPreferences: {
-			preload: path.join(__dirname, "app-preload.js"),
 			...options.webPreferences,
+			preload: path.join(__dirname, "app-preload.js"),
 		},
 	});
 
-	const appPath = getCaptainData("apps", id, "index.html");
-	const appUrl = url.format({
-		pathname: appPath,
-		protocol: "file:",
-		slashes: true,
-	});
+	try {
+		await appLoaders[id](appWindow);
+	} catch (error) {
+		console.log(error);
+	}
 
-	await appWindow.loadURL(appUrl);
 	return appWindow;
 }
 
@@ -308,7 +338,14 @@ export async function main() {
 
 	ipcMain.on(
 		buildKey([ID.APP], { suffix: ":open" }),
-		async (_event, { appId, action }: { appId: string; action?: string }) => {
+		async (
+			_event,
+			{
+				appId,
+				action,
+				options,
+			}: { appId: string; action?: string; options?: BrowserWindowConstructorOptions }
+		) => {
 			if (isCoreView(appId)) {
 				// If the appId is a core view we need to handle it
 				apps.core ||= await createCoreWindow();
@@ -326,7 +363,7 @@ export async function main() {
 			} else {
 				apps[appId] ||= await (isCoreApp(appId)
 					? createCoreAppWindow(appId)
-					: createAppWindow(appId));
+					: createAppWindow(appId, options));
 				apps[appId]!.on("close", () => {
 					apps[appId] = null;
 					// TODO Needs to ensure that all processes opened by this window are closed
