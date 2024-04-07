@@ -5,10 +5,10 @@ import {
 	VECTOR_STORE_SEARCH_KEY,
 	VECTOR_STORE_SEARCH_RESULT_KEY,
 } from "@captn/utils/constants";
+import type { ScrollOptions, SearchOptions } from "@captn/utils/types";
 import { ipcMain } from "electron";
 
 import { VECTOR_STORE_COLLECTION } from "#/constants";
-import type { ScrollOptions, SearchOptions } from "#/types/vector-store";
 import { VectorStore } from "@/services/vector-store";
 
 ipcMain.on(

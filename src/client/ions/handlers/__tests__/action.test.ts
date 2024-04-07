@@ -1,8 +1,9 @@
+import type { VectorStoreResponse } from "@captn/utils/types";
+
 import { handleCaptainAction } from "../action";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
-import type { VectorStoreResponse } from "#/types/vector-store";
 
 jest.mock("#/build-key", () => ({
 	buildKey: jest.fn(),
@@ -29,6 +30,7 @@ describe("handleCaptainAction", () => {
 				language: "en",
 				action: "function",
 				label: "Test Function",
+				type: "test",
 			},
 		};
 
@@ -52,6 +54,7 @@ describe("handleCaptainAction", () => {
 				language: "en",
 				action: "open",
 				label: "Test App",
+				type: "test",
 			},
 		};
 

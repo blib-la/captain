@@ -10,6 +10,7 @@ import {
 	DownloadState,
 	ERROR_KEY,
 } from "@captn/utils/constants";
+import type { VectorStoreDocument } from "@captn/utils/types";
 import { BrowserWindow, dialog, ipcMain } from "electron";
 import { download } from "electron-dl";
 import { execa } from "execa";
@@ -19,7 +20,6 @@ import { buildKey } from "#/build-key";
 import { VECTOR_STORE_COLLECTION } from "#/constants";
 import { ID } from "#/enums";
 import { extractH1Headings, getFileType } from "#/string";
-import type { VectorStoreDocument } from "#/types/vector-store";
 import { apps } from "@/apps";
 import { VectorStore } from "@/services/vector-store";
 import { inventoryStore, downloadsStore } from "@/stores";
@@ -125,7 +125,7 @@ ipcMain.handle(
 		context?: string
 	) => {
 		const filePath = getCaptainData("files", subpath);
-		const { dir: directory } = path.parse(filePath);
+		const { dir: directory, ext } = path.parse(filePath);
 		const fileType = getFileType(filePath);
 
 		// Ensure the directory exists, creating it if necessary
@@ -148,7 +148,27 @@ ipcMain.handle(
 			const vectorStore = VectorStore.getInstance;
 			let label = fileType;
 			const documents: VectorStoreDocument[] = [];
-			if (fileType === "markdown") {
+			if (fileType === "markdown" && filePath.includes("/stories/")) {
+				// For markdown, we use the H1 if it exists
+				label = extractH1Headings(content)[0] || fileType;
+				const chunks = await splitDocument("md", content, {
+					chunkSize: 200,
+					chunkOverlap: 10,
+				});
+				for (const chunk of chunks) {
+					documents.push({
+						content: chunk,
+						payload: {
+							id,
+							label,
+							type: "story",
+							fileType: "md",
+							language: "en",
+							filePath,
+						},
+					});
+				}
+			} else if (fileType === "markdown") {
 				// For markdown, we use the H1 if it exists
 				label = extractH1Headings(content)[0] || fileType;
 				const chunks = await splitDocument("md", content, {
@@ -162,11 +182,24 @@ ipcMain.handle(
 							id,
 							label,
 							type: "markdown",
+							fileType: "md",
 							language: "en",
 							filePath,
 						},
 					});
 				}
+			} else if (fileType === "image") {
+				documents.push({
+					content: context ?? content,
+					payload: {
+						id,
+						label,
+						type: fileType,
+						fileType: ext.replace(".", ""),
+						language: "en",
+						filePath,
+					},
+				});
 			} else {
 				documents.push({
 					content: context ?? content,

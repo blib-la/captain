@@ -1,6 +1,7 @@
 import fsp from "node:fs/promises";
 
 import { APP_MESSAGE_KEY, DownloadState } from "@captn/utils/constants";
+import type { VectorStoreDocument } from "@captn/utils/types";
 import { getProperty } from "dot-prop";
 import type { IpcMainEvent } from "electron";
 import { ipcMain } from "electron";
@@ -11,7 +12,6 @@ import type { Except } from "type-fest";
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import type { StoryRequest } from "#/types/story";
-import type { VectorStoreDocument } from "#/types/vector-store";
 import { apps } from "@/apps";
 import { captionImages, createStory, maxTokenMap } from "@/ipc/story";
 import logger from "@/services/logger";

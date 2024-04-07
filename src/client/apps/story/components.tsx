@@ -1,6 +1,13 @@
 import { localFile } from "@captn/utils/string";
-import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
-import type { DragEndEvent } from "@dnd-kit/core/dist/types";
+import {
+	DndContext,
+	DragOverlay,
+	KeyboardSensor,
+	PointerSensor,
+	useSensor,
+	useSensors,
+} from "@dnd-kit/core";
+import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core/dist/types";
 import {
 	arrayMove,
 	rectSortingStrategy,
@@ -9,10 +16,14 @@ import {
 	useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { Portal } from "@mui/base";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
+import Sheet from "@mui/joy/Sheet";
 import { useAtom } from "jotai/index";
 import type { CSSProperties } from "react";
+import { useMemo } from "react";
+import { useState } from "react";
 import { forwardRef, type LegacyRef, type ReactNode, useCallback, useRef } from "react";
 import Scrollbars from "react-custom-scrollbars";
 import AutoSizer from "react-virtualized-auto-sizer";
@@ -30,7 +41,7 @@ export function SortableItem({ id, children }: { id: string; children?: ReactNod
 	const style = {
 		transform: CSS.Transform.toString(transform),
 		transition,
-		zIndex: isDragging ? 1 : 0,
+		zIndex: isDragging ? 0 : 1,
 	};
 
 	return (
@@ -42,6 +53,7 @@ export function SortableItem({ id, children }: { id: string; children?: ReactNod
 
 export function SelectedImages() {
 	const [images, setImages] = useAtom(selectedStoryImagesAtom);
+	const [activeId, setActiveId] = useState<string | number | null>(null);
 	const sensors = useSensors(
 		useSensor(PointerSensor),
 		useSensor(KeyboardSensor, {
@@ -51,6 +63,7 @@ export function SelectedImages() {
 
 	function handleDragEnd(event: DragEndEvent) {
 		const { active, over } = event;
+		setActiveId(null);
 
 		if (active.id !== over?.id) {
 			setImages(previousState => {
@@ -62,13 +75,41 @@ export function SelectedImages() {
 		}
 	}
 
+	function handleDragStart(event: DragStartEvent) {
+		setActiveId(event.active.id);
+	}
+
+	const activeItem = useMemo(
+		() => images.find(image => image.id === activeId),
+		[images, activeId]
+	);
+
 	return (
-		<DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+		<DndContext sensors={sensors} onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
+			<Portal>
+				<DragOverlay>
+					{activeItem && (
+						<Box>
+							<img
+								src={localFile(activeItem.filePath)}
+								style={{ width: "100%" }}
+								alt=""
+							/>
+						</Box>
+					)}
+				</DragOverlay>
+			</Portal>
 			<SortableContext strategy={rectSortingStrategy} items={images.map(({ id }) => id)}>
 				<AutoGrid minWidth={150}>
 					{images.map(({ filePath, id }) => (
 						<SortableItem key={id} id={id}>
-							<img src={localFile(filePath)} style={{ width: "100%" }} alt="" />
+							<Sheet variant="outlined" sx={{ display: "flex" }}>
+								<img
+									src={localFile(filePath)}
+									style={{ width: "100%", opacity: activeId === id ? 0 : 1 }}
+									alt=""
+								/>
+							</Sheet>
 						</SortableItem>
 					))}
 				</AutoGrid>

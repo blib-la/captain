@@ -1,6 +1,7 @@
+import type { VectorStoreResponse } from "@captn/utils/types";
+
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
-import type { VectorStoreResponse } from "#/types/vector-store";
 
 /**
  * Processes an action based on the provided vector store response. The function distinguishes between

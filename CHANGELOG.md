@@ -1,3 +1,10 @@
+# [1.0.0-alpha.32](https://github.com/blib-la/captain/compare/v1.0.0-alpha.31...v1.0.0-alpha.32) (2024-04-07)
+
+
+### Features
+
+* display previews ([#186](https://github.com/blib-la/captain/issues/186)) ([a350107](https://github.com/blib-la/captain/commit/a350107a196f56b4a21b7ae43ca9b63daf23df0d))
+
 # [1.0.0-alpha.31](https://github.com/blib-la/captain/compare/v1.0.0-alpha.30...v1.0.0-alpha.31) (2024-04-07)
 
 

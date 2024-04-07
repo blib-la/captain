@@ -19,7 +19,7 @@ apps effortlessly on your own computer.
 
 <!-- releases -->
 <p align="center">
-  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-alpha.31/Captain-Setup-1.0.0-alpha.31.exe">
+  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-alpha.32/Captain-Setup-1.0.0-alpha.32.exe">
     <img src="./docs/download.svg" alt="Download Captain" width="300">
   </a>
 </p>

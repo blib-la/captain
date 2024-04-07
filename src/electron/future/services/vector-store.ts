@@ -1,5 +1,6 @@
 import fsp from "node:fs/promises";
 
+import type { ScrollOptions, SearchOptions, VectorStoreDocument } from "@captn/utils/types";
 import type { EmbeddingsInterface } from "@langchain/core/embeddings";
 import type { Schemas as QdrantSchemas } from "@qdrant/js-client-rest";
 import { QdrantClient } from "@qdrant/js-client-rest";
@@ -8,7 +9,6 @@ import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 import { v4 } from "uuid";
 
-import type { ScrollOptions, SearchOptions, VectorStoreDocument } from "#/types/vector-store";
 import logger from "@/services/logger";
 import { getCaptainData } from "@/utils/path-helpers";
 

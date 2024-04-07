@@ -42,7 +42,13 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 				<Alert color="primary" variant="soft" sx={{ m: 4, p: 4 }}>
 					<Typography level="title-lg">{t("texts:howToUseCaptain")}</Typography>
 				</Alert>
-				<List sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: 2 }}>
+				<List
+					sx={{
+						display: "grid",
+						gridTemplateColumns: "repeat(auto-fill,minmax(142px, 1fr))",
+						gap: 2,
+					}}
+				>
 					{items.map(item => (
 						<ListItem
 							key={item.id}
