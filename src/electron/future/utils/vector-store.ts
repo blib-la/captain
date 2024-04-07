@@ -9,6 +9,7 @@ import path from "node:path";
 // See package.json for the specific version and source of the @xenova/transformers package.
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
+import type { VectorStoreDocument } from "@captn/utils/types";
 import { env } from "@xenova/transformers";
 import exifr from "exifr";
 import { globby } from "globby";
@@ -16,7 +17,6 @@ import matter from "gray-matter";
 
 import { VECTOR_STORE_COLLECTION } from "#/constants";
 import { extractH1Headings } from "#/string";
-import type { VectorStoreDocument } from "#/types/vector-store";
 import { CustomHuggingFaceTransformersEmbeddings } from "@/langchain/custom-hugging-face-transformers-embeddings";
 import { VectorStore } from "@/services/vector-store";
 import { getCaptainData, getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
@@ -64,14 +64,15 @@ export async function populateFromDocuments() {
 	const images = await Promise.all(
 		imagePaths.map(async imagePath => {
 			const exif = await exifr.parse(imagePath);
-			const { name } = path.parse(imagePath);
+			const { name, base } = path.parse(imagePath);
 			return {
-				content: exif.Description,
+				content: exif.Description ?? "",
 				payload: {
 					id: name,
 					type: "image",
+					fileType: "png",
 					language: "en",
-					label: "Image",
+					label: base,
 					filePath: imagePath,
 				},
 			};
@@ -88,7 +89,8 @@ export async function populateFromDocuments() {
 				payload: {
 					id: dir.replaceAll("\\", "/").split("/").pop()!,
 					label: extractH1Headings(content)[0] || "Story",
-					type: "markdown",
+					type: "story",
+					fileType: "md",
 					language: "en",
 					filePath: storyPath,
 				},
