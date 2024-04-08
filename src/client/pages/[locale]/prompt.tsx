@@ -61,10 +61,6 @@ export default function Page() {
 	useAutoFocusIPC(promptReference);
 	useAutoSizerWindow(frameReference);
 
-	useEffect(() => {
-		console.log(suggestions);
-	}, [suggestions]);
-
 	return (
 		<Box
 			ref={frameReference}
