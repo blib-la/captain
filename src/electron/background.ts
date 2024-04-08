@@ -44,6 +44,7 @@ import "@/ipc/global"; // Manages global IPC events, including those related to 
 // This allows external applications to interact with the app through exposed handlers and
 // listeners.
 import "@/ipc/sdk";
+import "@/ipc/sdk/text-to-image";
 
 // Import install handlers and listeners
 import "@/ipc/install";

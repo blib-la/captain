@@ -11,7 +11,6 @@ import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
 
-import { RequiredModelsAlert } from "@/apps/live-painting/required-models-alert";
 import { DynamicIcon } from "@/atoms/icons/dynamic";
 import { Logo } from "@/atoms/logo";
 import { handleCaptainAction } from "@/ions/handlers/action";
@@ -38,7 +37,6 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 				<title>{t("labels:dashboard")}</title>
 			</Head>
 			<Box sx={{ p: 2 }}>
-				<RequiredModelsAlert inline />
 				<Alert color="primary" variant="soft" sx={{ m: 4, p: 4 }}>
 					<Typography level="title-lg">{t("texts:howToUseCaptain")}</Typography>
 				</Alert>

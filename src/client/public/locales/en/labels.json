@@ -28,6 +28,7 @@
     "mood": "Mood",
     "styleTheme": "Style & Theme"
   },
+  "generate": "Generate",
   "help": "Help",
   "illustrationStyles": {
     "childrensBook": "Children's Book",
@@ -88,6 +89,7 @@
   },
   "submitButtonText": "Submit",
   "text": "Text",
+  "textToImage": "Text to Image",
   "undefined": "Unknown",
   "unpacking": "Unpacking"
 }

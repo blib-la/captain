@@ -28,6 +28,7 @@
     "mood": "情绪",
     "styleTheme": "风格与主题"
   },
+  "generate": "生成",
   "help": "帮助",
   "illustrationStyles": {
     "childrensBook": "儿童书籍",
@@ -88,6 +89,7 @@
   },
   "submitButtonText": "提交",
   "text": "文本",
+  "textToImage": "文字转图片",
   "undefined": "未知",
   "unpacking": "解压中"
 }

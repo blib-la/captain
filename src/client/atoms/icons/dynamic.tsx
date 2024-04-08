@@ -8,6 +8,7 @@ const Dashboard = dynamic(() => import("@mui/icons-material/Dashboard"));
 const Flag = dynamic(() => import("@mui/icons-material/Flag"));
 const Folder = dynamic(() => import("@mui/icons-material/Folder"));
 const Image = dynamic(() => import("@mui/icons-material/Image"));
+const Images = dynamic(() => import("@mui/icons-material/Collections"));
 const LightMode = dynamic(() => import("@mui/icons-material/LightMode"));
 const TextSnippet = dynamic(() => import("@mui/icons-material/TextSnippet"));
 const MenuBook = dynamic(() => import("@mui/icons-material/MenuBook"));
@@ -21,6 +22,7 @@ const iconCache: Record<string, any> = {
 	Flag,
 	Folder,
 	Image,
+	Images,
 	LightMode,
 	MenuBook,
 	QuestionMark,

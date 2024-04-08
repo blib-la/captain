@@ -28,6 +28,7 @@
     "mood": "Stemming",
     "styleTheme": "Stijl & Thema"
   },
+  "generate": "Genereren",
   "help": "Hulp",
   "illustrationStyles": {
     "childrensBook": "Kinderboek",
@@ -88,6 +89,7 @@
   },
   "submitButtonText": "Indienen",
   "text": "Tekst",
+  "textToImage": "Tekst naar Afbeelding",
   "undefined": "Onbekend",
   "unpacking": "Uitpakken"
 }

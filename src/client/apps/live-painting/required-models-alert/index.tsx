@@ -1,4 +1,5 @@
 import { useRequiredDownloads } from "@captn/react/use-required-downloads";
+import type { RequiredDownload } from "@captn/utils/types";
 import WarningIcon from "@mui/icons-material/Warning";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
@@ -7,13 +8,17 @@ import Snackbar from "@mui/joy/Snackbar";
 import Typography from "@mui/joy/Typography";
 import { useTranslation } from "next-i18next";
 
-import { allRequiredDownloads } from "../constants";
-
-export function RequiredModelsAlert({ inline }: { inline?: boolean }) {
+export function RequiredModelsAlert({
+	inline,
+	downloads,
+}: {
+	inline?: boolean;
+	downloads: RequiredDownload[];
+}) {
 	const { t } = useTranslation(["common", "labels"]);
 
 	const { isCompleted, downloadCount, isDownloading, percent, requiredDownloads, download } =
-		useRequiredDownloads(allRequiredDownloads);
+		useRequiredDownloads(downloads);
 
 	return (
 		<Snackbar

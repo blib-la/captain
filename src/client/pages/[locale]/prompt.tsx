@@ -54,6 +54,7 @@ export default function Page() {
 			must_not: [
 				{ key: "type", match: { value: "image" } },
 				{ key: "type", match: { value: "markdown" } },
+				{ key: "type", match: { value: "story" } },
 			],
 		},
 	});

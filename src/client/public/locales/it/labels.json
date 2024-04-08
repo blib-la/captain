@@ -28,6 +28,7 @@
     "mood": "Umore",
     "styleTheme": "Stile & Tema"
   },
+  "generate": "Genera",
   "help": "Aiuto",
   "illustrationStyles": {
     "childrensBook": "Libro per bambini",
@@ -88,6 +89,7 @@
   },
   "submitButtonText": "Invia",
   "text": "Testo",
+  "textToImage": "Testo in Immagine",
   "undefined": "Sconosciuto",
   "unpacking": "Estrazione"
 }

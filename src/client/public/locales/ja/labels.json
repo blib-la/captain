@@ -28,6 +28,7 @@
     "mood": "ムード",
     "styleTheme": "スタイル＆テーマ"
   },
+  "generate": "生成する",
   "help": "ヘルプ",
   "illustrationStyles": {
     "childrensBook": "児童書",
@@ -88,6 +89,7 @@
   },
   "submitButtonText": "送信",
   "text": "テキスト",
+  "textToImage": "テキストから画像へ",
   "undefined": "不明",
   "unpacking": "解凍中"
 }

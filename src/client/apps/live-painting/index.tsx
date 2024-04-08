@@ -19,7 +19,7 @@ import {
 	SaveButton,
 	TooltipButton,
 } from "./components";
-import { APP_ID } from "./constants";
+import { allRequiredDownloads, APP_ID } from "./constants";
 import { DrawingArea } from "./drawing-area";
 import { useUnload } from "./hooks";
 import { RenderingArea } from "./rendering-area";
@@ -89,7 +89,7 @@ export function LivePainting() {
 
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
-			<RequiredModelsAlert />
+			<RequiredModelsAlert downloads={allRequiredDownloads} />
 			<StyledStickyHeader>
 				{/* Left Side of the header */}
 				<StyledButtonWrapper>

@@ -28,6 +28,7 @@
     "mood": "Настроение",
     "styleTheme": "Стиль и тема"
   },
+  "generate": "Создать",
   "help": "Помощь",
   "illustrationStyles": {
     "childrensBook": "Детская книга",
@@ -88,6 +89,7 @@
   },
   "submitButtonText": "Отправить",
   "text": "Текст",
+  "textToImage": "Текст в Изображение",
   "undefined": "Неизвестно",
   "unpacking": "Распаковка"
 }

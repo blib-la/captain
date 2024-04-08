@@ -28,6 +28,7 @@
     "mood": "מצב רוח",
     "styleTheme": "סגנון ונושא"
   },
+  "generate": "צור",
   "help": "עזרה",
   "illustrationStyles": {
     "childrensBook": "ספר ילדים",
@@ -88,6 +89,7 @@
   },
   "submitButtonText": "שלח",
   "text": "טקסט",
+  "textToImage": "טקסט לתמונה",
   "undefined": "לא ידוע",
   "unpacking": "פותח"
 }
