@@ -10,7 +10,6 @@ export function RenderingArea() {
 
 	useSDK<unknown, string>(APP_ID, {
 		onMessage(message) {
-			console.log(message);
 			switch (message.action) {
 				case "text-to-image:generated": {
 					setImage(message.payload);
