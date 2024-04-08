@@ -261,10 +261,10 @@ def main(pipe, output_image_path, shutdown_event):
     steps = 20
     guidance_scale = 7.0
 
-    last_prompt = None
-    last_seed = None
-    last_guidance_scale = None
-    last_steps = None
+    last_prompt = prompt
+    last_seed = seed
+    last_steps = steps
+    last_guidance_scale = guidance_scale
 
     # Queue to hold parameters received from stdin
     params_queue = queue.Queue()
