@@ -7,38 +7,35 @@ type: app
 path: /en/apps/explorer
 creatorID: Blibla
 tags:
-- art discovery
-- literature generation
-- photo filtering
-- novel narratives
-- picture sorting
-- image search
-- story crafting
-- artistic modeling
+  - explorer
+  - finder
+  - search
+  - files
 license: AGPL 3.0
 accessLevel: public
-description: "Dive into your media library with Creative Explorer. Harness AI to filter, search, and craft stories from your photos, art, and text."
+description: "Dive into your media library with Creative Explorer."
 icon: Folder
 iconColor: "#6C5EF5"
 ---
 
-Filter art by era or style.
-Search for poetry in your pictures.
-Discover novels in photo sequences.
-Show narratives hidden within snapshots.
-Find literature connecting your images.
-Craft tales from scenic photographs.
-Generate stories from daily photos.
-Explore thematic collections of art pieces.
-Reveal historical narratives in family albums.
-Unveil the novel within your gallery.
-Sort images by emotional impact.
-Connect pictures into a visual novel.
-Search for patterns in artistic compositions.
-Find photos matching a literary theme.
-Craft biographies from portrait galleries.
-Generate documentaries from event images.
-Reveal the artistry in candid snapshots.
-Uncover mysteries told through archived pictures.
-Explore generative art models for photo enhancement.
-Navigate through the chapters of your visual story.
+Launch the explorer to browse my documents.
+Show me how to access the finder for photos.
+Open the file explorer to manage my folders.
+Guide me to open the finder for organizing files.
+Command to launch the explorer for viewing images.
+How do I start the explorer with a keyboard shortcut?
+Open my documents directly in the file explorer.
+Find steps to access external storage in the finder.
+Shortcut to open the downloads folder in the explorer.
+Launch the explorer to search for specific file names.
+Discover the quickest way to open recent items in the finder.
+Open the explorer at a particular directory for quick access.
+Use search commands to open specific folders in the explorer.
+Navigate to my cloud files directly through the finder.
+Tips for opening and managing files with the explorer.
+Access shared documents through the explorer.
+Open multiple finder windows for efficient file management.
+Reveal hidden items on the first launch of the explorer.
+Employ search functionalities in the finder for specific queries.
+Organize and search for specific content using the explorer.
+

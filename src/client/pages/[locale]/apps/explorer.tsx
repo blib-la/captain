@@ -101,7 +101,7 @@ export function PreviewIcon({ item }: { item: VectorStoreResponse }) {
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["common", "labels"]);
 	const [query, setQuery] = useState("");
-	const { data } = useVectorStore(query);
+	const { data } = useVectorStore(query, { limit: 100, score_threshold: 0.2 });
 
 	const uniqueData = useMemo(() => uniqBy(data, "payload.id"), [data]);
 	const groups = useMemo(
