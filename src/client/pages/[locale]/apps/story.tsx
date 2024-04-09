@@ -23,7 +23,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			}
 		>
 			<Head>
-				<title>{t("labels:livePainting")}</title>
+				<title>{t("labels:createStory")}</title>
 			</Head>
 			<Box sx={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column" }}>
 				<Story />

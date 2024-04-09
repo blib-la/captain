@@ -71,6 +71,7 @@ export function Story() {
 
 	const { data: images_ } = useVectorScroll({
 		with_payload: true,
+		limit: 100,
 		filter: { must: [{ key: "type", match: { value: "image" } }] },
 	});
 
