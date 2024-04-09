@@ -125,7 +125,7 @@ ipcMain.handle(
 		context?: string
 	) => {
 		const filePath = getCaptainData("files", subpath);
-		const { dir: directory, ext } = path.parse(filePath);
+		const { dir: directory, ext, base } = path.parse(filePath);
 		const fileType = getFileType(filePath);
 
 		// Ensure the directory exists, creating it if necessary
@@ -193,7 +193,7 @@ ipcMain.handle(
 					content: context ?? content,
 					payload: {
 						id,
-						label,
+						label: base,
 						type: fileType,
 						fileType: ext.replace(".", ""),
 						language: "en",
