@@ -221,6 +221,18 @@ ipcMain.on(
 				break;
 			}
 
+			case "livePainting:imageBuffer": {
+				try {
+					const { buffer } = message.payload as any;
+
+					await fsp.writeFile(getCaptainTemporary("live-painting/input.png"), buffer);
+				} catch (error) {
+					console.error(error);
+				}
+
+				break;
+			}
+
 			case "cloneRepositories:start": {
 				const models = message.payload as {
 					repository: string;
