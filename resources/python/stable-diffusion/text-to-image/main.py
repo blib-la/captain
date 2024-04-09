@@ -245,6 +245,7 @@ def warmup(pipe):
     for _ in range(6):
         pipe(
             prompt="the moon, 4k",
+            negative_prompt="nsfw, nude",
             height=1024,
             width=1024,
             num_inference_steps=1,
@@ -257,14 +258,20 @@ def warmup(pipe):
 def main(pipe, output_image_path, shutdown_event):
     # Initial/default values for parameters
     prompt = "a captain with white beard, teal hat and uniform"
+    negative_prompt = "nsfw, nude"
     seed = 1
     steps = 20
     guidance_scale = 7.0
+    height = 1024
+    width = 1024
 
     last_prompt = prompt
+    last_negative_prompt = negative_prompt
     last_seed = seed
     last_steps = steps
     last_guidance_scale = guidance_scale
+    last_height = height
+    last_width = width
 
     # Queue to hold parameters received from stdin
     params_queue = queue.Queue()
@@ -281,9 +288,12 @@ def main(pipe, output_image_path, shutdown_event):
             while not params_queue.empty():
                 parameters = params_queue.get_nowait()
                 prompt = parameters.get("prompt", prompt)
+                negative_prompt = parameters.get("negative_prompt", negative_prompt)
                 seed = parameters.get("seed", seed)
-                guidance_scale = parameters.get("guidance_scale", guidance_scale)
                 steps = parameters.get("steps", steps)
+                guidance_scale = parameters.get("guidance_scale", guidance_scale)
+                height = parameters.get("height", height)
+                width = parameters.get("width", width)
                 print(f"Updated parameters {parameters}")
         except queue.Empty:
             pass  # No new parameters, proceed with the existing ones
@@ -292,16 +302,22 @@ def main(pipe, output_image_path, shutdown_event):
         # Determine if image generation should be triggered
         trigger_generation = (
             prompt != last_prompt
+            or negative_prompt != last_negative_prompt
             or seed != last_seed
             or steps != last_steps
             or guidance_scale != last_guidance_scale
+            or height != last_height
+            or width != last_width
         )
 
         if trigger_generation:
             last_prompt = prompt
+            last_negative_prompt = negative_prompt
             last_seed = seed
             last_steps = steps
             last_guidance_scale = guidance_scale
+            last_height = height
+            last_width = width
 
             # Only generate an image if the prompt is not empty
             if prompt is not None and prompt.strip():
@@ -310,9 +326,10 @@ def main(pipe, output_image_path, shutdown_event):
                 guidance_scale_ = float(guidance_scale)
 
                 image = pipe(
-                    prompt,
-                    height=1024,
-                    width=1024,
+                    prompt=prompt,
+                    negative_prompt=negative_prompt,
+                    height=height,
+                    width=width,
                     num_inference_steps=steps,
                     num_images_per_prompt=1,
                     strength=1.0,
