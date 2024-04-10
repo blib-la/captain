@@ -56,7 +56,10 @@ let cache = "";
 
 ipcMain.on(
 	APP_MESSAGE_KEY,
-	async (event, { message, appId }: { message: SDKMessage<string>; appId: string }) => {
+	async (
+		event,
+		{ message, appId }: { message: SDKMessage<{ stablefast?: boolean }>; appId: string }
+	) => {
 		if (message.action !== "livePainting:start") {
 			return;
 		}
@@ -89,9 +92,12 @@ ipcMain.on(
 			getCaptainTemporary("live-painting/input.png"),
 			"--output_image_path",
 			getCaptainTemporary("live-painting/output.png"),
-			"--disable_stablefast",
 			"--debug",
 		];
+
+		if (!message.payload.stablefast) {
+			scriptArguments.push("--disable_stablefast");
+		}
 
 		process_ = execa(pythonBinaryPath, ["-u", scriptPath, ...scriptArguments]);
 
