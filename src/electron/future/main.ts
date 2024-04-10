@@ -225,6 +225,7 @@ for (const installedApp of installedApps) {
 	appLoaders[id] = serve({
 		directory: getCaptainData(`apps`, id),
 		scheme: `captn-${id}`,
+		hostname: "localhost",
 		file: "index",
 	});
 }
