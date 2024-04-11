@@ -34,7 +34,11 @@ export function Preview() {
 						}[];
 					}) => {
 						setContent(story);
-						setImages(images.map(image => localFile(image.filePath)));
+						setImages(
+							images.map((_image, index) =>
+								localFile(filePath.replace("story.md", `${index + 1}.png`))
+							)
+						);
 					}
 				);
 		} else if (filePath && fileType === "markdown") {

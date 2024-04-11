@@ -16,7 +16,7 @@ import {
 export function ZoomControls({ zoomIn, zoomOut, resetTransform }: ReactZoomPanPinchContentRef) {
 	const { t } = useTranslation(["common"]);
 	return (
-		<Sheet sx={{ p: 0.5 }}>
+		<Sheet variant="soft" sx={{ p: 0.5 }}>
 			<ButtonGroup variant="soft" size="sm">
 				<IconButton
 					aria-label={t("common:zoomIn")}
