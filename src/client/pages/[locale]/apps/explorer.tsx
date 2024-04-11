@@ -183,15 +183,45 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 												}}
 											>
 												<ListItemButton
-													disabled={item.payload.type !== "app"}
+													// Disabled={item.payload.type !== "app"}
 													sx={{
 														flexDirection: "column",
 														width: 128,
 														p: 1,
 													}}
 													onClick={() => {
-														if (item.payload.type === "app") {
-															handleCaptainAction(item);
+														switch (item.payload.type) {
+															case "app": {
+																handleCaptainAction(item);
+																break;
+															}
+
+															case "image":
+															case "story":
+															case "markdown": {
+																handleCaptainAction(
+																	{
+																		score: 1,
+																		payload: {
+																			id: "preview",
+																			language: "en",
+																			type: "app",
+																			label: "Preview",
+																		},
+																	},
+																	{
+																		id: item.payload.id,
+																		fileType: item.payload.type,
+																		filePath:
+																			item.payload.filePath!,
+																	}
+																);
+																break;
+															}
+
+															default: {
+																break;
+															}
 														}
 													}}
 												>

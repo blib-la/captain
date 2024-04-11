@@ -130,8 +130,6 @@ async function createPromptWindow() {
  * the loading of local resources in a secure and controlled manner, bypassing the limitations of the
  * `file://` protocol in web contexts, and providing more flexibility in handling file requests.
  *
- * @param {ProtocolRequest} request - The request object provided by Electron's protocol module, containing
- * the URL and other metadata about the request.
  *
  * Usage:
  * 1. Register the custom protocol and its handler early in the application's lifecycle, ideally in the
@@ -178,7 +176,11 @@ export function initLocalProtocol() {
 	});
 }
 
-async function createCoreAppWindow(id: string, options: BrowserWindowConstructorOptions = {}) {
+async function createCoreAppWindow(
+	id: string,
+	query = "",
+	options: BrowserWindowConstructorOptions = {}
+) {
 	const appWindow = await createWindow(id, {
 		minWidth: 800,
 		minHeight: 600,
@@ -192,7 +194,7 @@ async function createCoreAppWindow(id: string, options: BrowserWindowConstructor
 		},
 	});
 
-	await loadURL(appWindow, `apps/${id}`);
+	await loadURL(appWindow, `apps/${id}?${query}`);
 
 	return appWindow;
 }
@@ -344,7 +346,13 @@ export async function main() {
 				appId,
 				action,
 				options,
-			}: { appId: string; action?: string; options?: BrowserWindowConstructorOptions }
+				query,
+			}: {
+				appId: string;
+				action?: string;
+				options?: BrowserWindowConstructorOptions;
+				query?: Record<string, string>;
+			}
 		) => {
 			if (isCoreView(appId)) {
 				// If the appId is a core view we need to handle it
@@ -360,9 +368,23 @@ export async function main() {
 				}
 
 				apps.core.focus();
+			} else if (appId === "preview") {
+				const scopeId = `${appId}:${query?.id ?? ""}`;
+				apps[scopeId] ||= await createCoreAppWindow(
+					"preview",
+					new URLSearchParams(query ?? {}).toString()
+				);
+				apps[scopeId]!.on("close", () => {
+					apps[scopeId] = null;
+				});
+				if (apps[scopeId]!.isMinimized()) {
+					apps[scopeId]!.restore();
+				}
+
+				apps[scopeId]!.focus();
 			} else {
 				apps[appId] ||= await (isCoreApp(appId)
-					? createCoreAppWindow(appId)
+					? createCoreAppWindow(appId, query ? new URLSearchParams(query).toString() : "")
 					: createAppWindow(appId, options));
 				apps[appId]!.on("close", () => {
 					apps[appId] = null;
