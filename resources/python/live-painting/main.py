@@ -51,9 +51,6 @@ torch.set_grad_enabled(False)
 torch.backends.cuda.matmul.allow_tf32 = True
 torch.backends.cudnn.allow_tf32 = True
 
-image_width = 256
-image_height = 256
-
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Control model and paths via CLI.")
@@ -144,7 +141,7 @@ def safe_rename_with_retries(src, dst, max_retries=5, delay=0.005):
 def load_image_with_retry(file_path, max_retries=25, delay=0.003):
     for _ in range(max_retries):
         try:
-            image = load_image(file_path).resize((image_width, image_height))
+            image = load_image(file_path).resize((512, 512))
             return image
         except:
             time.sleep(delay)
@@ -196,8 +193,8 @@ def prepare_pipeline(model_path, vae_path, disable_stablefast=False):
     # But it can increase the amount of GPU memory used.
     config.enable_cuda_graph = True
 
-    pipe.width = image_width
-    pipe.height = image_height
+    pipe.width = 512
+    pipe.height = 512
 
     pipe.vae = AutoencoderTiny.from_pretrained(vae_path).to(
         device=pipe.device, dtype=pipe.dtype
@@ -226,8 +223,8 @@ def warmup(pipe, input_image_path):
         pipe(
             prompt="the moon, 4k",
             image=init_image,
-            height=image_width,
-            width=image_height,
+            height=512,
+            width=512,
             num_inference_steps=1,
             num_images_per_prompt=1,
             strength=1.0,
@@ -239,15 +236,12 @@ def main(pipe, input_image_path, output_image_path, shutdown_event):
     # Initial/default values for parameters
     prompt = "a captain with white beard, teal hat and uniform"
     seed = 1
-    steps = 3
     strength = 0.95
+    steps = 3
     guidance_scale = 1.5
 
-    last_prompt = prompt
-    last_seed = seed
-    last_steps = steps
-    last_strength = strength
-    last_guidance_scale = guidance_scale
+    last_prompt = None
+    last_seed = None
     last_input_image = None
 
     # Queue to hold parameters received from stdin
@@ -280,18 +274,12 @@ def main(pipe, input_image_path, output_image_path, shutdown_event):
         trigger_generation = (
             prompt != last_prompt
             or seed != last_seed
-            or steps != last_steps
-            or strength != last_strength
-            or guidance_scale != last_guidance_scale
             or current_input_image != last_input_image
         )
 
         if trigger_generation:
             last_prompt = prompt
             last_seed = seed
-            last_steps = steps
-            last_strength = strength
-            last_guidance_scale = guidance_scale
             last_input_image = current_input_image
 
             # Only generate an image if the prompt is not empty
@@ -311,8 +299,8 @@ def main(pipe, input_image_path, output_image_path, shutdown_event):
                 image = pipe(
                     prompt,
                     image=init_image,
-                    height=image_width,
-                    width=image_height,
+                    height=512,
+                    width=512,
                     num_inference_steps=denoise_steps_,
                     num_images_per_prompt=1,
                     strength=strength_,
@@ -328,7 +316,7 @@ def main(pipe, input_image_path, output_image_path, shutdown_event):
                 print(json.dumps({"status": "image_generated"}))
 
             else:
-                image = Image.new("RGB", (image_width, image_height), color="white")
+                image = Image.new("RGB", (512, 512), color="white")
                 image.save(f"{output_image_path}.tmp.png")
                 safe_rename_with_retries(
                     f"{output_image_path}.tmp.png", output_image_path
