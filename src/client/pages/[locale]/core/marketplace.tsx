@@ -119,7 +119,7 @@ function ItemCard({ payload }: { payload: MarketplaceItemPayload }) {
 }
 
 /**
- * Show an alert for every error that happens and provide a way for the user to retry, which reloads the page.
+ * Show an alert for every error that happens and provide a way for the user to retry.
  *
  * @param error - The error message
  */
