@@ -22,8 +22,9 @@ export function CoreLayout({ children }: { children?: ReactNode }) {
 						}}
 					>
 						<TabButton href="/core/dashboard">{t("labels:dashboard")}</TabButton>
-						<TabButton href="/core/settings">{t("common:settings")}</TabButton>
+						<TabButton href="/core/marketplace">{t("labels:marketplace")}</TabButton>
 						<TabButton href="/core/downloads">{t("labels:downloads")}</TabButton>
+						<TabButton href="/core/settings">{t("common:settings")}</TabButton>
 					</Box>
 				</TitleBar>
 			}
