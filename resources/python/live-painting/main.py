@@ -236,12 +236,15 @@ def main(pipe, input_image_path, output_image_path, shutdown_event):
     # Initial/default values for parameters
     prompt = "a captain with white beard, teal hat and uniform"
     seed = 1
-    strength = 0.95
     steps = 3
+    strength = 0.95
     guidance_scale = 1.5
 
-    last_prompt = None
-    last_seed = None
+    last_prompt = prompt
+    last_seed = seed
+    last_steps = steps
+    last_strength = strength
+    last_guidance_scale = guidance_scale
     last_input_image = None
 
     # Queue to hold parameters received from stdin
@@ -274,12 +277,18 @@ def main(pipe, input_image_path, output_image_path, shutdown_event):
         trigger_generation = (
             prompt != last_prompt
             or seed != last_seed
+            or steps != last_steps
+            or strength != last_strength
+            or guidance_scale != last_guidance_scale
             or current_input_image != last_input_image
         )
 
         if trigger_generation:
             last_prompt = prompt
             last_seed = seed
+            last_steps = steps
+            last_strength = strength
+            last_guidance_scale = guidance_scale
             last_input_image = current_input_image
 
             # Only generate an image if the prompt is not empty
