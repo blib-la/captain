@@ -179,13 +179,13 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			}
 		);
 
-		// Download the cached marketplace data
-		window.ipc.send(buildKey([ID.MARKETPLACE], { suffix: ":cached" }));
-
 		// Download the latest marketplace data
 		if (connected) {
 			fetchMarketplace();
 		} else {
+			// Download the cached marketplace data
+			window.ipc.send(buildKey([ID.MARKETPLACE], { suffix: ":cached" }));
+
 			setError(notConnected);
 			setLoading(false);
 		}
