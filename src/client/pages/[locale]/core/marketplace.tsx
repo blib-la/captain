@@ -48,7 +48,9 @@ function fetchMarketplace() {
  * A hook to determine if we are connected to a network.
  */
 function useOnlineStatus() {
-	const [isOnline, setIsOnline] = useState(navigator ? navigator.onLine : false);
+	const [isOnline, setIsOnline] = useState(
+		typeof navigator === "undefined" ? false : navigator.onLine
+	);
 
 	useEffect(() => {
 		function setOnline() {
