@@ -7,7 +7,7 @@ jest.mock("electron", () => ({
 		getPath: jest.fn().mockImplementation((key: string) => {
 			switch (key) {
 				case "exe": {
-					return "C:\\path\\to\\exe";
+					return "path\\to\\exe";
 				}
 
 				case "userData": {
@@ -57,9 +57,7 @@ describe("Path Utilities", () => {
 
 		const { resourcesDirectory } = await import("../path-helpers");
 		const expectedProductionPath = path.join(
-			"C:/path/to/exe",
-			"..",
-			"resources",
+			"path/to/resources",
 			"app.asar.unpacked",
 			"resources"
 		);
