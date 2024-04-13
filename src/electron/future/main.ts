@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import fsp from "node:fs/promises";
 import path from "path";
 
@@ -6,7 +7,7 @@ import type { BrowserWindow, BrowserWindowConstructorOptions } from "electron";
 import { app, globalShortcut, ipcMain, Menu, protocol, screen, Tray } from "electron";
 import serve from "electron-serve";
 import type electronServe from "electron-serve";
-import { globbySync } from "globby";
+import { globby, globbySync } from "globby";
 
 import { version } from "../../../package.json";
 
@@ -21,7 +22,12 @@ import logger from "@/services/logger";
 import { isCoreApp, isCoreView } from "@/utils/core";
 import { createWindow } from "@/utils/create-window";
 import { loadURL } from "@/utils/load-window";
-import { getCaptainData, getDirectory } from "@/utils/path-helpers";
+import {
+	getCaptainData,
+	getCaptainTemporary,
+	getDirectory,
+	getUserData,
+} from "@/utils/path-helpers";
 import { initialize, populateFromDocuments, reset } from "@/utils/vector-store";
 
 /**
@@ -215,7 +221,7 @@ async function createCoreWindow(options: BrowserWindowConstructorOptions = {}) {
 }
 
 // Discover all installed apps based on the presence of an 'index.html' in their respective directories.
-const installedApps = globbySync([`${getCaptainData("apps").replaceAll("\\", "/")}/*/index.html`]);
+const installedApps = globbySync(["*/index.html"], { cwd: getCaptainData("apps") });
 
 const appLoaders: Record<string, electronServe.loadURL> = {};
 
@@ -282,6 +288,20 @@ async function runStartup() {
 	logger.info(`runStartup(): focused core window`);
 }
 
+export async function cleanFiles() {
+	if (fs.existsSync(getCaptainData("windows"))) {
+		await fsp.rm(getCaptainData("windows"), { recursive: true });
+	}
+
+	if (fs.existsSync(getCaptainTemporary())) {
+		await fsp.rm(getCaptainTemporary(), { recursive: true });
+	}
+
+	// Remove legacy top level window stores
+	const oldStores = await globby(["STORE-WINDOW--*.json"], { cwd: getUserData() });
+	await Promise.all(oldStores.map(async filePath => fsp.rm(filePath)));
+}
+
 let tray = null;
 
 /**
@@ -302,6 +322,8 @@ let tray = null;
 export async function main() {
 	logger.info(`main(): started`);
 
+	// Clean all temporary files upon startup
+	await cleanFiles();
 	await app.whenReady();
 	tray = new Tray(getDirectory("icon.png"));
 	const contextMenu = Menu.buildFromTemplate([

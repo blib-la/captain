@@ -7,6 +7,7 @@ import Store from "electron-store";
 import { buildKey } from "#/build-key";
 import { LOCAL_PROTOCOL } from "#/constants";
 import { ID } from "#/enums";
+import { getCaptainData } from "@/utils/path-helpers";
 import { ensureVisibleOnSomeDisplay, getCurrentPosition } from "@/utils/window";
 
 /**
@@ -25,7 +26,7 @@ export async function createWindow(
 	// Define key and name for window state storage.
 	const key = "window-state";
 	const name = buildKey([ID.STORE, ID.WINDOW], { suffix: `--${windowName}` });
-	const store = new Store<Rectangle>({ name });
+	const store = new Store<Rectangle>({ name, cwd: getCaptainData("windows") });
 	const defaultSize = {
 		width: options.width ?? 800,
 		height: options.height ?? 600,
@@ -44,9 +45,9 @@ export async function createWindow(
 		...options,
 		webPreferences: {
 			preload: path.join(__dirname, "preload.js"),
+			...options.webPreferences,
 			nodeIntegration: false,
 			contextIsolation: true,
-			...options.webPreferences,
 		},
 	});
 

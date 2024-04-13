@@ -8,10 +8,14 @@ import { app } from "electron";
 
 import { isDevelopment, isTest } from "#/flags";
 
+export function normalizePath(pathname: string) {
+	return pathname.replaceAll("\\", "/");
+}
+
 export const resourcesDirectory =
 	isTest || isDevelopment
-		? path.join(process.cwd(), "resources")
-		: path.join(app.getPath("exe"), "..", "resources", "app.asar.unpacked", "resources");
+		? normalizePath(path.join(process.cwd(), "resources"))
+		: normalizePath(path.join(app.getPath("exe"), "../resources/app.asar.unpacked/resources"));
 
 /**
  * Combines the resources directory path with additional subpaths.
@@ -22,21 +26,21 @@ export const resourcesDirectory =
  * @returns {string} The combined path formed by joining the resources directory with the provided subpaths.
  */
 export function getDirectory(...subpath: string[]): string {
-	return path.join(resourcesDirectory, ...subpath);
+	return normalizePath(path.join(resourcesDirectory, ...subpath));
 }
 
 export function getUserData(...subpath: string[]): string {
-	return path.join(app.getPath("userData"), ...subpath);
+	return normalizePath(path.join(app.getPath("userData"), ...subpath));
 }
 
 export function getCaptainData(...subpath: string[]): string {
-	return getUserData("Captain_Data", ...subpath);
+	return normalizePath(getUserData("Captain_Data", ...subpath));
 }
 
 export function getCaptainDownloads(...subpath: string[]): string {
-	return getCaptainData("downloads", ...subpath);
+	return normalizePath(getCaptainData("downloads", ...subpath));
 }
 
 export function getCaptainTemporary(...subpath: string[]): string {
-	return getCaptainData("temp", ...subpath);
+	return normalizePath(getCaptainData("temp", ...subpath));
 }
