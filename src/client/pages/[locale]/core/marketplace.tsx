@@ -14,6 +14,7 @@ import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
 import React, { useEffect, useState } from "react";
+import useSWR from "swr";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
@@ -39,9 +40,38 @@ interface MarketplaceItemPayload {
 	architecture?: string;
 }
 
-function fetchMarketplace() {
-	window.ipc.send(buildKey([ID.MARKETPLACE], { suffix: ":download" }), {
-		marketplaceUrl,
+/**
+ * Fetch data for the marketplace. When we are connected to the internet, we fetch the live data.
+ * When we are not connected, we use the cached data.
+ *
+ * @param connected boolean - Internet connection status
+ * @param marketplaceUrl string - URL pointing to the marketplace data
+ *
+ * @returns Promise
+ */
+function fetchMarketplace(connected: boolean, marketplaceUrl: string): Promise<any> {
+	return new Promise((resolve, reject) => {
+		const unsubscribeData = window.ipc.on(
+			buildKey([ID.MARKETPLACE], { suffix: ":data" }),
+			data => {
+				resolve(data);
+				unsubscribeData();
+				unsubscribeError();
+			}
+		);
+		const unsubscribeError = window.ipc.on(
+			buildKey([ID.MARKETPLACE], { suffix: ":error" }),
+			error => {
+				reject(error);
+				unsubscribeData();
+				unsubscribeError();
+			}
+		);
+
+		window.ipc.send(buildKey([ID.MARKETPLACE], { suffix: ":fetch" }), {
+			marketplaceUrl,
+			download: connected,
+		});
 	});
 }
 
@@ -127,8 +157,6 @@ function ItemCard({ payload }: { payload: MarketplaceItemPayload }) {
  * @param error - The error message
  */
 function ErrorMessage({ error }: { error: string }) {
-	const { t } = useTranslation(["labels"]);
-
 	return (
 		<Alert
 			color="warning"
@@ -137,13 +165,6 @@ function ErrorMessage({ error }: { error: string }) {
 			slotProps={{ startDecorator: { sx: { alignSelf: "flexStart" } } }}
 		>
 			<Typography>{error}</Typography>
-			<Button
-				onClick={() => {
-					fetchMarketplace();
-				}}
-			>
-				{t("lables:retry")}
-			</Button>
 		</Alert>
 	);
 }
@@ -151,53 +172,19 @@ function ErrorMessage({ error }: { error: string }) {
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["common", "labels"]);
 
-	const [items, setItems] = useState<MarketplaceItem[]>([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
-
 	const connected = useOnlineStatus();
 
-	const notConnected = t("texts:notConnectedToTheInternet");
+	const {
+		data,
+		error,
+		isLoading,
+		mutate: updateMarketplace,
+	} = useSWR(["marketplaceData", connected], () => fetchMarketplace(connected, marketplaceUrl), {
+		shouldRetryOnError: false,
+		revalidateOnFocus: true,
+	});
 
-	useEffect(() => {
-		// Receive marketplace data
-		const unsubscribeData = window.ipc.on(
-			buildKey([ID.MARKETPLACE], { suffix: ":data" }),
-			data => {
-				setItems(data.items);
-				setLoading(false);
-
-				if (connected) {
-					setError("");
-				}
-			}
-		);
-
-		// Error for marketplace data
-		const unsubscribeError = window.ipc.on(
-			buildKey([ID.MARKETPLACE], { suffix: ":error" }),
-			error => {
-				setError(error);
-				setLoading(false);
-			}
-		);
-
-		// Download the latest marketplace data
-		if (connected) {
-			fetchMarketplace();
-		} else {
-			// Download the cached marketplace data
-			window.ipc.send(buildKey([ID.MARKETPLACE], { suffix: ":cached" }));
-
-			setError(notConnected);
-			setLoading(false);
-		}
-
-		return () => {
-			unsubscribeError();
-			unsubscribeData();
-		};
-	}, [connected, notConnected]);
+	const errorMessage = connected ? error || null : t("texts:notConnectedToTheInternet");
 
 	return (
 		<>
@@ -205,25 +192,24 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 				<title>{t("labels:marketplace")}</title>
 			</Head>
 
-			{loading && (
+			{/* Loading the data for the marketplace */}
+			{isLoading && (
 				<Box>
 					<CircularProgress />
 				</Box>
 			)}
 
-			{!loading && error && (
+			{/* Some kind of error occurred */}
+			{!isLoading && errorMessage && (
 				<Box>
-					<ErrorMessage error={error} />
+					<ErrorMessage error={errorMessage} />
 				</Box>
 			)}
 
-			{!loading && (!error || !connected) && (
+			{/* Everything was loaded, so we show the marketplace items */}
+			{!isLoading && !errorMessage && (
 				<Box>
-					<Button
-						onClick={() => {
-							fetchMarketplace();
-						}}
-					>
+					<Button disabled={!connected} onClick={updateMarketplace}>
 						{t("labels:marketplaceRefresh")}
 					</Button>
 
@@ -233,7 +219,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 							gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
 						}}
 					>
-						{items.map(item => (
+						{data.items.map((item: MarketplaceItem) => (
 							<ItemCard key={item.id} payload={item.payload} />
 						))}
 					</Box>
