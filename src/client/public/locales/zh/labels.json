@@ -16,6 +16,7 @@
   "delete": "删除",
   "deleted": "已删除",
   "download": "下载",
+  "downloaded": "已下载",
   "downloadedOf": "已下载 {{downloaded}} 个，共 {{downloads}} 个",
   "downloading": "下载中",
   "downloads": "下载",
@@ -48,6 +49,8 @@
   },
   "livePainting": "实时绘画",
   "markdown": "Markdown",
+  "marketplace": "市场",
+  "marketplaceRefresh": "刷新市场",
   "maximize": "最大化",
   "minimize": "最小化",
   "mood": {
@@ -70,9 +73,10 @@
   "randomize": "随机化",
   "readStory": "阅读故事",
   "removeAllImages": "移除所有图片",
+  "retry": "重试",
   "save": "保存",
-  "saveImage": "保存图片",
   "saved": "已保存",
+  "saveImage": "保存图片",
   "seacrh": "搜索",
   "security": "安全",
   "sideBySide": "并排",
@@ -91,8 +95,5 @@
   "text": "文本",
   "textToImage": "文字转图片",
   "undefined": "未知",
-  "unpacking": "解压中",
-  "retry": "重试",
-  "marketplace": "市场",
-  "marketplaceRefresh": "刷新市场"
+  "unpacking": "解压中"
 }

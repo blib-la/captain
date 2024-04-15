@@ -16,6 +16,7 @@
   "delete": "Verwijderen",
   "deleted": "Verwijderd",
   "download": "Downloaden",
+  "downloaded": "Gedownload",
   "downloadedOf": "{{downloaded}} van {{downloads}} gedownload",
   "downloading": "Downloaden",
   "downloads": "Downloads",
@@ -48,6 +49,8 @@
   },
   "livePainting": "Live Schilderen",
   "markdown": "Markdown",
+  "marketplace": "Marktplaats",
+  "marketplaceRefresh": "Marktplaats verversen",
   "maximize": "Maximaliseren",
   "minimize": "Minimaliseren",
   "mood": {
@@ -70,9 +73,10 @@
   "randomize": "Willekeurig",
   "readStory": "Verhaal Lezen",
   "removeAllImages": "Alle afbeeldingen verwijderen",
+  "retry": "Opnieuw proberen",
   "save": "Opslaan",
-  "saveImage": "Afbeelding opslaan",
   "saved": "Opgeslagen",
+  "saveImage": "Afbeelding opslaan",
   "seacrh": "Zoeken",
   "security": "Beveiliging",
   "sideBySide": "Zij aan Zij",
@@ -91,8 +95,5 @@
   "text": "Tekst",
   "textToImage": "Tekst naar Afbeelding",
   "undefined": "Onbekend",
-  "unpacking": "Uitpakken",
-  "retry": "Opnieuw proberen",
-  "marketplace": "Marktplaats",
-  "marketplaceRefresh": "Marktplaats verversen"
+  "unpacking": "Uitpakken"
 }

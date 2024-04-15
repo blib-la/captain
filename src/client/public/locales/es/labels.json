@@ -16,6 +16,7 @@
   "delete": "Eliminar",
   "deleted": "Eliminado",
   "download": "Descargar",
+  "downloaded": "Descargado",
   "downloadedOf": "Descargados {{downloaded}} de {{downloads}}",
   "downloading": "Descargando",
   "downloads": "Descargas",
@@ -48,6 +49,8 @@
   },
   "livePainting": "Pintura en Vivo",
   "markdown": "Markdown",
+  "marketplace": "Mercado",
+  "marketplaceRefresh": "Actualizar Mercado",
   "maximize": "Maximizar",
   "minimize": "Minimizar",
   "mood": {
@@ -70,9 +73,10 @@
   "randomize": "Aleatorizar",
   "readStory": "Leer Historia",
   "removeAllImages": "Eliminar todas las imágenes",
+  "retry": "Intentar de nuevo",
   "save": "Guardar",
-  "saveImage": "Guardar imagen",
   "saved": "Guardado",
+  "saveImage": "Guardar imagen",
   "seacrh": "Buscar",
   "security": "Seguridad",
   "sideBySide": "Lado a Lado",
@@ -91,8 +95,5 @@
   "text": "Texto",
   "textToImage": "Texto a Imagen",
   "undefined": "Desconocido",
-  "unpacking": "Desempaquetando",
-  "retry": "Intentar de nuevo",
-  "marketplace": "Mercado",
-  "marketplaceRefresh": "Actualizar Mercado"
+  "unpacking": "Desempaquetando"
 }

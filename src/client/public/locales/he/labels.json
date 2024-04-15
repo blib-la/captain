@@ -16,6 +16,7 @@
   "delete": "מחק",
   "deleted": "נמחק",
   "download": "הורדה",
+  "downloaded": "הורד",
   "downloadedOf": "הורדו {{downloaded}} מתוך {{downloads}}",
   "downloading": "מוריד",
   "downloads": "הורדות",
@@ -48,6 +49,8 @@
   },
   "livePainting": "ציור חי",
   "markdown": "Markdown",
+  "marketplace": "שוק",
+  "marketplaceRefresh": "רענן את השוק",
   "maximize": "הגדל",
   "minimize": "מזער",
   "mood": {
@@ -70,9 +73,10 @@
   "randomize": "הפוך לאקראי",
   "readStory": "קרא סיפור",
   "removeAllImages": "הסר את כל התמונות",
+  "retry": "נסה שוב",
   "save": "שמור",
-  "saveImage": "שמור תמונה",
   "saved": "נשמר",
+  "saveImage": "שמור תמונה",
   "seacrh": "חיפוש",
   "security": "ביטחון",
   "sideBySide": "צד לצד",
@@ -91,8 +95,5 @@
   "text": "טקסט",
   "textToImage": "טקסט לתמונה",
   "undefined": "לא ידוע",
-  "unpacking": "פותח",
-  "retry": "נסה שוב",
-  "marketplace": "שוק",
-  "marketplaceRefresh": "רענן את השוק"
+  "unpacking": "פותח"
 }

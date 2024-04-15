@@ -16,6 +16,7 @@
   "delete": "Удалить",
   "deleted": "Удалено",
   "download": "Скачать",
+  "downloaded": "Загружено",
   "downloadedOf": "Загружено {{downloaded}} из {{downloads}}",
   "downloading": "Загрузка",
   "downloads": "Загрузки",
@@ -48,6 +49,8 @@
   },
   "livePainting": "Живая Живопись",
   "markdown": "Markdown",
+  "marketplace": "Рынок",
+  "marketplaceRefresh": "Обновить рынок",
   "maximize": "Развернуть",
   "minimize": "Свернуть",
   "mood": {
@@ -70,9 +73,10 @@
   "randomize": "Рандомизировать",
   "readStory": "Читать Историю",
   "removeAllImages": "Удалить все изображения",
+  "retry": "Попробовать снова",
   "save": "Сохранить",
-  "saveImage": "Сохранить изображение",
   "saved": "Сохранено",
+  "saveImage": "Сохранить изображение",
   "seacrh": "Поиск",
   "security": "Безопасность",
   "sideBySide": "Бок о Бок",
@@ -91,8 +95,5 @@
   "text": "Текст",
   "textToImage": "Текст в Изображение",
   "undefined": "Неизвестно",
-  "unpacking": "Распаковка",
-  "retry": "Попробовать снова",
-  "marketplace": "Рынок",
-  "marketplaceRefresh": "Обновить рынок"
+  "unpacking": "Распаковка"
 }

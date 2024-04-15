@@ -16,6 +16,7 @@
   "delete": "Delete",
   "deleted": "Deleted",
   "download": "Download",
+  "downloaded": "Downloaded",
   "downloadedOf": "Downloaded {{downloaded}} of {{downloads}}",
   "downloading": "Downloading",
   "downloads": "Downloads",
@@ -48,6 +49,8 @@
   },
   "livePainting": "Live Painting",
   "markdown": "Markdown",
+  "marketplace": "Marketplace",
+  "marketplaceRefresh": "Refresh Marketplace",
   "maximize": "Maximize",
   "minimize": "Minimize",
   "mood": {
@@ -70,9 +73,10 @@
   "randomize": "Randomize",
   "readStory": "Read Story",
   "removeAllImages": "Remove all Images",
+  "retry": "Try Again",
   "save": "Save",
-  "saveImage": "Save Image",
   "saved": "Saved",
+  "saveImage": "Save Image",
   "seacrh": "Search",
   "security": "Security",
   "sideBySide": "Side by Side",
@@ -91,8 +95,5 @@
   "text": "Text",
   "textToImage": "Text to Image",
   "undefined": "Unknown",
-  "unpacking": "Unpacking",
-  "retry": "Try Again",
-  "marketplace": "Marketplace",
-  "marketplaceRefresh": "Refresh Marketplace"
+  "unpacking": "Unpacking"
 }

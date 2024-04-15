@@ -16,6 +16,7 @@
   "delete": "削除",
   "deleted": "削除済み",
   "download": "ダウンロード",
+  "downloaded": "ダウンロード済み",
   "downloadedOf": "{{downloaded}} / {{downloads}} ダウンロード済み",
   "downloading": "ダウンロード中",
   "downloads": "ダウンロード",
@@ -48,6 +49,8 @@
   },
   "livePainting": "ライブペインティング",
   "markdown": "Markdown",
+  "marketplace": "マーケットプレイス",
+  "marketplaceRefresh": "マーケットプレイスを更新",
   "maximize": "最大化",
   "minimize": "最小化",
   "mood": {
@@ -70,9 +73,10 @@
   "randomize": "ランダム化",
   "readStory": "ストーリー閲覧",
   "removeAllImages": "すべての画像を削除",
+  "retry": "再試行",
   "save": "保存",
-  "saveImage": "画像を保存",
   "saved": "保存済み",
+  "saveImage": "画像を保存",
   "seacrh": "検索",
   "security": "セキュリティ",
   "sideBySide": "並列",
@@ -91,8 +95,5 @@
   "text": "テキスト",
   "textToImage": "テキストから画像へ",
   "undefined": "不明",
-  "unpacking": "解凍中",
-  "retry": "再試行",
-  "marketplace": "マーケットプレイス",
-  "marketplaceRefresh": "マーケットプレイスを更新"
+  "unpacking": "解凍中"
 }
