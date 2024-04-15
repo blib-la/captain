@@ -288,6 +288,52 @@ async function runStartup() {
 	logger.info(`runStartup(): focused core window`);
 }
 
+async function openCoreApp(page: string, action?: string) {
+	apps.core ||= await createCoreWindow();
+	// Add action to the url
+	await loadURL(apps.core, `core/${page}${action ? `?action=${action}` : ""}`);
+	apps.core.on("close", () => {
+		apps.core = null;
+	});
+
+	if (apps.core.isMinimized()) {
+		apps.core.restore();
+	}
+
+	apps.core.focus();
+}
+
+const contextMenu = Menu.buildFromTemplate([
+	{
+		label: "Quit Captain",
+		type: "normal",
+		click() {
+			app.quit();
+		},
+	},
+	{
+		label: "Open Dashboard",
+		type: "normal",
+		click() {
+			openCoreApp("dashboard");
+		},
+	},
+	{
+		label: "Open Downloads",
+		type: "normal",
+		click() {
+			openCoreApp("downloads");
+		},
+	},
+	{
+		label: "Open Settings",
+		type: "normal",
+		click() {
+			openCoreApp("settings");
+		},
+	},
+]);
+
 export async function cleanFiles() {
 	if (fs.existsSync(getCaptainData("windows"))) {
 		await fsp.rm(getCaptainData("windows"), { recursive: true });
@@ -301,8 +347,6 @@ export async function cleanFiles() {
 	const oldStores = await globby(["STORE-WINDOW--*.json"], { cwd: getUserData() });
 	await Promise.all(oldStores.map(async filePath => fsp.rm(filePath)));
 }
-
-let tray = null;
 
 /**
  * Initializes the application by determining its current state based on version and setup status.
@@ -323,18 +367,9 @@ export async function main() {
 	logger.info(`main(): started`);
 
 	// Clean all temporary files upon startup
-	await cleanFiles();
 	await app.whenReady();
-	tray = new Tray(getDirectory("icon.png"));
-	const contextMenu = Menu.buildFromTemplate([
-		{
-			label: "Quit Captain",
-			type: "normal",
-			click() {
-				app.quit();
-			},
-		},
-	]);
+	const tray = new Tray(getDirectory("icon.png"));
+
 	tray.setToolTip("Captain");
 	tray.setContextMenu(contextMenu);
 	logger.info(`main(): app is ready`);
@@ -377,19 +412,7 @@ export async function main() {
 			}
 		) => {
 			if (isCoreView(appId)) {
-				// If the appId is a core view we need to handle it
-				apps.core ||= await createCoreWindow();
-				// Add action to the url
-				await loadURL(apps.core, `core/${appId}${action ? `?action=${action}` : ""}`);
-				apps.core.on("close", () => {
-					apps.core = null;
-				});
-
-				if (apps.core.isMinimized()) {
-					apps.core.restore();
-				}
-
-				apps.core.focus();
+				await openCoreApp(appId, action);
 			} else if (appId === "preview") {
 				const scopeId = `${appId}:${query?.id ?? ""}`;
 				apps[scopeId] ||= await createCoreAppWindow(

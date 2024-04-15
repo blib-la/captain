@@ -8,6 +8,9 @@ import { app } from "electron";
 
 import { isDevelopment, isTest } from "#/flags";
 
+// Ensure that core settings are loaded
+import "@/core-setup";
+
 export function normalizePath(pathname: string) {
 	return pathname.replaceAll("\\", "/");
 }
