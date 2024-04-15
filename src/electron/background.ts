@@ -1,7 +1,8 @@
 import { app } from "electron";
 
 import { isTest } from "#/flags";
-import { cleanFiles, main } from "@/main";
+import { registerApps } from "@/app-loaders";
+import { main } from "@/main";
 import logger from "@/services/logger";
 import { watchStores } from "@/stores/watchers";
 
@@ -60,6 +61,7 @@ import "@/ipc/keys";
 
 // Import downloads
 import "@/ipc/downloads";
+import { cleanFiles } from "@/utils/clean-files";
 
 // Obtain a lock to check if the app is locked (primary instance)
 // If false, we close the app, as we want to prevent multiple instances of our app
@@ -69,6 +71,9 @@ const gotTheLock = app.requestSingleInstanceLock();
 let unsubscribe: (() => Promise<void>) | undefined;
 
 if (gotTheLock || isTest) {
+	// Register user installed apps
+	registerApps();
+
 	main().then(() => {
 		logger.info("Application started successfully");
 		unsubscribe = watchStores();
