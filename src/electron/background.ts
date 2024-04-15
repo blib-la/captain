@@ -5,6 +5,7 @@ import { registerApps } from "@/app-loaders";
 import { main } from "@/main";
 import logger from "@/services/logger";
 import { watchStores } from "@/stores/watchers";
+import { cleanFiles } from "@/utils/clean-files";
 
 // Import core setup module.
 // This ensures the core setup process is executed explicitly, even though it may already be called
@@ -61,7 +62,6 @@ import "@/ipc/keys";
 
 // Import downloads
 import "@/ipc/downloads";
-import { cleanFiles } from "@/utils/clean-files";
 
 // Obtain a lock to check if the app is locked (primary instance)
 // If false, we close the app, as we want to prevent multiple instances of our app
