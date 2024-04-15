@@ -91,5 +91,8 @@
   "text": "טקסט",
   "textToImage": "טקסט לתמונה",
   "undefined": "לא ידוע",
-  "unpacking": "פותח"
+  "unpacking": "פותח",
+  "retry": "נסה שוב",
+  "marketplace": "שוק",
+  "marketplaceRefresh": "רענן את השוק"
 }

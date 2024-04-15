@@ -12,5 +12,6 @@
   "quote4": "Travailler avec une IA, c'est comme avoir un ami qui sait presque tout mais qui ne sait toujours pas faire ses lacets.",
   "quote5": "J'ai demandé une blague à une IA. Elle a dit, 'Je pourrais te raconter une blague UDP, mais tu risques de ne pas la recevoir.'",
   "storyFormIntroduction": "Bienvenue dans notre outil de personnalisation d'histoires ! Après avoir donné vie à vos visions avec notre outil de peinture alimenté par IA, il est temps de tisser des récits autour de vos créations. Sélectionnez vos préférences ci-dessous pour façonner l'histoire qui convient le mieux à votre chef-d'œuvre. Que vous désiriez une histoire courte et douce, un voyage de longueur moyenne vers le fantastique, ou une plongée profonde dans les royaumes de l'inconnu, nous sommes ici pour donner vie à votre histoire. Choisissez votre style narratif, définissez le ton émotionnel, et créons ensemble une histoire magique.",
-  "unpackingSuccess": "Super, tout a été installé. Vous y êtes presque."
+  "unpackingSuccess": "Super, tout a été installé. Vous y êtes presque.",
+  "notConnectedToTheInternet": "Tu n'es pas connecté à Internet"
 }

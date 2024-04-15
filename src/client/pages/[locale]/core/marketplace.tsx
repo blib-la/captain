@@ -19,6 +19,7 @@ import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 
+// ToDo: Replace with actual URL
 const marketplaceUrl =
 	"https://github.com/blib-la/captain-marketplace/releases/download/1.0.0-alpha.3/index.json";
 
@@ -223,7 +224,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 							fetchMarketplace();
 						}}
 					>
-						{t("labels:refreshMarketplace")}
+						{t("labels:marketplaceRefresh")}
 					</Button>
 
 					<Box

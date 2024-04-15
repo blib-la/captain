@@ -91,5 +91,8 @@
   "text": "テキスト",
   "textToImage": "テキストから画像へ",
   "undefined": "不明",
-  "unpacking": "解凍中"
+  "unpacking": "解凍中",
+  "retry": "再試行",
+  "marketplace": "マーケットプレイス",
+  "marketplaceRefresh": "マーケットプレイスを更新"
 }

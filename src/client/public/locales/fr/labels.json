@@ -91,5 +91,8 @@
   "text": "Texte",
   "textToImage": "Texte en Image",
   "undefined": "Inconnu",
-  "unpacking": "Déballage"
+  "unpacking": "Déballage",
+  "retry": "Réessayer",
+  "marketplace": "Marché",
+  "marketplaceRefresh": "Actualiser le marché"
 }

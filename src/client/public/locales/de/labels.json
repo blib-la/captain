@@ -17,7 +17,7 @@
   "deleted": "Gelöscht",
   "download": "Herunterladen",
   "downloadedOf": "{{downloaded}} von {{downloads}} heruntergeladen",
-  "downloading": "Herunterladen",
+  "downloading": "Wird heruntergeladen",
   "downloads": "Downloads",
   "explorer": "Explorer",
   "finishing": "Abschluss",
@@ -91,5 +91,8 @@
   "text": "Text",
   "textToImage": "Text zu Bild",
   "undefined": "Unbekannt",
-  "unpacking": "Entpacken"
+  "unpacking": "Entpacken",
+  "retry": "Erneut versuchen",
+  "marketplace": "Marktplatz",
+  "marketplaceRefresh": "Marktplatz aktualisieren"
 }

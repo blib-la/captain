@@ -91,5 +91,8 @@
   "text": "Tekst",
   "textToImage": "Tekst naar Afbeelding",
   "undefined": "Onbekend",
-  "unpacking": "Uitpakken"
+  "unpacking": "Uitpakken",
+  "retry": "Opnieuw proberen",
+  "marketplace": "Marktplaats",
+  "marketplaceRefresh": "Marktplaats verversen"
 }

@@ -91,5 +91,8 @@
   "text": "Текст",
   "textToImage": "Текст в Изображение",
   "undefined": "Неизвестно",
-  "unpacking": "Распаковка"
+  "unpacking": "Распаковка",
+  "retry": "Попробовать снова",
+  "marketplace": "Рынок",
+  "marketplaceRefresh": "Обновить рынок"
 }

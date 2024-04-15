@@ -91,5 +91,8 @@
   "text": "文本",
   "textToImage": "文字转图片",
   "undefined": "未知",
-  "unpacking": "解压中"
+  "unpacking": "解压中",
+  "retry": "重试",
+  "marketplace": "市场",
+  "marketplaceRefresh": "刷新市场"
 }
