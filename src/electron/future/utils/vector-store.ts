@@ -1,6 +1,7 @@
 import fsp from "node:fs/promises";
 import path from "node:path";
 
+import type { VectorStoreDocument } from "@captn/utils/types";
 // The @xenova/transformers package is imported directly from GitHub as it includes
 // certain functionalities that are not available in the npm published version. This package
 // may not have complete type definitions, which can cause TypeScript to raise compilation errors.
@@ -9,7 +10,6 @@ import path from "node:path";
 // See package.json for the specific version and source of the @xenova/transformers package.
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import type { VectorStoreDocument } from "@captn/utils/types";
 import { env } from "@xenova/transformers";
 import exifr from "exifr";
 import { globby } from "globby";
@@ -19,7 +19,12 @@ import { VECTOR_STORE_COLLECTION } from "#/constants";
 import { extractH1Headings } from "#/string";
 import { CustomHuggingFaceTransformersEmbeddings } from "@/langchain/custom-hugging-face-transformers-embeddings";
 import { VectorStore } from "@/services/vector-store";
-import { getCaptainData, getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
+import {
+	getCaptainData,
+	getCaptainDownloads,
+	getDirectory,
+	normalizePath,
+} from "@/utils/path-helpers";
 import { splitDocument } from "@/utils/split-documents";
 
 export async function initialize() {
@@ -63,10 +68,9 @@ export async function populateFromDocuments() {
 
 	const images = await Promise.all(
 		imagePaths.map(async imagePath => {
-			const exif = await exifr.parse(imagePath);
 			const { name, base } = path.parse(imagePath);
-			return {
-				content: exif.Description ?? "",
+			const data = {
+				content: "an image",
 				payload: {
 					id: name,
 					type: "image",
@@ -76,6 +80,16 @@ export async function populateFromDocuments() {
 					filePath: imagePath,
 				},
 			};
+
+			// Try to read the data from the image
+			try {
+				const exif = await exifr.parse(imagePath);
+				data.content = exif.Caption || exif.Prompt || exif.Description || data.content;
+			} catch {
+				console.log("No image data found");
+			}
+
+			return data;
 		})
 	);
 	const stories_: VectorStoreDocument[] = [];
@@ -87,7 +101,7 @@ export async function populateFromDocuments() {
 			stories_.push({
 				content: chunk,
 				payload: {
-					id: dir.replaceAll("\\", "/").split("/").pop()!,
+					id: normalizePath(dir).split("/").pop()!,
 					label: extractH1Headings(content)[0] || "Story",
 					type: "story",
 					fileType: "md",

@@ -58,7 +58,10 @@ ipcMain.on(
 	APP_MESSAGE_KEY,
 	async (
 		event,
-		{ message, appId }: { message: SDKMessage<{ stablefast?: boolean }>; appId: string }
+		{
+			message,
+			appId = message.payload?.appId,
+		}: { message: SDKMessage<{ stablefast?: boolean; appId: string }>; appId: string }
 	) => {
 		if (message.action !== "livePainting:start") {
 			return;
@@ -96,6 +99,7 @@ ipcMain.on(
 		];
 
 		if (!message.payload.stablefast) {
+			console.log("livePainting disable stablefast");
 			scriptArguments.push("--disable_stablefast");
 		}
 
@@ -173,16 +177,16 @@ ipcMain.on(
 						});
 					}
 				} catch {
-					logger.info(`livePatinting: Received non-JSON data: ${dataString}`);
+					logger.info(`livePainting: Received non-JSON data: ${dataString}`);
 					console.log("Received non-JSON data:", dataString);
 				}
 			});
 
-			logger.info(`livePatinting: processing stderr`);
+			logger.info(`livePainting: processing stderr`);
 			process_.stderr.on("livePainting:data", data => {
 				console.error(`error: ${data}`);
 
-				logger.info(`livePatinting: error: ${data}`);
+				logger.info(`livePainting: error: ${data}`);
 
 				event.sender.send(channel, { action: "livePainting:error", payload: data });
 			});

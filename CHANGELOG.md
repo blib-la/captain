@@ -1,3 +1,38 @@
+# [1.0.0-alpha.43](https://github.com/blib-la/captain/compare/v1.0.0-alpha.42...v1.0.0-alpha.43) (2024-04-15)
+
+
+### Features
+
+* **tray:** add link to explorer ([#204](https://github.com/blib-la/captain/issues/204)) ([cf50ee5](https://github.com/blib-la/captain/commit/cf50ee5dd82632c5ef883700c309f094cf0fa0bb)), closes [#175](https://github.com/blib-la/captain/issues/175)
+
+# [1.0.0-alpha.42](https://github.com/blib-la/captain/compare/v1.0.0-alpha.41...v1.0.0-alpha.42) (2024-04-15)
+
+
+### Bug Fixes
+
+* clean files causes app to crash ([#203](https://github.com/blib-la/captain/issues/203)) ([d1cb64a](https://github.com/blib-la/captain/commit/d1cb64a580ce0e989407c18a4a0aa0b99e8853f6))
+
+# [1.0.0-alpha.41](https://github.com/blib-la/captain/compare/v1.0.0-alpha.40...v1.0.0-alpha.41) (2024-04-15)
+
+
+### Features
+
+* clean temporary ([#201](https://github.com/blib-la/captain/issues/201)) ([5455075](https://github.com/blib-la/captain/commit/54550756f717584b7a72abd46b53f63bc01d837c)), closes [#185](https://github.com/blib-la/captain/issues/185)
+
+# [1.0.0-alpha.40](https://github.com/blib-la/captain/compare/v1.0.0-alpha.39...v1.0.0-alpha.40) (2024-04-12)
+
+
+### Features
+
+* add preview app ([#198](https://github.com/blib-la/captain/issues/198)) ([f6b1132](https://github.com/blib-la/captain/commit/f6b11325c4d9c80e3eebc6718d84a03e9de5fdd7)), closes [#118](https://github.com/blib-la/captain/issues/118)
+
+# [1.0.0-alpha.39](https://github.com/blib-la/captain/compare/v1.0.0-alpha.38...v1.0.0-alpha.39) (2024-04-11)
+
+
+### Bug Fixes
+
+* ensure better compat to old vs new api ([#197](https://github.com/blib-la/captain/issues/197)) ([5f15b06](https://github.com/blib-la/captain/commit/5f15b068cd0c147f87d642455adcee1072237528))
+
 # [1.0.0-alpha.38](https://github.com/blib-la/captain/compare/v1.0.0-alpha.37...v1.0.0-alpha.38) (2024-04-11)
 
 

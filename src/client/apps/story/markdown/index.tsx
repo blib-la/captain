@@ -8,7 +8,7 @@ interface ComponentProperties {
 	children?: ReactNode;
 }
 
-export function components(images: string[]): Partial<Components> {
+export function components(images?: string[]): Partial<Components> {
 	return {
 		h1: ({ children }: ComponentProperties) => (
 			<Typography level="h1" component="h1" my={2}>
@@ -65,7 +65,7 @@ export function components(images: string[]): Partial<Components> {
 			}
 
 			const index = Number.parseInt(src, 10);
-			return (
+			return images ? (
 				images[index] && (
 					<Box
 						component="img"
@@ -94,12 +94,39 @@ export function components(images: string[]): Partial<Components> {
 						}}
 					/>
 				)
+			) : (
+				<Box
+					component="img"
+					src={src}
+					alt={alt}
+					sx={{
+						my: 1,
+						mr: {
+							md: (index - 1) % 2 ? 0 : 2,
+						},
+						ml: {
+							md: (index - 1) % 2 ? 2 : 0,
+						},
+						float: {
+							md: (index - 1) % 2 ? "right" : "left",
+						},
+						clear: { md: (index - 1) % 2 ? "inline-end" : "inline-start" },
+						width: {
+							xs: "100%",
+							md: "30%",
+						},
+						maxWidth: {
+							md: 512,
+						},
+						height: "auto",
+					}}
+				/>
 			);
 		},
 	};
 }
 
-export function Markdown({ markdown, images }: { markdown: string; images: string[] }) {
+export function Markdown({ markdown, images }: { markdown: string; images?: string[] }) {
 	return (
 		<Box sx={{ "*": { userSelect: "text" } }}>
 			<ReactMarkdown components={components(images)}>{markdown}</ReactMarkdown>

@@ -28,6 +28,15 @@ jest.mock("electron", () => ({
 			workArea: { x: 0, y: 0, width: 1920, height: 1040 },
 		}),
 	},
+	app: {
+		getPath: jest.fn(pathName => {
+			if (pathName === "userData") {
+				return "/mocked/user/data/path";
+			}
+
+			return "/mocked/default/path";
+		}),
+	},
 }));
 
 jest.mock("electron-store", () => ({

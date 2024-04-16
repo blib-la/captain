@@ -1,9 +1,11 @@
 import { app } from "electron";
 
 import { isTest } from "#/flags";
+import { registerApps } from "@/app-loaders";
 import { main } from "@/main";
 import logger from "@/services/logger";
 import { watchStores } from "@/stores/watchers";
+import { cleanFiles } from "@/utils/clean-files";
 
 // Import core setup module.
 // This ensures the core setup process is executed explicitly, even though it may already be called
@@ -72,6 +74,9 @@ const gotTheLock = app.requestSingleInstanceLock();
 let unsubscribe: (() => Promise<void>) | undefined;
 
 if (gotTheLock || isTest) {
+	// Register user installed apps
+	registerApps();
+
 	main().then(() => {
 		logger.info("Application started successfully");
 		unsubscribe = watchStores();
@@ -81,16 +86,21 @@ if (gotTheLock || isTest) {
 	// This event is emitted when all windows of the application have been closed.
 	// In response, quit the application to free up resources, adhering to typical desktop application
 	// behavior.
-	app.on("window-all-closed", () => {
+	app.on("window-all-closed", async () => {
 		app.quit();
+
+		// Clean all temporary files
+		await cleanFiles();
+
 		if (unsubscribe) {
-			unsubscribe();
+			await unsubscribe();
 		}
 	});
 } else {
 	// The app is locked, so we force quit the new instance
 	console.log("App is locked by another instance. Closing app");
 	app.quit();
+
 	if (unsubscribe) {
 		unsubscribe();
 	}

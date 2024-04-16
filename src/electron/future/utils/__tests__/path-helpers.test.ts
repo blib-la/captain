@@ -46,7 +46,7 @@ describe("Path Utilities", () => {
 		}));
 		const expectedDevelopmentPath = path.join(process.cwd(), "resources");
 		const { resourcesDirectory } = await import("../path-helpers");
-		expect(resourcesDirectory).toEqual(expectedDevelopmentPath);
+		expect(resourcesDirectory).toEqual(expectedDevelopmentPath.replaceAll("\\", "/"));
 	});
 
 	it("correctly sets resourcesDirectory in production mode", async () => {
@@ -57,19 +57,17 @@ describe("Path Utilities", () => {
 
 		const { resourcesDirectory } = await import("../path-helpers");
 		const expectedProductionPath = path.join(
-			"/path/to/exe",
-			"..",
-			"resources",
+			"/path/to/resources",
 			"app.asar.unpacked",
 			"resources"
 		);
-		expect(resourcesDirectory).toEqual(expectedProductionPath);
+		expect(resourcesDirectory).toEqual(expectedProductionPath.replaceAll("\\", "/"));
 	});
 
 	it("getDirectory combines resourcesDirectory with subpaths", () => {
 		const subpath = ["subdir", "file.txt"];
 		const expectedPath = path.join(resourcesDirectory, ...subpath);
-		expect(getDirectory(...subpath)).toEqual(expectedPath);
+		expect(getDirectory(...subpath)).toEqual(expectedPath.replaceAll("\\", "/"));
 	});
 
 	it("getUserData combines userData path with subpaths", async () => {
@@ -77,7 +75,7 @@ describe("Path Utilities", () => {
 
 		const subpath = ["config", "settings.json"];
 		const expectedPath = path.join("/path/to/userData", ...subpath);
-		expect(getUserData(...subpath)).toEqual(expectedPath);
+		expect(getUserData(...subpath)).toEqual(expectedPath.replaceAll("\\", "/"));
 	});
 
 	it("getCaptainData combines userData with Captain_Data and subpaths", async () => {
@@ -85,7 +83,7 @@ describe("Path Utilities", () => {
 
 		const subpath = ["logs", "log.txt"];
 		const expectedPath = path.join("/path/to/userData", "Captain_Data", ...subpath);
-		expect(getCaptainData(...subpath)).toEqual(expectedPath);
+		expect(getCaptainData(...subpath)).toEqual(expectedPath.replaceAll("\\", "/"));
 	});
 
 	it("getCaptainDownloads combines userData with Captain_Data/downloads and subpaths", async () => {
@@ -98,7 +96,7 @@ describe("Path Utilities", () => {
 			"downloads",
 			...subpath
 		);
-		expect(getCaptainDownloads(...subpath)).toEqual(expectedPath);
+		expect(getCaptainDownloads(...subpath)).toEqual(expectedPath.replaceAll("\\", "/"));
 	});
 
 	it("getCaptainTemporary combines userData with Captain_Data/temp and subpaths", async () => {
@@ -106,6 +104,6 @@ describe("Path Utilities", () => {
 
 		const subpath = ["session.json"];
 		const expectedPath = path.join("/path/to/userData", "Captain_Data", "temp", ...subpath);
-		expect(getCaptainTemporary(...subpath)).toEqual(expectedPath);
+		expect(getCaptainTemporary(...subpath)).toEqual(expectedPath.replaceAll("\\", "/"));
 	});
 });
