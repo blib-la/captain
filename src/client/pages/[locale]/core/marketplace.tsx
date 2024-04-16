@@ -20,9 +20,7 @@ import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 
-// ToDo: Replace with actual URL
-const marketplaceUrl =
-	"https://github.com/blib-la/captain-marketplace/releases/download/1.0.0-alpha.3/index.json";
+const marketplaceUrl = "https://blib-la.github.io/captain-marketplace/captain.json";
 
 interface MarketplaceItem {
 	id: string;
@@ -31,10 +29,11 @@ interface MarketplaceItem {
 
 interface MarketplaceItemPayload {
 	type: string;
+	label: string;
 	description: string;
 	author: string;
-	thumbnail: string;
-	download: RequiredDownload;
+	images: Record<string, string>;
+	sources: RequiredDownload[];
 	link?: string;
 	license?: string;
 	architecture?: string;
@@ -111,7 +110,8 @@ function useOnlineStatus() {
  */
 function ItemCard({ payload }: { payload: MarketplaceItemPayload }) {
 	const { t } = useTranslation(["labels"]);
-	const { download, isCompleted, isDownloading } = useRequiredDownloads([payload.download]);
+
+	const { download, isCompleted, isDownloading } = useRequiredDownloads(payload.sources);
 
 	let buttonText;
 	let startDecorator;
@@ -130,17 +130,17 @@ function ItemCard({ payload }: { payload: MarketplaceItemPayload }) {
 
 	return (
 		<Card>
-			{payload.thumbnail && (
+			{payload.images.thumbnail && (
 				<CardOverflow>
 					<img
-						src={payload.thumbnail}
-						alt={`${payload.download.label} thumbnail`}
+						src={payload.images.thumbnail}
+						alt={`${payload.label} thumbnail`}
 						loading="lazy"
 					/>
 				</CardOverflow>
 			)}
 			<CardContent>
-				<Typography level="h2">{payload.download.label}</Typography>
+				<Typography level="h2">{payload.label}</Typography>
 				<Typography level="body-md">{payload.description}</Typography>
 				<Typography level="body-sm">{payload.author}</Typography>
 				<Button startDecorator={startDecorator} disabled={isCompleted} onClick={download}>
@@ -174,17 +174,16 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 
 	const connected = useOnlineStatus();
 
-	const {
-		data,
-		error,
-		isLoading,
-		mutate: updateMarketplace,
-	} = useSWR(["marketplaceData", connected], () => fetchMarketplace(connected, marketplaceUrl), {
-		shouldRetryOnError: false,
-		revalidateOnFocus: true,
-	});
+	const { data, error, isLoading, mutate } = useSWR(
+		["marketplaceData", connected],
+		() => fetchMarketplace(connected, marketplaceUrl),
+		{
+			shouldRetryOnError: false,
+			revalidateOnFocus: true,
+		}
+	);
 
-	const errorMessage = connected ? error || null : t("texts:notConnectedToTheInternet");
+	const errorMessage = connected ? error ?? null : t("texts:notConnectedToTheInternet");
 
 	return (
 		<>
@@ -207,9 +206,9 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			)}
 
 			{/* Everything was loaded, so we show the marketplace items */}
-			{!isLoading && !errorMessage && (
+			{!isLoading && !errorMessage && data && (
 				<Box>
-					<Button disabled={!connected} onClick={updateMarketplace}>
+					<Button disabled={!connected} onClick={() => mutate()}>
 						{t("labels:marketplaceRefresh")}
 					</Button>
 
@@ -219,7 +218,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 							gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
 						}}
 					>
-						{data.items.map((item: MarketplaceItem) => (
+						{data.map((item: MarketplaceItem) => (
 							<ItemCard key={item.id} payload={item.payload} />
 						))}
 					</Box>
