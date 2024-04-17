@@ -6,7 +6,7 @@ export function isCoreApp(id: string): id is AppId {
 	return (coreApps as readonly string[]).includes(id);
 }
 
-export const coreViews = ["dashboard", "settings", "help"] as const;
+export const coreViews = ["dashboard", "settings", "downloads", "marketplace"] as const;
 
 export type CoreView = (typeof coreViews)[number];
 

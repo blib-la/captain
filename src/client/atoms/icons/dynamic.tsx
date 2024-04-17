@@ -13,6 +13,8 @@ const LightMode = dynamic(() => import("@mui/icons-material/LightMode"));
 const TextSnippet = dynamic(() => import("@mui/icons-material/TextSnippet"));
 const MenuBook = dynamic(() => import("@mui/icons-material/MenuBook"));
 const Settings = dynamic(() => import("@mui/icons-material/Settings"));
+const ShoppingBag = dynamic(() => import("@mui/icons-material/ShoppingBag"));
+const Stream = dynamic(() => import("@mui/icons-material/Stream"));
 const QuestionMark = dynamic(() => import("@mui/icons-material/QuestionMark"));
 
 const iconCache: Record<string, any> = {
@@ -27,6 +29,8 @@ const iconCache: Record<string, any> = {
 	MenuBook,
 	QuestionMark,
 	Settings,
+	ShoppingBag,
+	Stream,
 	TextSnippet,
 	markdown: TextSnippet,
 	image: Image,

@@ -8,12 +8,10 @@ export function useOnlineStatus() {
 
 	useEffect(() => {
 		function setOnline() {
-			console.log("online");
 			setIsOnline(true);
 		}
 
 		function setOffline() {
-			console.log("offline");
 			setIsOnline(false);
 		}
 

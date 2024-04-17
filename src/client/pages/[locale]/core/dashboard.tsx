@@ -27,6 +27,8 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			must_not: [
 				{ key: "id", match: { value: "dashboard" } },
 				{ key: "id", match: { value: "settings" } },
+				{ key: "id", match: { value: "marketplace" } },
+				{ key: "id", match: { value: "downloads" } },
 			],
 		},
 	});

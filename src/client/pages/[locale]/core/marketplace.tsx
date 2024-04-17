@@ -16,7 +16,7 @@ import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
 import React from "react";
-import useSWR, { useSWRConfig } from "swr";
+import useSWR from "swr";
 
 import type {
 	Marketplace,
@@ -130,9 +130,8 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	const { t } = useTranslation(["common", "labels"]);
 
 	const connected = useOnlineStatus();
-	const { mutate } = useSWRConfig();
 
-	const { data, error, isLoading } = useSWR(
+	const { data, error, isLoading, mutate } = useSWR(
 		["marketplaceData", connected],
 		() => fetchMarketplace(connected, marketplaceUrl),
 		{
@@ -167,7 +166,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 						size="sm"
 						startDecorator={isLoading ? <CircularProgress /> : <RefreshIcon />}
 						onClick={() => {
-							mutate("marketplaceData");
+							mutate();
 						}}
 					>
 						{t("labels:marketplaceRefresh")}
