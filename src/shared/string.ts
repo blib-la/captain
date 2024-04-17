@@ -106,3 +106,28 @@ export function getFileType(filePath: string) {
 
 	return "other";
 }
+
+/**
+ * Cleans a given pathname by removing any directory traversal characters.
+ * @param {string} pathname - The path to be cleaned.
+ * @returns {string} The cleaned path.
+ */
+export function cleanPath(pathname: string): string {
+	const segments = pathname.split("/");
+	const stack: string[] = [];
+
+	for (const segment of segments) {
+		if (segment === "..") {
+			// Only pop the stack if there's something to go back from
+			if (stack.length > 0) {
+				stack.pop();
+			}
+		} else if (segment !== "." && segment !== "") {
+			// Ignore '.' which represents current directory
+			// Ignore empty segments caused by consecutive slashes
+			stack.push(segment);
+		}
+	}
+
+	return "/" + stack.join("/");
+}

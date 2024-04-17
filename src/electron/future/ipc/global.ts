@@ -19,7 +19,7 @@ import { v4 } from "uuid";
 import { buildKey } from "#/build-key";
 import { VECTOR_STORE_COLLECTION } from "#/constants";
 import { ID } from "#/enums";
-import { extractH1Headings, getFileType } from "#/string";
+import { cleanPath, extractH1Headings, getFileType } from "#/string";
 import { apps } from "@/apps";
 import { VectorStore } from "@/services/vector-store";
 import { inventoryStore, downloadsStore } from "@/stores";
@@ -124,7 +124,7 @@ ipcMain.handle(
 		} = {},
 		context?: string
 	) => {
-		const filePath = getCaptainData("files", subpath);
+		const filePath = getCaptainData("files", cleanPath(subpath));
 		const { dir: directory, ext, base } = path.parse(filePath);
 		const fileType = getFileType(filePath);
 
@@ -227,7 +227,7 @@ ipcMain.handle(
 ipcMain.handle(
 	buildKey([ID.FILE], { suffix: ":copy" }),
 	async (_event, source: string, destination: string) => {
-		const filePath = getCaptainData("files", destination);
+		const filePath = getCaptainData("files", cleanPath(destination));
 		const { dir: directory } = path.parse(filePath);
 
 		// Ensure the directory exists, creating it if necessary
