@@ -129,5 +129,5 @@ export function cleanPath(pathname: string): string {
 		}
 	}
 
-	return "/" + stack.join("/");
+	return stack.join("/");
 }

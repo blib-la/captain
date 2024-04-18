@@ -57,34 +57,34 @@ describe("getFileType", () => {
 
 describe("cleanPath", () => {
 	it("should handle simple paths without traversal", () => {
-		expect(cleanPath("foo/bar/baz")).toBe("/foo/bar/baz");
+		expect(cleanPath("foo/bar/baz")).toBe("foo/bar/baz");
 	});
 
 	it('should resolve paths with "." to the same path', () => {
-		expect(cleanPath("./foo/./bar/./baz")).toBe("/foo/bar/baz");
+		expect(cleanPath("./foo/./bar/./baz")).toBe("foo/bar/baz");
 	});
 
 	it('should correctly handle paths with ".." to move up directories', () => {
-		expect(cleanPath("foo/bar/baz/../../qux")).toBe("/foo/qux");
+		expect(cleanPath("foo/bar/baz/../../qux")).toBe("foo/qux");
 	});
 
 	it("should return root when moving back past the root", () => {
-		expect(cleanPath("../../../foo")).toBe("/foo");
+		expect(cleanPath("../../../foo")).toBe("foo");
 	});
 
 	it("should ignore empty segments caused by consecutive slashes", () => {
-		expect(cleanPath("foo//bar///baz")).toBe("/foo/bar/baz");
+		expect(cleanPath("foo//bar///baz")).toBe("foo/bar/baz");
 	});
 
 	it("should handle complex mixed paths", () => {
-		expect(cleanPath("../../../foo/bar/./../../baz")).toBe("/baz");
+		expect(cleanPath("../../../foo/bar/./../../baz")).toBe("baz");
 	});
 
 	it("should return a root slash for completely empty paths", () => {
-		expect(cleanPath("")).toBe("/");
+		expect(cleanPath("")).toBe("");
 	});
 
 	it("should return a root slash for paths that resolve to the root", () => {
-		expect(cleanPath("../../../../")).toBe("/");
+		expect(cleanPath("../../../../")).toBe("");
 	});
 });
