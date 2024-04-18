@@ -11,6 +11,7 @@ import type { Except } from "type-fest";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
+import { cleanPath } from "#/string";
 import type { StoryRequest } from "#/types/story";
 import { apps } from "@/apps";
 import { captionImages, createStory, maxTokenMap } from "@/ipc/story";
@@ -61,12 +62,28 @@ ipcMain.on(
 		{
 			message,
 			appId = message.payload?.appId,
-		}: { message: SDKMessage<{ stablefast?: boolean; appId: string }>; appId: string }
+		}: {
+			message: SDKMessage<{
+				stablefast?: boolean;
+				appId: string;
+				vae?: string;
+				model?: string;
+			}>;
+			appId: string;
+		}
 	) => {
 		if (message.action !== "livePainting:start") {
 			return;
 		}
 
+		const {
+			model = "stabilityai/sd-turbo/fp16",
+			vae = "madebyollin/taesd",
+			stablefast,
+		} = message.payload;
+
+		console.log("Live Painting is running for app with ID:", message.payload?.appId);
+		console.log("Live Painting is using:", { model, vae });
 		createDirectory(getCaptainTemporary("live-painting"));
 
 		await fsp.writeFile(
@@ -86,11 +103,9 @@ ipcMain.on(
 		const scriptPath = getDirectory("python/live-painting/main.py");
 		const scriptArguments = [
 			"--model_path",
-			getCaptainDownloads(
-				"stable-diffusion/checkpoints/stabilityai/sd-turbo/fp16/sd-turbo-fp16"
-			),
+			getCaptainDownloads("stable-diffusion/checkpoints", cleanPath(model)),
 			"--vae_path",
-			getCaptainDownloads("stable-diffusion/vae/madebyollin/taesd/taesd"),
+			getCaptainDownloads("stable-diffusion/vae", cleanPath(vae)),
 			"--input_image_path",
 			getCaptainTemporary("live-painting/input.png"),
 			"--output_image_path",
@@ -98,7 +113,7 @@ ipcMain.on(
 			"--debug",
 		];
 
-		if (!message.payload.stablefast) {
+		if (!stablefast) {
 			console.log("livePainting disable stablefast");
 			scriptArguments.push("--disable_stablefast");
 		}

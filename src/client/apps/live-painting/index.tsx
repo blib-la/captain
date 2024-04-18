@@ -103,7 +103,15 @@ export function LivePainting() {
 						}}
 						onStart={() => {
 							setIsLoading(true);
-							send({ action: "livePainting:start", payload: APP_ID });
+							send({
+								action: "livePainting:start",
+								payload: {
+									appId: APP_ID,
+									stablefast: true,
+									model: "stabilityai/sd-turbo/fp16",
+									vae: "madebyollin/taesd/taesd",
+								},
+							});
 						}}
 					/>
 					{/* Switch to toggle the overlay layout mode */}

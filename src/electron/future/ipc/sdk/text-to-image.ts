@@ -6,6 +6,7 @@ import { ipcMain } from "electron";
 import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 
+import { cleanPath } from "#/string";
 import logger from "@/services/logger";
 import { createDirectory } from "@/utils/fs";
 import {
@@ -25,10 +26,30 @@ let cache = "";
 
 ipcMain.on(
 	APP_MESSAGE_KEY,
-	async (event, { message, appId }: { message: SDKMessage<string>; appId: string }) => {
+	async (
+		event,
+		{
+			message,
+			appId,
+		}: {
+			message: SDKMessage<{
+				stablefast?: boolean;
+				appId: string;
+				vae?: string;
+				model?: string;
+			}>;
+			appId: string;
+		}
+	) => {
 		if (message.action !== "text-to-image:start") {
 			return;
 		}
+
+		const {
+			stablefast,
+			model = "stabilityai/sdxl/sd_xl_base_1.0_0.9vae.safetensors",
+			vae = "madebyollin/taesdxl",
+		} = message.payload;
 
 		createDirectory(getCaptainTemporary("text-to-image"));
 
@@ -44,18 +65,19 @@ ipcMain.on(
 		const outputFile = getCaptainTemporary("text-to-image/output.png");
 		const scriptArguments = [
 			"--model_path",
-			getCaptainDownloads(
-				"stable-diffusion/checkpoints/stabilityai/sdxl/sd_xl_base_1.0_0.9vae.safetensors"
-			),
+			getCaptainDownloads("stable-diffusion/checkpoints", cleanPath(model)),
 			"--vae_path",
-			getCaptainDownloads("stable-diffusion/vae/madebyollin/vae-fix"),
+			getCaptainDownloads("stable-diffusion/vae", cleanPath(vae)),
 			"--model_type",
 			"stable-diffusion-xl",
 			"--output_image_path",
 			outputFile,
-			"--disable_stablefast",
 			"--debug",
 		];
+
+		if (!stablefast) {
+			scriptArguments.push("--disable_stablefast");
+		}
 
 		process_ = execa(pythonBinaryPath, ["-u", scriptPath, ...scriptArguments]);
 

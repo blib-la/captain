@@ -82,7 +82,14 @@ export function TextToImage() {
 						}}
 						onStart={() => {
 							setIsLoading(true);
-							send({ action: "text-to-image:start", payload: APP_ID });
+							send({
+								action: "text-to-image:start",
+								payload: {
+									appId: APP_ID,
+									model: "stabilityai/sdxl/sd_xl_base_1.0_0.9vae.safetensors",
+									vae: "madebyollin/taesdxl",
+								},
+							});
 						}}
 					/>
 				</StyledButtonWrapper>
