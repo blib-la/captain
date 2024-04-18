@@ -82,8 +82,6 @@ ipcMain.on(
 			stablefast,
 		} = message.payload;
 
-		console.log("Live Painting is running for app with ID:", message.payload?.appId);
-		console.log("Live Painting is using:", { model, vae });
 		createDirectory(getCaptainTemporary("live-painting"));
 
 		await fsp.writeFile(
@@ -114,7 +112,6 @@ ipcMain.on(
 		];
 
 		if (!stablefast) {
-			console.log("livePainting disable stablefast");
 			scriptArguments.push("--disable_stablefast");
 		}
 
