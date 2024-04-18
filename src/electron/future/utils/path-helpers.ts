@@ -41,6 +41,10 @@ export function getCaptainDownloads(...subpath: string[]): string {
 	return normalizePath(getCaptainData("downloads", ...subpath));
 }
 
+export function getCaptainApps(...subpath: string[]): string {
+	return normalizePath(getCaptainData("apps", ...subpath));
+}
+
 export function getCaptainTemporary(...subpath: string[]): string {
 	return normalizePath(getCaptainData("temp", ...subpath));
 }

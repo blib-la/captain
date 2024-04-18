@@ -14,13 +14,14 @@ import { initLocalProtocol } from "@/init-local-protocol";
 import { runStartup } from "@/run-startup";
 import logger from "@/services/logger";
 import { createTray } from "@/tray";
-import { isCoreView } from "@/utils/core";
+import { isCoreApp, isCoreView } from "@/utils/core";
 import { initialize, populateFromDocuments, reset } from "@/utils/vector-store";
 import {
 	createCoreWindow,
 	createInstallerWindow,
+	handleCoreAppWindow,
 	openApp,
-	openCoreApp,
+	openCore,
 	openPreviewApp,
 } from "@/windows";
 
@@ -86,10 +87,13 @@ export async function main() {
 			}
 		) => {
 			if (isCoreView(appId)) {
-				await openCoreApp(appId, action);
+				await openCore(appId, action);
 			} else if (appId === "preview") {
 				await openPreviewApp(query);
+			} else if (isCoreApp(appId)) {
+				await handleCoreAppWindow(appId, query ?? {}, options ?? {});
 			} else {
+				console.log(`Opening app with ID: ${appId}`, { options, query });
 				await openApp(appId, { options, query });
 			}
 		}

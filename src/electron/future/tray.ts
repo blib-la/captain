@@ -1,7 +1,7 @@
 import { app, Menu, Tray } from "electron";
 
 import { getDirectory } from "@/utils/path-helpers";
-import { openApp, openCoreApp } from "@/windows";
+import { openApp, openCore } from "@/windows";
 
 export const contextMenu = Menu.buildFromTemplate([
 	{
@@ -15,21 +15,21 @@ export const contextMenu = Menu.buildFromTemplate([
 		label: "Open Dashboard",
 		type: "normal",
 		click() {
-			openCoreApp("dashboard");
+			openCore("dashboard");
 		},
 	},
 	{
 		label: "Open Downloads",
 		type: "normal",
 		click() {
-			openCoreApp("downloads");
+			openCore("downloads");
 		},
 	},
 	{
 		label: "Open Settings",
 		type: "normal",
 		click() {
-			openCoreApp("settings");
+			openCore("settings");
 		},
 	},
 	{
