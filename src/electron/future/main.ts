@@ -93,7 +93,7 @@ export async function main() {
 			} else if (isCoreApp(appId)) {
 				await handleCoreAppWindow(appId, query ?? {}, options ?? {});
 			} else {
-				console.log(`Opening app with ID: ${appId}`, { options, query });
+				logger.info(`Opening app with ID: ${appId}`, { options, query });
 				await openApp(appId, { options, query });
 			}
 		}

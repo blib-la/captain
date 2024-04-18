@@ -245,7 +245,7 @@ export async function createAppWindow(
 	id: string,
 	options: BrowserWindowConstructorOptions = {}
 ): Promise<BrowserWindow> {
-	console.log(`Created App with ID: ${id} and these options:`, options);
+	logger.info(`Created App with ID: ${id} and these options:`, options);
 	const appWindow = await createWindow(id, {
 		frame: false,
 		...options,
@@ -258,8 +258,7 @@ export async function createAppWindow(
 	try {
 		await appLoaders[id](appWindow);
 	} catch (error) {
-		console.log(`Failed loading window with ID: ${id}`, appLoaders);
-		console.log(error);
+		logger.error(`Failed loading window with ID: ${id}`, appLoaders, error);
 	}
 
 	return appWindow;
