@@ -6,7 +6,12 @@ import { apps } from "@/apps";
 import { inventoryStore } from "@/stores";
 import { pushToStore } from "@/stores/utils";
 import { sendToAllWindows } from "@/stores/watchers";
-import { getCaptainDownloads, getCaptainTemporary, getDirectory } from "@/utils/path-helpers";
+import {
+	getCaptainApps,
+	getCaptainDownloads,
+	getCaptainTemporary,
+	getDirectory,
+} from "@/utils/path-helpers";
 import { unpack } from "@/utils/unpack";
 
 /**
@@ -134,6 +139,12 @@ export class DownloadManager {
 	 * @private
 	 */
 	private async startDownload(item: DownloadItem): Promise<void> {
+		// Apps should be in apps, not in downloads/apps
+		const targetDestination =
+			item.destination === "apps"
+				? getCaptainApps(item.id)
+				: getCaptainDownloads(item.destination, item.id);
+
 		// Prompt is our always open window, so we can use it for the download
 		const window_ = apps.prompt!;
 		try {
@@ -143,7 +154,7 @@ export class DownloadManager {
 				showProgressBar: true,
 				directory: item.unzip
 					? getCaptainTemporary(item.destination, item.id)
-					: getCaptainDownloads(item.destination, item.id),
+					: targetDestination,
 				onStarted() {
 					item.state = DownloadState.ACTIVE;
 					sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
@@ -170,7 +181,7 @@ export class DownloadManager {
 							await unpack(
 								getDirectory("7zip/win/7za.exe"),
 								file.path,
-								getCaptainDownloads(item.destination, item.id),
+								targetDestination,
 								true
 							);
 							item.state = DownloadState.DONE;
@@ -178,7 +189,7 @@ export class DownloadManager {
 								action: DownloadEvent.COMPLETED,
 								payload: item,
 							});
-							const modelPath = getCaptainDownloads(item.destination, item.id);
+							const modelPath = targetDestination;
 							const keyPath = item.destination.replaceAll("/", ".");
 							pushToStore(inventoryStore, keyPath, {
 								id: item.id,

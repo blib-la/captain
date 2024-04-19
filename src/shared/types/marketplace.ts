@@ -28,4 +28,5 @@ export interface StableDiffusion {
 
 export interface Marketplace {
 	"stable-diffusion": StableDiffusion;
+	apps: { [key: string]: Entry };
 }

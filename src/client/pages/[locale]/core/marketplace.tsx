@@ -109,7 +109,7 @@ function ItemCard({ payload }: { payload: MarketplacePayload }) {
 }
 
 /**
- * Show an alert for every error that happens and provide a way for the user to retry.
+ * Show an alert for every error that happens.
  *
  * @param error - The error message
  */
@@ -177,6 +177,27 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 
 					{data && (
 						<CustomScrollbars>
+							{data.apps && (
+								<Box sx={{ p: 1 }}>
+									<Typography level="h3" component="h2" sx={{ mt: 1, mb: 2 }}>
+										Apps
+									</Typography>
+									<Box
+										sx={{
+											display: "grid",
+											gridTemplateColumns:
+												"repeat(auto-fill, minmax(240px, 1fr))",
+											gap: 1,
+										}}
+									>
+										{Object.entries(data.apps).map(
+											([key, item]: [string, MarketplaceEntry]) => (
+												<ItemCard key={key} payload={item.payload} />
+											)
+										)}
+									</Box>
+								</Box>
+							)}
 							{data["stable-diffusion"] && data["stable-diffusion"].checkpoint && (
 								<Box sx={{ p: 1 }}>
 									<Typography level="h3" component="h2" sx={{ mt: 1, mb: 2 }}>
