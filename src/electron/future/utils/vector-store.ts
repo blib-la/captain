@@ -56,7 +56,7 @@ export async function populateFromDocuments() {
 		cwd: getCaptainData("files/stories"),
 		absolute: true,
 	});
-	const documentPaths = await globby(["**/*.md"], {
+	const documentPaths = await globby(["**/captain.md"], {
 		cwd: getCaptainData("apps"),
 		absolute: true,
 	});

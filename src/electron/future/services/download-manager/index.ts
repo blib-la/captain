@@ -147,7 +147,11 @@ export class DownloadManager {
 
 		// Prompt is our always open window, so we can use it for the download
 		const window_ = apps.prompt!;
-		const keyPath = [item.destination, item.id].join("/").replaceAll("/", ".");
+		const keyPath =
+			item.destination === "apps"
+				? "apps"
+				: [item.destination, item.id].join("/").replaceAll("/", ".");
+		const downloadKeyPath = [item.destination, item.id].join("/").replaceAll("/", ".");
 		try {
 			await download(window_, item.source, {
 				overwrite: true,
@@ -185,13 +189,12 @@ export class DownloadManager {
 								true
 							);
 							item.state = DownloadState.DONE;
-							const modelPath = targetDestination;
 							pushToStore(inventoryStore, keyPath, {
 								id: item.id,
-								modelPath,
+								modelPath: targetDestination,
 								label: item.label,
 							});
-							downloadsStore.set(keyPath, item.state);
+							downloadsStore.set(downloadKeyPath, item.state);
 							sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
 								action: DownloadEvent.COMPLETED,
 								payload: item,
@@ -199,7 +202,7 @@ export class DownloadManager {
 						} catch {
 							item.state = DownloadState.FAILED;
 							this.currentDownloads -= 1;
-							downloadsStore.set(keyPath, item.state);
+							downloadsStore.set(downloadKeyPath, item.state);
 							sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
 								action: DownloadEvent.ERROR,
 								payload: item,
@@ -208,7 +211,12 @@ export class DownloadManager {
 						}
 					} else {
 						item.state = DownloadState.DONE;
-						downloadsStore.set(keyPath, item.state);
+						pushToStore(inventoryStore, keyPath, {
+							id: item.id,
+							modelPath: targetDestination,
+							label: item.label,
+						});
+						downloadsStore.set(downloadKeyPath, item.state);
 						sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
 							action: DownloadEvent.COMPLETED,
 							payload: item,
@@ -217,7 +225,7 @@ export class DownloadManager {
 				},
 				onProgress({ percent, transferredBytes, totalBytes }) {
 					item.state = DownloadState.ACTIVE;
-					downloadsStore.set(keyPath, item.state);
+					downloadsStore.set(downloadKeyPath, item.state);
 					sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
 						action: DownloadEvent.PROGRESS,
 						payload: {
@@ -232,7 +240,7 @@ export class DownloadManager {
 		} catch {
 			item.state = DownloadState.FAILED;
 			this.currentDownloads -= 1;
-			downloadsStore.set(keyPath, item.state);
+			downloadsStore.set(downloadKeyPath, item.state);
 			sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
 				action: DownloadEvent.ERROR,
 				payload: item,
