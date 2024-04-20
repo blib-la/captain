@@ -162,6 +162,7 @@ export class DownloadManager {
 					: targetDestination,
 				onStarted() {
 					item.state = DownloadState.ACTIVE;
+					downloadsStore.set(downloadKeyPath, item.state);
 					sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
 						action: DownloadEvent.STARTED,
 						payload: item,
