@@ -30,6 +30,10 @@ jest.mock("@/stores", () => ({
 		get: jest.fn(),
 		set: jest.fn(),
 	},
+	downloadsStore: {
+		get: jest.fn(),
+		set: jest.fn(),
+	},
 }));
 
 jest.mock("@/stores/utils", () => {
