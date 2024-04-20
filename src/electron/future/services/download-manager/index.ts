@@ -147,10 +147,7 @@ export class DownloadManager {
 
 		// Prompt is our always open window, so we can use it for the download
 		const window_ = apps.prompt!;
-		const keyPath =
-			item.destination === "apps"
-				? "apps"
-				: [item.destination, item.id].join("/").replaceAll("/", ".");
+		const keyPath = item.destination.replaceAll("/", ".");
 		const downloadKeyPath = [item.destination, item.id].join("/").replaceAll("/", ".");
 		try {
 			await download(window_, item.source, {
