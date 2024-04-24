@@ -41,7 +41,10 @@
     "realism": "Realismus"
   },
   "image": "Bild",
+  "install": "Installieren",
   "installationSuccess": "Installation fertig",
+  "installFailed": "Installation fehlgeschlagen",
+  "installUpdate": "Updates",
   "length": {
     "long": "Lang",
     "medium": "Mittel",
@@ -66,7 +69,6 @@
     "customStyle": "Die Geschichte sollte skurril und sehr lustig sein, ein Mysterium ohne Abschluss beinhalten",
     "prompt": "Ich möchte ein Bild malen"
   },
-  "preparation": "Captain wird vorbereitet",
   "preview": "Vorschau",
   "privacy": "Datenschutz",
   "prompt": "Prompt",
@@ -74,6 +76,7 @@
   "randomize": "Zufällig",
   "readStory": "Erzählung lesen",
   "removeAllImages": "Alle Bilder entfernen",
+  "reportProblem": "Problem melden",
   "retry": "Erneut versuchen",
   "save": "Speichern",
   "saved": "Gespeichert",
@@ -96,5 +99,7 @@
   "text": "Text",
   "textToImage": "Text zu Bild",
   "undefined": "Unbekannt",
-  "unpacking": "Entpacken"
+  "unpacking": "Entpacken",
+  "update": "Aktualisieren",
+  "updateFailed": "Update fehlgeschlagen"
 }

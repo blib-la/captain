@@ -1,6 +1,5 @@
 import { AppFrame } from "@captn/joy/app-frame";
 import { TitleBar } from "@captn/joy/title-bar";
-import Alert from "@mui/joy/Alert";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import CircularProgress from "@mui/joy/CircularProgress";
@@ -8,7 +7,7 @@ import Input from "@mui/joy/Input";
 import Typography from "@mui/joy/Typography";
 import type { InferGetStaticPropsType } from "next";
 import { useTranslation } from "next-i18next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
@@ -58,44 +57,9 @@ function DummyPrompt() {
 
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["labels", "texts"]);
-	const [loading, setLoading] = useState(true);
 	const [starting, setStarting] = useState(false);
-	const [error, setError] = useState(null);
 
-	let buttonText;
-
-	useEffect(() => {
-		const unsubscribeInitialized = window.ipc.on(
-			buildKey([ID.INSTALL], { suffix: ":initialized" }),
-			() => {
-				setLoading(false);
-				setError(null);
-			}
-		);
-
-		const unsubscribeError = window.ipc.on(
-			buildKey([ID.INSTALL], { suffix: ":error" }),
-			error => {
-				setLoading(false);
-				setError(error);
-			}
-		);
-
-		window.ipc.send(buildKey([ID.INSTALL], { suffix: ":initialize" }));
-
-		return () => {
-			unsubscribeInitialized();
-			unsubscribeError();
-		};
-	}, []);
-
-	if (loading) {
-		buttonText = t("labels:preparation");
-	} else if (starting) {
-		buttonText = t("labels:starting");
-	} else {
-		buttonText = t("labels:start");
-	}
+	const buttonText = starting ? t("labels:starting") : t("labels:start");
 
 	return (
 		<AppFrame titleBar={<TitleBar disableMaximize />}>
@@ -129,23 +93,13 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 						<Typography level="body-lg" sx={{ my: 2, textAlign: "center" }}>
 							{t("texts:howToUseCaptain")}
 						</Typography>
-
-						{error ? (
-							<Alert color="danger">{error}</Alert>
-						) : (
-							<Typography level="body-lg" sx={{ my: 2, textAlign: "center" }}>
-								{loading ? t("texts:preparation") : t("texts:preparationDone")}
-							</Typography>
-						)}
 					</Box>
 				</Box>
 
 				<Box sx={{ display: "flex", justifyContent: "flex-end", m: 1 }}>
 					<Box sx={{ display: "flex", gap: 1 }}>
 						<Button
-							endDecorator={
-								loading || starting ? <CircularProgress size="sm" /> : null
-							}
+							endDecorator={starting ? <CircularProgress size="sm" /> : null}
 							onClick={() => {
 								setStarting(true);
 								window.ipc.send(buildKey([ID.APP], { suffix: ":ready" }), true);

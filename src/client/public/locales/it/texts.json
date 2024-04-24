@@ -5,13 +5,13 @@
   "essentialModelDownloads": "Download di modelli essenziali necessari!",
   "howToUseCaptain": "Puoi controllare facilmente Captain tramite il prompt, che puoi aprire in qualsiasi momento utilizzando la combinazione di tasti Ctrl + Alt + Spazio. Scrivi semplicemente cosa vuoi fare e noi ci occupiamo del resto.",
   "notConnectedToTheInternet": "Non sei connesso a Internet",
-  "preparation": "Per fare in modo che il prompt funzioni, stiamo preparando rapidamente tutto.",
-  "preparationDone": "Tutti i preparativi sono completati! Divertiti con Captain.",
   "quote1": "Proprio come gli umani, anche le IA sognano pecore elettriche. Zzz...",
   "quote2": "Sto imparando cose nuove! Sapevi che non posso gustare una tazza di caffè? Eppure, posso aiutare a prepararne uno.",
   "quote3": "Se pensi che un minuto passi molto velocemente, non sei mai stato ai 'secondi finali' di un download.",
   "quote4": "Lavorare con l'IA è come avere un amico che sa quasi tutto ma che ancora non sa allacciarsi le scarpe.",
   "quote5": "Ho chiesto all'IA di raccontarmi una barzelletta. Ha detto, 'Potrei raccontarti una barzelletta su UDP, ma potresti non riceverla.'",
   "storyFormIntroduction": "Benvenuto nel nostro strumento di personalizzazione delle storie! Dopo aver dato vita alle tue visioni con il nostro strumento di pittura basato sull'IA, è ora di tessere narrazioni intorno alle tue creazioni. Seleziona le tue preferenze qui sotto per modellare la storia che si adatta meglio al tuo capolavoro. Che tu desideri una storia breve e dolce, un viaggio di media lunghezza verso il fantastico, o un'immersione profonda nei regni dell'ignoto, siamo qui per dare vita alla tua storia. Scegli il tuo stile narrativo, imposta il tono emotivo e creiamo insieme una storia magica.",
-  "unpackingSuccess": "Fantastico, tutto è stato installato. Ci sei quasi."
+  "tryAgainOrReport": "Per favore riprova o segnala il problema a noi.",
+  "unpackingSuccess": "Fantastico, tutto è stato installato. Ci sei quasi.",
+  "updateIntro": "È disponibile un aggiornamento per Captain. Si prega di procedere con l'aggiornamento per continuare a utilizzare Captain."
 }

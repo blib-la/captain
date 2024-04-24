@@ -9,12 +9,15 @@ import { appSettingsStore } from "./stores";
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import { isProduction } from "#/flags";
+import manifest from "#/manifest.json";
+import type { Manifest } from "#/types/manifest";
 import { apps } from "@/apps";
 import { initLocalProtocol } from "@/init-local-protocol";
 import { runStartup } from "@/run-startup";
 import logger from "@/services/logger";
 import { createTray } from "@/tray";
 import { isCoreApp, isCoreView } from "@/utils/core";
+import { checkUpdates } from "@/utils/update";
 import { initialize, populateFromDocuments, reset } from "@/utils/vector-store";
 import {
 	createCoreWindow,
@@ -54,15 +57,20 @@ export async function main() {
 
 	logger.info(`main(): local protocol initialized`);
 
-	const lastAppVersion = appSettingsStore.get("version");
-	const appStatus = appSettingsStore.get("status");
+	// Find updates for windows
+	const updates = checkUpdates(manifest as Manifest, "windows");
 
-	const isUpToDate = version === lastAppVersion || process.env.TEST_VERSION === "upToDate";
-	const isReady =
-		(appStatus === DownloadState.DONE && process.env.TEST_APP_STATUS !== "IDLE") ||
-		process.env.TEST_APP_STATUS === "DONE";
+	// Find out if the user already has resources downloaded, which means
+	// the installation was done at least once
+	const hasResources =
+		appSettingsStore.get("resources") !== undefined ||
+		process.env.TEST_APP_STATUS === DownloadState.UPDATE;
 
-	logger.info(`main(): app is upToDate ${isUpToDate} and ready ${isReady}`);
+	// Is Captain up to date?
+	const isUpToDate =
+		(updates.length === 0 && hasResources) || process.env.TEST_VERSION === "upToDate";
+
+	logger.info(`main(): app is upToDate ${isUpToDate}`);
 
 	if (isProduction) {
 		Menu.setApplicationMenu(null);
@@ -101,7 +109,7 @@ export async function main() {
 
 	logger.info(`main(): listened to :open`);
 
-	if (isUpToDate && isReady) {
+	if (isUpToDate) {
 		app.on("second-instance", async () => {
 			apps.core ||= await createCoreWindow();
 
@@ -122,12 +130,23 @@ export async function main() {
 		// Start app
 		await runStartup();
 	} else {
-		// Update app settings for installation
-		appSettingsStore.set("status", DownloadState.IDLE);
-		appSettingsStore.set("version", version);
+		let step = "";
 
-		// Create and show installer window
-		const installerWindow = await createInstallerWindow();
+		// When the user already has settings (setup ran at least once),
+		// we skip the first 2 steps and go straight to
+		// downloading the necessary resource updates
+		if (hasResources) {
+			appSettingsStore.set("status", DownloadState.UPDATE);
+			step = "installer/02-update";
+		} else {
+			appSettingsStore.set("status", DownloadState.IDLE);
+			step = "installer/00";
+		}
+
+		logger.info(`main(): start installer on step "${step}"`);
+
+		// Create and show the installer window
+		const installerWindow = await createInstallerWindow({ step });
 
 		app.on("second-instance", async () => {
 			apps.core ||= await createCoreWindow();
@@ -139,10 +158,18 @@ export async function main() {
 			installerWindow.focus();
 		});
 
-		// When the installer is done we open the prompt window
+		// When the installer is done we open the prompt window & update the version
 		ipcMain.on(buildKey([ID.APP], { suffix: ":ready" }), async () => {
+			// Start the vector store and fill it with data
+			await initialize();
+			await reset();
+			await populateFromDocuments();
+			logger.info(`main(): initialized vector store`);
+
 			await runStartup();
 			installerWindow.close();
+
+			appSettingsStore.set("version", version);
 		});
 	}
 }

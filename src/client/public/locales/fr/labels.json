@@ -41,7 +41,10 @@
     "realism": "Réalisme"
   },
   "image": "Image",
+  "install": "Installer",
   "installationSuccess": "Installation terminée",
+  "installFailed": "Échec de l'installation",
+  "installUpdate": "Mises à jour",
   "length": {
     "long": "Long",
     "medium": "Moyen",
@@ -66,7 +69,6 @@
     "customStyle": "L'histoire doit être excentrique et très drôle, inclure un mystère sans clôture",
     "prompt": "Je veux peindre une image"
   },
-  "preparation": "Le capitaine est en préparation",
   "preview": "Aperçu",
   "privacy": "Confidentialité",
   "prompt": "Prompt",
@@ -74,6 +76,7 @@
   "randomize": "Aléatoire",
   "readStory": "Lire Histoire",
   "removeAllImages": "Supprimer toutes les images",
+  "reportProblem": "Signaler un problème",
   "retry": "Réessayer",
   "save": "Sauvegarder",
   "saved": "Sauvegardé",
@@ -96,5 +99,7 @@
   "text": "Texte",
   "textToImage": "Texte en Image",
   "undefined": "Inconnu",
-  "unpacking": "Déballage"
+  "unpacking": "Déballage",
+  "update": "Mettre à jour",
+  "updateFailed": "Échec de la mise à jour"
 }

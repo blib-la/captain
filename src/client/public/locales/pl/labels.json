@@ -41,7 +41,10 @@
     "realism": "Realizm"
   },
   "image": "Obraz",
+  "install": "Instaluj",
   "installationSuccess": "Instalacja zakończona",
+  "installFailed": "Instalacja nieudana",
+  "installUpdate": "Aktualizacje",
   "length": {
     "long": "Długa",
     "medium": "Średnia",
@@ -66,7 +69,6 @@
     "customStyle": "Historia powinna być osobliwa i bardzo zabawna, zawierać tajemnicę bez zakończenia",
     "prompt": "Chcę namalować obraz"
   },
-  "preparation": "Kapitan jest przygotowywany",
   "preview": "Podgląd",
   "privacy": "Prywatność",
   "prompt": "Prompt",
@@ -74,6 +76,7 @@
   "randomize": "Losuj",
   "readStory": "Czytaj Historię",
   "removeAllImages": "Usuń wszystkie obrazy",
+  "reportProblem": "Zgłoś problem",
   "retry": "Spróbuj ponownie",
   "save": "Zapisz",
   "saved": "Zapisano",
@@ -96,5 +99,7 @@
   "text": "Tekst",
   "textToImage": "Tekst na Obraz",
   "undefined": "Nieznany",
-  "unpacking": "Rozpakowywanie"
+  "unpacking": "Rozpakowywanie",
+  "update": "Aktualizuj",
+  "updateFailed": "Aktualizacja nieudana"
 }

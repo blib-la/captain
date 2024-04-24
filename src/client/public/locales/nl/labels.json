@@ -41,7 +41,10 @@
     "realism": "Realisme"
   },
   "image": "Afbeelding",
+  "install": "Installeren",
   "installationSuccess": "Installatie voltooid",
+  "installFailed": "Installatie mislukt",
+  "installUpdate": "Updates",
   "length": {
     "long": "Lang",
     "medium": "Middel",
@@ -66,7 +69,6 @@
     "customStyle": "Het verhaal moet eigenzinnig en erg grappig zijn, inclusief een mysterie zonder afsluiting",
     "prompt": "Ik wil een afbeelding schilderen"
   },
-  "preparation": "Captain wordt voorbereid",
   "preview": "Voorvertoning",
   "privacy": "Privacy",
   "prompt": "Prompt",
@@ -74,6 +76,7 @@
   "randomize": "Willekeurig",
   "readStory": "Verhaal Lezen",
   "removeAllImages": "Alle afbeeldingen verwijderen",
+  "reportProblem": "Probleem melden",
   "retry": "Opnieuw proberen",
   "save": "Opslaan",
   "saved": "Opgeslagen",
@@ -96,5 +99,7 @@
   "text": "Tekst",
   "textToImage": "Tekst naar Afbeelding",
   "undefined": "Onbekend",
-  "unpacking": "Uitpakken"
+  "unpacking": "Uitpakken",
+  "update": "Bijwerken",
+  "updateFailed": "Update mislukt"
 }

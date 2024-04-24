@@ -5,13 +5,13 @@
   "essentialModelDownloads": "Downloads essenciais de modelos necessários!",
   "howToUseCaptain": "Você pode controlar facilmente o Captain através do prompt, que você pode abrir a qualquer momento usando o atalho de teclado Ctrl + Alt + Espaço. Basta escrever o que você quer fazer e nós cuidamos do resto.",
   "notConnectedToTheInternet": "Você não está conectado à Internet",
-  "preparation": "Para que o prompt funcione, estamos preparando tudo rapidamente.",
-  "preparationDone": "Todas as preparações estão completas! Aproveite o Captain.",
   "quote1": "Assim como os humanos, as IAs também sonham com ovelhas elétricas. Zzz...",
   "quote2": "Estou aprendendo coisas novas! Você sabia que não posso apreciar uma xícara de café? Mas, posso ajudar a preparar uma!",
   "quote3": "Se você acha que um minuto passa muito rápido, nunca esteve nos 'últimos segundos' de um download.",
   "quote4": "Trabalhar com IA é como ter um amigo que sabe quase tudo, mas ainda não sabe amarrar os sapatos.",
   "quote5": "Pedi a uma IA para contar uma piada. Ela disse: 'Eu contaria uma piada sobre UDP, mas você pode não recebê-la.'",
   "storyFormIntroduction": "Bem-vindo à nossa ferramenta de personalização de histórias! Após dar vida às suas visões com nossa ferramenta de pintura alimentada por IA, é hora de tecer narrativas em torno de suas criações. Selecione suas preferências abaixo para moldar a história que melhor se adapta à sua obra-prima. Seja uma história curta e doce, uma jornada de comprimento médio para o fantástico, ou um mergulho profundo nos reinos do desconhecido, estamos aqui para trazer sua história à vida. Escolha seu estilo narrativo, defina o tom emocional e vamos criar uma história mágica juntos.",
-  "unpackingSuccess": "Ótimo, tudo foi instalado. Você está quase lá."
+  "tryAgainOrReport": "Por favor, tente novamente ou relate o problema a nós.",
+  "unpackingSuccess": "Ótimo, tudo foi instalado. Você está quase lá.",
+  "updateIntro": "Há uma atualização disponível para o Captain. Por favor, atualize para continuar utilizando o Captain."
 }

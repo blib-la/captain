@@ -9,6 +9,7 @@ import {
 	VECTOR_STORE_SAVED_KEY,
 	DownloadState,
 	ERROR_KEY,
+	USER_THEME_KEY,
 } from "@captn/utils/constants";
 import type { VectorStoreDocument } from "@captn/utils/types";
 import { BrowserWindow, dialog, ipcMain } from "electron";
@@ -22,7 +23,7 @@ import { ID } from "#/enums";
 import { cleanPath, extractH1Headings, getFileType } from "#/string";
 import { apps } from "@/apps";
 import { VectorStore } from "@/services/vector-store";
-import { inventoryStore, downloadsStore } from "@/stores";
+import { inventoryStore, downloadsStore, userStore } from "@/stores";
 import { pushToStore } from "@/stores/utils";
 import { getCaptainData, getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
 import { splitDocument } from "@/utils/split-documents";
@@ -53,6 +54,10 @@ ipcMain.on(WINDOW_MAXIMIZE_KEY, () => {
 	} else {
 		window_.maximize();
 	}
+});
+
+ipcMain.on(USER_THEME_KEY, (_event, mode: string) => {
+	userStore.set("theme", mode);
 });
 
 ipcMain.handle(buildKey([ID.DIRECTORY], { prefix: "path:", suffix: ":get" }), async () => {

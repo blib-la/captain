@@ -25,7 +25,11 @@ import { loadURL } from "@/utils/load-window";
  *
  * @returns {Promise<BrowserWindow>} A promise that resolves to the created BrowserWindow instance for the installer.
  */
-export async function createInstallerWindow(): Promise<BrowserWindow> {
+export async function createInstallerWindow({
+	step = "installer/00",
+}: {
+	step?: string;
+}): Promise<BrowserWindow> {
 	const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 	const windowWidth = Math.min(600, width);
 	const windowHeight = Math.min(700, height);
@@ -39,7 +43,7 @@ export async function createInstallerWindow(): Promise<BrowserWindow> {
 		frame: false,
 	});
 
-	await loadURL(installerWindow, "installer/00");
+	await loadURL(installerWindow, step);
 	return installerWindow;
 }
 

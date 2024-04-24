@@ -5,13 +5,13 @@
   "essentialModelDownloads": "Wichtige Modell-Downloads erforderlich!",
   "howToUseCaptain": "Captain kannst du ganz einfach über den Prompt steuern, welchen du mit der Tastenkombination Strg + Alt + Leertaste jederzeit öffnen kannst. Schreibe dann einfach, was du machen möchtest und wir erledigen den Rest.",
   "notConnectedToTheInternet": "Du bist aktuell nicht mit dem Internet verbunden",
-  "preparation": "Damit der Prompt funktioniert, bereiten wir noch kurz alles vor.",
-  "preparationDone": "Alle Vorbereitungen sind abgeschlossen! Viel Spaß mit Captain.",
   "quote1": "Wie Menschen träumen KIs auch von elektrischen Schafen. Zzz...",
   "quote2": "Ich lerne neue Dinge! Wusstest du, dass ich keinen Kaffee genießen kann? Aber ich kann helfen, einen zu brauen!",
   "quote3": "Wenn du denkst, eine Minute vergeht wirklich schnell, warst du noch nie in den 'letzten Sekunden' eines Downloads.",
   "quote4": "Mit KI zu arbeiten ist wie einen Freund zu haben, der fast alles weiß, aber immer noch nicht seine Schuhe binden kann.",
   "quote5": "Ich bat eine KI um einen Witz. Sie sagte: 'Ich könnte dir einen UDP-Witz erzählen, aber du verstehst ihn vielleicht nicht.'",
   "storyFormIntroduction": "Willkommen zu unserem Tool zur Geschichtsanpassung! Nachdem du deine Visionen mit unserem KI-gestützten Malwerkzeug zum Leben erweckt hast, ist es nun an der Zeit, Geschichten um deine Kreationen zu weben. Wähle unten deine Präferenzen, um die Geschichte zu formen, die am besten zu deinem Meisterwerk passt. Ob du eine kurze und süße Erzählung wünschst, eine mittellange Reise ins Fantastische oder einen tiefen Tauchgang in die Reiche des Unbekannten, wir sind hier, um deine Geschichte zum Leben zu erwecken. Wähle deinen Erzählstil, setze den emotionalen Ton und lass uns gemeinsam eine magische Geschichte erschaffen.",
-  "unpackingSuccess": "Super, alles wurde installiert. Du hast es fast geschafft."
+  "tryAgainOrReport": "Bitte versuche es erneut oder melde das Problem an uns.",
+  "unpackingSuccess": "Super, alles wurde installiert. Du hast es fast geschafft.",
+  "updateIntro": "Es steht ein Update für Captain bereit. Bitte führe es durch, um Captain weiter nutzen zu können."
 }

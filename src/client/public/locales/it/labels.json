@@ -41,7 +41,10 @@
     "realism": "Realismo"
   },
   "image": "Immagine",
+  "install": "Installare",
   "installationSuccess": "Installazione completata",
+  "installFailed": "Installazione fallita",
+  "installUpdate": "Aggiornamenti",
   "length": {
     "long": "Lungo",
     "medium": "Medio",
@@ -66,7 +69,6 @@
     "customStyle": "La storia dovrebbe essere eccentrica e molto divertente, includere un mistero senza conclusione",
     "prompt": "Voglio dipingere un'immagine"
   },
-  "preparation": "Il capitano si sta preparando",
   "preview": "Anteprima",
   "privacy": "Privacy",
   "prompt": "Prompt",
@@ -74,6 +76,7 @@
   "randomize": "Randomizza",
   "readStory": "Leggi Storia",
   "removeAllImages": "Rimuovi tutte le immagini",
+  "reportProblem": "Segnala un problema",
   "retry": "Riprova",
   "save": "Salva",
   "saved": "Salvato",
@@ -96,5 +99,7 @@
   "text": "Testo",
   "textToImage": "Testo in Immagine",
   "undefined": "Sconosciuto",
-  "unpacking": "Estrazione"
+  "unpacking": "Estrazione",
+  "update": "Aggiorna",
+  "updateFailed": "Aggiornamento fallito"
 }

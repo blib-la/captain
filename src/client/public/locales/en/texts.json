@@ -5,13 +5,13 @@
   "essentialModelDownloads": "Essential Model Downloads Needed!",
   "howToUseCaptain": "You can easily control Captain via the prompt, which you can open at any time using the Ctrl + Alt + Space keyboard shortcut. Just write what you want to do, and we'll take care of the rest.",
   "notConnectedToTheInternet": "You are not currently connected to the Internet",
-  "preparation": "To make the prompt work, we're just quickly preparing everything.",
-  "preparationDone": "All preparations are complete! Enjoy using Captain.",
   "quote1": "Just like humans, AIs also dream of electric sheep. Zzz...",
   "quote2": "I'm learning new things! Did you know I can't enjoy a cup of coffee? Yet, I can help brew one!",
   "quote3": "If you think a minute goes by really fast, you've never been on the 'final seconds' of a download.",
   "quote4": "Working with AI is like having a friend who knows nearly everything but still can't tie their shoes.",
   "quote5": "I asked an AI for a joke. It said, 'I could tell you a UDP joke, but you might not get it.'",
   "storyFormIntroduction": "Welcome to our story customization tool! After bringing your visions to life with our AI-powered painting tool, it's time to weave narratives around your creations. Select your preferences below to shape the story that best fits your masterpiece. Whether you desire a tale that's short and sweet, a medium-length journey into the fantastical, or a deep dive into the realms of the unknown, we're here to bring your story to life. Choose your narrative style, set the emotional tone, and let's craft a magical story together.",
-  "unpackingSuccess": "Great, everything has been installed. You're almost there."
+  "tryAgainOrReport": "Please try again or report the problem to us.",
+  "unpackingSuccess": "Great, everything has been installed. You're almost there.",
+  "updateIntro": "An update for Captain is available. Please proceed with the update to continue using Captain."
 }

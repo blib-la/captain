@@ -41,7 +41,10 @@
     "realism": "Realism"
   },
   "image": "Image",
+  "install": "Install",
   "installationSuccess": "Installation complete",
+  "installFailed": "Installation failed",
+  "installUpdate": "Updates",
   "length": {
     "long": "Long",
     "medium": "Medium",
@@ -66,7 +69,6 @@
     "customStyle": "The story should be quirky and very funny, include a mystery without closure",
     "prompt": "I want to paint a picture"
   },
-  "preparation": "Captain is being prepared",
   "preview": "Preview",
   "privacy": "Privacy",
   "prompt": "Prompt",
@@ -74,6 +76,7 @@
   "randomize": "Randomize",
   "readStory": "Read Story",
   "removeAllImages": "Remove all Images",
+  "reportProblem": "Report problem",
   "retry": "Try Again",
   "save": "Save",
   "saved": "Saved",
@@ -96,5 +99,7 @@
   "text": "Text",
   "textToImage": "Text to Image",
   "undefined": "Unknown",
-  "unpacking": "Unpacking"
+  "unpacking": "Unpacking",
+  "update": "Update",
+  "updateFailed": "Update failed"
 }

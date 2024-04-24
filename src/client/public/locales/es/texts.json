@@ -5,13 +5,13 @@
   "essentialModelDownloads": "¡Descargas esenciales de modelos necesarias!",
   "howToUseCaptain": "Puedes controlar fácilmente a Captain a través del prompt, el cual puedes abrir en cualquier momento usando la combinación de teclas Ctrl + Alt + Espacio. Simplemente escribe lo que deseas hacer y nosotros nos encargamos del resto.",
   "notConnectedToTheInternet": "No estás conectado a Internet",
-  "preparation": "Para que el prompt funcione, estamos preparando todo rápidamente.",
-  "preparationDone": "¡Todas las preparaciones están completas! Disfruta usando a Captain.",
   "quote1": "Al igual que los humanos, las IA también sueñan con ovejas eléctricas. Zzz...",
   "quote2": "¡Estoy aprendiendo cosas nuevas! ¿Sabías que no puedo disfrutar de una taza de café? Sin embargo, puedo ayudar a preparar uno.",
   "quote3": "Si piensas que un minuto pasa muy rápido, nunca has estado en los 'últimos segundos' de una descarga.",
   "quote4": "Trabajar con IA es como tener un amigo que sabe casi todo, pero aún no puede atarse los zapatos.",
   "quote5": "Le pedí un chiste a una IA. Dijo, 'Podría contarte un chiste de UDP, pero es posible que no lo recibas.'",
   "storyFormIntroduction": "¡Bienvenido a nuestra herramienta de personalización de historias! Después de dar vida a tus visiones con nuestra herramienta de pintura potenciada por IA, es hora de tejer narrativas alrededor de tus creaciones. Selecciona tus preferencias a continuación para dar forma a la historia que mejor se ajuste a tu obra maestra. Ya sea que desees un cuento corto y dulce, un viaje de longitud media hacia lo fantástico, o una inmersión profunda en los reinos de lo desconocido, estamos aquí para dar vida a tu historia. Elige tu estilo narrativo, establece el tono emocional y vamos a crear una historia mágica juntos.",
-  "unpackingSuccess": "Genial, todo se ha instalado. Ya casi estás."
+  "tryAgainOrReport": "Por favor, inténtalo de nuevo o informa el problema a nosotros.",
+  "unpackingSuccess": "Genial, todo se ha instalado. Ya casi estás.",
+  "updateIntro": "Hay una actualización disponible para Captain. Por favor, actualiza para seguir utilizando Captain."
 }

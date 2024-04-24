@@ -41,7 +41,10 @@
     "realism": "Realismo"
   },
   "image": "Imagem",
+  "install": "Instalar",
   "installationSuccess": "Instalação concluída",
+  "installFailed": "Falha na instalação",
+  "installUpdate": "Atualizações",
   "length": {
     "long": "Longa",
     "medium": "Média",
@@ -66,7 +69,6 @@
     "customStyle": "A história deve ser peculiar e muito engraçada, incluir um mistério sem conclusão",
     "prompt": "Eu quero pintar uma imagem"
   },
-  "preparation": "Capitão está sendo preparado",
   "preview": "Pré-visualização",
   "privacy": "Privacidade",
   "prompt": "Prompt",
@@ -74,6 +76,7 @@
   "randomize": "Randomizar",
   "readStory": "Ler História",
   "removeAllImages": "Remover Todas as Imagens",
+  "reportProblem": "Reportar problema",
   "retry": "Tentar novamente",
   "save": "Salvar",
   "saved": "Salvo",
@@ -96,5 +99,7 @@
   "text": "Texto",
   "textToImage": "Texto para Imagem",
   "undefined": "Desconhecido",
-  "unpacking": "Desembalando"
+  "unpacking": "Desembalando",
+  "update": "Atualizar",
+  "updateFailed": "Falha na atualização"
 }

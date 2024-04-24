@@ -41,7 +41,10 @@
     "realism": "リアリズム"
   },
   "image": "画像",
+  "install": "インストール",
   "installationSuccess": "インストール完了",
+  "installFailed": "インストールに失敗しました",
+  "installUpdate": "アップデート",
   "length": {
     "long": "長編",
     "medium": "中編",
@@ -66,7 +69,6 @@
     "customStyle": "物語は風変わりでとても面白く、結末のないミステリーを含めるべきです",
     "prompt": "絵を描きたい"
   },
-  "preparation": "キャプテンの準備中",
   "preview": "プレビュー",
   "privacy": "プライバシー",
   "prompt": "プロンプト",
@@ -74,6 +76,7 @@
   "randomize": "ランダム化",
   "readStory": "ストーリー閲覧",
   "removeAllImages": "すべての画像を削除",
+  "reportProblem": "問題を報告する",
   "retry": "再試行",
   "save": "保存",
   "saved": "保存済み",
@@ -96,5 +99,7 @@
   "text": "テキスト",
   "textToImage": "テキストから画像へ",
   "undefined": "不明",
-  "unpacking": "解凍中"
+  "unpacking": "解凍中",
+  "update": "更新",
+  "updateFailed": "更新に失敗しました"
 }

@@ -5,13 +5,13 @@
   "essentialModelDownloads": "Téléchargements de modèles essentiels nécessaires !",
   "howToUseCaptain": "Vous pouvez facilement contrôler Captain via l'invite de commande, que vous pouvez ouvrir à tout moment en utilisant le raccourci clavier Ctrl + Alt + Espace. Écrivez simplement ce que vous souhaitez faire, et nous nous occupons du reste.",
   "notConnectedToTheInternet": "Tu n'es pas connecté à Internet",
-  "preparation": "Pour que l'invite de commande fonctionne, nous préparons rapidement tout.",
-  "preparationDone": "Toutes les préparations sont terminées ! Profitez de Captain.",
   "quote1": "Tout comme les humains, les IA rêvent aussi de moutons électriques. Zzz...",
   "quote2": "J'apprends de nouvelles choses ! Saviez-vous que je ne peux pas profiter d'une tasse de café ? Pourtant, je peux aider à en préparer une.",
   "quote3": "Si vous pensez qu'une minute passe vraiment vite, vous n'avez jamais été dans les 'dernières secondes' d'un téléchargement.",
   "quote4": "Travailler avec une IA, c'est comme avoir un ami qui sait presque tout mais qui ne sait toujours pas faire ses lacets.",
   "quote5": "J'ai demandé une blague à une IA. Elle a dit, 'Je pourrais te raconter une blague UDP, mais tu risques de ne pas la recevoir.'",
   "storyFormIntroduction": "Bienvenue dans notre outil de personnalisation d'histoires ! Après avoir donné vie à vos visions avec notre outil de peinture alimenté par IA, il est temps de tisser des récits autour de vos créations. Sélectionnez vos préférences ci-dessous pour façonner l'histoire qui convient le mieux à votre chef-d'œuvre. Que vous désiriez une histoire courte et douce, un voyage de longueur moyenne vers le fantastique, ou une plongée profonde dans les royaumes de l'inconnu, nous sommes ici pour donner vie à votre histoire. Choisissez votre style narratif, définissez le ton émotionnel, et créons ensemble une histoire magique.",
-  "unpackingSuccess": "Super, tout a été installé. Vous y êtes presque."
+  "tryAgainOrReport": "Veuillez réessayer ou signaler le problème à nous.",
+  "unpackingSuccess": "Super, tout a été installé. Vous y êtes presque.",
+  "updateIntro": "Une mise à jour pour Captain est disponible. Veuillez la réaliser pour continuer à utiliser Captain."
 }

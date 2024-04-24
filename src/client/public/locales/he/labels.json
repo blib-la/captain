@@ -41,7 +41,10 @@
     "realism": "ריאליזם"
   },
   "image": "תמונה",
+  "install": "התקנה",
   "installationSuccess": "ההתקנה הושלמה",
+  "installFailed": "ההתקנה נכשלה",
+  "installUpdate": "עדכונים",
   "length": {
     "long": "ארוך",
     "medium": "בינוני",
@@ -66,7 +69,6 @@
     "customStyle": "הסיפור צריך להיות מוזר ומאוד מצחיק, לכלול מסתורין ללא סגירה",
     "prompt": "אני רוצה לצייר תמונה"
   },
-  "preparation": "הקפטן מתכונן",
   "preview": "תצוגה מקדימה",
   "privacy": "פרטיות",
   "prompt": "בקשה",
@@ -74,6 +76,7 @@
   "randomize": "הפוך לאקראי",
   "readStory": "קרא סיפור",
   "removeAllImages": "הסר את כל התמונות",
+  "reportProblem": "דווח על בעיה",
   "retry": "נסה שוב",
   "save": "שמור",
   "saved": "נשמר",
@@ -96,5 +99,7 @@
   "text": "טקסט",
   "textToImage": "טקסט לתמונה",
   "undefined": "לא ידוע",
-  "unpacking": "פותח"
+  "unpacking": "פותח",
+  "update": "עדכון",
+  "updateFailed": "עדכון נכשל"
 }

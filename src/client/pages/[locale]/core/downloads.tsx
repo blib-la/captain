@@ -7,6 +7,7 @@ import DownloadingIcon from "@mui/icons-material/Downloading";
 import ErrorIcon from "@mui/icons-material/Error";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import PendingIcon from "@mui/icons-material/Pending";
+import SystemUpdateAltIcon from "@mui/icons-material/SystemUpdateAlt";
 import Box from "@mui/joy/Box";
 import LinearProgress from "@mui/joy/LinearProgress";
 import List from "@mui/joy/List";
@@ -38,6 +39,7 @@ const iconMap: Record<DownloadState, ReactNode> = {
 	[DownloadState.FAILED]: <ErrorIcon />,
 	[DownloadState.CANCELED]: <PauseCircleIcon />,
 	[DownloadState.UNPACKING]: <BuildCircleIcon />,
+	[DownloadState.UPDATE]: <SystemUpdateAltIcon />,
 } as const;
 const iconColors: Record<DownloadState, ColorPaletteProp> = {
 	[DownloadState.ACTIVE]: "green",
@@ -46,6 +48,7 @@ const iconColors: Record<DownloadState, ColorPaletteProp> = {
 	[DownloadState.FAILED]: "red",
 	[DownloadState.CANCELED]: "neutral",
 	[DownloadState.UNPACKING]: "green",
+	[DownloadState.UPDATE]: "blue",
 } as const;
 
 export function DownloadListItem({ label, percent, state }: DownloadListItemProperties) {

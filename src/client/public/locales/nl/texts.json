@@ -5,13 +5,13 @@
   "essentialModelDownloads": "Essentiële modeldownloads nodig!",
   "howToUseCaptain": "Je kunt Captain eenvoudig bedienen via de prompt, die je op elk moment kunt openen met de toetsencombinatie Ctrl + Alt + Spatie. Schrijf gewoon wat je wilt doen en wij regelen de rest.",
   "notConnectedToTheInternet": "Je bent niet verbonden met het internet",
-  "preparation": "Om de prompt te laten werken, bereiden we alles snel voor.",
-  "preparationDone": "Alle voorbereidingen zijn voltooid! Veel plezier met Captain.",
   "quote1": "Net als mensen, dromen AI's ook van elektrische schapen. Zzz...",
   "quote2": "Ik leer nieuwe dingen! Wist je dat ik geen kop koffie kan genieten? Toch kan ik helpen er een te zetten!",
   "quote3": "Als je denkt dat een minuut snel voorbij gaat, heb je nooit de 'laatste seconden' van een download meegemaakt.",
   "quote4": "Werken met AI is als een vriend hebben die bijna alles weet maar nog steeds zijn veters niet kan strikken.",
   "quote5": "Ik vroeg een AI om een grap. Het zei: 'Ik zou je een UDP-grap kunnen vertellen, maar je zou het misschien niet krijgen.'",
   "storyFormIntroduction": "Welkom bij ons verhaal-aanpassingstool! Na het tot leven brengen van je visies met onze door AI aangedreven schildertool, is het tijd om verhalen rond je creaties te weven. Selecteer hieronder je voorkeuren om het verhaal vorm te geven dat het beste bij je meesterwerk past. Of je nu een kort en zoet verhaal wenst, een middellange reis naar het fantastische, of een diepe duik in de rijken van het onbekende, we zijn hier om jouw verhaal tot leven te brengen. Kies je verhaalstijl, stel de emotionele toon in, en laten we samen een magisch verhaal creëren.",
-  "unpackingSuccess": "Geweldig, alles is geïnstalleerd. Je bent er bijna."
+  "tryAgainOrReport": "Probeer het opnieuw of meld het probleem aan ons.",
+  "unpackingSuccess": "Geweldig, alles is geïnstalleerd. Je bent er bijna.",
+  "updateIntro": "Er is een update beschikbaar voor Captain. Voer deze uit om Captain te blijven gebruiken."
 }

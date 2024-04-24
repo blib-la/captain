@@ -41,7 +41,10 @@
     "realism": "现实主义"
   },
   "image": "图片",
+  "install": "安装",
   "installationSuccess": "安装成功",
+  "installFailed": "安装失败",
+  "installUpdate": "更新",
   "length": {
     "long": "长",
     "medium": "中",
@@ -66,7 +69,6 @@
     "customStyle": "故事应该是古怪且非常有趣的，包括一个没有结局的谜团",
     "prompt": "我想画一幅画"
   },
-  "preparation": "船长正在准备",
   "preview": "预览",
   "privacy": "隐私",
   "prompt": "提示",
@@ -74,6 +76,7 @@
   "randomize": "随机化",
   "readStory": "阅读故事",
   "removeAllImages": "移除所有图片",
+  "reportProblem": "报告问题",
   "retry": "重试",
   "save": "保存",
   "saved": "已保存",
@@ -96,5 +99,7 @@
   "text": "文本",
   "textToImage": "文字转图片",
   "undefined": "未知",
-  "unpacking": "解压中"
+  "unpacking": "解压中",
+  "update": "更新",
+  "updateFailed": "更新失败"
 }
