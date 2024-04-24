@@ -7,120 +7,16 @@ import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import LinearProgress from "@mui/joy/LinearProgress";
 import Typography from "@mui/joy/Typography";
-import type { Progress } from "electron-dl";
 import type { InferGetStaticPropsType } from "next";
 import { useTranslation } from "next-i18next";
-import type { ReactNode } from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
+import { useInstallProgress } from "@/ions/hooks/install-progress";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
-import { Illustration } from "@/organisms/illustration";
+import { InstallStep } from "@/organisms/installer";
 import { QuoteLoop } from "@/organisms/quote-loop";
-
-function useInstallProgress() {
-	const [status, setStatus] = useState(DownloadState.UPDATE);
-	const [error, setError] = useState("");
-	const [name, setName] = useState("");
-	const [size, setSize] = useState("");
-	const [progress, setProgress] = useState<Progress>({
-		percent: 0,
-		transferredBytes: 0,
-		totalBytes: 0,
-	});
-	const reset = useCallback(() => {
-		setProgress({
-			percent: 0,
-			transferredBytes: 0,
-			totalBytes: 0,
-		});
-	}, []);
-
-	useEffect(() => {
-		const unsubscribeStarted = window.ipc.on(
-			buildKey([ID.INSTALL], { suffix: ":started" }),
-			({ name, size }) => {
-				setStatus(DownloadState.ACTIVE);
-				setName(name);
-				setSize(size);
-				setError("");
-			}
-		);
-		const unsubscribeProgress = window.ipc.on(
-			buildKey([ID.INSTALL], { suffix: ":progress" }),
-			(progress: Progress) => {
-				setStatus(DownloadState.ACTIVE);
-				setProgress(progress);
-			}
-		);
-		const unsubscribeCancelled = window.ipc.on(
-			buildKey([ID.INSTALL], { suffix: ":canceled" }),
-			() => {
-				setStatus(DownloadState.CANCELED);
-			}
-		);
-		const unsubscribeCompleted = window.ipc.on(
-			buildKey([ID.INSTALL], { suffix: ":completed" }),
-			() => {
-				setStatus(DownloadState.DONE);
-			}
-		);
-		const unsubscribeUnpacking = window.ipc.on(
-			buildKey([ID.INSTALL], { suffix: ":unpacking" }),
-			() => {
-				setStatus(DownloadState.UNPACKING);
-			}
-		);
-		const unsubscribeFailed = window.ipc.on(
-			buildKey([ID.INSTALL], { suffix: ":failed" }),
-			message => {
-				setStatus(DownloadState.FAILED);
-				setError(message);
-			}
-		);
-
-		return () => {
-			unsubscribeStarted();
-			unsubscribeProgress();
-			unsubscribeCancelled();
-			unsubscribeCompleted();
-			unsubscribeUnpacking();
-			unsubscribeFailed();
-		};
-	}, []);
-	return { status, progress, name, size, error, reset };
-}
-
-function InstallStep({
-	illustration,
-	heading,
-	children,
-}: {
-	illustration: string;
-	heading: string;
-	children?: ReactNode;
-}) {
-	return (
-		<>
-			<Illustration height={200} path={illustration} />
-			<Typography level="h1" sx={{ my: 2, textAlign: "center" }}>
-				{heading}
-			</Typography>
-			<Box
-				sx={{
-					flex: 1,
-					display: "flex",
-					flexDirection: "column",
-					justifyContent: "center",
-					mx: 8,
-				}}
-			>
-				{children}
-			</Box>
-		</>
-	);
-}
 
 export function InstallScreen({
 	percent,
@@ -268,7 +164,9 @@ export function InstallScreen({
 
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["labels", "installer"]);
-	const { progress, status, name, size, error, reset } = useInstallProgress();
+	const { progress, status, name, size, error, reset } = useInstallProgress({
+		state: DownloadState.UPDATE,
+	});
 	const [starting, setStarting] = useState(false);
 
 	return (
