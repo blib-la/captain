@@ -19,6 +19,20 @@ jest.mock("@mui/joy/styles", () => ({
 }));
 
 describe("useSsrColorScheme", () => {
+	beforeEach(() => {
+		Object.defineProperty(window, "ipc", {
+			value: {
+				send: jest.fn(),
+				on: jest.fn(() => jest.fn()),
+			},
+			configurable: true,
+		});
+	});
+
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+
 	it("should set initial mode to 'system'", () => {
 		const { result } = renderHook(() => useSsrColorScheme());
 		expect(result.current.mode).toBe("system");
