@@ -45,8 +45,8 @@
       "sources": [
         {
           "url": "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/qdrant-win.7z",
-          "destination": "Qdrant",
-          "name": "Git",
+          "destination": "qdrant",
+          "name": "Qdrant",
           "size": "13.9 MB",
           "unzip": true
         }
