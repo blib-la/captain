@@ -6,6 +6,7 @@ import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import manifest from "#/manifest.json";
 import type { Resource } from "#/types/install";
+import type { Manifest } from "#/types/manifest";
 import { appSettingsStore } from "@/stores";
 import { getCaptainData, getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
 import { unpack } from "@/utils/unpack";
@@ -18,7 +19,7 @@ ipcMain.on(buildKey([ID.INSTALL], { suffix: ":start" }), async _event => {
 	}
 
 	// Get the needed updates
-	const updates: Resource[] = checkUpdates(manifest, "windows");
+	const updates: Resource[] = checkUpdates(manifest as Manifest, "windows");
 
 	try {
 		const items: Promise<void>[] = [];
@@ -69,16 +70,16 @@ ipcMain.on(buildKey([ID.INSTALL], { suffix: ":start" }), async _event => {
 		appSettingsStore.set("status", DownloadState.UNPACKING);
 		await Promise.all(items);
 
-		// Everything was downloaded & unpacked
-		window_.webContents.send(buildKey([ID.INSTALL], { suffix: ":completed" }), true);
-		appSettingsStore.set("status", DownloadState.DONE);
-
 		// Set the new version of the resources so we know that those have been updated
 		for (const resource of updates) {
 			const { name, version } = resource;
 
 			appSettingsStore.set(`resources.${name}.version`, version);
 		}
+
+		// Everything was downloaded & unpacked
+		window_.webContents.send(buildKey([ID.INSTALL], { suffix: ":completed" }), true);
+		appSettingsStore.set("status", DownloadState.DONE);
 	} catch (error) {
 		if (error instanceof Error) {
 			window_.webContents.send(buildKey([ID.INSTALL], { suffix: ":failed" }), error.message);
