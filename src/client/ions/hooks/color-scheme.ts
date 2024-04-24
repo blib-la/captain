@@ -16,7 +16,7 @@ export function useSsrColorScheme() {
 	useEffect(() => {
 		setMode_(mode ?? "system");
 
-		window.ipc.send(USER_THEME_KEY, mode);
+		window.ipc.send(USER_THEME_KEY, mode ?? "system");
 	}, [mode]);
 	return { mode: mode_, setMode: setLazyMode };
 }
