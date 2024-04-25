@@ -1,8 +1,9 @@
 import { app } from "electron";
 
+import { main } from "./main";
+
 import { isTest } from "#/flags";
 import { registerApps } from "@/app-loaders";
-import { main } from "@/main";
 import logger from "@/services/logger";
 import { watchStores } from "@/stores/watchers";
 import { cleanFiles } from "@/utils/clean-files";
@@ -42,11 +43,16 @@ import "@/ipc/story";
 // This includes window management tasks such as minimizing, maximizing, or closing windows.
 import "@/ipc/global"; // Manages global IPC events, including those related to window actions.
 
+/**
+ * @deprecated
+ */
+import "@/ipc/sdk";
+
 // Import SDK module for 3rd party integration.
 // This allows external applications to interact with the app through exposed handlers and
 // listeners.
-import "@/ipc/sdk";
 import "@/ipc/sdk/text-to-image";
+import "@/ipc/sdk/image-to-image";
 
 // Import install handlers and listeners
 import "@/ipc/install";

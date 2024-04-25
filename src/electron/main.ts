@@ -2,9 +2,7 @@ import { DownloadState } from "@captn/utils/constants";
 import type { BrowserWindowConstructorOptions } from "electron";
 import { app, ipcMain, Menu } from "electron";
 
-import { version } from "../../../package.json";
-
-import { appSettingsStore } from "./stores";
+import { version } from "../../package.json";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
@@ -15,6 +13,7 @@ import { apps } from "@/apps";
 import { initLocalProtocol } from "@/init-local-protocol";
 import { runStartup } from "@/run-startup";
 import logger from "@/services/logger";
+import { appSettingsStore } from "@/stores";
 import { createTray } from "@/tray";
 import { isCoreApp, isCoreView } from "@/utils/core";
 import { checkUpdates } from "@/utils/update";

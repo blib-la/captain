@@ -18,13 +18,14 @@ export function CoreLayout({ children }: { children?: ReactNode }) {
 							WebkitAppRegion: "no-drag",
 							display: "flex",
 							alignItems: "center",
-							ml: -1,
+							mx: -1,
 						}}
 					>
 						<TabButton href="/core/dashboard">{t("labels:dashboard")}</TabButton>
 						<TabButton href="/core/marketplace">{t("labels:marketplace")}</TabButton>
 						<TabButton href="/core/downloads">{t("labels:downloads")}</TabButton>
 						<TabButton href="/core/settings">{t("common:settings")}</TabButton>
+						<Box sx={{ flex: 1, alignSelf: "stretch", WebkitAppRegion: "drag" }} />
 					</Box>
 				</TitleBar>
 			}

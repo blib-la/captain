@@ -18,7 +18,7 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 	const { send } = useSDK<unknown, string>(APP_ID, {
 		onMessage(message) {
 			switch (message.action) {
-				case "livePainting:generated": {
+				case "image-to-image:generated": {
 					break;
 				}
 
@@ -81,7 +81,7 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 				context.current.stroke();
 			}
 
-			send({ action: "livePainting:dataUrl", payload: canvas.current.toDataURL() });
+			send({ action: "image-to-image:dataUrl", payload: canvas.current.toDataURL() });
 		}
 
 		function handleMouseUp() {
@@ -143,7 +143,7 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 			context.current.fillStyle = "#ffffff";
 			context.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
 			context.current.fillRect(0, 0, canvas.current.width, canvas.current.height);
-			send({ action: "livePainting:dataUrl", payload: canvas.current.toDataURL() });
+			send({ action: "image-to-image:dataUrl", payload: canvas.current.toDataURL() });
 		}
 	}, [send, clearCounter]);
 

@@ -1,32 +1,19 @@
-import fsp from "node:fs/promises";
-
 import { APP_MESSAGE_KEY, DownloadState } from "@captn/utils/constants";
 import type { VectorStoreDocument } from "@captn/utils/types";
 import { getProperty } from "dot-prop";
 import type { IpcMainEvent } from "electron";
 import { ipcMain } from "electron";
-import type { ExecaChildProcess } from "execa";
-import { execa } from "execa";
 import type { Except } from "type-fest";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
-import { cleanPath } from "#/string";
 import type { StoryRequest } from "#/types/story";
 import { apps } from "@/apps";
 import { captionImages, createStory, maxTokenMap } from "@/ipc/story";
-import logger from "@/services/logger";
 import { downloadsStore, inventoryStore, userStore } from "@/stores";
 import { pushToStore } from "@/stores/utils";
-import { createDirectory } from "@/utils/fs";
 import { clone } from "@/utils/git";
-import {
-	getCaptainData,
-	getCaptainDownloads,
-	getCaptainTemporary,
-	getDirectory,
-	getUserData,
-} from "@/utils/path-helpers";
+import { getCaptainDownloads, getUserData } from "@/utils/path-helpers";
 
 export interface SDKMessage<T> {
 	payload: T;
@@ -52,209 +39,10 @@ ipcMain.on(
 	}
 );
 
-let process_: ExecaChildProcess<string> | undefined;
-let cache = "";
-
-ipcMain.on(
-	APP_MESSAGE_KEY,
-	async (
-		event,
-		{
-			message,
-			appId = message.payload?.appId,
-		}: {
-			message: SDKMessage<{
-				stablefast?: boolean;
-				appId: string;
-				vae?: string;
-				model?: string;
-			}>;
-			appId: string;
-		}
-	) => {
-		if (message.action !== "livePainting:start") {
-			return;
-		}
-
-		const {
-			model = "stabilityai/sd-turbo/fp16",
-			vae = "madebyollin/taesd",
-			stablefast,
-		} = message.payload;
-
-		createDirectory(getCaptainTemporary("live-painting"));
-
-		await fsp.writeFile(
-			getCaptainTemporary("live-painting/input.png"),
-			"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4//8/AwAI/AL+p5qgoAAAAABJRU5ErkJggg==",
-			"base64"
-		);
-
-		const channel = `${appId}:${APP_MESSAGE_KEY}`;
-		if (process_) {
-			event.sender.send(channel, { action: "livePainting:started", payload: true });
-			logger.info(`livePainting: started`);
-			return;
-		}
-
-		const pythonBinaryPath = getCaptainData("python-embedded/python.exe");
-		const scriptPath = getDirectory("python/live-painting/main.py");
-		const scriptArguments = [
-			"--model_path",
-			getCaptainDownloads("stable-diffusion/checkpoints", cleanPath(model)),
-			"--vae_path",
-			getCaptainDownloads("stable-diffusion/vae", cleanPath(vae)),
-			"--input_image_path",
-			getCaptainTemporary("live-painting/input.png"),
-			"--output_image_path",
-			getCaptainTemporary("live-painting/output.png"),
-			"--debug",
-		];
-
-		if (!stablefast) {
-			scriptArguments.push("--disable_stablefast");
-		}
-
-		process_ = execa(pythonBinaryPath, ["-u", scriptPath, ...scriptArguments]);
-
-		if (process_.stdout && process_.stderr) {
-			logger.info(`livePainting: processing data`);
-			process_.stdout.on("data", async data => {
-				const dataString = data.toString();
-
-				try {
-					const jsonData = JSON.parse(dataString);
-
-					console.log(`live-painting: ${JSON.stringify(jsonData)}`);
-
-					if (process_ && jsonData.status === "starting") {
-						event.sender.send(channel, {
-							action: "livePainting:starting",
-							payload: true,
-						});
-					}
-
-					if (process_ && jsonData.status === "started") {
-						event.sender.send(channel, {
-							action: "livePainting:started",
-							payload: true,
-						});
-					}
-
-					if (
-						process_ &&
-						(jsonData.status === "shutdown" || jsonData.status === "stopped")
-					) {
-						if (process_) {
-							if (process_.stdout) {
-								process_.stdout.removeAllListeners("data");
-							}
-
-							if (process_.stderr) {
-								process_.stderr.removeAllListeners("data");
-							}
-
-							if (process_ && !process_.killed) {
-								process_.kill();
-							}
-						}
-
-						process_ = undefined;
-
-						event.sender.send(channel, {
-							action: "livePainting:stopped",
-							payload: true,
-						});
-					}
-
-					if (jsonData.status === "image_generated") {
-						const imageData = await fsp.readFile(
-							getCaptainData("temp/live-painting/output.png")
-						);
-						const base64Image = imageData.toString("base64");
-
-						if (!base64Image.trim()) {
-							return;
-						}
-
-						if (base64Image.trim() === cache) {
-							return;
-						}
-
-						cache = base64Image;
-
-						event.sender.send(channel, {
-							action: "livePainting:generated",
-							payload: `data:image/png;base64,${base64Image}`,
-						});
-					}
-				} catch {
-					logger.info(`livePainting: Received non-JSON data: ${dataString}`);
-					console.log("Received non-JSON data:", dataString);
-				}
-			});
-
-			logger.info(`livePainting: processing stderr`);
-			process_.stderr.on("livePainting:data", data => {
-				console.error(`error: ${data}`);
-
-				logger.info(`livePainting: error: ${data}`);
-
-				event.sender.send(channel, { action: "livePainting:error", payload: data });
-			});
-		}
-	}
-);
-
 ipcMain.on(
 	APP_MESSAGE_KEY,
 	async <T>(_event: IpcMainEvent, { message }: { message: SDKMessage<T>; appId: string }) => {
 		switch (message.action) {
-			case "livePainting:stop": {
-				if (process_ && process_.stdin) {
-					process_.stdin.write(JSON.stringify({ command: "shutdown" }) + "\n");
-				}
-
-				break;
-			}
-
-			case "livePainting:settings": {
-				if (process_ && process_.stdin) {
-					process_.stdin.write(JSON.stringify(message.payload) + "\n");
-				}
-
-				break;
-			}
-
-			case "livePainting:dataUrl": {
-				try {
-					const dataString = message.payload as string;
-					const base64Data = dataString.replace(/^data:image\/png;base64,/, "");
-					const decodedImageData = Buffer.from(base64Data, "base64");
-
-					await fsp.writeFile(
-						getCaptainTemporary("live-painting/input.png"),
-						decodedImageData
-					);
-				} catch (error) {
-					console.error(error);
-				}
-
-				break;
-			}
-
-			case "livePainting:imageBuffer": {
-				try {
-					const { buffer } = message.payload as any;
-
-					await fsp.writeFile(getCaptainTemporary("live-painting/input.png"), buffer);
-				} catch (error) {
-					console.error(error);
-				}
-
-				break;
-			}
-
 			case "cloneRepositories:start": {
 				const models = message.payload as {
 					repository: string;

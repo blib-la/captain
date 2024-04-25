@@ -12,7 +12,7 @@ export function RenderingArea() {
 	useSDK<unknown, string>(APP_ID, {
 		onMessage(message) {
 			switch (message.action) {
-				case "livePainting:generated": {
+				case "image-to-image:generated": {
 					setImage(message.payload);
 					break;
 				}

@@ -17,7 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": [
-        "./src/electron/future/*"
+        "./src/electron/helpers/*"
       ],
       "#/*": [
         "./src/shared/*"

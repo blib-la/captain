@@ -54,13 +54,13 @@ export function LivePainting() {
 	const { send } = useSDK<unknown, string>(APP_ID, {
 		onMessage(message) {
 			switch (message.action) {
-				case "livePainting:started": {
+				case "image-to-image:started": {
 					setIsRunning(true);
 					setIsLoading(false);
 					break;
 				}
 
-				case "livePainting:stopped": {
+				case "image-to-image:stopped": {
 					setIsRunning(false);
 					setIsLoading(false);
 					break;
@@ -78,7 +78,7 @@ export function LivePainting() {
 	useEffect(() => {
 		if (isRunning) {
 			send({
-				action: "livePainting:settings",
+				action: "image-to-image:settings",
 				payload: {
 					prompt: [prompt, illustrationStyles[illustrationStyle]].join(", "),
 					seed,
@@ -99,17 +99,17 @@ export function LivePainting() {
 						isRunning={isRunning}
 						onStop={() => {
 							setIsLoading(true);
-							send({ action: "livePainting:stop", payload: APP_ID });
+							send({ action: "image-to-image:stop", payload: APP_ID });
 						}}
 						onStart={() => {
 							setIsLoading(true);
 							send({
-								action: "livePainting:start",
+								action: "image-to-image:start",
 								payload: {
 									appId: APP_ID,
 									stablefast: true,
 									model: "stabilityai/sd-turbo/fp16",
-									vae: "madebyollin/taesd/taesd",
+									vae: "madebyollin/taesd",
 								},
 							});
 						}}

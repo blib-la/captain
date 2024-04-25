@@ -7,7 +7,7 @@ export function useUnload() {
 	const { send } = useSDK<unknown, string>(APP_ID, {});
 	useEffect(() => {
 		function beforeUnload() {
-			send({ action: "livePainting:stop", payload: APP_ID });
+			send({ action: "image-to-image:stop", payload: APP_ID });
 		}
 
 		window.addEventListener("beforeunload", beforeUnload);
