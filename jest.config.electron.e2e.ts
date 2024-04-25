@@ -16,7 +16,7 @@ const jestConfig = {
 		],
 	},
 	moduleNameMapper: {
-		"@/(.*)": "<rootDir>/src/electron/future/$1",
+		"@/(.*)": "<rootDir>/src/electron/helpers/$1",
 		"#/(.*)": "<rootDir>/src/shared/$1",
 	},
 	collectCoverage: true,
