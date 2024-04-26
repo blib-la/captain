@@ -47,7 +47,7 @@ export function listenForUpdates() {
 	// autoUpdater.forceDevUpdateConfig = true;
 
 	autoUpdater.on("update-available", data => {
-		logger.error(`auto-update: update available`);
+		logger.info(`auto-update: update available`);
 
 		const window_ = BrowserWindow.getFocusedWindow();
 		window_!.webContents.send(buildKey([ID.UPDATE], { suffix: ":available" }), data);
