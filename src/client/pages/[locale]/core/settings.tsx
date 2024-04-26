@@ -1,4 +1,5 @@
 import { CustomScrollbars } from "@captn/joy/custom-scrollbars";
+import Button from "@mui/joy/Button";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Container from "@mui/joy/Container";
@@ -116,6 +117,91 @@ export function OpenAISettings() {
 	);
 }
 
+export function AutoUpdate() {
+	const [available, setAvailable] = useState(false);
+	const [downloaded, setDownloaded] = useState(false);
+
+	useEffect(() => {
+		const unsubscribeAvailable = window.ipc.on(
+			buildKey([ID.UPDATE], { suffix: ":available" }),
+			data => {
+				setAvailable(true);
+			}
+		);
+
+		const unsubscribeDownloaded = window.ipc.on(
+			buildKey([ID.UPDATE], { suffix: ":downloaded" }),
+			data => {
+				setDownloaded(true);
+			}
+		);
+
+		return () => {
+			unsubscribeAvailable();
+			unsubscribeDownloaded();
+		};
+	}, []);
+
+	return (
+		<Card variant="soft">
+			<Typography>Update</Typography>
+			<CardContent>
+				<List>
+					<ListItem>
+						<ListItemContent>
+							<Typography level="title-sm">Search for updates</Typography>
+							<Typography level="body-sm">
+								Keep Captain up to date and get the latest features and
+								optimizations
+							</Typography>
+						</ListItemContent>
+						<ListItemDecorator sx={{ width: 172, flexShrink: 0 }}>
+							{available && !downloaded && (
+								<Button
+									onClick={() => {
+										window.ipc.send(
+											buildKey([ID.UPDATE], { suffix: ":download" }),
+											true
+										);
+									}}
+								>
+									Update now
+								</Button>
+							)}
+
+							{downloaded && (
+								<Button
+									onClick={() => {
+										window.ipc.send(
+											buildKey([ID.UPDATE], { suffix: ":install" }),
+											true
+										);
+									}}
+								>
+									Install & Restart
+								</Button>
+							)}
+
+							{!available && !downloaded && (
+								<Button
+									onClick={() => {
+										window.ipc.send(
+											buildKey([ID.UPDATE], { suffix: ":search" }),
+											true
+										);
+									}}
+								>
+									Search for Updates
+								</Button>
+							)}
+						</ListItemDecorator>
+					</ListItem>
+				</List>
+			</CardContent>
+		</Card>
+	);
+}
+
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["common"]);
 	return (
@@ -128,6 +214,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 					<Stack spacing={4}>
 						<UserPreferences />
 						<OpenAISettings />
+						<AutoUpdate />
 					</Stack>
 				</Container>
 			</CustomScrollbars>

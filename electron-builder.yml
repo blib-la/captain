@@ -1,9 +1,11 @@
 appId: com.blibla.captain
 productName: Captain
 copyright: Copyright © 2024 Blibla
+
 directories:
   output: dist
   buildResources: resources
+
 files:
   - from: .
     filter:
@@ -13,15 +15,24 @@ files:
       - resources/actions/**/*
       - resources/7zip/**/*
       - resources/icon.png
-publish: null
+
+publish:
+  provider: github
+  repo: captain
+  owner: "blib-la"
+  private: false
+
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
   artifactName: "${productName}-Setup-${version}.${ext}"
-  # include: build/installer.nsh
+
 asar: true
 asarUnpack:
   - "resources/python/**/*"
   - "resources/actions/**/*"
   - "resources/7zip/**/*"
   - "resources/icon.png"
+
+win:
+  publisherName: Blibla

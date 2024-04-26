@@ -16,7 +16,7 @@ import logger from "@/services/logger";
 import { appSettingsStore } from "@/stores";
 import { createTray } from "@/tray";
 import { isCoreApp, isCoreView } from "@/utils/core";
-import { checkUpdates } from "@/utils/update";
+import { checkUpdates, listenForUpdates } from "@/utils/update";
 import { initialize, populateFromDocuments, reset } from "@/utils/vector-store";
 import {
 	createCoreWindow,
@@ -128,6 +128,9 @@ export async function main() {
 
 		// Start app
 		await runStartup();
+
+		// Listen for core updates
+		listenForUpdates();
 	} else {
 		let step = "";
 

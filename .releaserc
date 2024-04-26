@@ -25,7 +25,6 @@
       "@semantic-release/exec",
       {
         "prepareCmd": "npm run build && node ./scripts/update-readme.mjs ${nextRelease.version}"
-
       }
     ],
     [
@@ -45,6 +44,9 @@
         "assets": [
           {
             "path": "dist/Captain-Setup*.exe"
+          },
+          {
+            "path": "dist/latest.yml"
           }
         ]
       }

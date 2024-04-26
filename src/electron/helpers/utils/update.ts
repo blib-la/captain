@@ -1,5 +1,11 @@
+import { BrowserWindow } from "electron";
+import { autoUpdater } from "electron-updater";
+
+import { buildKey } from "#/build-key";
+import { ID } from "#/enums";
 import type { Resource } from "#/types/install";
 import type { Manifest, OS } from "#/types/manifest";
+import logger from "@/services/logger";
 import { appSettingsStore } from "@/stores";
 
 /**
@@ -25,4 +31,63 @@ export function checkUpdates(manifest: Manifest, os: OS): Resource[] {
 	}
 
 	return updates;
+}
+
+/**
+ * Sets up listeners for various events from electron-updater.
+ */
+export function listenForUpdates() {
+	// Enable pre-release versions
+	autoUpdater.allowPrerelease = true;
+
+	// Don't download automatically
+	autoUpdater.autoDownload = false;
+
+	// For local development without the need to pack the application
+	// autoUpdater.forceDevUpdateConfig = true;
+
+	autoUpdater.on("update-available", data => {
+		logger.error(`auto-update: update available`);
+
+		const window_ = BrowserWindow.getFocusedWindow();
+		window_!.webContents.send(buildKey([ID.UPDATE], { suffix: ":available" }), data);
+	});
+
+	autoUpdater.on("update-downloaded", data => {
+		logger.error(`auto-update: update downloaded`);
+
+		const window_ = BrowserWindow.getFocusedWindow();
+		window_!.webContents.send(buildKey([ID.UPDATE], { suffix: ":downloaded" }), data);
+	});
+
+	autoUpdater.on("error", data => {
+		logger.error(`auto-update: ${data}`);
+	});
+
+	autoUpdater.on("checking-for-update", () => {});
+
+	autoUpdater.on("update-not-available", data => {});
+
+	autoUpdater.on("download-progress", data => {});
+}
+
+/**
+ * Triggers a check for updates and notifies the user if an update is available.
+ */
+export async function checkCoreUpdates(): Promise<void> {
+	await autoUpdater.checkForUpdatesAndNotify();
+}
+
+/**
+ * Downloads the update if any updates are available.
+ */
+export async function downloadCoreUpdate(): Promise<void> {
+	await autoUpdater.downloadUpdate();
+}
+
+/**
+ * Restarts the application and installs the downloaded update.
+ */
+export function restartAndInstall(): void {
+	autoUpdater.quitAndInstall();
 }
