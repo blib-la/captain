@@ -3,16 +3,17 @@ import { autoUpdater } from "electron-updater";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
+import { isDevelopment } from "#/flags";
 import type { Resource } from "#/types/install";
 import type { Manifest, OS } from "#/types/manifest";
-import logger from "@/services/logger";
+import { logger } from "@/services/logger";
 import { appSettingsStore } from "@/stores";
 
 /**
  * Checks for available updates based on the installed versions of resources.
  *
  * @param manifest - The complete resource manifest for all operating systems.
- * @param os - The current operating system to check updates for, which must be one of 'windows', 'macos', or 'linux'.
+ * @param os - The current operating system to check updates for, which must be one of 'windows', 'macOS', or 'linux'.
  *
  * @returns An array of resources that have updates available.
  */
@@ -44,7 +45,7 @@ export function listenForUpdates() {
 	autoUpdater.autoDownload = false;
 
 	// For local development without the need to pack the application
-	// autoUpdater.forceDevUpdateConfig = true;
+	autoUpdater.forceDevUpdateConfig = isDevelopment;
 
 	autoUpdater.on("update-available", data => {
 		logger.info(`auto-update: update available`);
@@ -64,11 +65,20 @@ export function listenForUpdates() {
 		logger.error(`auto-update: ${data}`);
 	});
 
-	autoUpdater.on("checking-for-update", () => {});
+	// TODO adjust implementation
+	autoUpdater.on("checking-for-update", () => {
+		logger.info("auto-update: on -> checking-for-update");
+	});
 
-	autoUpdater.on("update-not-available", data => {});
+	// TODO adjust implementation
+	autoUpdater.on("update-not-available", data => {
+		logger.info("auto-update: on -> update-not-available", data);
+	});
 
-	autoUpdater.on("download-progress", data => {});
+	// TODO adjust implementation
+	autoUpdater.on("download-progress", data => {
+		logger.info("auto-update: on -> download-progress", data);
+	});
 }
 
 /**
