@@ -16,6 +16,11 @@ import { unpack } from "@/utils/unpack";
 
 const testDownloadFile = "https://example.com/test.jpg";
 
+jest.mock("electron", () => ({
+	app: {
+		requestSingleInstanceLock: jest.fn(),
+	},
+}));
 jest.mock("electron-dl", () => {
 	const originalModule = jest.requireActual("electron-dl");
 

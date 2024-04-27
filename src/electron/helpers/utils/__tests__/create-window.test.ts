@@ -29,6 +29,7 @@ jest.mock("electron", () => ({
 		}),
 	},
 	app: {
+		requestSingleInstanceLock: jest.fn(),
 		getPath: jest.fn(pathName => {
 			if (pathName === "userData") {
 				return "/mocked/user/data/path";
