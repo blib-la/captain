@@ -23,6 +23,21 @@ jest.mock("electron", () => {
 		...originalModule,
 		app: {
 			...originalModule.app,
+			getPath: jest.fn().mockImplementation((key: string) => {
+				switch (key) {
+					case "exe": {
+						return "/path/to/exe";
+					}
+
+					case "userData": {
+						return "/path/to/userData";
+					}
+
+					default: {
+						return "/default/path";
+					}
+				}
+			}),
 			requestSingleInstanceLock: jest.fn(),
 		},
 	};
