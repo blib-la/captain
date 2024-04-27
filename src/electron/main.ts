@@ -1,6 +1,5 @@
 import { DownloadState } from "@captn/utils/constants";
 import type { BrowserWindowConstructorOptions } from "electron";
-import { dialog } from "electron";
 import { app, ipcMain, Menu } from "electron";
 
 import { version } from "../../package.json";
@@ -110,7 +109,7 @@ export async function main() {
 	logger.info(`main(): listened to :open`);
 
 	if (isUpToDate) {
-		app.on("second-instance", async (_, commandLine) => {
+		app.on("second-instance", async () => {
 			apps.core ||= await createCoreWindow();
 
 			if (apps.core) {
@@ -120,8 +119,6 @@ export async function main() {
 
 				apps.core.focus();
 			}
-
-			dialog.showErrorBox("Welcome Back", `You arrived from: ${commandLine.pop()}`);
 		});
 		// Start the vector store and fill it with data
 		await initialize();
