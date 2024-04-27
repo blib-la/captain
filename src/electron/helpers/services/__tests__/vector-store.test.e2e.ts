@@ -51,6 +51,7 @@ describe("VectorStore Integration Tests", () => {
 			id: "live-painting:schema",
 			label: "Live Painting",
 			language: "en",
+			type: "app",
 		},
 	};
 
@@ -61,6 +62,7 @@ describe("VectorStore Integration Tests", () => {
 			id: "story-creator:schema",
 			label: "Story Creator",
 			language: "en",
+			type: "app",
 		},
 	};
 
