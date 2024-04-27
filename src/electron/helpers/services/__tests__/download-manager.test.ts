@@ -21,6 +21,35 @@ jest.mock("electron", () => ({
 		requestSingleInstanceLock: jest.fn(),
 	},
 }));
+
+jest.mock("electron", () => {
+	const originalModule = jest.requireActual("electron");
+
+	return {
+		...originalModule,
+		app: {
+			...originalModule.app,
+			requestSingleInstanceLock: jest.fn(),
+		},
+	};
+});
+
+jest.mock("electron-dl", () => {
+	const originalModule = jest.requireActual("electron-dl");
+
+	return {
+		...originalModule,
+		download: jest.fn(),
+	};
+});
+jest.mock("electron-dl", () => {
+	const originalModule = jest.requireActual("electron-dl");
+
+	return {
+		...originalModule,
+		download: jest.fn(),
+	};
+});
 jest.mock("electron-dl", () => {
 	const originalModule = jest.requireActual("electron-dl");
 
