@@ -1,3 +1,10 @@
+# [1.0.0-alpha.53](https://github.com/blib-la/captain/compare/v1.0.0-alpha.52...v1.0.0-alpha.53) (2024-04-27)
+
+
+### Features
+
+* allows opening app from a website ([#231](https://github.com/blib-la/captain/issues/231)) ([539b93b](https://github.com/blib-la/captain/commit/539b93baf6a70227ed93e9e6bc32be31618e321e)), closes [#232](https://github.com/blib-la/captain/issues/232)
+
 # [1.0.0-alpha.52](https://github.com/blib-la/captain/compare/v1.0.0-alpha.51...v1.0.0-alpha.52) (2024-04-26)
 
 

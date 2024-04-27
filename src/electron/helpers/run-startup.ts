@@ -1,5 +1,5 @@
 import { apps } from "@/apps";
-import logger from "@/services/logger";
+import { logger } from "@/services/logger";
 import { loadURL } from "@/utils/load-window";
 import { createCoreWindow, createPromptWindow } from "@/windows";
 

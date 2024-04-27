@@ -2,9 +2,9 @@ import { app } from "electron";
 
 import { main } from "./main";
 
-import { isTest } from "#/flags";
+import { gotTheLock, isTest } from "#/flags";
 import { registerApps } from "@/app-loaders";
-import logger from "@/services/logger";
+import { logger } from "@/services/logger";
 import { watchStores } from "@/stores/watchers";
 import { cleanFiles } from "@/utils/clean-files";
 
@@ -75,13 +75,7 @@ import "@/ipc/downloads";
 // Import marketplace
 import "@/ipc/marketplace";
 
-// Obtain a lock to check if the app is locked (primary instance)
-// If false, we close the app, as we want to prevent multiple instances of our app
-// https://github.com/electron/electron/blob/v30.0.0-nightly.20240221/docs/api/app.md#apprequestsingleinstancelockadditionaldata
-const gotTheLock = app.requestSingleInstanceLock();
-
 let unsubscribe: (() => Promise<void>) | undefined;
-
 if (gotTheLock || isTest) {
 	// Register user installed apps
 	registerApps();
@@ -105,12 +99,4 @@ if (gotTheLock || isTest) {
 			await unsubscribe();
 		}
 	});
-} else {
-	// The app is locked, so we force quit the new instance
-	console.log("App is locked by another instance. Closing app");
-	app.quit();
-
-	if (unsubscribe) {
-		unsubscribe();
-	}
 }

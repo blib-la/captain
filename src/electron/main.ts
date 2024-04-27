@@ -9,17 +9,15 @@ import { ID } from "#/enums";
 import { isProduction } from "#/flags";
 import manifest from "#/manifest.json";
 import type { Manifest } from "#/types/manifest";
-import { apps } from "@/apps";
 import { initLocalProtocol } from "@/init-local-protocol";
 import { runStartup } from "@/run-startup";
-import logger from "@/services/logger";
+import { logger } from "@/services/logger";
 import { appSettingsStore } from "@/stores";
 import { createTray } from "@/tray";
 import { isCoreApp, isCoreView } from "@/utils/core";
 import { checkUpdates, listenForUpdates } from "@/utils/update";
 import { initialize, populateFromDocuments, reset } from "@/utils/vector-store";
 import {
-	createCoreWindow,
 	createInstallerWindow,
 	handleCoreAppWindow,
 	openApp,
@@ -110,15 +108,8 @@ export async function main() {
 
 	if (isUpToDate) {
 		app.on("second-instance", async () => {
-			apps.core ||= await createCoreWindow();
-
-			if (apps.core) {
-				if (apps.core.isMinimized()) {
-					apps.core.restore();
-				}
-
-				apps.core.focus();
-			}
+			await openCore("dashboard");
+			logger.info("second instance requested");
 		});
 		// Start the vector store and fill it with data
 		await initialize();
@@ -151,13 +142,13 @@ export async function main() {
 		const installerWindow = await createInstallerWindow({ step });
 
 		app.on("second-instance", async () => {
-			apps.core ||= await createCoreWindow();
+			if (installerWindow) {
+				if (installerWindow.isMinimized()) {
+					installerWindow.restore();
+				}
 
-			if (installerWindow.isMinimized()) {
-				installerWindow.restore();
+				installerWindow.focus();
 			}
-
-			installerWindow.focus();
 		});
 
 		// When the installer is done we open the prompt window & update the version

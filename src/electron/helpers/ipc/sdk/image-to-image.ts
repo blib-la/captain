@@ -7,7 +7,7 @@ import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 
 import { cleanPath } from "#/string";
-import logger from "@/services/logger";
+import { logger } from "@/services/logger";
 import { createDirectory } from "@/utils/fs";
 import {
 	getCaptainData,
