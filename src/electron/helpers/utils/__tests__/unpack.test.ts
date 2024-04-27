@@ -20,12 +20,6 @@ jest.mock("node:fs/promises", () => ({
 	unlink: jest.fn().mockImplementation(() => Promise.resolve()),
 }));
 
-jest.mock("electron", () => ({
-	app: {
-		requestSingleInstanceLock: jest.fn(),
-	},
-}));
-
 describe("electron/utils/unpack.ts", () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
