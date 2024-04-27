@@ -14,4 +14,6 @@ export interface Resource {
 
 export type OS = "windows" | "macos" | "linux";
 
-export interface Manifest extends Record<OS, Resource[]> {}
+export type Manifest = {
+	[K in OS]?: Resource[];
+};
