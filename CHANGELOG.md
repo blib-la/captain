@@ -1,3 +1,10 @@
+# [1.0.0-alpha.54](https://github.com/blib-la/captain/compare/v1.0.0-alpha.53...v1.0.0-alpha.54) (2024-04-27)
+
+
+### Features
+
+* added "update" to "settings" ([#230](https://github.com/blib-la/captain/issues/230)) ([1855747](https://github.com/blib-la/captain/commit/1855747e465f84c38a08628e661139e1f1e96b66)), closes [#227](https://github.com/blib-la/captain/issues/227)
+
 # [1.0.0-alpha.53](https://github.com/blib-la/captain/compare/v1.0.0-alpha.52...v1.0.0-alpha.53) (2024-04-27)
 
 
