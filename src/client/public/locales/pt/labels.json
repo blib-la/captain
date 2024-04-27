@@ -7,6 +7,7 @@
   "artStyle": "Estilo Artístico",
   "back": "Voltar",
   "brushSize": "Tamanho Pincel",
+  "checkForUpdates": "Verificar atualizações",
   "clear": "Limpar",
   "clickDownloadToStart": "Clique em \"Baixar\" para começar!",
   "close": "Fechar",
@@ -43,6 +44,7 @@
   },
   "image": "Imagem",
   "install": "Instalar",
+  "installAndRestart": "Instalar e reiniciar",
   "installationSuccess": "Instalação concluída",
   "installFailed": "Falha na instalação",
   "installUpdate": "Atualizações",
@@ -102,5 +104,6 @@
   "undefined": "Desconhecido",
   "unpacking": "Desembalando",
   "update": "Atualizar",
-  "updateFailed": "Falha na atualização"
+  "updateFailed": "Falha na atualização",
+  "updateNow": "Atualizar agora"
 }

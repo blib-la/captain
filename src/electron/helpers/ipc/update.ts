@@ -4,7 +4,7 @@ import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import { checkCoreUpdates, downloadCoreUpdate, restartAndInstall } from "@/utils/update";
 
-ipcMain.on(buildKey([ID.UPDATE], { suffix: ":search" }), async () => {
+ipcMain.on(buildKey([ID.UPDATE], { suffix: ":check" }), async () => {
 	await checkCoreUpdates();
 });
 

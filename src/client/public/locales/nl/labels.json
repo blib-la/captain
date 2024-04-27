@@ -7,6 +7,7 @@
   "artStyle": "Kunststijl",
   "back": "Terug",
   "brushSize": "Penseelgrootte",
+  "checkForUpdates": "Controleren op updates",
   "clear": "Wissen",
   "clickDownloadToStart": "Klik op \"Downloaden\" om te starten!",
   "close": "Sluiten",
@@ -43,6 +44,7 @@
   },
   "image": "Afbeelding",
   "install": "Installeren",
+  "installAndRestart": "Installeren en herstarten",
   "installationSuccess": "Installatie voltooid",
   "installFailed": "Installatie mislukt",
   "installUpdate": "Updates",
@@ -102,5 +104,6 @@
   "undefined": "Onbekend",
   "unpacking": "Uitpakken",
   "update": "Bijwerken",
-  "updateFailed": "Update mislukt"
+  "updateFailed": "Update mislukt",
+  "updateNow": "Nu bijwerken"
 }

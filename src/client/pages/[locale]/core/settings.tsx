@@ -118,20 +118,21 @@ export function OpenAISettings() {
 }
 
 export function AutoUpdate() {
+	const { t } = useTranslation(["labels", "texts"]);
 	const [available, setAvailable] = useState(false);
 	const [downloaded, setDownloaded] = useState(false);
 
 	useEffect(() => {
 		const unsubscribeAvailable = window.ipc.on(
 			buildKey([ID.UPDATE], { suffix: ":available" }),
-			data => {
+			() => {
 				setAvailable(true);
 			}
 		);
 
 		const unsubscribeDownloaded = window.ipc.on(
 			buildKey([ID.UPDATE], { suffix: ":downloaded" }),
-			data => {
+			() => {
 				setDownloaded(true);
 			}
 		);
@@ -144,15 +145,14 @@ export function AutoUpdate() {
 
 	return (
 		<Card variant="soft">
-			<Typography>Update</Typography>
+			<Typography>{t("labels:update")}</Typography>
 			<CardContent>
 				<List>
 					<ListItem>
 						<ListItemContent>
-							<Typography level="title-sm">Search for updates</Typography>
+							<Typography level="title-sm">{t("labels:checkForUpdates")}</Typography>
 							<Typography level="body-sm">
-								Keep Captain up to date and get the latest features and
-								optimizations
+								{t("texts:keepCaptainUpToDate")}
 							</Typography>
 						</ListItemContent>
 						<ListItemDecorator sx={{ width: 172, flexShrink: 0 }}>
@@ -165,7 +165,7 @@ export function AutoUpdate() {
 										);
 									}}
 								>
-									Update now
+									{t("labels:updateNow")}
 								</Button>
 							)}
 
@@ -178,7 +178,7 @@ export function AutoUpdate() {
 										);
 									}}
 								>
-									Install & Restart
+									{t("labels:installAndRestart")}
 								</Button>
 							)}
 
@@ -186,12 +186,12 @@ export function AutoUpdate() {
 								<Button
 									onClick={() => {
 										window.ipc.send(
-											buildKey([ID.UPDATE], { suffix: ":search" }),
+											buildKey([ID.UPDATE], { suffix: ":check" }),
 											true
 										);
 									}}
 								>
-									Search for Updates
+									{t("labels:checkForUpdates")}
 								</Button>
 							)}
 						</ListItemDecorator>
