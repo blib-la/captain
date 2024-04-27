@@ -1,4 +1,5 @@
 import { CustomScrollbars } from "@captn/joy/custom-scrollbars";
+import Button from "@mui/joy/Button";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Container from "@mui/joy/Container";
@@ -116,6 +117,91 @@ export function OpenAISettings() {
 	);
 }
 
+export function AutoUpdate() {
+	const { t } = useTranslation(["labels", "texts"]);
+	const [available, setAvailable] = useState(false);
+	const [downloaded, setDownloaded] = useState(false);
+
+	useEffect(() => {
+		const unsubscribeAvailable = window.ipc.on(
+			buildKey([ID.UPDATE], { suffix: ":available" }),
+			() => {
+				setAvailable(true);
+			}
+		);
+
+		const unsubscribeDownloaded = window.ipc.on(
+			buildKey([ID.UPDATE], { suffix: ":downloaded" }),
+			() => {
+				setDownloaded(true);
+			}
+		);
+
+		return () => {
+			unsubscribeAvailable();
+			unsubscribeDownloaded();
+		};
+	}, []);
+
+	return (
+		<Card variant="soft">
+			<Typography>{t("labels:update")}</Typography>
+			<CardContent>
+				<List>
+					<ListItem>
+						<ListItemContent>
+							<Typography level="title-sm">{t("labels:checkForUpdates")}</Typography>
+							<Typography level="body-sm">
+								{t("texts:keepCaptainUpToDate")}
+							</Typography>
+						</ListItemContent>
+						<ListItemDecorator sx={{ width: 172, flexShrink: 0 }}>
+							{available && !downloaded && (
+								<Button
+									onClick={() => {
+										window.ipc.send(
+											buildKey([ID.UPDATE], { suffix: ":download" }),
+											true
+										);
+									}}
+								>
+									{t("labels:updateNow")}
+								</Button>
+							)}
+
+							{downloaded && (
+								<Button
+									onClick={() => {
+										window.ipc.send(
+											buildKey([ID.UPDATE], { suffix: ":install" }),
+											true
+										);
+									}}
+								>
+									{t("labels:installAndRestart")}
+								</Button>
+							)}
+
+							{!available && !downloaded && (
+								<Button
+									onClick={() => {
+										window.ipc.send(
+											buildKey([ID.UPDATE], { suffix: ":check" }),
+											true
+										);
+									}}
+								>
+									{t("labels:checkForUpdates")}
+								</Button>
+							)}
+						</ListItemDecorator>
+					</ListItem>
+				</List>
+			</CardContent>
+		</Card>
+	);
+}
+
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["common"]);
 	return (
@@ -128,6 +214,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 					<Stack spacing={4}>
 						<UserPreferences />
 						<OpenAISettings />
+						<AutoUpdate />
 					</Stack>
 				</Container>
 			</CustomScrollbars>

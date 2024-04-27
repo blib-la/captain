@@ -2,6 +2,8 @@ import { unlink } from "node:fs/promises";
 
 import Seven from "node-7z";
 
+import { unpack } from "@/utils/unpack";
+
 jest.mock("node-7z", () => ({
 	extractFull: jest.fn().mockImplementation(() => ({
 		on: jest.fn().mockImplementation((event, handler) => {
@@ -17,8 +19,6 @@ jest.mock("node-7z", () => ({
 jest.mock("node:fs/promises", () => ({
 	unlink: jest.fn().mockImplementation(() => Promise.resolve()),
 }));
-
-import { unpack } from "@/utils/unpack";
 
 describe("electron/utils/unpack.ts", () => {
 	beforeEach(() => {

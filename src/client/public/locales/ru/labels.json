@@ -7,6 +7,7 @@
   "artStyle": "Стиль искусства",
   "back": "Назад",
   "brushSize": "Размер Кисти",
+  "checkForUpdates": "Проверить обновления",
   "clear": "Очистить",
   "clickDownloadToStart": "Нажмите \"Скачать\", чтобы начать!",
   "close": "Закрыть",
@@ -43,6 +44,7 @@
   },
   "image": "Изображение",
   "install": "Установить",
+  "installAndRestart": "Установить и перезагрузить",
   "installationSuccess": "Установка завершена",
   "installFailed": "Не удалось установить",
   "installUpdate": "Обновления",
@@ -102,5 +104,6 @@
   "undefined": "Неизвестно",
   "unpacking": "Распаковка",
   "update": "Обновить",
-  "updateFailed": "Обновление не удалось"
+  "updateFailed": "Обновление не удалось",
+  "updateNow": "Обновить сейчас"
 }

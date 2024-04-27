@@ -57,6 +57,9 @@ import "@/ipc/sdk/image-to-image";
 // Import install handlers and listeners
 import "@/ipc/install";
 
+// Import update handlers
+import "@/ipc/update";
+
 // Import testing helpers
 import "@/ipc/testing";
 

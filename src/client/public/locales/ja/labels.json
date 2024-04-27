@@ -7,6 +7,7 @@
   "artStyle": "アートスタイル",
   "back": "戻る",
   "brushSize": "ブラシサイズ",
+  "checkForUpdates": "更新を確認",
   "clear": "クリア",
   "clickDownloadToStart": "「ダウンロード」をクリックして開始！",
   "close": "閉じる",
@@ -43,6 +44,7 @@
   },
   "image": "画像",
   "install": "インストール",
+  "installAndRestart": "インストールして再起動",
   "installationSuccess": "インストール完了",
   "installFailed": "インストールに失敗しました",
   "installUpdate": "アップデート",
@@ -102,5 +104,6 @@
   "undefined": "不明",
   "unpacking": "解凍中",
   "update": "更新",
-  "updateFailed": "更新に失敗しました"
+  "updateFailed": "更新に失敗しました",
+  "updateNow": "今すぐ更新"
 }

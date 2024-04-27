@@ -7,6 +7,7 @@
   "artStyle": "סגנון אומנותי",
   "back": "חזרה",
   "brushSize": "גודל מברשת",
+  "checkForUpdates": "בדוק עדכונים",
   "clear": "נקה",
   "clickDownloadToStart": "לחץ על \"הורד\" כדי להתחיל!",
   "close": "סגור",
@@ -43,6 +44,7 @@
   },
   "image": "תמונה",
   "install": "התקנה",
+  "installAndRestart": "התקן ואתחל",
   "installationSuccess": "ההתקנה הושלמה",
   "installFailed": "ההתקנה נכשלה",
   "installUpdate": "עדכונים",
@@ -102,5 +104,6 @@
   "undefined": "לא ידוע",
   "unpacking": "פותח",
   "update": "עדכון",
-  "updateFailed": "עדכון נכשל"
+  "updateFailed": "עדכון נכשל",
+  "updateNow": "עדכן עכשיו"
 }

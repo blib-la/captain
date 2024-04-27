@@ -7,6 +7,12 @@ jest.mock("@/stores", () => ({
 	},
 }));
 
+jest.mock("electron", () => ({
+	app: {
+		requestSingleInstanceLock: jest.fn(),
+	},
+}));
+
 describe("checkUpdates", () => {
 	const manifest = {
 		windows: [
