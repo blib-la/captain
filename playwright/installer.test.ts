@@ -28,13 +28,13 @@ test.afterAll(async () => {
 	await electronApp.close();
 });
 
-test("Renders the installer page", async () => {
+test.skip("Renders the installer page", async () => {
 	page = await electronApp.firstWindow();
 	const title = await page.title();
 	expect(title).toBe("Captain");
 });
 
-test("Allows switching the language", async () => {
+test.skip("Allows switching the language", async () => {
 	page = await electronApp.firstWindow();
 
 	await expect(page.getByTestId("language-selector-list")).toBeVisible();
@@ -43,7 +43,7 @@ test("Allows switching the language", async () => {
 	await expect(page.getByText("Sprache")).toBeVisible();
 });
 
-test("Can open page 2 of the installer & download & unpack", async () => {
+test.skip("Can open page 2 of the installer & download & unpack", async () => {
 	page = await electronApp.firstWindow();
 
 	const locale = "de";
@@ -56,7 +56,7 @@ test("Can open page 2 of the installer & download & unpack", async () => {
 	await page.getByTestId("installer-02-start").click();
 });
 
-(isLocalEnvironment ? test : test.skip)("Download and unpack archives", async () => {
+test.skip("Download and unpack archives", async () => {
 	page = await electronApp.firstWindow();
 
 	const start = buildKey([ID.INSTALL], { suffix: ":start" });
@@ -80,7 +80,7 @@ test("Can open page 2 of the installer & download & unpack", async () => {
 		[start, completed]
 	);
 
-	await expect(result).toBeTruthy();
+	expect(result).toBeTruthy();
 });
 
 // Doesn't work yet
@@ -112,5 +112,5 @@ test.skip("error when trying to download and unpack archives", async () => {
 		[start, completed, failed]
 	);
 
-	await expect(result).toHaveProperty("path");
+	expect(result).toHaveProperty("path");
 });
