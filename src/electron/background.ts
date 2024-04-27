@@ -2,7 +2,6 @@ import { app } from "electron";
 
 import { main } from "./main";
 
-import { isTest } from "#/flags";
 import { registerApps } from "@/app-loaders";
 import logger from "@/services/logger";
 import { watchStores } from "@/stores/watchers";
@@ -72,42 +71,27 @@ import "@/ipc/downloads";
 // Import marketplace
 import "@/ipc/marketplace";
 
-// Obtain a lock to check if the app is locked (primary instance)
-// If false, we close the app, as we want to prevent multiple instances of our app
-// https://github.com/electron/electron/blob/v30.0.0-nightly.20240221/docs/api/app.md#apprequestsingleinstancelockadditionaldata
-const gotTheLock = app.requestSingleInstanceLock();
-
 let unsubscribe: (() => Promise<void>) | undefined;
 
-if (gotTheLock || isTest) {
-	// Register user installed apps
-	registerApps();
+// Register user installed apps
+registerApps();
 
-	main().then(() => {
-		logger.info("Application started successfully");
-		unsubscribe = watchStores();
-	});
+main().then(() => {
+	logger.info("Application started successfully");
+	unsubscribe = watchStores();
+});
 
-	// Listen for the 'window-all-closed' event on the Electron app object.
-	// This event is emitted when all windows of the application have been closed.
-	// In response, quit the application to free up resources, adhering to typical desktop application
-	// behavior.
-	app.on("window-all-closed", async () => {
-		app.quit();
-
-		// Clean all temporary files
-		await cleanFiles();
-
-		if (unsubscribe) {
-			await unsubscribe();
-		}
-	});
-} else {
-	// The app is locked, so we force quit the new instance
-	console.log("App is locked by another instance. Closing app");
+// Listen for the 'window-all-closed' event on the Electron app object.
+// This event is emitted when all windows of the application have been closed.
+// In response, quit the application to free up resources, adhering to typical desktop application
+// behavior.
+app.on("window-all-closed", async () => {
 	app.quit();
 
+	// Clean all temporary files
+	await cleanFiles();
+
 	if (unsubscribe) {
-		unsubscribe();
+		await unsubscribe();
 	}
-}
+});
