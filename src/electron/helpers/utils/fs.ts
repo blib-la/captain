@@ -1,5 +1,4 @@
-import { existsSync, mkdirSync } from "node:fs";
-import fsp from "node:fs/promises";
+import fs, { existsSync, mkdirSync } from "node:fs";
 
 export function createDirectory(path: string): string {
 	if (!existsSync(path)) {
@@ -14,12 +13,12 @@ export function createDirectory(path: string): string {
  *
  * @param path - The directory path where files will be deleted.
  */
-export async function clearDirectory(path: string) {
+export function clearDirectory(path: string) {
 	try {
-		const files = await fsp.readdir(path);
+		const files = fs.readdirSync(path);
 		for (const file of files) {
 			const filePath = `${path}/${file}`;
-			await fsp.unlink(filePath);
+			fs.unlinkSync(filePath);
 		}
 	} catch (error) {
 		console.error(`Error deleting files: ${error}`);

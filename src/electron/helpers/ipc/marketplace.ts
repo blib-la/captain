@@ -3,7 +3,7 @@ import { ipcMain } from "electron";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
-import logger from "@/services/logger";
+import { logger } from "@/services/logger";
 import { marketplaceStore } from "@/stores";
 
 ipcMain.handle(

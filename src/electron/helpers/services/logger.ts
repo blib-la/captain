@@ -1,7 +1,6 @@
 import * as winston from "winston";
 
-import { createDirectory, clearDirectory } from "@/utils/fs";
-import { getCaptainData } from "@/utils/path-helpers";
+import { getUserData } from "@/utils/path-helpers";
 
 /**
  * Creates and configures a Winston logger with file and console transports.
@@ -26,13 +25,13 @@ function create() {
 	if (process.env.NODE_ENV === "production") {
 		logger.add(
 			new winston.transports.File({
-				filename: getCaptainData("logs", "error.log"),
+				filename: getUserData("error.log"),
 				level: "error",
 			})
 		);
 		logger.add(
 			new winston.transports.File({
-				filename: getCaptainData("logs", "combined.log"),
+				filename: getUserData("combined.log"),
 			})
 		);
 	}
@@ -47,15 +46,5 @@ function create() {
 	return logger;
 }
 
-const logsPath = getCaptainData("logs");
-
-// Make sure the logs directory exists
-await createDirectory(logsPath);
-
-// Delete old logs
-await clearDirectory(logsPath);
-
 // Create logger
-const logger = create();
-
-export default logger;
+export const logger = create();

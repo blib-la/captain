@@ -16,6 +16,49 @@ import { unpack } from "@/utils/unpack";
 
 const testDownloadFile = "https://example.com/test.jpg";
 
+jest.mock("electron", () => {
+	const originalModule = jest.requireActual("electron");
+
+	return {
+		...originalModule,
+		app: {
+			...originalModule.app,
+			getPath: jest.fn().mockImplementation((key: string) => {
+				switch (key) {
+					case "exe": {
+						return "/path/to/exe";
+					}
+
+					case "userData": {
+						return "/path/to/userData";
+					}
+
+					default: {
+						return "/default/path";
+					}
+				}
+			}),
+			requestSingleInstanceLock: jest.fn(),
+		},
+	};
+});
+
+jest.mock("electron-dl", () => {
+	const originalModule = jest.requireActual("electron-dl");
+
+	return {
+		...originalModule,
+		download: jest.fn(),
+	};
+});
+jest.mock("electron-dl", () => {
+	const originalModule = jest.requireActual("electron-dl");
+
+	return {
+		...originalModule,
+		download: jest.fn(),
+	};
+});
 jest.mock("electron-dl", () => {
 	const originalModule = jest.requireActual("electron-dl");
 

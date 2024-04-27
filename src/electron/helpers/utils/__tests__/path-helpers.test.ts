@@ -4,6 +4,7 @@ import { resourcesDirectory, getDirectory } from "../path-helpers";
 
 jest.mock("electron", () => ({
 	app: {
+		requestSingleInstanceLock: jest.fn(),
 		getPath: jest.fn().mockImplementation((key: string) => {
 			switch (key) {
 				case "exe": {
