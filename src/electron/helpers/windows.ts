@@ -14,7 +14,7 @@ import { ID } from "#/enums";
 import type { MultiWindowConfiguration, MultiWindowKey } from "@/app-loaders";
 import { appLoaders, isMultiWindow } from "@/app-loaders";
 import { apps } from "@/apps";
-import logger from "@/services/logger";
+import { logger } from "@/services/logger";
 import { createWindow } from "@/utils/create-window";
 import { loadURL } from "@/utils/load-window";
 

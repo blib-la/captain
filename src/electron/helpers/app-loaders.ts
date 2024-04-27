@@ -7,7 +7,7 @@ import serve from "electron-serve";
 import { globbySync } from "globby";
 import matter from "gray-matter";
 
-import logger from "@/services/logger";
+import { logger } from "@/services/logger";
 import { getCaptainApps } from "@/utils/path-helpers";
 
 export const appLoaders: Record<string, electronServe.loadURL> = {};
@@ -80,7 +80,7 @@ export function registerApps() {
 	const installedApps = globbySync(["*/captain.md"], {
 		cwd: getCaptainApps(),
 	});
-	logger.info({ installedApps });
+	logger.info(JSON.stringify(installedApps, null, 2));
 
 	// Register a custom protocol for each installed app, allowing them to be served statically.
 	for (const installedApp of installedApps) {

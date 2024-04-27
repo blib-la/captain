@@ -1,7 +1,7 @@
 import type { BrowserWindow } from "electron";
 
 import { isProduction } from "#/flags";
-import logger from "@/services/logger";
+import { logger } from "@/services/logger";
 import { getLocale } from "@/utils/locale";
 
 /**

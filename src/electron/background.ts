@@ -2,10 +2,9 @@ import { app } from "electron";
 
 import { main } from "./main";
 
-import { isTest } from "#/flags";
+import { gotTheLock, isTest } from "#/flags";
 import { registerApps } from "@/app-loaders";
-import { gotTheLock } from "@/core-setup";
-import logger from "@/services/logger";
+import { logger } from "@/services/logger";
 import { watchStores } from "@/stores/watchers";
 import { cleanFiles } from "@/utils/clean-files";
 

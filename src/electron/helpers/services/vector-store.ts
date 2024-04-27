@@ -9,7 +9,7 @@ import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 import { v4 } from "uuid";
 
-import logger from "@/services/logger";
+import { logger } from "@/services/logger";
 import { getCaptainData } from "@/utils/path-helpers";
 
 interface ServiceReadyConfig {
