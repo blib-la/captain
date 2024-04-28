@@ -2,7 +2,8 @@ import { USER_LANGUAGE_KEY, USER_THEME_KEY } from "@captn/utils/constants";
 import type { Unsubscribe } from "conf/dist/source/types";
 import { BrowserWindow } from "electron";
 
-import { downloadsStore, inventoryStore, userStore } from "@/stores";
+import { appSettingsStore, downloadsStore, inventoryStore, userStore } from "@/stores";
+import { traverseAndModify } from "@/utils/download-restart";
 
 export function sendToFocusedWindow<T>(key: string, value: T) {
 	const window_ = BrowserWindow.getFocusedWindow();
@@ -20,6 +21,8 @@ export function sendToAllWindows<T>(key: string, value: T) {
 
 export function watchStores() {
 	const subscriptions: Unsubscribe[] = [];
+	downloadsStore.store = traverseAndModify(downloadsStore.store);
+	appSettingsStore.set("requiresRestart", false);
 	subscriptions.push(
 		userStore.onDidChange("language", language => {
 			if (language) {
