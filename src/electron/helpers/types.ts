@@ -163,7 +163,7 @@ export interface DownloadStatus {
  * This facilitates tracking multiple downloads simultaneously.
  */
 export interface DownloadsSettings {
-	[key: string]: DownloadsSettings | string;
+	[key: string]: DownloadsSettings | DownloadState;
 }
 
 /**

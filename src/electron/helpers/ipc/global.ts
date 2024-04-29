@@ -23,8 +23,9 @@ import { ID } from "#/enums";
 import { cleanPath, extractH1Headings, getFileType } from "#/string";
 import { apps } from "@/apps";
 import { VectorStore } from "@/services/vector-store";
-import { inventoryStore, downloadsStore, userStore } from "@/stores";
+import { inventoryStore, downloadsStore, userStore, appSettingsStore } from "@/stores";
 import { pushToStore } from "@/stores/utils";
+import type { DownloadsSettings } from "@/types";
 import { getCaptainData, getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
 import { splitDocument } from "@/utils/split-documents";
 import { unpack } from "@/utils/unpack";
@@ -261,10 +262,27 @@ ipcMain.handle(
  */
 ipcMain.handle(
 	buildKey([ID.STORE, ID.INVENTORY], { suffix: ":get" }),
-	(_event, key: string, defaultValue: unknown) =>
+	(_event, key: string, defaultValue?: unknown) =>
 		// Directly return the value obtained from the inventory store using the provided key.
 		// If the key does not exist, the specified default value is returned.
 		inventoryStore.get(key, defaultValue)
+);
+
+/**
+ * Retrieves a value from the app settings store.
+ * This IPC handler responds to requests for data retrieval from the app settings store,
+ * returning the value associated with the specified key, or a default value if the key doesn't exist.
+ *
+ * @param {string} key - The key associated with the value to retrieve from the app settings store.
+ * @param {unknown} defaultValue - A default value to return if the key is not found in the store.
+ * @returns {unknown} The value from the inventory store or the default value if the key is not present.
+ */
+ipcMain.handle(
+	buildKey([ID.STORE, ID.APP], { suffix: ":get" }),
+	(_event, key: string, defaultValue?: unknown) =>
+		// Directly return the value obtained from the app settings store using the provided key.
+		// If the key does not exist, the specified default value is returned.
+		appSettingsStore.get(key, defaultValue)
 );
 
 /**
@@ -273,15 +291,15 @@ ipcMain.handle(
  * or details of a download task based on its unique identifier.
  *
  * @param {string} key - The unique identifier for the download task to query in the downloads store.
- * @param {unknown} defaultValue - A default value to return if the unique identifier is not found.
+ * @param {DownloadState | DownloadsSettings} [defaultValue] - A default value to return if the unique identifier is not found.
  * @returns {unknown} The value from the downloads store or the default value if the identifier is not present.
  */
 ipcMain.handle(
 	buildKey([ID.STORE, ID.DOWNLOADS], { suffix: ":get" }),
-	(_event, key: string, defaultValue: unknown) =>
+	(_event, key: string, defaultValue?: DownloadState | DownloadsSettings) =>
 		// Retrieve and return the value associated with the download task's unique identifier.
 		// If the identifier isn't found, return the given default value.
-		downloadsStore.get(key, defaultValue)
+		defaultValue === undefined ? downloadsStore.get(key) : downloadsStore.get(key, defaultValue)
 );
 
 /**
