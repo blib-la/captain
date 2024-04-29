@@ -1,6 +1,7 @@
 import { CustomScrollbars } from "@captn/joy/custom-scrollbars";
 import { useRequiredDownloads } from "@captn/react/use-required-downloads";
 import CheckCircle from "@mui/icons-material/CheckCircle";
+import DownloadIcon from "@mui/icons-material/Download";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import WarningIcon from "@mui/icons-material/Warning";
 import Alert from "@mui/joy/Alert";
@@ -12,10 +13,11 @@ import CardOverflow from "@mui/joy/CardOverflow";
 import CircularProgress from "@mui/joy/CircularProgress";
 import Sheet from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
+import { useAtom } from "jotai";
 import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 
 import type {
@@ -23,6 +25,7 @@ import type {
 	Payload as MarketplacePayload,
 	Entry as MarketplaceEntry,
 } from "#/types/marketplace";
+import { requiresRestartAtom } from "@/ions/atoms";
 import { useOnlineStatus } from "@/ions/hooks/online-status";
 import { makeStaticProperties } from "@/ions/i18n/get-static";
 
@@ -51,8 +54,11 @@ async function fetchMarketplace(download: boolean, url: string): Promise<Marketp
  */
 function ItemCard({ payload }: { payload: MarketplacePayload }) {
 	const { t } = useTranslation(["labels"]);
+	const [, setRequiresRestart] = useAtom(requiresRestartAtom);
+	const [mayRequireRestart, setMayRequireRestart] = useState(false);
 
 	const { download, isCompleted, isDownloading } = useRequiredDownloads(payload.sources);
+	const { type } = payload;
 
 	let buttonText;
 	let startDecorator;
@@ -66,8 +72,20 @@ function ItemCard({ payload }: { payload: MarketplacePayload }) {
 		startDecorator = <CircularProgress />;
 	} else {
 		buttonText = t("labels:download");
-		startDecorator = null;
+		startDecorator = <DownloadIcon />;
 	}
+
+	useEffect(() => {
+		if (!isCompleted && type === "app") {
+			setMayRequireRestart(true);
+		}
+	}, [isCompleted, type]);
+
+	useEffect(() => {
+		if (isCompleted && mayRequireRestart) {
+			setRequiresRestart(true);
+		}
+	}, [isCompleted, mayRequireRestart, setRequiresRestart]);
 
 	return (
 		<Card variant="soft">

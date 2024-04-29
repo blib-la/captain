@@ -3,7 +3,7 @@ import { DOWNLOADS_MESSAGE_KEY, DownloadEvent, DownloadState } from "@captn/util
 import { download } from "electron-dl";
 
 import { apps } from "@/apps";
-import { downloadsStore, inventoryStore } from "@/stores";
+import { appSettingsStore, downloadsStore, inventoryStore } from "@/stores";
 import { pushToStore } from "@/stores/utils";
 import { sendToAllWindows } from "@/stores/watchers";
 import {
@@ -140,10 +140,10 @@ export class DownloadManager {
 	 */
 	private async startDownload(item: DownloadItem): Promise<void> {
 		// Apps should be in apps, not in downloads/apps
-		const targetDestination =
-			item.destination === "apps"
-				? getCaptainApps(item.id)
-				: getCaptainDownloads(item.destination, item.id);
+		const isApp = item.destination === "apps";
+		const targetDestination = isApp
+			? getCaptainApps(item.id)
+			: getCaptainDownloads(item.destination, item.id);
 
 		// Prompt is our always open window, so we can use it for the download
 		const window_ = apps.prompt!;
@@ -186,13 +186,17 @@ export class DownloadManager {
 								targetDestination,
 								true
 							);
-							item.state = DownloadState.DONE;
+							item.state = isApp ? DownloadState.RESTART : DownloadState.DONE;
+							if (isApp) {
+								appSettingsStore.set("requiresRestart", true);
+							}
+
+							downloadsStore.set(downloadKeyPath, item.state);
 							pushToStore(inventoryStore, keyPath, {
 								id: item.id,
 								modelPath: targetDestination,
 								label: item.label,
 							});
-							downloadsStore.set(downloadKeyPath, item.state);
 							sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
 								action: DownloadEvent.COMPLETED,
 								payload: item,
@@ -208,13 +212,17 @@ export class DownloadManager {
 							this.processQueue();
 						}
 					} else {
-						item.state = DownloadState.DONE;
+						item.state = isApp ? DownloadState.RESTART : DownloadState.DONE;
+						if (isApp) {
+							appSettingsStore.set("requiresRestart", true);
+						}
+
+						downloadsStore.set(downloadKeyPath, item.state);
 						pushToStore(inventoryStore, keyPath, {
 							id: item.id,
 							modelPath: targetDestination,
 							label: item.label,
 						});
-						downloadsStore.set(downloadKeyPath, item.state);
 						sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
 							action: DownloadEvent.COMPLETED,
 							payload: item,

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ipcMain } from "electron";
+import { app, ipcMain } from "electron";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
@@ -8,7 +8,7 @@ import { marketplaceStore } from "@/stores";
 
 ipcMain.handle(
 	buildKey([ID.MARKETPLACE], { suffix: ":fetch" }),
-	async (event, { url, download }) => {
+	async (_event, { url, download }) => {
 		if (!download) {
 			return marketplaceStore.store;
 		}
@@ -25,3 +25,8 @@ ipcMain.handle(
 		}
 	}
 );
+
+ipcMain.on(buildKey([ID.APP], { suffix: "restart" }), async () => {
+	app.relaunch();
+	app.quit();
+});
