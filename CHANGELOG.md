@@ -1,3 +1,10 @@
+# [1.0.0-alpha.55](https://github.com/blib-la/captain/compare/v1.0.0-alpha.54...v1.0.0-alpha.55) (2024-04-29)
+
+
+### Features
+
+* restart after app download ([#235](https://github.com/blib-la/captain/issues/235)) ([38d7f48](https://github.com/blib-la/captain/commit/38d7f4825dd8e2515ee83af25ecba5d403859729)), closes [#228](https://github.com/blib-la/captain/issues/228)
+
 # [1.0.0-alpha.54](https://github.com/blib-la/captain/compare/v1.0.0-alpha.53...v1.0.0-alpha.54) (2024-04-27)
 
 
