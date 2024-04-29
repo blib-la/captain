@@ -7,6 +7,7 @@ import DownloadingIcon from "@mui/icons-material/Downloading";
 import ErrorIcon from "@mui/icons-material/Error";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import PendingIcon from "@mui/icons-material/Pending";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import SystemUpdateAltIcon from "@mui/icons-material/SystemUpdateAlt";
 import Box from "@mui/joy/Box";
 import LinearProgress from "@mui/joy/LinearProgress";
@@ -34,19 +35,22 @@ export interface DownloadListItemProperties {
 
 const iconMap: Record<DownloadState, ReactNode> = {
 	[DownloadState.ACTIVE]: <DownloadingIcon />,
-	[DownloadState.IDLE]: <PendingIcon />,
+	[DownloadState.CANCELED]: <PauseCircleIcon />,
 	[DownloadState.DONE]: <CheckCircleIcon />,
 	[DownloadState.FAILED]: <ErrorIcon />,
-	[DownloadState.CANCELED]: <PauseCircleIcon />,
+	[DownloadState.IDLE]: <PendingIcon />,
+	[DownloadState.RESTART]: <RestartAltIcon />,
 	[DownloadState.UNPACKING]: <BuildCircleIcon />,
 	[DownloadState.UPDATE]: <SystemUpdateAltIcon />,
 } as const;
+
 const iconColors: Record<DownloadState, ColorPaletteProp> = {
 	[DownloadState.ACTIVE]: "green",
-	[DownloadState.IDLE]: "neutral",
+	[DownloadState.CANCELED]: "neutral",
 	[DownloadState.DONE]: "neutral",
 	[DownloadState.FAILED]: "red",
-	[DownloadState.CANCELED]: "neutral",
+	[DownloadState.IDLE]: "neutral",
+	[DownloadState.RESTART]: "yellow",
 	[DownloadState.UNPACKING]: "green",
 	[DownloadState.UPDATE]: "blue",
 } as const;
