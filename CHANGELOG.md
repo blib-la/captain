@@ -1,3 +1,10 @@
+# [1.0.0-alpha.56](https://github.com/blib-la/captain/compare/v1.0.0-alpha.55...v1.0.0-alpha.56) (2024-04-30)
+
+
+### Bug Fixes
+
+* default protocol needs to differ from dev and prod ([#237](https://github.com/blib-la/captain/issues/237)) ([8849bb6](https://github.com/blib-la/captain/commit/8849bb6faacfa314373621178505b3edab9bfc37)), closes [#236](https://github.com/blib-la/captain/issues/236)
+
 # [1.0.0-alpha.55](https://github.com/blib-la/captain/compare/v1.0.0-alpha.54...v1.0.0-alpha.55) (2024-04-29)
 
 
