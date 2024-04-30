@@ -17,6 +17,9 @@
       ],
       "#/*": [
         "../shared/*"
+      ],
+      "~package": [
+        "../../package.json"
       ]
     },
     "module": "esnext"

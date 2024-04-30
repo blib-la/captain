@@ -21,6 +21,9 @@
       ],
       "#/*": [
         "./src/shared/*"
+      ],
+      "~package": [
+        "./package.json"
       ]
     }
   },
