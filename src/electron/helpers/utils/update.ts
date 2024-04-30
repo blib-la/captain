@@ -3,7 +3,6 @@ import { autoUpdater } from "electron-updater";
 
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
-import { isDevelopment } from "#/flags";
 import type { Resource } from "#/types/install";
 import type { Manifest, OS } from "#/types/manifest";
 import { logger } from "@/services/logger";
@@ -45,7 +44,7 @@ export function listenForUpdates() {
 	autoUpdater.autoDownload = false;
 
 	// For local development without the need to pack the application
-	autoUpdater.forceDevUpdateConfig = isDevelopment;
+	// autoUpdater.forceDevUpdateConfig = isDevelopment;
 
 	autoUpdater.on("update-available", data => {
 		logger.info(`auto-update: update available`);
@@ -73,6 +72,8 @@ export function listenForUpdates() {
 	// TODO adjust implementation
 	autoUpdater.on("update-not-available", data => {
 		logger.info("auto-update: on -> update-not-available", data);
+		const window_ = BrowserWindow.getFocusedWindow();
+		window_!.webContents.send(buildKey([ID.UPDATE], { suffix: ":not-available" }), data);
 	});
 
 	// TODO adjust implementation
