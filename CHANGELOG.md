@@ -1,3 +1,10 @@
+# [1.0.0-alpha.58](https://github.com/blib-la/captain/compare/v1.0.0-alpha.57...v1.0.0-alpha.58) (2024-04-30)
+
+
+### Bug Fixes
+
+* installer window buttons floating left ([#241](https://github.com/blib-la/captain/issues/241)) ([38e99c2](https://github.com/blib-la/captain/commit/38e99c287d4bc0d7edffaf70d1f051a419251171)), closes [#240](https://github.com/blib-la/captain/issues/240)
+
 # [1.0.0-alpha.57](https://github.com/blib-la/captain/compare/v1.0.0-alpha.56...v1.0.0-alpha.57) (2024-04-30)
 
 
