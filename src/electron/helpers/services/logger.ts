@@ -1,3 +1,5 @@
+import fs from "node:fs";
+
 import * as winston from "winston";
 
 import { getUserData } from "@/utils/path-helpers";
@@ -10,6 +12,17 @@ import { getUserData } from "@/utils/path-helpers";
  * @returns {winston.Logger} A Winston Logger instance.
  */
 function create() {
+	const errorLog = getUserData("error.log");
+	const combinedLog = getUserData("combined.log");
+
+	if (fs.existsSync(errorLog)) {
+		fs.rmSync(errorLog);
+	}
+
+	if (fs.existsSync(combinedLog)) {
+		fs.rmSync(combinedLog);
+	}
+
 	const logger = winston.createLogger({
 		level: "info",
 		format: winston.format.combine(
@@ -25,13 +38,13 @@ function create() {
 	if (process.env.NODE_ENV === "production") {
 		logger.add(
 			new winston.transports.File({
-				filename: getUserData("error.log"),
+				filename: errorLog,
 				level: "error",
 			})
 		);
 		logger.add(
 			new winston.transports.File({
-				filename: getUserData("combined.log"),
+				filename: combinedLog,
 			})
 		);
 	}
