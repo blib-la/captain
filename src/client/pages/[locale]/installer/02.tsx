@@ -182,7 +182,13 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	});
 
 	return (
-		<AppFrame titleBar={<TitleBar disableMaximize />}>
+		<AppFrame
+			titleBar={
+				<TitleBar disableMaximize>
+					<Box />
+				</TitleBar>
+			}
+		>
 			<Box sx={{ minHeight: "100%", display: "flex", flexDirection: "column" }}>
 				<InstallScreen
 					percent={progress.percent}
