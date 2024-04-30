@@ -1,11 +1,12 @@
 import path from "node:path";
+import process from "node:process";
 
 import { app, protocol } from "electron";
 import contextMenu from "electron-context-menu";
 import serve from "electron-serve";
 
 import { LOCAL_PROTOCOL } from "#/constants";
-import { gotTheLock, isProduction, isTest } from "#/flags";
+import { gotTheLock, isDevelopment, isProduction, isTest } from "#/flags";
 
 if (gotTheLock || isTest) {
 	if (isProduction) {
@@ -27,7 +28,8 @@ if (gotTheLock || isTest) {
 
 	if (process.defaultApp) {
 		if (process.argv.length >= 2) {
-			app.setAsDefaultProtocolClient("captain-login", process.execPath, [
+			const protocol = isDevelopment ? "captain-login-development" : "captain-login";
+			app.setAsDefaultProtocolClient(protocol, process.execPath, [
 				path.resolve(process.argv[1]),
 			]);
 		}
