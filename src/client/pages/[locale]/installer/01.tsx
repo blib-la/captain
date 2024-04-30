@@ -110,7 +110,13 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	const { t } = useTranslation(["common"]);
 
 	return (
-		<AppFrame titleBar={<TitleBar disableMaximize />}>
+		<AppFrame
+			titleBar={
+				<TitleBar disableMaximize>
+					<Box />
+				</TitleBar>
+			}
+		>
 			<Box sx={{ minHeight: "100%", display: "flex", flexDirection: "column" }}>
 				<ColorScreen />
 				<Box sx={{ display: "flex", justifyContent: "flex-end", m: 1 }}>

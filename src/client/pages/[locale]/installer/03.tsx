@@ -62,7 +62,13 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	const buttonText = starting ? t("labels:starting") : t("labels:start");
 
 	return (
-		<AppFrame titleBar={<TitleBar disableMaximize />}>
+		<AppFrame
+			titleBar={
+				<TitleBar disableMaximize>
+					<Box />
+				</TitleBar>
+			}
+		>
 			<Box sx={{ minHeight: "100%", display: "flex", flexDirection: "column" }}>
 				<Box sx={{ height: 200, alignContent: "center", px: 2 }}>
 					<DummyPrompt />
