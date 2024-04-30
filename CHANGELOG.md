@@ -1,3 +1,10 @@
+# [1.0.0-alpha.61](https://github.com/blib-la/captain/compare/v1.0.0-alpha.60...v1.0.0-alpha.61) (2024-04-30)
+
+
+### Bug Fixes
+
+* logs are never cleared ([#250](https://github.com/blib-la/captain/issues/250)) ([604ce48](https://github.com/blib-la/captain/commit/604ce481231b61da50cb22c837155560ab66898e)), closes [#247](https://github.com/blib-la/captain/issues/247)
+
 # [1.0.0-alpha.60](https://github.com/blib-la/captain/compare/v1.0.0-alpha.59...v1.0.0-alpha.60) (2024-04-30)
 
 
