@@ -10,6 +10,21 @@ jest.mock("@/stores", () => ({
 jest.mock("electron", () => ({
 	app: {
 		requestSingleInstanceLock: jest.fn(),
+		getPath: jest.fn().mockImplementation((key: string) => {
+			switch (key) {
+				case "exe": {
+					return "/path/to/exe";
+				}
+
+				case "userData": {
+					return "/path/to/userData";
+				}
+
+				default: {
+					return "/default/path";
+				}
+			}
+		}),
 	},
 }));
 
