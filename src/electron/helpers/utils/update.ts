@@ -69,7 +69,6 @@ export function listenForUpdates() {
 		logger.info("auto-update: on -> checking-for-update");
 	});
 
-	// TODO adjust implementation
 	autoUpdater.on("update-not-available", data => {
 		logger.info("auto-update: on -> update-not-available", data);
 		const window_ = BrowserWindow.getFocusedWindow();
