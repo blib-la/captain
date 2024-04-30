@@ -10,6 +10,7 @@ import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import ListItemContent from "@mui/joy/ListItemContent";
 import ListItemDecorator from "@mui/joy/ListItemDecorator";
+import Sheet from "@mui/joy/Sheet";
 import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
 import type { InferGetStaticPropsType } from "next";
@@ -23,6 +24,7 @@ import { makeStaticProperties } from "@/ions/i18n/get-static";
 import { ColorModeSelector } from "@/organisms/color-mode-selector";
 import { LanguageSelect } from "@/organisms/language-select";
 import { PasswordField } from "@/organisms/password-field";
+import package_ from "~package";
 
 export function UserPreferences() {
 	const { t } = useTranslation(["common"]);
@@ -237,12 +239,26 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 				<title>{t("common:settings")}</title>
 			</Head>
 			<CustomScrollbars>
-				<Container sx={{ py: 2 }}>
+				<Container sx={{ py: 2, pb: 8 }}>
 					<Stack spacing={4}>
 						<UserPreferences />
 						<OpenAISettings />
 						<AutoUpdate />
 					</Stack>
+					<Sheet
+						variant="soft"
+						sx={{
+							position: "fixed",
+							zIndex: 2,
+							bottom: 0,
+							left: 0,
+							right: 0,
+							px: 2,
+							py: 1,
+						}}
+					>
+						v{package_.version}
+					</Sheet>
 				</Container>
 			</CustomScrollbars>
 		</>

@@ -2,8 +2,6 @@ import { DownloadState } from "@captn/utils/constants";
 import type { BrowserWindowConstructorOptions } from "electron";
 import { app, ipcMain, Menu } from "electron";
 
-import { version } from "../../package.json";
-
 import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import { isProduction } from "#/flags";
@@ -25,6 +23,7 @@ import {
 	openCore,
 	openPreviewApp,
 } from "@/windows";
+import package_ from "~package";
 
 /**
  * Initializes the application by determining its current state based on version and setup status.
@@ -42,7 +41,8 @@ import {
  * - In production mode, it removes the default application menu to align with the custom UI design.
  */
 export async function main() {
-	logger.info(`main(): started`);
+	logger.info(`main(): started with version: ${package_.version}`);
+	appSettingsStore.set("version", package_.version);
 
 	await app.whenReady();
 	logger.info(`main(): app is ready`);
@@ -178,8 +178,6 @@ export async function main() {
 
 			await runStartup();
 			installerWindow.close();
-
-			appSettingsStore.set("version", version);
 		});
 	}
 }
