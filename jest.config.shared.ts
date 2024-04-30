@@ -7,6 +7,9 @@ const jestConfig = {
 	transform: {
 		"^.+\\.ts$": ["@swc/jest"],
 	},
+	moduleNameMapper: {
+		"~package": "<rootDir>/package.json",
+	},
 	collectCoverage: true,
 	coverageDirectory: "./coverage",
 	coverageProvider: "v8",

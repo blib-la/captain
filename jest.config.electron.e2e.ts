@@ -18,6 +18,7 @@ const jestConfig = {
 	moduleNameMapper: {
 		"@/(.*)": "<rootDir>/src/electron/helpers/$1",
 		"#/(.*)": "<rootDir>/src/shared/$1",
+		"~package": "<rootDir>/package.json",
 	},
 	collectCoverage: true,
 	coverageDirectory: "./coverage",
