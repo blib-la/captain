@@ -1,3 +1,10 @@
+# [1.0.0-alpha.59](https://github.com/blib-la/captain/compare/v1.0.0-alpha.58...v1.0.0-alpha.59) (2024-04-30)
+
+
+### Features
+
+* visual feedback when checking for updates ([#243](https://github.com/blib-la/captain/issues/243)) ([b6aa22e](https://github.com/blib-la/captain/commit/b6aa22e63aaded4ed02be2299459231257fa3f5c)), closes [#242](https://github.com/blib-la/captain/issues/242)
+
 # [1.0.0-alpha.58](https://github.com/blib-la/captain/compare/v1.0.0-alpha.57...v1.0.0-alpha.58) (2024-04-30)
 
 
