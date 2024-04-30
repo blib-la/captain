@@ -15,6 +15,7 @@ import { logger } from "@/services/logger";
 import { appSettingsStore } from "@/stores";
 import { createTray } from "@/tray";
 import { isCoreApp, isCoreView } from "@/utils/core";
+import { handleDeepLink } from "@/utils/handle-deep-link";
 import { checkUpdates, listenForUpdates } from "@/utils/update";
 import { initialize, populateFromDocuments, reset } from "@/utils/vector-store";
 import {
@@ -107,9 +108,25 @@ export async function main() {
 	logger.info(`main(): listened to :open`);
 
 	if (isUpToDate) {
-		app.on("second-instance", async () => {
+		app.on("second-instance", async (_event, commandLine) => {
 			await openCore("dashboard");
 			logger.info("second instance requested");
+			const defaultProtocol =
+				process.env.NODE_ENV === "development"
+					? "captain-login-development"
+					: "captain-login";
+			const url =
+				process.platform === "win32"
+					? commandLine
+							.slice(1)
+							.find(argument => argument.startsWith(`${defaultProtocol}://`))
+					: process.argv.find(argument => argument.startsWith(`${defaultProtocol}://`));
+
+			if (url) {
+				handleDeepLink(url);
+			}
+
+			console.log(commandLine.pop());
 		});
 		// Start the vector store and fill it with data
 		await initialize();

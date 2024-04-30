@@ -26,15 +26,15 @@ if (gotTheLock || isTest) {
 
 	app.commandLine.appendSwitch("enable-smooth-scrolling");
 
+	const defaultProtocol = isDevelopment ? "captain-login-development" : "captain-login";
 	if (process.defaultApp) {
 		if (process.argv.length >= 2) {
-			const protocol = isDevelopment ? "captain-login-development" : "captain-login";
-			app.setAsDefaultProtocolClient(protocol, process.execPath, [
+			app.setAsDefaultProtocolClient(defaultProtocol, process.execPath, [
 				path.resolve(process.argv[1]),
 			]);
 		}
 	} else {
-		app.setAsDefaultProtocolClient("captain-login");
+		app.setAsDefaultProtocolClient(defaultProtocol);
 	}
 } else {
 	// The app is locked, so we force quit the new instance
