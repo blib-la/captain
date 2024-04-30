@@ -1,7 +1,10 @@
 import { CustomScrollbars } from "@captn/joy/custom-scrollbars";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import UpdateIcon from "@mui/icons-material/Update";
 import Button from "@mui/joy/Button";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
+import CircularProgress from "@mui/joy/CircularProgress";
 import Container from "@mui/joy/Container";
 import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
@@ -121,23 +124,34 @@ export function AutoUpdate() {
 	const { t } = useTranslation(["labels", "texts"]);
 	const [available, setAvailable] = useState(false);
 	const [downloaded, setDownloaded] = useState(false);
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
 		const unsubscribeAvailable = window.ipc.on(
 			buildKey([ID.UPDATE], { suffix: ":available" }),
 			() => {
+				setLoading(false);
 				setAvailable(true);
+			}
+		);
+
+		const unsubscribeNotAvailable = window.ipc.on(
+			buildKey([ID.UPDATE], { suffix: ":not-available" }),
+			() => {
+				setLoading(false);
 			}
 		);
 
 		const unsubscribeDownloaded = window.ipc.on(
 			buildKey([ID.UPDATE], { suffix: ":downloaded" }),
 			() => {
+				setLoading(false);
 				setDownloaded(true);
 			}
 		);
 
 		return () => {
+			unsubscribeNotAvailable();
 			unsubscribeAvailable();
 			unsubscribeDownloaded();
 		};
@@ -155,10 +169,15 @@ export function AutoUpdate() {
 								{t("texts:keepCaptainUpToDate")}
 							</Typography>
 						</ListItemContent>
-						<ListItemDecorator sx={{ width: 172, flexShrink: 0 }}>
+						<ListItemDecorator sx={{ width: 200, flexShrink: 0 }}>
 							{available && !downloaded && (
 								<Button
+									fullWidth
+									disabled={loading}
+									startDecorator={loading ? <CircularProgress /> : <UpdateIcon />}
+									sx={{ whiteSpace: "nowrap" }}
 									onClick={() => {
+										setLoading(true);
 										window.ipc.send(
 											buildKey([ID.UPDATE], { suffix: ":download" }),
 											true
@@ -171,6 +190,9 @@ export function AutoUpdate() {
 
 							{downloaded && (
 								<Button
+									fullWidth
+									startDecorator={<RestartAltIcon />}
+									sx={{ whiteSpace: "nowrap" }}
 									onClick={() => {
 										window.ipc.send(
 											buildKey([ID.UPDATE], { suffix: ":install" }),
@@ -184,7 +206,12 @@ export function AutoUpdate() {
 
 							{!available && !downloaded && (
 								<Button
+									fullWidth
+									disabled={loading}
+									startDecorator={loading ? <CircularProgress /> : <UpdateIcon />}
+									sx={{ whiteSpace: "nowrap" }}
 									onClick={() => {
+										setLoading(true);
 										window.ipc.send(
 											buildKey([ID.UPDATE], { suffix: ":check" }),
 											true
