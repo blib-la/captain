@@ -1,3 +1,10 @@
+# [1.0.0-alpha.60](https://github.com/blib-la/captain/compare/v1.0.0-alpha.59...v1.0.0-alpha.60) (2024-04-30)
+
+
+### Features
+
+* show version and update in store ([#249](https://github.com/blib-la/captain/issues/249)) ([da82780](https://github.com/blib-la/captain/commit/da8278031dedfc362775bf3de22435af71442f90)), closes [#245](https://github.com/blib-la/captain/issues/245) [#244](https://github.com/blib-la/captain/issues/244)
+
 # [1.0.0-alpha.59](https://github.com/blib-la/captain/compare/v1.0.0-alpha.58...v1.0.0-alpha.59) (2024-04-30)
 
 
