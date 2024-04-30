@@ -1,3 +1,10 @@
+# [1.0.0-alpha.57](https://github.com/blib-la/captain/compare/v1.0.0-alpha.56...v1.0.0-alpha.57) (2024-04-30)
+
+
+### Features
+
+* handle access-token ([#239](https://github.com/blib-la/captain/issues/239)) ([3df3f25](https://github.com/blib-la/captain/commit/3df3f2590b183ea392c323a1fcf146432774c472))
+
 # [1.0.0-alpha.56](https://github.com/blib-la/captain/compare/v1.0.0-alpha.55...v1.0.0-alpha.56) (2024-04-30)
 
 
