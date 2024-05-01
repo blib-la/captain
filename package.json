@@ -170,8 +170,7 @@
     "typescript": "^5.4.5",
     "use-debounce": "^10.0.0",
     "uuid": "^9.0.1",
-    "webpack": "^5.91.0",
-    "winston": "^3.13.0"
+    "webpack": "^5.91.0"
   },
   "optionalDependencies": {
     "@swc/core-darwin-arm64": "^1.5.2",
