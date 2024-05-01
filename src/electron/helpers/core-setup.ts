@@ -1,3 +1,4 @@
+import console from "node:console";
 import path from "node:path";
 import process from "node:process";
 
@@ -38,6 +39,7 @@ if (gotTheLock || isTest) {
 	}
 } else {
 	// The app is locked, so we force quit the new instance
+	// Use native log here since this is before the logger was initialized
 	console.log("App is locked by another instance. Closing app");
 	app.quit();
 }

@@ -6,8 +6,9 @@ import { ipcMain } from "electron";
 import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 
+import { jsonStringify } from "#/object";
 import { cleanPath } from "#/string";
-import { logger } from "@/services/logger";
+import { logError, logger } from "@/services/logger";
 import { createDirectory } from "@/utils/fs";
 import {
 	getCaptainData,
@@ -89,7 +90,8 @@ ipcMain.on(
 				try {
 					const jsonData = JSON.parse(dataString);
 
-					console.log(`text-to-image: ${JSON.stringify(jsonData)}`);
+					// Use native log here as this is only useful while developing
+					console.log(`text-to-image: ${jsonStringify(jsonData)}`);
 
 					if (process_ && jsonData.status === "starting") {
 						event.sender.send(channel, {
@@ -152,15 +154,12 @@ ipcMain.on(
 					}
 				} catch {
 					logger.info(`text-to-image: Received non-JSON data: ${dataString}`);
-					console.log("Received non-JSON data:", dataString);
 				}
 			});
 
 			logger.info(`text-to-image: processing stderr`);
 			process_.stderr.on("text-to-image:data", data => {
-				console.error(`error: ${data}`);
-
-				logger.info(`text-to-image: error: ${data}`);
+				logError(data);
 
 				event.sender.send(channel, { action: "text-to-image:error", payload: data });
 			});

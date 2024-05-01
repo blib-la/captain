@@ -140,6 +140,7 @@ describe("VectorStore Integration Tests", () => {
 			await vectorStore.search(collectionName2, document1.content);
 		} catch (error) {
 			expect(error).toBeDefined();
+			// Use native log here as this is only useful while developing
 			console.log(error);
 			expect((error as Error).message).toContain(
 				`Collection ${collectionName2} doesn't exist`

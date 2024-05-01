@@ -22,6 +22,7 @@ import { VECTOR_STORE_COLLECTION } from "#/constants";
 import { ID } from "#/enums";
 import { cleanPath, extractH1Headings, getFileType } from "#/string";
 import { apps } from "@/apps";
+import { logError } from "@/services/logger";
 import { VectorStore } from "@/services/vector-store";
 import { inventoryStore, downloadsStore, userStore, appSettingsStore } from "@/stores";
 import { pushToStore } from "@/stores/utils";
@@ -145,7 +146,7 @@ ipcMain.handle(
 			try {
 				await writePngMetaData(filePath, context);
 			} catch (error) {
-				console.log(error);
+				logError(error);
 			}
 		}
 
@@ -370,7 +371,7 @@ ipcMain.handle(
 								apps[item.appId]?.webContents.send("downloadComplete", true);
 							}
 						} catch (error) {
-							console.log(`Error on ${item.id}`, error);
+							logError(error, `Error on ${item.id}`);
 							downloadsStore.set(item.id, DownloadState.FAILED);
 						} finally {
 							downloadsStore.delete(item.id);

@@ -123,6 +123,7 @@ describe("DownloadManager", () => {
 				await fsp.rm(testDirectory, { recursive: true });
 			}
 		} catch (error) {
+			// Use native log here as this is only useful while developing
 			console.log("Error cleaning up test directory before tests:", error);
 		}
 	});
@@ -134,6 +135,7 @@ describe("DownloadManager", () => {
 				await fsp.rm(testDirectory, { recursive: true });
 			}
 		} catch (error) {
+			// Use native log here as this is only useful while developing
 			console.log("Error cleaning up test directory after all tests:", error);
 		}
 	});

@@ -1,13 +1,16 @@
+import console from "node:console";
 import fsp from "node:fs/promises";
 
+import type { SDKMessage } from "@captn/react/types";
 import { APP_MESSAGE_KEY } from "@captn/utils/constants";
 import type { IpcMainEvent } from "electron";
 import { ipcMain } from "electron";
 import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 
+import { jsonStringify } from "#/object";
 import { cleanPath } from "#/string";
-import { logger } from "@/services/logger";
+import { logError, logger } from "@/services/logger";
 import { createDirectory } from "@/utils/fs";
 import {
 	getCaptainData,
@@ -15,11 +18,6 @@ import {
 	getCaptainTemporary,
 	getDirectory,
 } from "@/utils/path-helpers";
-
-export interface SDKMessage<T> {
-	payload: T;
-	action?: string;
-}
 
 let process_: ExecaChildProcess<string> | undefined;
 let cache = "";
@@ -94,7 +92,8 @@ ipcMain.on(
 				try {
 					const jsonData = JSON.parse(dataString);
 
-					console.log(`image-to-image: ${JSON.stringify(jsonData)}`);
+					// Use native log here as this is only useful while developing
+					console.log(`image-to-image: ${jsonStringify(jsonData)}`);
 
 					if (process_ && jsonData.status === "starting") {
 						event.sender.send(channel, {
@@ -157,15 +156,12 @@ ipcMain.on(
 					}
 				} catch {
 					logger.info(`image-to-image: Received non-JSON data: ${dataString}`);
-					console.log("Received non-JSON data:", dataString);
 				}
 			});
 
 			logger.info(`image-to-image: processing stderr`);
 			process_.stderr.on("image-to-image:data", data => {
-				console.error(`error: ${data}`);
-
-				logger.info(`image-to-image: error: ${data}`);
+				logError(data, "image-to-image error:");
 
 				event.sender.send(channel, { action: "image-to-image:error", payload: data });
 			});
@@ -204,7 +200,7 @@ ipcMain.on(
 						decodedImageData
 					);
 				} catch (error) {
-					console.error(error);
+					logError(error);
 				}
 
 				break;
@@ -212,11 +208,11 @@ ipcMain.on(
 
 			case "image-to-image:imageBuffer": {
 				try {
-					const { buffer } = message.payload as any;
+					const { buffer } = message.payload as { buffer: Buffer };
 
 					await fsp.writeFile(getCaptainTemporary("image-to-image/input.png"), buffer);
 				} catch (error) {
-					console.error(error);
+					logError(error);
 				}
 
 				break;

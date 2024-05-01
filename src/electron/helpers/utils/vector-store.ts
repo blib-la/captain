@@ -86,6 +86,7 @@ export async function populateFromDocuments() {
 				const exif = await exifr.parse(imagePath);
 				data.content = exif.Caption || exif.Prompt || exif.Description || data.content;
 			} catch {
+				// Use native log here as this is only useful while developing
 				console.log("No image data found");
 			}
 

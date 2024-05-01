@@ -1,3 +1,6 @@
+import console from "node:console";
+
+import type { SDKMessage } from "@captn/react/types";
 import { APP_MESSAGE_KEY, DownloadState } from "@captn/utils/constants";
 import type { VectorStoreDocument } from "@captn/utils/types";
 import { getProperty } from "dot-prop";
@@ -10,15 +13,11 @@ import { ID } from "#/enums";
 import type { StoryRequest } from "#/types/story";
 import { apps } from "@/apps";
 import { captionImages, createStory, maxTokenMap } from "@/ipc/story";
+import { logError, logger } from "@/services/logger";
 import { downloadsStore, inventoryStore, userStore } from "@/stores";
 import { pushToStore } from "@/stores/utils";
 import { clone } from "@/utils/git";
 import { getCaptainDownloads, getUserData } from "@/utils/path-helpers";
-
-export interface SDKMessage<T> {
-	payload: T;
-	action?: string;
-}
 
 ipcMain.on(
 	APP_MESSAGE_KEY,
@@ -79,7 +78,7 @@ ipcMain.on(
 						await Promise.all(promises);
 					} catch (error) {
 						// TODO: add "onError" into "clone" to properly catch the error
-						console.log(error);
+						logError(error);
 					}
 				}
 
@@ -110,12 +109,13 @@ ipcMain.on(
 
 					// Seems like no descriptions were generated. Handle as error
 					if (!imageDescriptions) {
-						console.log("missing descriptions");
+						logger.error("missing descriptions");
 
 						return;
 					}
 
 					// Debugging helper to check how the images were captioned
+					// Use native log here as this is only useful while developing
 					console.log(imageDescriptions);
 
 					const maxTokens = maxTokenMap[options.length] * images.length;
@@ -125,7 +125,7 @@ ipcMain.on(
 						{ imageDescriptions, maxTokens, locale, options },
 						{
 							onError(error) {
-								console.log(error);
+								logError(error);
 							},
 							onChunk(story) {
 								event.sender.send(channel, {
@@ -208,13 +208,13 @@ ipcMain.on(
 		// Retaining this log facilitates a deeper understanding of the action's payload and helps identify
 		// potential issues or anomalies in the data structure or content. It's particularly useful for tracking
 		// the flow of data and ensuring that the expected actions are triggered correctly within the SDK.
-		console.log(message);
+		logger.info(message);
 		switch (message.action) {
 			case "function": {
 				try {
 					handleCaptainAction(message.payload as VectorStoreDocument["payload"]);
 				} catch (error) {
-					console.log(error);
+					logError(error);
 				}
 
 				if (apps.prompt) {
