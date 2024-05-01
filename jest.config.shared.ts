@@ -11,7 +11,7 @@ const jestConfig = {
 		"~package": "<rootDir>/package.json",
 	},
 	collectCoverage: true,
-	coverageDirectory: "./coverage",
+	coverageDirectory: "./coverage/shared",
 	coverageProvider: "v8",
 	coverageReporters: ["lcov", "text", "json"],
 	coverageThreshold: {

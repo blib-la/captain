@@ -1,14 +1,14 @@
-name: Electron Tests
+name: Test and Cover Tests
 
 on:
   push:
     branches: [ alpha, beta, rc, main ]
   pull_request:
-    types: [opened, synchronize]
+    types: [ opened, synchronize ]
     branches: [ alpha, beta, rc, main ]
 
 jobs:
-  test-electron:
+  test-all:
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
@@ -20,5 +20,10 @@ jobs:
           node-version-file: '.nvmrc'
       - name: Install dependencies
         run: npm install
-      - name: Run Electron tests
-        run: npm run test:electron
+      - name: Run all jest tests
+        run: npm run test:all
+      - name: Codacy Coverage
+        uses: codacy/codacy-coverage-reporter-action@v1
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: ./coverage/report/lcov.info
