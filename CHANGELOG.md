@@ -1,3 +1,10 @@
+# [1.0.0-alpha.62](https://github.com/blib-la/captain/compare/v1.0.0-alpha.61...v1.0.0-alpha.62) (2024-05-01)
+
+
+### Features
+
+* improve logging ([#254](https://github.com/blib-la/captain/issues/254)) ([f0c6845](https://github.com/blib-la/captain/commit/f0c684549e95e1b98fb612a20e328a167d652bc9))
+
 # [1.0.0-alpha.61](https://github.com/blib-la/captain/compare/v1.0.0-alpha.60...v1.0.0-alpha.61) (2024-04-30)
 
 
