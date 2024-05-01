@@ -6,13 +6,13 @@
  * @returns { (key: string, value: any) => any } A replacer function that safely serializes objects
  * containing circular references.
  */
-export function getCircularReplacer(): (key: string, value: unknown) => unknown {
+export function getCircularReplacer() {
 	const seen = new WeakSet();
-	return (_key: string, value: unknown): unknown => {
+	return (key: string, value: unknown): unknown => {
 		if (typeof value === "object" && value !== null) {
 			if (seen.has(value)) {
-				// If a circular reference is detected, avoid infinite loops by returning undefined.
-				return;
+				// Return undefined to completely omit the value from the output
+				return undefined;
 			}
 
 			seen.add(value);
@@ -31,6 +31,6 @@ export function getCircularReplacer(): (key: string, value: unknown) => unknown 
  *                                            string keys and values of unknown types.
  * @returns {string} A JSON string representation of the object, with circular references handled gracefully.
  */
-export function jsonStringify(object_: Record<string, unknown>) {
+export function jsonStringify(object_: Record<string, unknown> | unknown[]) {
 	return JSON.stringify(object_, getCircularReplacer());
 }

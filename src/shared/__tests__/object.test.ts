@@ -31,4 +31,18 @@ describe("jsonStringify", () => {
 		expect(() => jsonStringify(object)).not.toThrow();
 		expect(jsonStringify(object)).toContain('{"name":"Test"}');
 	});
+
+	it("should serialize non-circular arrays correctly", () => {
+		const array = [1, "two", { three: 3 }];
+		expect(jsonStringify(array)).toBe(JSON.stringify(array));
+	});
+
+	it("should serialize arrays with circular references without throwing an error", () => {
+		const object: Record<string, unknown> = { name: "Array Item" };
+		const array: unknown[] = [object, "test", object];
+		object.self = array; // Circular reference
+		expect(() => jsonStringify(array)).not.toThrow();
+		// Update expected string based on new replacer behavior
+		expect(jsonStringify(array)).toBe('[{"name":"Array Item"},"test",null]');
+	});
 });
