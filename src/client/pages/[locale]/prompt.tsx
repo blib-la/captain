@@ -117,9 +117,12 @@ export default function Page() {
 						setValue(event.target.value);
 						try {
 							const result = evaluate(event.target.value);
-							setEvaluationResult(result.toString());
+							if (["string", "number"].includes(typeof result)) {
+								setEvaluationResult(result.toString());
+							} else {
+								setEvaluationResult("");
+							}
 						} catch {
-							// Console.error(error);
 							setEvaluationResult("");
 						}
 					}}
