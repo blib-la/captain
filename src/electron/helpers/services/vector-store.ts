@@ -12,7 +12,7 @@ import { v4 } from "uuid";
 import { logger } from "@/electron/services/logger";
 import { getCaptainData } from "@/electron/utils/path-helpers";
 
-interface ServiceReadyConfig {
+export interface ServiceReadyConfig {
 	maxRetries?: number;
 	retryInterval?: number;
 	timeout?: number;

@@ -188,9 +188,9 @@ export const functions: FunctionTree = {
  * Handles actions directed at the `captain` entity by invoking functions specified by a function path within the `functions` tree.
  * The function to be invoked is determined based on the provided `functionPath`, and it is called with the provided `parameters`.
  *
- * @param {Object} payload - An object containing the details of the action to be performed.
- * @param {string} payload.id - The path to the function within the `functions` tree.
- * @param {Record<string, unknown>} payload.parameters - The parameters to be passed to the function.
+ * @param {{id: string; parameters: Record<string, unknown>}} payload - An object containing the details of the action to be performed.
+ * - id: The path to the function within the `functions` tree.
+ * - parameters: The parameters to be passed to the function.
  */
 export function handleCaptainAction({
 	id: functionPath,
