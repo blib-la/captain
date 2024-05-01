@@ -1,6 +1,7 @@
 import type { DownloadItem } from "@captn/utils/constants";
 import { DOWNLOADS_MESSAGE_KEY, DownloadEvent, DownloadState } from "@captn/utils/constants";
 import { download } from "electron-dl";
+import type ElectronStore from "electron-store";
 
 import { jsonStringify } from "#/object";
 import { apps } from "@/apps";
@@ -15,6 +16,33 @@ import {
 	getDirectory,
 } from "@/utils/path-helpers";
 import { unpack } from "@/utils/unpack";
+
+function handleDownloadCompletion(
+	item: DownloadItem,
+	{
+		isApp,
+		downloadKeyPath,
+		keyPath,
+		targetDestination,
+	}: { isApp: boolean; downloadKeyPath: string; keyPath: string; targetDestination: string }
+) {
+	item.state = DownloadState.DONE;
+	if (isApp) {
+		item.state = DownloadState.RESTART;
+		appSettingsStore.set("requiresRestart", true);
+	}
+
+	downloadsStore.set(downloadKeyPath, item.state);
+	pushToStore(inventoryStore as unknown as ElectronStore<Record<string, unknown>>, keyPath, {
+		id: item.id,
+		modelPath: targetDestination,
+		label: item.label,
+	});
+	sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
+		action: DownloadEvent.COMPLETED,
+		payload: item,
+	});
+}
 
 /**
  * The DownloadManager class serves as a centralized manager for handling all download-related activities within an application.
@@ -110,7 +138,7 @@ export class DownloadManager {
 				action: DownloadEvent.QUEUED,
 				payload: item,
 			});
-			this.processQueue();
+			this.processQueue().catch();
 		}
 	}
 
@@ -177,8 +205,8 @@ export class DownloadManager {
 						queueItem => queueItem.id !== item.id
 					);
 
-					// Check if more downloads can be started
-					this.processQueue();
+					this.processQueue().catch();
+
 					if (item.unzip) {
 						try {
 							item.state = DownloadState.UNPACKING;
@@ -192,20 +220,11 @@ export class DownloadManager {
 								targetDestination,
 								true
 							);
-							item.state = isApp ? DownloadState.RESTART : DownloadState.DONE;
-							if (isApp) {
-								appSettingsStore.set("requiresRestart", true);
-							}
-
-							downloadsStore.set(downloadKeyPath, item.state);
-							pushToStore(inventoryStore, keyPath, {
-								id: item.id,
-								modelPath: targetDestination,
-								label: item.label,
-							});
-							sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
-								action: DownloadEvent.COMPLETED,
-								payload: item,
+							handleDownloadCompletion(item, {
+								isApp,
+								keyPath,
+								downloadKeyPath,
+								targetDestination,
 							});
 						} catch {
 							item.state = DownloadState.FAILED;
@@ -215,23 +234,14 @@ export class DownloadManager {
 								action: DownloadEvent.ERROR,
 								payload: item,
 							});
-							this.processQueue();
+							this.processQueue().catch();
 						}
 					} else {
-						item.state = isApp ? DownloadState.RESTART : DownloadState.DONE;
-						if (isApp) {
-							appSettingsStore.set("requiresRestart", true);
-						}
-
-						downloadsStore.set(downloadKeyPath, item.state);
-						pushToStore(inventoryStore, keyPath, {
-							id: item.id,
-							modelPath: targetDestination,
-							label: item.label,
-						});
-						sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
-							action: DownloadEvent.COMPLETED,
-							payload: item,
+						handleDownloadCompletion(item, {
+							isApp,
+							keyPath,
+							downloadKeyPath,
+							targetDestination,
 						});
 					}
 				},
@@ -257,7 +267,7 @@ export class DownloadManager {
 				action: DownloadEvent.ERROR,
 				payload: item,
 			});
-			this.processQueue();
+			this.processQueue().catch();
 		}
 	}
 }

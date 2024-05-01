@@ -174,9 +174,20 @@ export class VectorStore {
 	 *
 	 * @param {string} collectionName - The name of the collection where documents will be upserted.
 	 * @param {VectorStoreDocument[]} documents - An array of documents to be upserted.
-	 * @returns {Promise<any[]>} A promise that resolves when all upsert operations are completed.
+	 * @returns {Promise<ReturnType<QdrantClient["upsert"]> | ReturnType<QdrantClient["upsert"]>[] | undefined>} A promise that resolves when all upsert operations are completed.
 	 */
-	public async upsert(collectionName: string, documents: VectorStoreDocument[]) {
+	public async upsert(
+		collectionName: string,
+		documents: VectorStoreDocument[]
+	): Promise<
+		Awaited<
+			| {
+					operation_id?: number | null | undefined;
+					status: "acknowledged" | "completed";
+			  }
+			| undefined
+		>[]
+	> {
 		await this.ensureCollection(collectionName);
 
 		const contentArray = documents.map(document_ => document_.content);
@@ -226,9 +237,13 @@ export class VectorStore {
 	 * @param {string} collectionName - The name of the collection to search in.
 	 * @param {string} query - The text query to search for similar documents.
 	 * @param {SearchOptions} [options] - Optional search parameters.
-	 * @returns {Promise<any>} A promise that resolves with the search results.
+	 * @returns {Promise<ReturnType<QdrantClient["search"]>|undefined>} A promise that resolves with the search results.
 	 */
-	public async search(collectionName: string, query: string, options?: SearchOptions) {
+	public async search(
+		collectionName: string,
+		query: string,
+		options?: SearchOptions
+	): Promise<ReturnType<QdrantClient["search"]> | undefined> {
 		await this.ensureCollection(collectionName);
 
 		const queryVector = await this.embeddings.embedDocuments([query]);
@@ -243,12 +258,15 @@ export class VectorStore {
 	 *
 	 * @param {string} collectionName - The name of the collection to search in.
 	 * @param {ScrollOptions} [options] - Optional scroll parameters.
-	 * @returns {Promise<any>} A promise that resolves with the search results.
+	 * @returns {Promise<ReturnType<QdrantClient["scroll"]>|undefined>} A promise that resolves with the search results.
 	 */
-	public async scroll(collectionName: string, options?: ScrollOptions) {
+	public async scroll(
+		collectionName: string,
+		options?: ScrollOptions
+	): Promise<ReturnType<QdrantClient["scroll"]> | undefined> {
 		await this.ensureCollection(collectionName);
 
-		return this.client!.scroll(collectionName, options);
+		return this.client?.scroll(collectionName, options);
 	}
 
 	/**
@@ -259,7 +277,10 @@ export class VectorStore {
 	 * @param {boolean} autoCreate - Whether to automatically create the collection if it does not exist.
 	 * @returns {Promise<void>}
 	 */
-	private async ensureCollection(collectionName: string, autoCreate: boolean = true) {
+	private async ensureCollection(
+		collectionName: string,
+		autoCreate: boolean = true
+	): Promise<void> {
 		if (!this.client) {
 			throw new Error("Qdrant client is not initialized.");
 		}
@@ -281,7 +302,7 @@ export class VectorStore {
 			await this.client.createCollection(collectionName, collectionConfig);
 
 			// Create the index for the internal id
-			this.client.createPayloadIndex(collectionName, {
+			await this.client.createPayloadIndex(collectionName, {
 				field_name: "id",
 				field_schema: "keyword",
 			});
@@ -296,9 +317,9 @@ export class VectorStore {
 	 * Deletes the specified collection from the Qdrant database.
 	 *
 	 * @param {string} collectionName - The name of the collection to be deleted.
-	 * @returns {Promise<any>} A promise that resolves when the collection has been deleted.
+	 * @returns { Promise<boolean|undefined>)} A promise that resolves when the collection has been deleted.
 	 */
-	public async deleteCollection(collectionName: string) {
+	public async deleteCollection(collectionName: string): Promise<boolean | undefined> {
 		await this.ensureCollection(collectionName, false);
 
 		return this.client?.deleteCollection(collectionName);

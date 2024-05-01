@@ -1,4 +1,4 @@
-import type { VectorStoreResponse } from "@captn/utils/types";
+import type { IPCHandlers, VectorStoreResponse } from "@captn/utils/types";
 
 import { handleCaptainAction } from "../action";
 
@@ -10,11 +10,9 @@ jest.mock("#/build-key", () => ({
 }));
 
 describe("handleCaptainAction", () => {
-	// Mocking window.ipc.send
 	const mockSend = jest.fn();
 	beforeAll(() => {
-		// Ensure window.ipc exists
-		global.window.ipc = { send: mockSend } as any;
+		global.window.ipc = { send: mockSend } as unknown as IPCHandlers;
 	});
 
 	beforeEach(() => {

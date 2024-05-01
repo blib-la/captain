@@ -1,6 +1,10 @@
 import path from "node:path";
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { env } from "@xenova/transformers";
+
+import { CustomHuggingFaceTransformersEmbeddings } from "../custom-hugging-face-transformers-embeddings";
 
 const originalImplementation = Array.isArray;
 // @ts-expect-error we just want to mock this
@@ -16,10 +20,8 @@ Array.isArray = jest.fn(type => {
 	return originalImplementation(type);
 });
 
-import { CustomHuggingFaceTransformersEmbeddings } from "../custom-hugging-face-transformers-embeddings";
-
 describe("CustomHuggingFaceEmbeddings", () => {
-	let embeddings: any;
+	let embeddings: CustomHuggingFaceTransformersEmbeddings;
 
 	beforeAll(() => {
 		env.localModelPath = path.join(process.cwd(), "models");
@@ -48,14 +50,14 @@ describe("CustomHuggingFaceEmbeddings", () => {
 		expect(results.length).toEqual(texts.length);
 
 		// Check each result to ensure it's an array and not empty
-		for (const [index, embedding] of results.entries()) {
+		for (const [, embedding] of results.entries()) {
 			expect(Array.isArray(embedding)).toBeTruthy();
 			expect(embedding.length).toBeGreaterThan(0);
 		}
 	});
 
 	describe("without maxTokens defined", () => {
-		let defaultEmbeddings: any;
+		let defaultEmbeddings: CustomHuggingFaceTransformersEmbeddings;
 
 		beforeAll(() => {
 			defaultEmbeddings = new CustomHuggingFaceTransformersEmbeddings({
@@ -79,7 +81,7 @@ describe("CustomHuggingFaceEmbeddings", () => {
 			expect(Array.isArray(results)).toBeTruthy();
 			expect(results.length).toEqual(texts.length);
 
-			for (const [index, embedding] of results.entries()) {
+			for (const [, embedding] of results.entries()) {
 				expect(Array.isArray(embedding)).toBeTruthy();
 				expect(embedding.length).toBeGreaterThan(0);
 			}

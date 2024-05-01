@@ -21,10 +21,11 @@ import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import Sheet from "@mui/joy/Sheet";
 import { useAtom } from "jotai/index";
-import type { CSSProperties } from "react";
+import type { CSSProperties, RefCallback } from "react";
 import { useMemo } from "react";
 import { useState } from "react";
 import { forwardRef, type LegacyRef, type ReactNode, useCallback, useRef } from "react";
+import type { ScrollbarProps } from "react-custom-scrollbars";
 import Scrollbars from "react-custom-scrollbars";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeGrid } from "react-window";
@@ -172,13 +173,13 @@ export function LegacyCustomScrollbars({
 	style,
 	children,
 }: {
-	onScroll?: any;
-	forwardedRef?: any;
-	style?: any;
-	children?: any;
+	onScroll?: ScrollbarProps["onScroll"];
+	forwardedRef?: RefCallback<HTMLDivElement>;
+	style?: CSSProperties;
+	children?: ReactNode;
 }) {
-	const referenceSetter: LegacyRef<any> = useCallback(
-		(scrollbarsReference: { view: any }) => {
+	const referenceSetter: LegacyRef<unknown> = useCallback(
+		(scrollbarsReference: { view: HTMLDivElement }) => {
 			if (forwardedRef) {
 				if (scrollbarsReference) {
 					forwardedRef(scrollbarsReference.view);
@@ -214,10 +215,14 @@ export function LegacyCustomScrollbars({
 	);
 }
 
-export const CustomScrollbarsVirtualList = forwardRef<
-	HTMLDivElement,
-	{ onScroll: any; forwardedRef: any; style: any; children: any }
->((properties, reference) => <LegacyCustomScrollbars {...properties} forwardedRef={reference} />);
+export const CustomScrollbarsVirtualList = forwardRef<HTMLDivElement | undefined>(
+	(properties, reference) => (
+		<LegacyCustomScrollbars
+			{...properties}
+			forwardedRef={reference as RefCallback<HTMLDivElement>}
+		/>
+	)
+);
 
 CustomScrollbarsVirtualList.displayName = "CustomScrollbarsVirtualList";
 
