@@ -7,7 +7,7 @@ import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import type { Resource } from "#/types/install";
 import type { Manifest, OS } from "#/types/manifest";
-import { logger } from "@/services/logger";
+import { logError, logger } from "@/services/logger";
 import { appSettingsStore } from "@/stores";
 
 /**
@@ -49,21 +49,21 @@ export function listenForUpdates() {
 	// autoUpdater.forceDevUpdateConfig = isDevelopment;
 
 	autoUpdater.on("update-available", data => {
-		logger.info(`auto-update: update available`);
+		logger.info("auto-update: update available");
 
 		const window_ = BrowserWindow.getFocusedWindow();
 		window_!.webContents.send(buildKey([ID.UPDATE], { suffix: ":available" }), data);
 	});
 
 	autoUpdater.on("update-downloaded", data => {
-		logger.error(`auto-update: update downloaded`);
+		logger.error("auto-update: update downloaded");
 
 		const window_ = BrowserWindow.getFocusedWindow();
 		window_!.webContents.send(buildKey([ID.UPDATE], { suffix: ":downloaded" }), data);
 	});
 
 	autoUpdater.on("error", data => {
-		logger.error(`auto-update: ${data}`);
+		logError(data, "auto-update");
 	});
 
 	// TODO adjust implementation
