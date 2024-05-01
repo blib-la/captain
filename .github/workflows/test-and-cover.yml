@@ -22,8 +22,8 @@ jobs:
         run: npm install
       - name: Run all jest tests
         run: npm run test:all
-      - name: Codacy Analysis
-        uses: codacy/codacy-analysis-cli-action@v1
+      - name: Codacy Coverage
+        uses: codacy/codacy-coverage-reporter-action@v1
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           coverage-reports: ./coverage/combined-coverage.json
