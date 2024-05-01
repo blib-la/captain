@@ -1,3 +1,5 @@
+import console from "node:console";
+
 import { BrowserWindow } from "electron";
 import { autoUpdater } from "electron-updater";
 
@@ -77,7 +79,8 @@ export function listenForUpdates() {
 
 	// TODO adjust implementation
 	autoUpdater.on("download-progress", data => {
-		logger.info("auto-update: on -> download-progress", data);
+		// Use native log here as this is only useful while developing
+		console.log("auto-update: on -> download-progress", data);
 	});
 }
 
