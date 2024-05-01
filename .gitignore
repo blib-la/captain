@@ -6,27 +6,20 @@
 # node
 node_modules
 *.log
+
+
+# environmental variables
+.env
+
+# build
 .next
 app
 dist
 build
 
-.env
-
-# python
-resources/python-embedded/
-resources/python/caption/wd14/models/model.onnx
-__pycache__
-.pytest_cache
-
-# live-canvas
-live-canvas-frontend-user-data.png
-live-canvas-generate-image-output.png
-live-canvas-generate-image-output.png.tmp.png
-
 # test
 coverage
 playwright-report
+.nyc_output
+.pytest_cache
 
-# qdrant
-Captain_Data/*
