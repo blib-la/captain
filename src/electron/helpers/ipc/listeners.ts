@@ -1,6 +1,7 @@
 import fsp from "node:fs/promises";
 import path from "node:path";
 
+import { USER_LANGUAGE_KEY } from "@captn/utils/constants";
 import { ipcMain } from "electron";
 
 import { buildKey } from "#/build-key";
@@ -11,7 +12,7 @@ import { clone, lfs } from "@/utils/git";
 import { getCaptainData } from "@/utils/path-helpers";
 import { readFilesRecursively } from "@/utils/read-files-recursively";
 
-ipcMain.on(buildKey([ID.USER], { suffix: ":language" }), (_event, language) => {
+ipcMain.on(USER_LANGUAGE_KEY, (_event, language) => {
 	userStore.set("language", language);
 });
 

@@ -1,3 +1,4 @@
+import { USER_LANGUAGE_KEY } from "@captn/utils/constants";
 import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import ListItemButton from "@mui/joy/ListItemButton";
@@ -12,8 +13,6 @@ import { useCallback } from "react";
 
 import nexti18Next from "../../../../next-i18next.config.js";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
 import { FlagDe } from "@/atoms/flags/de";
 import { FlagEs } from "@/atoms/flags/es";
 import { FlagFr } from "@/atoms/flags/fr";
@@ -112,7 +111,7 @@ export function LanguageSelect() {
 			)}
 			onChange={async (event, value: string | null) => {
 				if (value) {
-					await window.ipc.send(buildKey([ID.USER], { suffix: ":language" }), value);
+					await window.ipc.send(USER_LANGUAGE_KEY, value);
 					await changeLanguage(value);
 				}
 			}}
@@ -144,10 +143,7 @@ export function LanguageSelectList() {
 						selected={locale === locale_}
 						color="primary"
 						onClick={async () => {
-							await window.ipc.send(
-								buildKey([ID.USER], { suffix: ":language" }),
-								locale_
-							);
+							await window.ipc.send(USER_LANGUAGE_KEY, locale_);
 							await push(`/${locale_}${asPath_}`, undefined);
 						}}
 					>
