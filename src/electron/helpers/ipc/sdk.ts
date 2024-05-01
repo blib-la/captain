@@ -6,6 +6,7 @@ import type { VectorStoreDocument } from "@captn/utils/types";
 import { getProperty } from "dot-prop";
 import type { IpcMainEvent } from "electron";
 import { ipcMain } from "electron";
+import type ElectronStore from "electron-store";
 import type { Except } from "type-fest";
 
 import { apps } from "@/electron/apps";
@@ -63,11 +64,17 @@ ipcMain.on(
 
 								const keyPath = destination.replaceAll("/", ".");
 
-								pushToStore(inventoryStore, keyPath, {
-									id: repository,
-									modelPath: getCaptainDownloads(destination, repository),
-									label,
-								});
+								pushToStore(
+									inventoryStore as unknown as ElectronStore<
+										Record<string, unknown>
+									>,
+									keyPath,
+									{
+										id: repository,
+										modelPath: getCaptainDownloads(destination, repository),
+										label,
+									}
+								);
 
 								downloadsStore.delete(repository);
 							},

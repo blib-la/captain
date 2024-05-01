@@ -32,7 +32,7 @@ ipcMain.on(VECTOR_STORE_SCROLL_KEY, async (event, { options }: { options?: Scrol
 	try {
 		const vectorStore = VectorStore.getInstance;
 
-		const { points } = await vectorStore.scroll(VECTOR_STORE_COLLECTION, options);
+		const { points } = await vectorStore.scroll(VECTOR_STORE_COLLECTION, options)!;
 		event.sender.send(VECTOR_STORE_SCROLL_RESULT_KEY, points);
 	} catch (error) {
 		event.sender.send(ERROR_KEY, error);
