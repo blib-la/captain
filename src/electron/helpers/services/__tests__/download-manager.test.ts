@@ -16,6 +16,10 @@ import { unpack } from "@/utils/unpack";
 
 const testDownloadFile = "https://example.com/test.jpg";
 
+interface DownloadEventArguments {
+	action: DownloadEvent;
+}
+
 jest.mock("electron", () => {
 	const originalModule = jest.requireActual("electron");
 
@@ -377,11 +381,16 @@ describe("DownloadManager", () => {
 		});
 
 		expect(
-			spySend.mock.calls.some((call: any) => call[1].action === DownloadEvent.PROGRESS)
+			spySend.mock.calls.some(
+				(call: [string, unknown]) =>
+					(call[1] as DownloadEventArguments).action === DownloadEvent.PROGRESS
+			)
 		).toBe(true);
 		expect(
-			spySend.mock.calls.filter((call: any) => call[1].action === DownloadEvent.PROGRESS)
-				.length
+			spySend.mock.calls.filter(
+				(call: [string, unknown]) =>
+					(call[1] as DownloadEventArguments).action === DownloadEvent.PROGRESS
+			).length
 		).toBeGreaterThan(1);
 	});
 

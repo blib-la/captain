@@ -1,5 +1,6 @@
 import fs from "node:fs";
 
+import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 
 jest.mock("execa");
@@ -13,6 +14,12 @@ jest.mock("@/utils/path-helpers", () => ({
 }));
 
 const mockedExeca = execa as jest.MockedFunction<typeof execa>;
+
+interface MockChildProcess {
+	stderr: {
+		on: (event: string, handler: (data: unknown) => void) => void;
+	};
+}
 
 describe("lfs", () => {
 	const fakePath = "path/to/git";
@@ -180,7 +187,7 @@ describe("clone", () => {
 	it("should report progress during clone operation", async () => {
 		jest.spyOn(fs, "existsSync").mockReturnValueOnce(false);
 
-		const mockChildProcess = {
+		const mockChildProcess: MockChildProcess = {
 			stderr: {
 				on: jest.fn((event, handler) => {
 					if (event === "data") {
@@ -189,7 +196,7 @@ describe("clone", () => {
 				}),
 			},
 		};
-		mockedExeca.mockReturnValueOnce(mockChildProcess as any);
+		mockedExeca.mockReturnValueOnce(mockChildProcess as unknown as ExecaChildProcess<Buffer>);
 
 		const onProgressMock = jest.fn();
 

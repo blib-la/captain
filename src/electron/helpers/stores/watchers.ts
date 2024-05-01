@@ -35,21 +35,27 @@ export function watchStores() {
 			}
 		}),
 		// We need to cast the type to any to allow dot-prop
-		inventoryStore.onDidChange<any>("files.image", images => {
+		inventoryStore.onDidChange("files.image" as keyof typeof inventoryStore.store, images => {
 			if (images) {
 				sendToAllWindows("images", images);
 			}
 		}),
-		inventoryStore.onDidChange<any>("stable-diffusion.checkpoints", checkpoints => {
-			if (checkpoints) {
-				sendToAllWindows("stable-diffusion.checkpoints", checkpoints);
+		inventoryStore.onDidChange(
+			"stable-diffusion.checkpoints" as keyof typeof inventoryStore.store,
+			checkpoints => {
+				if (checkpoints) {
+					sendToAllWindows("stable-diffusion.checkpoints", checkpoints);
+				}
 			}
-		}),
-		inventoryStore.onDidChange<any>("stable-diffusion.vae", vae => {
-			if (vae) {
-				sendToAllWindows("stable-diffusion.vae", vae);
+		),
+		inventoryStore.onDidChange(
+			"stable-diffusion.vae" as keyof typeof inventoryStore.store,
+			vae => {
+				if (vae) {
+					sendToAllWindows("stable-diffusion.vae", vae);
+				}
 			}
-		}),
+		),
 		inventoryStore.onDidAnyChange(inventory => {
 			sendToAllWindows("allInventory", inventory);
 		}),

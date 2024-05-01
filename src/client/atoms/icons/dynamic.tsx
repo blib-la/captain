@@ -1,5 +1,8 @@
-import type { SvgIconProps } from "@mui/joy/SvgIcon";
+import type { DefaultComponentProps } from "@mui/material/OverridableComponent";
+import type { SvgIconProps } from "@mui/material/SvgIcon";
+import type { SvgIconTypeMap } from "@mui/material/SvgIcon";
 import dynamic from "next/dynamic";
+import type { ComponentType } from "react";
 import { createElement } from "react";
 
 const Brush = dynamic(() => import("@mui/icons-material/Brush"));
@@ -17,7 +20,10 @@ const ShoppingBag = dynamic(() => import("@mui/icons-material/ShoppingBag"));
 const Stream = dynamic(() => import("@mui/icons-material/Stream"));
 const QuestionMark = dynamic(() => import("@mui/icons-material/QuestionMark"));
 
-const iconCache: Record<string, any> = {
+const iconCache: Record<
+	string,
+	ComponentType<DefaultComponentProps<SvgIconTypeMap<object, "svg">>>
+> = {
 	Brush,
 	DarkMode,
 	Dashboard,
@@ -39,5 +45,5 @@ const iconCache: Record<string, any> = {
 
 export function DynamicIcon({ icon, ...rest }: { icon: string } & SvgIconProps) {
 	const component = iconCache[icon] ?? null;
-	return component && createElement(component, rest);
+	return component && createElement(component, rest as SvgIconProps);
 }

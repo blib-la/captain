@@ -8,7 +8,7 @@ import { createDirectory } from "@/utils/fs";
 import { getCaptainData, getCaptainDownloads } from "@/utils/path-helpers";
 
 export interface GitCloneOptions {
-	onStarted?: (item: any) => void;
+	onStarted?: (item: { repository: string; destination: string; cancel(): void }) => void;
 	onProgress?: (progress: GitCloneProgress) => void;
 	onCompleted?: (completed: GitCloneCompleted) => void;
 }
@@ -39,11 +39,11 @@ export async function clone(repository: string, destination: string, options?: G
 
 	createDirectory(destinationPath);
 
-	let process: ExecaChildProcess | null = null;
+	let process_: ExecaChildProcess | null = null;
 
 	function cancel() {
-		if (process) {
-			process.kill("SIGTERM");
+		if (process_) {
+			process_.kill("SIGTERM");
 		}
 	}
 
@@ -56,8 +56,8 @@ export async function clone(repository: string, destination: string, options?: G
 	// Update repo if it already exists
 	if (fs.existsSync(gitDirectory)) {
 		try {
-			process = execa(git(), ["pull"], { cwd: destinationPath });
-			await process;
+			process_ = execa(git(), ["pull"], { cwd: destinationPath });
+			await process_;
 
 			options?.onProgress?.({
 				percent: 1,
@@ -69,9 +69,14 @@ export async function clone(repository: string, destination: string, options?: G
 		}
 	} else {
 		// Proceed with cloning
-		process = execa(git(), ["clone", "--progress", `git@hf.co:${repository}`, destinationPath]);
+		process_ = execa(git(), [
+			"clone",
+			"--progress",
+			`git@hf.co:${repository}`,
+			destinationPath,
+		]);
 
-		process.stderr?.on("data", (buffer: Buffer) => {
+		process_.stderr?.on("data", (buffer: Buffer) => {
 			const output = buffer.toString();
 			const progressMatch = output.match(/Receiving objects:\s+(\d+)%/);
 			if (progressMatch) {
@@ -87,16 +92,16 @@ export async function clone(repository: string, destination: string, options?: G
 
 		// Clone
 		try {
-			await process;
+			await process_;
 		} catch (error) {
 			throw new Error(`Cloning repository failed: ${error}`);
 		}
 	}
 
 	// Fetch LFS objects
-	process = execa(git(), ["lfs", "fetch"], { cwd: destinationPath });
+	process_ = execa(git(), ["lfs", "fetch"], { cwd: destinationPath });
 
-	process.stderr?.on("data", (buffer: Buffer) => {
+	process_.stderr?.on("data", (buffer: Buffer) => {
 		const output = buffer.toString();
 		const progressMatch = output.match(/(\d+)% \((\d+)\/(\d+)\)/);
 		if (progressMatch) {
@@ -111,15 +116,15 @@ export async function clone(repository: string, destination: string, options?: G
 	});
 
 	try {
-		await process;
+		await process_;
 	} catch (error) {
 		throw new Error(`Fetching Git LFS objects failed: ${error}`);
 	}
 
 	// Checkout LFS objects
 	try {
-		process = execa(git(), ["lfs", "checkout"], { cwd: destinationPath });
-		await process;
+		process_ = execa(git(), ["lfs", "checkout"], { cwd: destinationPath });
+		await process_;
 
 		options?.onCompleted?.({
 			path: destinationPath,
