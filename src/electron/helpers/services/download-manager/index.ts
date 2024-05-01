@@ -2,7 +2,9 @@ import type { DownloadItem } from "@captn/utils/constants";
 import { DOWNLOADS_MESSAGE_KEY, DownloadEvent, DownloadState } from "@captn/utils/constants";
 import { download } from "electron-dl";
 
+import { jsonStringify } from "#/object";
 import { apps } from "@/apps";
+import { logger } from "@/services/logger";
 import { appSettingsStore, downloadsStore, inventoryStore } from "@/stores";
 import { pushToStore } from "@/stores/utils";
 import { sendToAllWindows } from "@/stores/watchers";
@@ -124,11 +126,15 @@ export class DownloadManager {
 
 		const nextItem = this.downloadQueue.find(item => item.state === DownloadState.IDLE);
 		if (!nextItem) {
+			// Use native log here as this is only useful while developing
 			console.log("No more items to process");
 			return;
 		}
 
-		console.log("DOWNLOAD STARTING", nextItem);
+		logger.info(
+			"DOWNLOAD STARTING",
+			jsonStringify(nextItem as unknown as Record<string, unknown>)
+		);
 		this.currentDownloads += 1;
 		await this.startDownload(nextItem);
 	}

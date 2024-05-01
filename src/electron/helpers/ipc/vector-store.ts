@@ -9,6 +9,7 @@ import type { ScrollOptions, SearchOptions } from "@captn/utils/types";
 import { ipcMain } from "electron";
 
 import { VECTOR_STORE_COLLECTION } from "#/constants";
+import { logError } from "@/services/logger";
 import { VectorStore } from "@/services/vector-store";
 
 ipcMain.on(
@@ -21,7 +22,7 @@ ipcMain.on(
 
 			event.sender.send(VECTOR_STORE_SEARCH_RESULT_KEY, result);
 		} catch (error) {
-			console.log(error);
+			logError(error);
 			event.sender.send(ERROR_KEY, error);
 		}
 	}

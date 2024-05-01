@@ -125,8 +125,6 @@ export async function main() {
 			if (url) {
 				handleDeepLink(url);
 			}
-
-			console.log(commandLine.pop());
 		});
 		// Start the vector store and fill it with data
 		await initialize();

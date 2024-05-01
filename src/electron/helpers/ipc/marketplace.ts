@@ -15,7 +15,6 @@ ipcMain.handle(
 
 		try {
 			const { data } = await axios.get(url);
-			console.log("data", data);
 			marketplaceStore.store = data;
 			return data;
 		} catch (error) {

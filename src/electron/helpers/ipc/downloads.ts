@@ -4,6 +4,7 @@ import { ipcMain } from "electron";
 
 import { apps } from "@/apps";
 import { DownloadManager } from "@/services/download-manager";
+import { logError } from "@/services/logger";
 
 const downloadManager = new DownloadManager();
 
@@ -39,7 +40,7 @@ ipcMain.on(
 						payload,
 					});
 				} catch (error) {
-					console.log(error);
+					logError(error);
 				}
 
 				break;

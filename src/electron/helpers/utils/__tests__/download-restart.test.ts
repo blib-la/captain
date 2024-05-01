@@ -1,7 +1,8 @@
 import { DownloadState } from "@captn/utils/constants";
 
-import type { Tree } from "../download-restart";
 import { modifyState, traverseAndModify } from "../download-restart";
+
+import type { DownloadsSettings } from "@/types";
 
 describe("modifyState", () => {
 	it("should return DONE when the input state is RESTART", () => {
@@ -21,21 +22,21 @@ describe("traverseAndModify", () => {
 	});
 
 	it("should modify a flat tree with a RESTART state", () => {
-		const tree: Tree = { status: DownloadState.RESTART };
+		const tree: DownloadsSettings = { status: DownloadState.RESTART };
 		expect(traverseAndModify(tree)).toEqual({ status: DownloadState.DONE });
 	});
 
 	it("should not modify a flat tree without a RESTART state", () => {
-		const tree: Tree = { status: DownloadState.ACTIVE };
+		const tree: DownloadsSettings = { status: DownloadState.ACTIVE };
 		expect(traverseAndModify(tree)).toEqual({ status: DownloadState.ACTIVE });
 	});
 
 	it("should modify a nested tree with multiple RESTART states", () => {
-		const tree: Tree = {
+		const tree: DownloadsSettings = {
 			first: { status: DownloadState.RESTART },
 			second: { status: DownloadState.IDLE, nested: { status: DownloadState.RESTART } },
 		};
-		const expectedTree: Tree = {
+		const expectedTree: DownloadsSettings = {
 			first: { status: DownloadState.DONE },
 			second: { status: DownloadState.IDLE, nested: { status: DownloadState.DONE } },
 		};
@@ -43,7 +44,7 @@ describe("traverseAndModify", () => {
 	});
 
 	it("should traverse deeply nested structures", () => {
-		const tree: Tree = {
+		const tree: DownloadsSettings = {
 			level1: {
 				level2: {
 					level3: { status: DownloadState.RESTART },
@@ -51,7 +52,7 @@ describe("traverseAndModify", () => {
 				other: { status: DownloadState.ACTIVE },
 			},
 		};
-		const expectedTree: Tree = {
+		const expectedTree: DownloadsSettings = {
 			level1: {
 				level2: {
 					level3: { status: DownloadState.DONE },

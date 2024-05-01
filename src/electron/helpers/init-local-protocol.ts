@@ -4,6 +4,7 @@ import path from "path";
 import { protocol } from "electron";
 
 import { LOCAL_PROTOCOL } from "#/constants";
+import { logError } from "@/services/logger";
 
 /**
  * Handles requests to a custom protocol for serving local files in an Electron application.
@@ -55,7 +56,7 @@ export function initLocalProtocol() {
 			return new Response(file, { headers: { "Content-Type": "application/octet-stream" } });
 		} catch (error) {
 			// Log and return an error response if the file cannot be read
-			console.error(`Failed to read ${filePath}:`, error);
+			logError(error, `Failed to read ${filePath}:`);
 			return new Response("File not found", { status: 404 });
 		}
 	});
