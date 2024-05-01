@@ -6,7 +6,6 @@ import { buildKey } from "#/build-key";
 import { ID } from "#/enums";
 import manifest from "#/manifest.json";
 import type { Resource } from "#/types/install";
-import type { Manifest } from "#/types/manifest";
 import { appSettingsStore } from "@/stores";
 import { getCaptainData, getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
 import { unpack } from "@/utils/unpack";
@@ -19,7 +18,7 @@ ipcMain.on(buildKey([ID.INSTALL], { suffix: ":start" }), async _event => {
 	}
 
 	// Get the needed updates
-	const updates: Resource[] = checkUpdates(manifest as Manifest, "windows");
+	const updates: Resource[] = checkUpdates(manifest, "windows");
 
 	try {
 		const items: Promise<void>[] = [];

@@ -14,6 +14,7 @@ import {
 import type { VectorStoreDocument } from "@captn/utils/types";
 import { BrowserWindow, dialog, ipcMain } from "electron";
 import { download } from "electron-dl";
+import type ElectronStore from "electron-store";
 import { execa } from "execa";
 import { v4 } from "uuid";
 
@@ -362,11 +363,15 @@ ipcMain.handle(
 							);
 							downloadsStore.set(item.id, DownloadState.DONE);
 							const keyPath = item.destination.replaceAll("/", ".");
-							pushToStore(inventoryStore, keyPath, {
-								id: item.id,
-								modelPath,
-								label: item.label,
-							});
+							pushToStore(
+								inventoryStore as unknown as ElectronStore<Record<string, unknown>>,
+								keyPath,
+								{
+									id: item.id,
+									modelPath,
+									label: item.label,
+								}
+							);
 							if (apps[item.appId]) {
 								apps[item.appId]?.webContents.send("downloadComplete", true);
 							}
