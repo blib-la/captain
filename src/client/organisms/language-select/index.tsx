@@ -13,19 +13,19 @@ import { useCallback } from "react";
 
 import nexti18Next from "../../../../next-i18next.config.js";
 
-import { FlagDe } from "@/atoms/flags/de";
-import { FlagEs } from "@/atoms/flags/es";
-import { FlagFr } from "@/atoms/flags/fr";
-import { FlagHe } from "@/atoms/flags/he";
-import { FlagIt } from "@/atoms/flags/it";
-import { FlagJa } from "@/atoms/flags/ja";
-import { FlagNl } from "@/atoms/flags/nl";
-import { FlagPl } from "@/atoms/flags/pl";
-import { FlagPt } from "@/atoms/flags/pt";
-import { FlagRu } from "@/atoms/flags/ru";
-import { FlagUs } from "@/atoms/flags/us";
-import { FlagZh } from "@/atoms/flags/zh";
-import { StyledFlagWrapper, StyledValueWrapper } from "@/organisms/language-select/styled";
+import { FlagDe } from "@/client/atoms/flags/de";
+import { FlagEs } from "@/client/atoms/flags/es";
+import { FlagFr } from "@/client/atoms/flags/fr";
+import { FlagHe } from "@/client/atoms/flags/he";
+import { FlagIt } from "@/client/atoms/flags/it";
+import { FlagJa } from "@/client/atoms/flags/ja";
+import { FlagNl } from "@/client/atoms/flags/nl";
+import { FlagPl } from "@/client/atoms/flags/pl";
+import { FlagPt } from "@/client/atoms/flags/pt";
+import { FlagRu } from "@/client/atoms/flags/ru";
+import { FlagUs } from "@/client/atoms/flags/us";
+import { FlagZh } from "@/client/atoms/flags/zh";
+import { StyledFlagWrapper, StyledValueWrapper } from "@/client/organisms/language-select/styled";
 
 export const localeNames: Record<string, string> = {
 	de: "Deutsch",

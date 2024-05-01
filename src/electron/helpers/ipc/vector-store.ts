@@ -8,9 +8,9 @@ import {
 import type { ScrollOptions, SearchOptions } from "@captn/utils/types";
 import { ipcMain } from "electron";
 
-import { VECTOR_STORE_COLLECTION } from "#/constants";
-import { logError } from "@/services/logger";
-import { VectorStore } from "@/services/vector-store";
+import { logError } from "@/electron/services/logger";
+import { VectorStore } from "@/electron/services/vector-store";
+import { VECTOR_STORE_COLLECTION } from "@/shared/constants";
 
 ipcMain.on(
 	VECTOR_STORE_SEARCH_KEY,

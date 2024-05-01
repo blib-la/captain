@@ -9,14 +9,14 @@ import {
 import type { BrowserWindowConstructorOptions } from "electron";
 import { app, type BrowserWindow, globalShortcut, ipcMain, screen } from "electron";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
-import type { MultiWindowConfiguration, MultiWindowKey } from "@/app-loaders";
-import { appLoaders, isMultiWindow } from "@/app-loaders";
-import { apps } from "@/apps";
-import { logger } from "@/services/logger";
-import { createWindow } from "@/utils/create-window";
-import { loadURL } from "@/utils/load-window";
+import type { MultiWindowConfiguration, MultiWindowKey } from "@/electron/app-loaders";
+import { appLoaders, isMultiWindow } from "@/electron/app-loaders";
+import { apps } from "@/electron/apps";
+import { logger } from "@/electron/services/logger";
+import { createWindow } from "@/electron/utils/create-window";
+import { loadURL } from "@/electron/utils/load-window";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
 
 /**
  * Creates and displays the installer window with predefined dimensions.

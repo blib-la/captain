@@ -18,19 +18,19 @@ import type ElectronStore from "electron-store";
 import { execa } from "execa";
 import { v4 } from "uuid";
 
-import { buildKey } from "#/build-key";
-import { VECTOR_STORE_COLLECTION } from "#/constants";
-import { ID } from "#/enums";
-import { cleanPath, extractH1Headings, getFileType } from "#/string";
-import { apps } from "@/apps";
-import { logError } from "@/services/logger";
-import { VectorStore } from "@/services/vector-store";
-import { inventoryStore, downloadsStore, userStore, appSettingsStore } from "@/stores";
-import { pushToStore } from "@/stores/utils";
-import type { DownloadsSettings } from "@/types";
-import { getCaptainData, getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
-import { splitDocument } from "@/utils/split-documents";
-import { unpack } from "@/utils/unpack";
+import { apps } from "@/electron/apps";
+import { logError } from "@/electron/services/logger";
+import { VectorStore } from "@/electron/services/vector-store";
+import { inventoryStore, downloadsStore, userStore, appSettingsStore } from "@/electron/stores";
+import { pushToStore } from "@/electron/stores/utils";
+import type { DownloadsSettings } from "@/electron/types";
+import { getCaptainData, getCaptainDownloads, getDirectory } from "@/electron/utils/path-helpers";
+import { splitDocument } from "@/electron/utils/split-documents";
+import { unpack } from "@/electron/utils/unpack";
+import { buildKey } from "@/shared/build-key";
+import { VECTOR_STORE_COLLECTION } from "@/shared/constants";
+import { ID } from "@/shared/enums";
+import { cleanPath, extractH1Headings, getFileType } from "@/shared/string";
 
 ipcMain.on(WINDOW_CLOSE_KEY, () => {
 	const window_ = BrowserWindow.getFocusedWindow();

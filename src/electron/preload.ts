@@ -2,8 +2,8 @@ import { contextBridge, ipcRenderer } from "electron";
 
 import { handlers } from "./handlers";
 
-import { buildKey } from "#/build-key";
-import { ID, KEY } from "#/enums";
+import { buildKey } from "@/shared/build-key";
+import { ID, KEY } from "@/shared/enums";
 
 contextBridge.exposeInMainWorld("ipc", {
 	...handlers,

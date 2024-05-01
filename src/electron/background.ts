@@ -2,18 +2,18 @@ import { app } from "electron";
 
 import { main } from "./main";
 
-import { gotTheLock, isTest } from "#/flags";
-import { registerApps } from "@/app-loaders";
-import { logger } from "@/services/logger";
-import { watchStores } from "@/stores/watchers";
-import { cleanFiles } from "@/utils/clean-files";
+import { registerApps } from "@/electron/app-loaders";
+import { logger } from "@/electron/services/logger";
+import { watchStores } from "@/electron/stores/watchers";
+import { cleanFiles } from "@/electron/utils/clean-files";
+import { gotTheLock, isTest } from "@/shared/flags";
 
 // Import core setup module.
 // This ensures the core setup process is executed explicitly, even though it may already be called
 // by dependencies.
 // The core setup is crucial for configuring the application environment before other modules are
 // loaded.
-import "@/core-setup";
+import "@/electron/core-setup";
 
 // Deprecated IPC Modules
 // Warning: The IPC handlers and listeners imported below are considered deprecated.
@@ -29,51 +29,51 @@ import "@/core-setup";
 
 /**
  * @deprecated Handles legacy IPC event listeners
- * Consider migrating to the new event handling approach outlined in "@/ipc/sdk" or "@/ipc/global".
+ * Consider migrating to the new event handling approach outlined in "@/electron/ipc/sdk" or "@/electron/ipc/global".
  */
-import "@/ipc/listeners";
+import "@/electron/ipc/listeners";
 
 /**
  * @deprecated Manages IPC for outdated storytelling or narrative-driven interactions.
- * Consider migrating to the new event handling approach outlined in "@/ipc/sdk" or "@/ipc/global".
+ * Consider migrating to the new event handling approach outlined in "@/electron/ipc/sdk" or "@/electron/ipc/global".
  */
-import "@/ipc/story";
+import "@/electron/ipc/story";
 
 // Import modules for managing globally accessible functionalities.
 // This includes window management tasks such as minimizing, maximizing, or closing windows.
-import "@/ipc/global"; // Manages global IPC events, including those related to window actions.
+import "@/electron/ipc/global"; // Manages global IPC events, including those related to window actions.
 
 /**
  * @deprecated
  */
-import "@/ipc/sdk";
+import "@/electron/ipc/sdk";
 
 // Import SDK module for 3rd party integration.
 // This allows external applications to interact with the app through exposed handlers and
 // listeners.
-import "@/ipc/sdk/text-to-image";
-import "@/ipc/sdk/image-to-image";
+import "@/electron/ipc/sdk/text-to-image";
+import "@/electron/ipc/sdk/image-to-image";
 
 // Import install handlers and listeners
-import "@/ipc/install";
+import "@/electron/ipc/install";
 
 // Import update handlers
-import "@/ipc/update";
+import "@/electron/ipc/update";
 
 // Import testing helpers
-import "@/ipc/testing";
+import "@/electron/ipc/testing";
 
 // Import the vector store
-import "@/ipc/vector-store";
+import "@/electron/ipc/vector-store";
 
 // Import keys
-import "@/ipc/keys";
+import "@/electron/ipc/keys";
 
 // Import downloads
-import "@/ipc/downloads";
+import "@/electron/ipc/downloads";
 
 // Import marketplace
-import "@/ipc/marketplace";
+import "@/electron/ipc/marketplace";
 
 let unsubscribe: (() => Promise<void>) | undefined;
 if (gotTheLock || isTest) {

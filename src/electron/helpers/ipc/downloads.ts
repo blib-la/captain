@@ -2,9 +2,9 @@ import type { DownloadItem } from "@captn/utils/constants";
 import { DOWNLOADS_MESSAGE_KEY } from "@captn/utils/constants";
 import { ipcMain } from "electron";
 
-import { apps } from "@/apps";
-import { DownloadManager } from "@/services/download-manager";
-import { logError } from "@/services/logger";
+import { apps } from "@/electron/apps";
+import { DownloadManager } from "@/electron/services/download-manager";
+import { logError } from "@/electron/services/logger";
 
 const downloadManager = new DownloadManager();
 

@@ -11,12 +11,12 @@ import type { InferGetStaticPropsType } from "next";
 import { useTranslation } from "next-i18next";
 import { useState } from "react";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
-import { useInstallProgress } from "@/ions/hooks/install-progress";
-import { makeStaticProperties } from "@/ions/i18n/get-static";
-import { InstallStep } from "@/organisms/installer";
-import { QuoteLoop } from "@/organisms/quote-loop";
+import { useInstallProgress } from "@/client/ions/hooks/install-progress";
+import { makeStaticProperties } from "@/client/ions/i18n/get-static";
+import { InstallStep } from "@/client/organisms/installer";
+import { QuoteLoop } from "@/client/organisms/quote-loop";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
 
 export function InstallScreen({
 	percent,
@@ -235,4 +235,4 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 
 export const getStaticProps = makeStaticProperties(["installer", "texts", "labels"]);
 
-export { getStaticPaths } from "@/ions/i18n/get-static";
+export { getStaticPaths } from "@/client/ions/i18n/get-static";

@@ -9,8 +9,8 @@ const jestConfig = {
 		"^.+\\.(ts|js)$": ["@swc/jest"],
 	},
 	moduleNameMapper: {
-		"@/(.*)": "<rootDir>/src/electron/helpers/$1",
-		"#/(.*)": "<rootDir>/src/shared/$1",
+		"@/electron/(.*)": "<rootDir>/src/electron/helpers/$1",
+		"@/shared/(.*)": "<rootDir>/src/shared/$1",
 		"~package": "<rootDir>/package.json",
 	},
 	collectCoverage: true,

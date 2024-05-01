@@ -13,16 +13,16 @@ import { allRequiredDownloads, APP_ID } from "./constants";
 import { useUnload } from "./hooks";
 import { RenderingArea } from "./rendering-area";
 
-import { randomSeed } from "#/number";
-import { PromptSheet, RunButton, SaveButton } from "@/apps/live-painting/components";
-import { RequiredModelsAlert } from "@/apps/live-painting/required-models-alert";
+import { PromptSheet, RunButton, SaveButton } from "@/client/apps/live-painting/components";
+import { RequiredModelsAlert } from "@/client/apps/live-painting/required-models-alert";
 import {
 	StyledButtonWrapper,
 	StyledRenderingAreaWrapper,
 	StyledStickyHeader,
-} from "@/apps/live-painting/styled";
-import type { IllustrationStyles } from "@/apps/live-painting/text-to-image";
-import { illustrationStyles } from "@/apps/live-painting/text-to-image";
+} from "@/client/apps/live-painting/styled";
+import type { IllustrationStyles } from "@/client/apps/live-painting/text-to-image";
+import { illustrationStyles } from "@/client/apps/live-painting/text-to-image";
+import { randomSeed } from "@/shared/number";
 
 export function TextToImage() {
 	const { t } = useTranslation(["common", "labels"]);

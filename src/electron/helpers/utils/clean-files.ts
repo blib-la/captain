@@ -3,7 +3,7 @@ import fsp from "node:fs/promises";
 
 import { globby } from "globby";
 
-import { getCaptainData, getCaptainTemporary, getUserData } from "@/utils/path-helpers";
+import { getCaptainData, getCaptainTemporary, getUserData } from "@/electron/utils/path-helpers";
 
 export async function cleanFiles() {
 	if (fs.existsSync(getCaptainData("windows"))) {

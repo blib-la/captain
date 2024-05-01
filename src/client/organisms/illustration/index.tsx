@@ -1,6 +1,6 @@
 import Box from "@mui/joy/Box";
 
-import { IllustrationBox } from "@/organisms/illustration-box";
+import { IllustrationBox } from "@/client/organisms/illustration-box";
 
 export function Illustration({
 	path,

@@ -8,6 +8,7 @@ const jestConfig = {
 		"^.+\\.ts$": ["@swc/jest"],
 	},
 	moduleNameMapper: {
+		"@/shared/(.*)": "<rootDir>/src/shared/$1",
 		"~package": "<rootDir>/package.json",
 	},
 	collectCoverage: true,

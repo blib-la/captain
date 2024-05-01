@@ -6,10 +6,10 @@ import Typography from "@mui/joy/Typography";
 import type { InferGetStaticPropsType } from "next";
 import { useTranslation } from "next-i18next";
 
-import { I18nLink } from "@/atoms/i18n-link";
-import { useSsrColorScheme } from "@/ions/hooks/color-scheme";
-import { makeStaticProperties } from "@/ions/i18n/get-static";
-import { Illustration } from "@/organisms/illustration";
+import { I18nLink } from "@/client/atoms/i18n-link";
+import { useSsrColorScheme } from "@/client/ions/hooks/color-scheme";
+import { makeStaticProperties } from "@/client/ions/i18n/get-static";
+import { Illustration } from "@/client/organisms/illustration";
 
 export function ColorScreen() {
 	const { t } = useTranslation(["installer"]);
@@ -136,4 +136,4 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 
 export const getStaticProps = makeStaticProperties(["common", "installer"]);
 
-export { getStaticPaths } from "@/ions/i18n/get-static";
+export { getStaticPaths } from "@/client/ions/i18n/get-static";

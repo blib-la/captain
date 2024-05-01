@@ -2,8 +2,8 @@ import { USER_LANGUAGE_KEY, USER_THEME_KEY } from "@captn/utils/constants";
 import type { Unsubscribe } from "conf/dist/source/types";
 import { BrowserWindow } from "electron";
 
-import { appSettingsStore, downloadsStore, inventoryStore, userStore } from "@/stores";
-import { traverseAndModify } from "@/utils/download-restart";
+import { appSettingsStore, downloadsStore, inventoryStore, userStore } from "@/electron/stores";
+import { traverseAndModify } from "@/electron/utils/download-restart";
 
 export function sendToFocusedWindow<T>(key: string, value: T) {
 	const window_ = BrowserWindow.getFocusedWindow();

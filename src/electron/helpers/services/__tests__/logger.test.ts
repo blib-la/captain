@@ -1,6 +1,6 @@
 import { logError, logger } from "../logger";
 
-import { jsonStringify } from "#/object";
+import { jsonStringify } from "@/shared/object";
 
 // Mock the logger to prevent actual logging during tests
 jest.mock("electron-log/node", () => ({
@@ -15,7 +15,7 @@ jest.mock("electron-log/node", () => ({
 	error: jest.fn(),
 }));
 
-jest.mock("#/object", () => ({
+jest.mock("@/shared/object", () => ({
 	jsonStringify: jest.fn(() => "mocked json"),
 }));
 

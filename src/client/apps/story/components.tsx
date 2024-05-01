@@ -32,7 +32,7 @@ import { FixedSizeGrid } from "react-window";
 
 import { selectedStoryImagesAtom, storyImagesAtom } from "./atoms";
 
-import { AutoGrid } from "@/organisms/auto-grid";
+import { AutoGrid } from "@/client/organisms/auto-grid";
 
 export function SortableItem({ id, children }: { id: string; children?: ReactNode }) {
 	const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({

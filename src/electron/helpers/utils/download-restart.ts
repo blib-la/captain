@@ -1,6 +1,6 @@
 import { DownloadState } from "@captn/utils/constants";
 
-import type { DownloadsSettings } from "@/types";
+import type { DownloadsSettings } from "@/electron/types";
 
 /**
  * Modifies the state if it matches a specific condition.

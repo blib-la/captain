@@ -13,14 +13,14 @@ import { evaluate } from "mathjs";
 import type { RefObject } from "react";
 import { useEffect, useRef, useState } from "react";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
-import { DynamicIcon } from "@/atoms/icons/dynamic";
-import { Logo } from "@/atoms/logo";
-import { Captain } from "@/atoms/logo/captain";
-import { handleCaptainAction } from "@/ions/handlers/action";
-import { useResizeObserver } from "@/ions/hooks/resize-observer";
-import { makeStaticProperties } from "@/ions/i18n/get-static";
+import { DynamicIcon } from "@/client/atoms/icons/dynamic";
+import { Logo } from "@/client/atoms/logo";
+import { Captain } from "@/client/atoms/logo/captain";
+import { handleCaptainAction } from "@/client/ions/handlers/action";
+import { useResizeObserver } from "@/client/ions/hooks/resize-observer";
+import { makeStaticProperties } from "@/client/ions/i18n/get-static";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
 
 export function useAutoFocusIPC<T extends HTMLElement>(reference: RefObject<T>) {
 	useEffect(() => {
@@ -242,4 +242,4 @@ export default function Page() {
 
 export const getStaticProps = makeStaticProperties(["common", "labels"]);
 
-export { getStaticPaths } from "@/ions/i18n/get-static";
+export { getStaticPaths } from "@/client/ions/i18n/get-static";

@@ -2,7 +2,7 @@ import Option from "@mui/joy/Option";
 import Select from "@mui/joy/Select";
 import { useTranslation } from "next-i18next";
 
-import { useSsrColorScheme } from "@/ions/hooks/color-scheme";
+import { useSsrColorScheme } from "@/client/ions/hooks/color-scheme";
 
 const colorModes = ["light", "dark", "system"];
 

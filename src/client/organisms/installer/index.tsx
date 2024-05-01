@@ -2,7 +2,7 @@ import Box from "@mui/joy/Box";
 import Typography from "@mui/joy/Typography";
 import type { ReactNode } from "react";
 
-import { Illustration } from "@/organisms/illustration";
+import { Illustration } from "@/client/organisms/illustration";
 
 export function InstallStep({
 	illustration,

@@ -1,10 +1,10 @@
 import axios from "axios";
 import { app, ipcMain } from "electron";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
-import { logger } from "@/services/logger";
-import { marketplaceStore } from "@/stores";
+import { logger } from "@/electron/services/logger";
+import { marketplaceStore } from "@/electron/stores";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
 
 ipcMain.handle(
 	buildKey([ID.MARKETPLACE], { suffix: ":fetch" }),

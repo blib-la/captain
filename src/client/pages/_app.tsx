@@ -9,9 +9,9 @@ import { useRouter } from "next/router";
 import { appWithTranslation, useTranslation } from "next-i18next";
 import { useEffect, useMemo } from "react";
 
-import { ActionListeners } from "@/ions/hook-containers/actions";
-import { CoreLayout } from "@/organisms/layout/core";
-import "@/ions/date";
+import { ActionListeners } from "@/client/ions/hook-containers/actions";
+import { CoreLayout } from "@/client/organisms/layout/core";
+import "@/client/ions/date";
 
 function App({ Component, pageProps }: AppProps) {
 	const {

@@ -38,8 +38,8 @@ Array.isArray = jest.fn(type => {
 	return originalImplementation(type);
 });
 
-import { CustomHuggingFaceTransformersEmbeddings } from "@/langchain/custom-hugging-face-transformers-embeddings";
-import { VectorStore } from "@/services/vector-store";
+import { CustomHuggingFaceTransformersEmbeddings } from "@/electron/langchain/custom-hugging-face-transformers-embeddings";
+import { VectorStore } from "@/electron/services/vector-store";
 
 describe("VectorStore Integration Tests", () => {
 	let vectorStore: VectorStore;

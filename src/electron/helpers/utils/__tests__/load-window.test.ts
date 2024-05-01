@@ -9,11 +9,11 @@ jest.mock("electron", () => ({
 	},
 }));
 
-jest.mock("@/utils/locale", () => ({
+jest.mock("@/electron/utils/locale", () => ({
 	getLocale: jest.fn(),
 }));
 
-jest.mock("@/services/logger", () => ({
+jest.mock("@/electron/services/logger", () => ({
 	create: jest.fn(),
 }));
 
@@ -32,10 +32,10 @@ describe("loadURL", () => {
 
 	it("loads the correct URL in production environment", async () => {
 		// Mock flags and utils inside the test to ensure isolation
-		jest.doMock("#/flags", () => ({
+		jest.doMock("@/shared/flags", () => ({
 			isProduction: true,
 		}));
-		const { getLocale } = await import("@/utils/locale");
+		const { getLocale } = await import("@/electron/utils/locale");
 		(getLocale as jest.Mock).mockReturnValue("en");
 
 		// Dynamically import the function under test
@@ -48,10 +48,10 @@ describe("loadURL", () => {
 	});
 
 	it("loads the correct URL in development environment", async () => {
-		jest.doMock("#/flags", () => ({
+		jest.doMock("@/shared/flags", () => ({
 			isProduction: false,
 		}));
-		const { getLocale } = await import("@/utils/locale");
+		const { getLocale } = await import("@/electron/utils/locale");
 		(getLocale as jest.Mock).mockReturnValue("en");
 
 		// Dynamically import the function under test

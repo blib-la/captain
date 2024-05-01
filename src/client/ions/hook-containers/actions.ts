@@ -4,8 +4,8 @@ import type { Mode } from "@mui/system/cssVars/useCurrentColorScheme";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-import { useSsrColorScheme } from "@/ions/hooks/color-scheme";
-import { useLocalizedPath } from "@/organisms/language-select";
+import { useSsrColorScheme } from "@/client/ions/hooks/color-scheme";
+import { useLocalizedPath } from "@/client/organisms/language-select";
 
 export function ActionListeners() {
 	const { changeLanguage } = useLocalizedPath();

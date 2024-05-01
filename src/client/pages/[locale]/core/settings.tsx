@@ -18,12 +18,12 @@ import Head from "next/head";
 import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
-import { makeStaticProperties } from "@/ions/i18n/get-static";
-import { ColorModeSelector } from "@/organisms/color-mode-selector";
-import { LanguageSelect } from "@/organisms/language-select";
-import { PasswordField } from "@/organisms/password-field";
+import { makeStaticProperties } from "@/client/ions/i18n/get-static";
+import { ColorModeSelector } from "@/client/organisms/color-mode-selector";
+import { LanguageSelect } from "@/client/organisms/language-select";
+import { PasswordField } from "@/client/organisms/password-field";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
 import package_ from "~package";
 
 export function UserPreferences() {
@@ -267,4 +267,4 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 
 export const getStaticProps = makeStaticProperties(["common", "labels"]);
 
-export { getStaticPaths } from "@/ions/i18n/get-static";
+export { getStaticPaths } from "@/client/ions/i18n/get-static";

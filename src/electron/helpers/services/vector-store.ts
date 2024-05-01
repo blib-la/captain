@@ -9,8 +9,8 @@ import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 import { v4 } from "uuid";
 
-import { logger } from "@/services/logger";
-import { getCaptainData } from "@/utils/path-helpers";
+import { logger } from "@/electron/services/logger";
+import { getCaptainData } from "@/electron/utils/path-helpers";
 
 interface ServiceReadyConfig {
 	maxRetries?: number;

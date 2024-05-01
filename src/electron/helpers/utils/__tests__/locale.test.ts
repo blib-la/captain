@@ -3,7 +3,7 @@ import { app } from "electron";
 import i18next from "../../../../../next-i18next.config";
 import { getLocale } from "../locale";
 
-import { userStore } from "@/stores";
+import { userStore } from "@/electron/stores";
 
 // Mock the entire electron module
 jest.mock("electron", () => ({
@@ -13,7 +13,7 @@ jest.mock("electron", () => ({
 }));
 
 // Explicitly declare the type of the mock for userStore.get
-jest.mock("@/stores", () => ({
+jest.mock("@/electron/stores", () => ({
 	userStore: {
 		get: jest.fn(),
 	},

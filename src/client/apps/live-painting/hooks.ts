@@ -1,7 +1,7 @@
 import { useSDK } from "@captn/react/use-sdk";
 import { useEffect } from "react";
 
-import { APP_ID } from "@/apps/live-painting/constants";
+import { APP_ID } from "@/client/apps/live-painting/constants";
 
 export function useUnload() {
 	const { send } = useSDK<unknown, string>(APP_ID, {});

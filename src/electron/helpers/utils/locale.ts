@@ -2,7 +2,7 @@ import { app } from "electron";
 
 import i18next from "../../../../next-i18next.config";
 
-import { userStore } from "@/stores";
+import { userStore } from "@/electron/stores";
 
 /**
  * Retrieves the most appropriate locale for the application based on user preference,

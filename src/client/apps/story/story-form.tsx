@@ -19,7 +19,7 @@ import { selectedStoryImagesAtom } from "./atoms";
 import { SelectedImages } from "./components";
 import { APP_ID } from "./constants";
 
-import type { FormInput } from "#/types/story";
+import type { FormInput } from "@/shared/types/story";
 
 export function StoryForm({
 	hasOpenAiApiKey,

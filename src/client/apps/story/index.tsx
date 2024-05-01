@@ -21,9 +21,9 @@ import { APP_ID } from "./constants";
 import { Markdown } from "./markdown";
 import { StoryForm } from "./story-form";
 
-import { extractH1Headings } from "#/string";
-import { replaceImagePlaceholders } from "@/ions/utils/string";
-import { Lottie } from "@/organisms/lottie";
+import { replaceImagePlaceholders } from "@/client/ions/utils/string";
+import { Lottie } from "@/client/organisms/lottie";
+import { extractH1Headings } from "@/shared/string";
 
 export function Story() {
 	const {

@@ -4,9 +4,9 @@ import type { ElectronApplication, Page } from "@playwright/test";
 import { test, expect } from "@playwright/test";
 import { _electron as electron } from "playwright";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
-import type { GitCloneCompleted } from "@/utils/git";
+import type { GitCloneCompleted } from "@/electron/utils/git";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
 
 /**
  * For these tests to work, you need "portable-git" inside of "Captain_Data"

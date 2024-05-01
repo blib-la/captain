@@ -23,7 +23,7 @@ import { useTranslation } from "next-i18next";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 
-import { makeStaticProperties } from "@/ions/i18n/get-static";
+import { makeStaticProperties } from "@/client/ions/i18n/get-static";
 
 export interface DownloadListItemProperties {
 	id: string;
@@ -252,4 +252,4 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 
 export const getStaticProps = makeStaticProperties(["common", "labels"]);
 
-export { getStaticPaths } from "@/ions/i18n/get-static";
+export { getStaticPaths } from "@/client/ions/i18n/get-static";

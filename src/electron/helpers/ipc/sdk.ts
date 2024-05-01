@@ -8,16 +8,16 @@ import type { IpcMainEvent } from "electron";
 import { ipcMain } from "electron";
 import type { Except } from "type-fest";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
-import type { StoryRequest } from "#/types/story";
-import { apps } from "@/apps";
-import { captionImages, createStory, maxTokenMap } from "@/ipc/story";
-import { logError, logger } from "@/services/logger";
-import { downloadsStore, inventoryStore, userStore } from "@/stores";
-import { pushToStore } from "@/stores/utils";
-import { clone } from "@/utils/git";
-import { getCaptainDownloads, getUserData } from "@/utils/path-helpers";
+import { apps } from "@/electron/apps";
+import { captionImages, createStory, maxTokenMap } from "@/electron/ipc/story";
+import { logError, logger } from "@/electron/services/logger";
+import { downloadsStore, inventoryStore, userStore } from "@/electron/stores";
+import { pushToStore } from "@/electron/stores/utils";
+import { clone } from "@/electron/utils/git";
+import { getCaptainDownloads, getUserData } from "@/electron/utils/path-helpers";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
+import type { StoryRequest } from "@/shared/types/story";
 
 ipcMain.on(
 	APP_MESSAGE_KEY,

@@ -5,8 +5,8 @@ import Box from "@mui/joy/Box";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-import { Markdown } from "@/apps/story/markdown";
-import { ZoomImage } from "@/organisms/zoom-image";
+import { Markdown } from "@/client/apps/story/markdown";
+import { ZoomImage } from "@/client/organisms/zoom-image";
 
 export function Preview() {
 	const { query } = useRouter();

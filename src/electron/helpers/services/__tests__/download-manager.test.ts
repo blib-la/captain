@@ -9,10 +9,10 @@ import { v4 } from "uuid";
 
 import { DownloadManager } from "../download-manager";
 
-import { apps } from "@/apps";
-import { sendToAllWindows } from "@/stores/watchers";
-import { getCaptainDownloads } from "@/utils/path-helpers";
-import { unpack } from "@/utils/unpack";
+import { apps } from "@/electron/apps";
+import { sendToAllWindows } from "@/electron/stores/watchers";
+import { getCaptainDownloads } from "@/electron/utils/path-helpers";
+import { unpack } from "@/electron/utils/unpack";
 
 const testDownloadFile = "https://example.com/test.jpg";
 
@@ -72,7 +72,7 @@ jest.mock("electron-dl", () => {
 	};
 });
 
-jest.mock("@/stores", () => ({
+jest.mock("@/electron/stores", () => ({
 	inventoryStore: {
 		get: jest.fn(),
 		set: jest.fn(),
@@ -83,8 +83,8 @@ jest.mock("@/stores", () => ({
 	},
 }));
 
-jest.mock("@/stores/utils", () => {
-	const originalModule = jest.requireActual("@/stores/utils");
+jest.mock("@/electron/stores/utils", () => {
+	const originalModule = jest.requireActual("@/electron/stores/utils");
 
 	return {
 		...originalModule,
@@ -92,11 +92,11 @@ jest.mock("@/stores/utils", () => {
 	};
 });
 
-jest.mock("@/stores/watchers", () => ({
+jest.mock("@/electron/stores/watchers", () => ({
 	sendToAllWindows: jest.fn(),
 }));
 
-jest.mock("@/utils/unpack", () => ({
+jest.mock("@/electron/utils/unpack", () => ({
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
 	unpack: jest.fn().mockResolvedValue(),

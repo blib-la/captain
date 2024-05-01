@@ -7,9 +7,9 @@ import serve from "electron-serve";
 import { globbySync } from "globby";
 import matter from "gray-matter";
 
-import { jsonStringify } from "#/object";
-import { logger } from "@/services/logger";
-import { getCaptainApps } from "@/utils/path-helpers";
+import { logger } from "@/electron/services/logger";
+import { getCaptainApps } from "@/electron/utils/path-helpers";
+import { jsonStringify } from "@/shared/object";
 
 export const appLoaders: Record<string, electronServe.loadURL> = {};
 

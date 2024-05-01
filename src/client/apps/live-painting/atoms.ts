@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 
-import type { ImageItem } from "#/types";
+import type { ImageItem } from "@/shared/types";
 
 export const livePaintingOptionsAtom = atom({
 	brushSize: 5,

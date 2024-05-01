@@ -16,15 +16,10 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/electron/helpers/*"
-      ],
-      "#/*": [
-        "./src/shared/*"
-      ],
-      "~package": [
-        "./package.json"
-      ]
+      "@/client/*": ["./src/client/*"],
+      "@/electron/*": ["./src/electron/helpers/*"],
+      "@/shared/*": ["./src/shared/*"],
+      "~package": ["./package.json"]
     }
   },
   "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx"],

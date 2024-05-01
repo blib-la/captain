@@ -1,7 +1,7 @@
-import { appSettingsStore } from "@/stores";
-import { checkUpdates } from "@/utils/update";
+import { appSettingsStore } from "@/electron/stores";
+import { checkUpdates } from "@/electron/utils/update";
 
-jest.mock("@/stores", () => ({
+jest.mock("@/electron/stores", () => ({
 	appSettingsStore: {
 		get: jest.fn(),
 	},

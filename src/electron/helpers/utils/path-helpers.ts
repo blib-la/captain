@@ -6,7 +6,7 @@ import path from "path";
 
 import { app } from "electron";
 
-import { isDevelopment, isTest } from "#/flags";
+import { isDevelopment, isTest } from "@/shared/flags";
 
 export function normalizePath(pathname: string) {
 	return pathname.replaceAll("\\", "/");

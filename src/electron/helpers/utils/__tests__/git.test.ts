@@ -5,10 +5,10 @@ import { execa } from "execa";
 
 jest.mock("execa");
 
-import { clone, lfs } from "@/utils/git";
-import { getCaptainDownloads, getCaptainData } from "@/utils/path-helpers";
+import { clone, lfs } from "@/electron/utils/git";
+import { getCaptainDownloads, getCaptainData } from "@/electron/utils/path-helpers";
 
-jest.mock("@/utils/path-helpers", () => ({
+jest.mock("@/electron/utils/path-helpers", () => ({
 	getCaptainData: jest.fn(),
 	getCaptainDownloads: jest.fn(),
 }));

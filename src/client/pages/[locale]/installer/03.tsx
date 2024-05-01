@@ -9,10 +9,10 @@ import type { InferGetStaticPropsType } from "next";
 import { useTranslation } from "next-i18next";
 import { useState } from "react";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
-import { Captain } from "@/atoms/logo/captain";
-import { makeStaticProperties } from "@/ions/i18n/get-static";
+import { Captain } from "@/client/atoms/logo/captain";
+import { makeStaticProperties } from "@/client/ions/i18n/get-static";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
 
 function DummyPrompt() {
 	const { t } = useTranslation(["labels", "texts"]);
@@ -122,4 +122,4 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 
 export const getStaticProps = makeStaticProperties(["common", "installer", "texts", "labels"]);
 
-export { getStaticPaths } from "@/ions/i18n/get-static";
+export { getStaticPaths } from "@/client/ions/i18n/get-static";

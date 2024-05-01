@@ -20,14 +20,14 @@ import { useTranslation } from "next-i18next";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 
+import { requiresRestartAtom } from "@/client/ions/atoms";
+import { useOnlineStatus } from "@/client/ions/hooks/online-status";
+import { makeStaticProperties } from "@/client/ions/i18n/get-static";
 import type {
 	Marketplace,
 	Payload as MarketplacePayload,
 	Entry as MarketplaceEntry,
-} from "#/types/marketplace";
-import { requiresRestartAtom } from "@/ions/atoms";
-import { useOnlineStatus } from "@/ions/hooks/online-status";
-import { makeStaticProperties } from "@/ions/i18n/get-static";
+} from "@/shared/types/marketplace";
 
 const marketplaceUrl = "https://blib-la.github.io/captain-marketplace/captain.json";
 
@@ -268,4 +268,4 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 
 export const getStaticProps = makeStaticProperties(["common", "texts", "labels"]);
 
-export { getStaticPaths } from "@/ions/i18n/get-static";
+export { getStaticPaths } from "@/client/ions/i18n/get-static";
