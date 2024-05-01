@@ -45,38 +45,3 @@ export enum ID {
 	LIVE_PAINT = "LIVE_PAINT",
 	STORY = "STORY",
 }
-
-/**
- * Enum representing the possible states of a download process.
- */
-export enum DownloadState {
-	/**
-	 * The download is currently idle.
-	 */
-	IDLE = "IDLE",
-
-	/**
-	 * The download is currently in progress.
-	 */
-	ACTIVE = "ACTIVE",
-
-	/**
-	 * The download has completed successfully.
-	 */
-	DONE = "DONE",
-
-	/**
-	 * The download has encountered an error and did not complete.
-	 */
-	FAILED = "FAILED",
-
-	/**
-	 * The download has been canceled by rhe user and did not complete.
-	 */
-	CANCELED = "CANCELED",
-
-	/**
-	 * The download is being unpacked.
-	 */
-	UNPACKING = "UNPACKING",
-}
