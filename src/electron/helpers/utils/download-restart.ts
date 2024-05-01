@@ -7,7 +7,7 @@ import type { DownloadsSettings } from "@/types";
  * @param state The current state as a string.
  * @returns The modified state.
  */
-export function modifyState(state: string): string {
+export function modifyState(state: DownloadState): DownloadState {
 	if (state === DownloadState.RESTART) {
 		return DownloadState.DONE;
 	}
