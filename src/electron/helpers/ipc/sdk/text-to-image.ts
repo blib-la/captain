@@ -1,5 +1,6 @@
 import fsp from "node:fs/promises";
 
+import type { SDKMessage } from "@captn/react/types";
 import { APP_MESSAGE_KEY } from "@captn/utils/constants";
 import type { IpcMainEvent } from "electron";
 import { ipcMain } from "electron";
@@ -16,11 +17,6 @@ import {
 } from "@/electron/utils/path-helpers";
 import { jsonStringify } from "@/shared/object";
 import { cleanPath } from "@/shared/string";
-
-export interface SDKMessage<T> {
-	payload: T;
-	action?: string;
-}
 
 let process_: ExecaChildProcess<string> | undefined;
 let cache = "";

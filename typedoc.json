@@ -13,6 +13,7 @@
     "./src/client/pages/**",
     "./src/client/public/**",
     "./src/client/next.config.js",
+    "./src/electron/helpers/ipc/**",
     "./src/electron/preload.ts",
     "./src/electron/app-preload.ts",
     "./src/electron/background.ts",
