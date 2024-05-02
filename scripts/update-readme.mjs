@@ -10,7 +10,7 @@ const version = process.argv[2];
 const releasesTemplate = `
 <p align="center">
   <a href="https://github.com/blib-la/captain/releases/download/v${version}/Captain-Setup-${version}.exe">
-    <img src="./docs/download.svg" alt="Download Captain" width="300">
+    <img alt="Windows" src="https://img.shields.io/badge/Windows-Download Now-2c2?style=for-the-badge"/>
   </a>
 </p>
 `;

@@ -97,6 +97,7 @@
     "cpy-cli": "^5.0.0",
     "cross-env": "^7.0.3",
     "dayjs": "1.11.11",
+    "docusaurus-plugin-typedoc": "^0.22.0",
     "dot-prop": "^8.0.2",
     "dotenv": "^16.4.5",
     "dotenv-cli": "^7.4.1",

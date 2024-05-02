@@ -1,21 +1,21 @@
 <p align="center">
-    <img src="./docs/logo.png" alt="Download Captain" width="300">
+    <img src="https://github.com/blib-la/captain/assets/1148334/63796c40-34e2-487a-b891-a333ef5a8102" alt="Download Captain" width="300"/>
 </p>
 
 <h1 align="center">Captain</h1>
 
 <div align="center">
-    <img alt="Status: ALPHA" src="https://img.shields.io/badge/Status-ALPHA-purple?style=for-the-badge">
-    <img alt="License: AGPL 3.0" src="https://img.shields.io/badge/License-AGPL%203.0-blue?style=for-the-badge">
-    <a href="https://discord.com/invite/m3TBB9XEkb"><img alt="Discord" src="https://img.shields.io/discord/1091306623819059300?color=7289da&label=Discord&logo=discord&logoColor=fff&style=for-the-badge"></a>
+    <img alt="Status: ALPHA" src="https://img.shields.io/badge/Status-ALPHA-purple?style=for-the-badge"/>
+    <img alt="License: AGPL 3.0" src="https://img.shields.io/badge/License-AGPL%203.0-blue?style=for-the-badge"/>
+    <a href="https://discord.com/invite/m3TBB9XEkb"><img alt="Discord" src="https://img.shields.io/discord/1091306623819059300?color=7289da&label=Discord&logo=discord&logoColor=fff&style=for-the-badge"/></a>
 </div>
 
 <div align="center">
   <a href="https://app.codacy.com/gh/blib-la/captain/dashboard?branch=alpha">
-    <img src="https://img.shields.io/codacy/coverage/d8a4f3a79f3f44ce8c3abd94b83fc77a?logo=jest&style=for-the-badge" alt="Codacy coverage">
+    <img src="https://img.shields.io/codacy/coverage/d8a4f3a79f3f44ce8c3abd94b83fc77a?logo=jest&style=for-the-badge" alt="Codacy coverage"/>
   </a>
   <a href="https://app.codacy.com/gh/blib-la/captain/dashboard?branch=alpha">
-    <img src="https://img.shields.io/codacy/grade/d8a4f3a79f3f44ce8c3abd94b83fc77a?logo=codacy&style=for-the-badge" alt="Codacy grade">
+    <img src="https://img.shields.io/codacy/grade/d8a4f3a79f3f44ce8c3abd94b83fc77a?logo=codacy&style=for-the-badge" alt="Codacy grade"/>
   </a>
 </div>
 
@@ -30,14 +30,14 @@ apps effortlessly on your own computer.
 <!-- releases -->
 <p align="center">
   <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-alpha.62/Captain-Setup-1.0.0-alpha.62.exe">
-    <img src="./docs/download.svg" alt="Download Captain" width="300">
+    <img alt="Windows" src="https://img.shields.io/badge/Windows-Download Now-2c2?style=for-the-badge"/>
   </a>
 </p>
 <!-- releasesstop -->
 
 <div align="center">
-  <img alt="MacOS" src="https://img.shields.io/badge/MacOS-Coming Soon-white?style=for-the-badge">
-  <img alt="Linux" src="https://img.shields.io/badge/Linux-Coming Soon-white?style=for-the-badge">
+  <img alt="MacOS" src="https://img.shields.io/badge/MacOS-Coming Soon-white?style=for-the-badge"/>
+  <img alt="Linux" src="https://img.shields.io/badge/Linux-Coming Soon-white?style=for-the-badge"/>
 </div>
 
 ---
@@ -146,7 +146,7 @@ Let's connect and tell us what you think about Captain:
 ## Contribute
 
 Join us on deck! If you're looking to contribute, our
-[Contribution Guidelines](./.github/CONTRIBUTING.md) will help you get started.
+[Contribution Guidelines](https://github.com/blib-la/captain/blob/alpha/.github/CONTRIBUTING.md) will help you get started.
 
 ## License
 

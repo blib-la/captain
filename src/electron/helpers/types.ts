@@ -106,10 +106,6 @@ export interface UserTertiarySettings {
 		 * Layout preference. Default: "default". Options: "default", "compact", "spacious".
 		 */
 		layout: "default" | "compact" | "spacious";
-		/**
-		 * Color scheme with key-value pairs defining colors. Example default: { primary: "#007bff", background: "#ffffff" }.
-		 */
-		colorScheme: Record<string, string>;
 	};
 
 	/**

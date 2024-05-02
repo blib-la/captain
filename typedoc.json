@@ -1,21 +1,18 @@
 {
   "$schema": "https://typedoc.org/schema.json",
   "tsconfig": "tsconfig.json",
-  "out": "doc",
-  "entryPoints": [
-    "src"
-  ],
+  "out": "documentation/docs/api",
+  "entryPoints": ["src"],
   "exclude": [
     "**/*test.ts",
     "**/__tests__/**",
     "**/__mocks__/**",
     "./src/client/.next/**",
-    "./src/client/next.config.js"
+    "./src/client/next.config.js",
+    "./documentation/**"
   ],
   "entryPointStrategy": "expand",
-  "plugin": [
-    "typedoc-plugin-markdown"
-  ],
+  "plugin": ["typedoc-plugin-markdown"],
   "markedOptions": {
     "gfm": true,
     "tables": true,

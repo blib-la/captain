@@ -19,7 +19,8 @@
       "@/client/*": ["./src/client/*"],
       "@/electron/*": ["./src/electron/helpers/*"],
       "@/shared/*": ["./src/shared/*"],
-      "~package": ["./package.json"]
+      "~package": ["./package.json"],
+      "@site/*": ["./documentation/*"]
     }
   },
   "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx"],
