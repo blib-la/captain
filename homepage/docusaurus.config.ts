@@ -75,9 +75,9 @@ const config: Config = {
 					label: "API",
 				},
 				{
-					label: "Blog",
+					label: "Supporters",
 					position: "left",
-					href: "https://blib.la/blog",
+					to: "/supporters",
 				},
 				{
 					href: "https://github.com/blib-la/captain",
@@ -133,14 +133,6 @@ const config: Config = {
 						{
 							label: "About us",
 							href: "https://blib.la/about",
-						},
-						{
-							label: "Workshops",
-							href: "https://blib.la/workshops",
-						},
-						{
-							label: "Consulting",
-							href: "https://blib.la/consulting",
 						},
 					],
 				},
