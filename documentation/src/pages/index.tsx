@@ -9,7 +9,7 @@ import styles from "./index.module.css";
 function HomepageHeader() {
 	const { siteConfig } = useDocusaurusContext();
 	return (
-		<header className={clsx("hero hero--primary", styles.heroBanner)}>
+		<header className={clsx("hero hero--primary", styles["hero-banner"])}>
 			<div className="container">
 				<Heading as="h1" className="hero__title">
 					{siteConfig.title}
@@ -34,7 +34,7 @@ export default function Home() {
 			<HomepageHeader />
 			<main>
 				<div className="container">
-					<Heading as="h2" className={styles.mainHeading}>
+					<Heading as="h2" className={styles["main-heading"]}>
 						Welcome to Captain
 					</Heading>
 					<p className="hero__subtitle">Create and run AI apps on your computer</p>

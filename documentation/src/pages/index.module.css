@@ -3,7 +3,7 @@
  * and scoped locally.
  */
 
-.heroBanner {
+.hero-banner {
 	padding: 4rem 0;
 	text-align: center;
 	position: relative;
@@ -11,7 +11,7 @@
 }
 
 @media screen and (max-width: 996px) {
-	.heroBanner {
+	.hero-banner {
 		padding: 2rem;
 	}
 }
@@ -22,6 +22,6 @@
 	justify-content: center;
 }
 
-.mainHeading {
+.main-heading {
 	margin-top: 2rem;
 }
