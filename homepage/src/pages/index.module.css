@@ -8,6 +8,8 @@
 	text-align: center;
 	position: relative;
 	overflow: hidden;
+	background: var(--color-primary);
+	color: var(--text-light);
 }
 
 @media screen and (width <= 996px) {
@@ -18,10 +20,20 @@
 
 .buttons {
 	display: flex;
+	gap: 1rem;
 	align-items: center;
 	justify-content: center;
 }
 
 .main-heading {
 	margin-top: 2rem;
+}
+
+
+.flex1 {
+	flex: 1
+}
+
+.flex-stretch {
+	display: flex
 }

@@ -1,0 +1,15 @@
+.media {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	aspect-ratio: 2;
+}
+
+.media svg {
+	position: absolute;
+	inset: 0;
+	height: 100%;
+	width: 100%;
+	pointer-events: none;
+}

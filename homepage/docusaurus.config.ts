@@ -4,7 +4,7 @@ import { themes as prismThemes } from "prism-react-renderer";
 
 const config: Config = {
 	title: "Captain",
-	tagline: "Your AI Hub, on your computer",
+	tagline: "A platform that evolves to your needs and brings your ideas to life",
 	favicon: "img/favicon.ico",
 
 	// Set the production url of your site here
@@ -57,8 +57,8 @@ const config: Config = {
 		// Replace with your project's social card
 		colorMode: {
 			defaultMode: "light",
-			disableSwitch: true,
-			respectPrefersColorScheme: false,
+			disableSwitch: false,
+			respectPrefersColorScheme: true,
 		},
 		image: "img/captain-social-card.jpg",
 		navbar: {
@@ -73,6 +73,11 @@ const config: Config = {
 					sidebarId: "apiSidebar",
 					position: "left",
 					label: "API",
+				},
+				{
+					label: "Supporters",
+					position: "left",
+					to: "/supporters",
 				},
 				{
 					href: "https://github.com/blib-la/captain",
@@ -91,18 +96,26 @@ const config: Config = {
 							label: "API",
 							to: "/docs/api/",
 						},
+						{
+							label: "Source Code",
+							href: "https://github.com/blib-la/captain",
+						},
 					],
 				},
 				{
 					title: "Community",
 					items: [
 						{
+							label: "Discord",
+							href: "https://discord.com/invite/m3TBB9XEkb",
+						},
+						{
 							label: "GitHub",
 							href: "https://github.com/blib-la/captain",
 						},
 						{
-							label: "Discord",
-							href: "https://discord.com/invite/m3TBB9XEkb",
+							label: "Hugging Face",
+							href: "https://huggingface.co/Blib-la",
 						},
 						{
 							label: "X (Twitter)",
@@ -118,13 +131,26 @@ const config: Config = {
 							href: "https://blib.la/blog",
 						},
 						{
-							label: "Blibla",
-							href: "https://blib.la/",
+							label: "About us",
+							href: "https://blib.la/about",
+						},
+					],
+				},
+				{
+					title: "Legal",
+					items: [
+						{
+							label: "Imprint",
+							href: "https://blib.la/legal/imprint",
+						},
+						{
+							label: "Data Privacy",
+							href: "https://blib.la/legal/data-privacy",
 						},
 					],
 				},
 			],
-			copyright: `Copyright © ${new Date().getFullYear()} Blibla.`,
+			copyright: `Copyright © ${new Date().getFullYear()} Blibla`,
 		},
 		prism: {
 			theme: prismThemes.github,
