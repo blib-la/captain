@@ -2,7 +2,7 @@ import { unlink } from "node:fs/promises";
 
 import Seven from "node-7z";
 
-import { unpack } from "@/utils/unpack";
+import { unpack } from "@/electron/utils/unpack";
 
 jest.mock("node-7z", () => ({
 	extractFull: jest.fn().mockImplementation(() => ({

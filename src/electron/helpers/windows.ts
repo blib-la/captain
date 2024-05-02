@@ -9,14 +9,14 @@ import {
 import type { BrowserWindowConstructorOptions } from "electron";
 import { app, type BrowserWindow, globalShortcut, ipcMain, screen } from "electron";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
-import type { MultiWindowConfiguration, MultiWindowKey } from "@/app-loaders";
-import { appLoaders, isMultiWindow } from "@/app-loaders";
-import { apps } from "@/apps";
-import { logger } from "@/services/logger";
-import { createWindow } from "@/utils/create-window";
-import { loadURL } from "@/utils/load-window";
+import type { MultiWindowConfiguration, MultiWindowKey } from "@/electron/app-loaders";
+import { appLoaders, isMultiWindow } from "@/electron/app-loaders";
+import { apps } from "@/electron/apps";
+import { logger } from "@/electron/services/logger";
+import { createWindow } from "@/electron/utils/create-window";
+import { loadURL } from "@/electron/utils/load-window";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
 
 /**
  * Creates and displays the installer window with predefined dimensions.
@@ -471,12 +471,10 @@ export async function createAppWindows(
  *
  * @param {string} appId - The unique identifier for the application. This ID is used as a base for creating window IDs
  *                         in multi-window configurations.
- * @param {Object} [payload={}] - An object containing optional settings for opening the application:
- *   @param {Record<string, string>} [query] - Optional query parameters, not used directly in this function but can be
- *                                             passed to window initialization functions.
- *   @param {BrowserWindowConstructorOptions | MultiWindowConfiguration} [options={}] - Configuration options for the window.
- *            This can either be a single set of BrowserWindowConstructorOptions for a single window or a MultiWindowConfiguration
- *            object containing multiple configurations.
+ * @param {{query?: Record<string, string>; options?: BrowserWindowConstructorOptions | MultiWindowConfiguration}} [payload={options: {}}] - An object containing optional settings for opening the application:
+ * - query: Optional query parameters, not used directly in this function but can be passed to window initialization functions.
+ * - options: Configuration options for the window. This can either be a single set of BrowserWindowConstructorOptions for a single window or a MultiWindowConfiguration
+ *   object containing multiple configurations.
  *
  * @returns {Promise<void>} A promise that resolves when all windows are successfully opened and configured.
  */

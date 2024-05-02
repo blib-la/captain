@@ -1,8 +1,8 @@
 import type { IpcRendererEvent } from "electron";
 import { ipcRenderer } from "electron";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
 
 export const handlers = {
 	inventoryStore: {

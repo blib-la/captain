@@ -1,8 +1,8 @@
 import type { BrowserWindow } from "electron";
 
-import { isProduction } from "#/flags";
-import { logger } from "@/services/logger";
-import { getLocale } from "@/utils/locale";
+import { logger } from "@/electron/services/logger";
+import { getLocale } from "@/electron/utils/locale";
+import { isProduction } from "@/shared/flags";
 
 /**
  * Loads a URL into the given BrowserWindow instance, adjusting the URL path

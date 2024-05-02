@@ -1,7 +1,7 @@
-import { apps } from "@/apps";
-import { logger } from "@/services/logger";
-import { loadURL } from "@/utils/load-window";
-import { createCoreWindow, createPromptWindow } from "@/windows";
+import { apps } from "@/electron/apps";
+import { logger } from "@/electron/services/logger";
+import { loadURL } from "@/electron/utils/load-window";
+import { createCoreWindow, createPromptWindow } from "@/electron/windows";
 
 export async function runStartup() {
 	logger.info(`runStartup(): started`);

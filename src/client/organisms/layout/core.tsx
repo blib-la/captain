@@ -8,10 +8,10 @@ import { useTranslation } from "next-i18next";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
-import { requiresRestartAtom } from "@/ions/atoms";
-import { TabButton } from "@/organisms/tab";
+import { requiresRestartAtom } from "@/client/ions/atoms";
+import { TabButton } from "@/client/organisms/tab";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
 
 export function CoreLayout({ children }: { children?: ReactNode }) {
 	const { t } = useTranslation(["common", "labels", "texts"]);

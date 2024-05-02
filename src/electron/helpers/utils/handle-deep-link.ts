@@ -1,4 +1,4 @@
-import { keyStore } from "@/stores";
+import { keyStore } from "@/electron/stores";
 
 /**
  * Handles a deep link URL by parsing it to extract the `access_token` parameter.

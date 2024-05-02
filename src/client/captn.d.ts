@@ -1,7 +1,7 @@
 /// <reference types="@captn/joy/types" />
 /// <reference types="node" />
 
-import { Marketplace } from "#/types/marketplace";
+import { Marketplace } from "@/shared/types/marketplace";
 
 declare module "@captn/utils/types" {
 	interface IPCHandlers {

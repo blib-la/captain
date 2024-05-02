@@ -2,10 +2,10 @@ import type { IPCHandlers, VectorStoreResponse } from "@captn/utils/types";
 
 import { handleCaptainAction } from "../action";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
 
-jest.mock("#/build-key", () => ({
+jest.mock("@/shared/build-key", () => ({
 	buildKey: jest.fn(),
 }));
 

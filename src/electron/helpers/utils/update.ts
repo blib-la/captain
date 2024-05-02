@@ -3,12 +3,12 @@ import console from "node:console";
 import { BrowserWindow } from "electron";
 import { autoUpdater } from "electron-updater";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
-import type { Resource } from "#/types/install";
-import type { Manifest, OS } from "#/types/manifest";
-import { logError, logger } from "@/services/logger";
-import { appSettingsStore } from "@/stores";
+import { logError, logger } from "@/electron/services/logger";
+import { appSettingsStore } from "@/electron/stores";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
+import type { Resource } from "@/shared/types/install";
+import type { Manifest, OS } from "@/shared/types/manifest";
 
 /**
  * Checks for available updates based on the installed versions of resources.

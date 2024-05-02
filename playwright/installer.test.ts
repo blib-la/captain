@@ -2,8 +2,8 @@ import type { ElectronApplication, Page } from "@playwright/test";
 import { test, expect } from "@playwright/test";
 import { _electron as electron } from "playwright";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
 
 const isLocalEnvironment = process.env.TEST_ENV === "local";
 let electronApp: ElectronApplication;

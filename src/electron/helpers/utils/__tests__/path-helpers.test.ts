@@ -23,9 +23,9 @@ jest.mock("electron", () => ({
 	},
 }));
 
-jest.mock("#/flags", () => ({
-	isDevelopment: jest.requireActual("#/flags").isDevelopment,
-	isTest: jest.requireActual("#/flags").isTest,
+jest.mock("@/shared/flags", () => ({
+	isDevelopment: jest.requireActual("@/shared/flags").isDevelopment,
+	isTest: jest.requireActual("@/shared/flags").isTest,
 }));
 
 describe("Path Utilities", () => {
@@ -41,7 +41,7 @@ describe("Path Utilities", () => {
 	});
 
 	it("correctly sets resourcesDirectory in development mode", async () => {
-		jest.mock("#/flags", () => ({
+		jest.mock("@/shared/flags", () => ({
 			isDevelopment: true,
 			isTest: true,
 		}));
@@ -51,7 +51,7 @@ describe("Path Utilities", () => {
 	});
 
 	it("correctly sets resourcesDirectory in production mode", async () => {
-		jest.mock("#/flags", () => ({
+		jest.mock("@/shared/flags", () => ({
 			isDevelopment: false,
 			isTest: false,
 		}));

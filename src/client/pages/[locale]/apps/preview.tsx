@@ -6,8 +6,8 @@ import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
 
-import { Preview } from "@/apps/preview";
-import { makeStaticProperties } from "@/ions/i18n/get-static";
+import { Preview } from "@/client/apps/preview";
+import { makeStaticProperties } from "@/client/ions/i18n/get-static";
 
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["common", "labels"]);
@@ -32,4 +32,4 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 
 export const getStaticProps = makeStaticProperties(["common", "texts", "labels"]);
 
-export { getStaticPaths } from "@/ions/i18n/get-static";
+export { getStaticPaths } from "@/client/ions/i18n/get-static";

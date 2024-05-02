@@ -3,7 +3,7 @@ import Store from "electron-store";
 import type { DeepMockProxy } from "jest-mock-extended";
 import { mockDeep } from "jest-mock-extended";
 
-import { createWindow } from "@/utils/create-window";
+import { createWindow } from "@/electron/utils/create-window";
 
 jest.mock("electron", () => ({
 	BrowserWindow: jest.fn().mockImplementation(() => ({

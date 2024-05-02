@@ -1,6 +1,6 @@
 import logger from "electron-log/node";
 
-import { jsonStringify } from "#/object";
+import { jsonStringify } from "@/shared/object";
 
 logger.transports.file.level = "info";
 logger.transports.console.format = "{h}:{i}:{s} {text}";

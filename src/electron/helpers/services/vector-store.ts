@@ -9,10 +9,10 @@ import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 import { v4 } from "uuid";
 
-import { logger } from "@/services/logger";
-import { getCaptainData } from "@/utils/path-helpers";
+import { logger } from "@/electron/services/logger";
+import { getCaptainData } from "@/electron/utils/path-helpers";
 
-interface ServiceReadyConfig {
+export interface ServiceReadyConfig {
 	maxRetries?: number;
 	retryInterval?: number;
 	timeout?: number;
@@ -174,20 +174,12 @@ export class VectorStore {
 	 *
 	 * @param {string} collectionName - The name of the collection where documents will be upserted.
 	 * @param {VectorStoreDocument[]} documents - An array of documents to be upserted.
-	 * @returns {Promise<ReturnType<QdrantClient["upsert"]> | ReturnType<QdrantClient["upsert"]>[] | undefined>} A promise that resolves when all upsert operations are completed.
+	 * @returns {Promise<Awaited<ReturnType<QdrantClient["upsert"]>>[]>} A promise that resolves when all upsert operations are completed.
 	 */
 	public async upsert(
 		collectionName: string,
 		documents: VectorStoreDocument[]
-	): Promise<
-		Awaited<
-			| {
-					operation_id?: number | null | undefined;
-					status: "acknowledged" | "completed";
-			  }
-			| undefined
-		>[]
-	> {
+	): Promise<Awaited<ReturnType<QdrantClient["upsert"]>>[]> {
 		await this.ensureCollection(collectionName);
 
 		const contentArray = documents.map(document_ => document_.content);
@@ -204,7 +196,7 @@ export class VectorStore {
 						{ key: "language", match: { value: document_.payload.language } },
 					],
 				};
-				const result = await this.client?.scroll(collectionName, {
+				const result = await this.client!.scroll(collectionName, {
 					filter,
 					with_payload: true,
 					with_vector: false,
@@ -214,7 +206,7 @@ export class VectorStore {
 				documentId = result && result.points.length > 0 ? result.points[0].id : v4();
 			}
 
-			return this.client?.upsert(collectionName, {
+			return this.client!.upsert(collectionName, {
 				points: [
 					{
 						id: documentId,
@@ -237,17 +229,17 @@ export class VectorStore {
 	 * @param {string} collectionName - The name of the collection to search in.
 	 * @param {string} query - The text query to search for similar documents.
 	 * @param {SearchOptions} [options] - Optional search parameters.
-	 * @returns {Promise<ReturnType<QdrantClient["search"]>|undefined>} A promise that resolves with the search results.
+	 * @returns {ReturnType<QdrantClient["search"]>} A promise that resolves with the search results.
 	 */
 	public async search(
 		collectionName: string,
 		query: string,
 		options?: SearchOptions
-	): Promise<ReturnType<QdrantClient["search"]> | undefined> {
+	): ReturnType<QdrantClient["search"]> {
 		await this.ensureCollection(collectionName);
 
 		const queryVector = await this.embeddings.embedDocuments([query]);
-		return this.client?.search(collectionName, {
+		return this.client!.search(collectionName, {
 			vector: queryVector[0],
 			...options,
 		});
@@ -258,15 +250,15 @@ export class VectorStore {
 	 *
 	 * @param {string} collectionName - The name of the collection to search in.
 	 * @param {ScrollOptions} [options] - Optional scroll parameters.
-	 * @returns {Promise<ReturnType<QdrantClient["scroll"]>|undefined>} A promise that resolves with the search results.
+	 * @returns {ReturnType<QdrantClient["scroll"]>} A promise that resolves with the search results.
 	 */
 	public async scroll(
 		collectionName: string,
 		options?: ScrollOptions
-	): Promise<ReturnType<QdrantClient["scroll"]> | undefined> {
+	): ReturnType<QdrantClient["scroll"]> {
 		await this.ensureCollection(collectionName);
 
-		return this.client?.scroll(collectionName, options);
+		return this.client!.scroll(collectionName, options);
 	}
 
 	/**

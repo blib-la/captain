@@ -1,26 +1,22 @@
 import fsp from "node:fs/promises";
 
+import type { SDKMessage } from "@captn/react/types";
 import { APP_MESSAGE_KEY } from "@captn/utils/constants";
 import type { IpcMainEvent } from "electron";
 import { ipcMain } from "electron";
 import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 
-import { jsonStringify } from "#/object";
-import { cleanPath } from "#/string";
-import { logError, logger } from "@/services/logger";
-import { createDirectory } from "@/utils/fs";
+import { logError, logger } from "@/electron/services/logger";
+import { createDirectory } from "@/electron/utils/fs";
 import {
 	getCaptainData,
 	getCaptainDownloads,
 	getCaptainTemporary,
 	getDirectory,
-} from "@/utils/path-helpers";
-
-export interface SDKMessage<T> {
-	payload: T;
-	action?: string;
-}
+} from "@/electron/utils/path-helpers";
+import { jsonStringify } from "@/shared/object";
+import { cleanPath } from "@/shared/string";
 
 let process_: ExecaChildProcess<string> | undefined;
 let cache = "";

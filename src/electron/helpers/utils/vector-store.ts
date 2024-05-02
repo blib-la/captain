@@ -15,17 +15,17 @@ import exifr from "exifr";
 import { globby } from "globby";
 import matter from "gray-matter";
 
-import { VECTOR_STORE_COLLECTION } from "#/constants";
-import { extractH1Headings } from "#/string";
-import { CustomHuggingFaceTransformersEmbeddings } from "@/langchain/custom-hugging-face-transformers-embeddings";
-import { VectorStore } from "@/services/vector-store";
+import { CustomHuggingFaceTransformersEmbeddings } from "@/electron/langchain/custom-hugging-face-transformers-embeddings";
+import { VectorStore } from "@/electron/services/vector-store";
 import {
 	getCaptainData,
 	getCaptainDownloads,
 	getDirectory,
 	normalizePath,
-} from "@/utils/path-helpers";
-import { splitDocument } from "@/utils/split-documents";
+} from "@/electron/utils/path-helpers";
+import { splitDocument } from "@/electron/utils/split-documents";
+import { VECTOR_STORE_COLLECTION } from "@/shared/constants";
+import { extractH1Headings } from "@/shared/string";
 
 export async function initialize() {
 	env.localModelPath = getCaptainDownloads("llm/embeddings");

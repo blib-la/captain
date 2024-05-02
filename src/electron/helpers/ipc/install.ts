@@ -2,14 +2,14 @@ import { DownloadState } from "@captn/utils/constants";
 import { BrowserWindow, ipcMain } from "electron";
 import { download } from "electron-dl";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
-import manifest from "#/manifest.json";
-import type { Resource } from "#/types/install";
-import { appSettingsStore } from "@/stores";
-import { getCaptainData, getCaptainDownloads, getDirectory } from "@/utils/path-helpers";
-import { unpack } from "@/utils/unpack";
-import { checkUpdates } from "@/utils/update";
+import { appSettingsStore } from "@/electron/stores";
+import { getCaptainData, getCaptainDownloads, getDirectory } from "@/electron/utils/path-helpers";
+import { unpack } from "@/electron/utils/unpack";
+import { checkUpdates } from "@/electron/utils/update";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
+import manifest from "@/shared/manifest.json";
+import type { Resource } from "@/shared/types/install";
 
 ipcMain.on(buildKey([ID.INSTALL], { suffix: ":start" }), async _event => {
 	const window_ = BrowserWindow.getFocusedWindow();

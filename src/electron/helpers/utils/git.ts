@@ -4,8 +4,8 @@ import path from "node:path";
 import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 
-import { createDirectory } from "@/utils/fs";
-import { getCaptainData, getCaptainDownloads } from "@/utils/path-helpers";
+import { createDirectory } from "@/electron/utils/fs";
+import { getCaptainData, getCaptainDownloads } from "@/electron/utils/path-helpers";
 
 export interface GitCloneOptions {
 	onStarted?: (item: { repository: string; destination: string; cancel(): void }) => void;

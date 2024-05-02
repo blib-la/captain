@@ -3,21 +3,22 @@ import console from "node:console";
 import type { SDKMessage } from "@captn/react/types";
 import { APP_MESSAGE_KEY, DownloadState } from "@captn/utils/constants";
 import type { VectorStoreDocument } from "@captn/utils/types";
-import { getProperty } from "dot-prop";
 import type { IpcMainEvent } from "electron";
 import { ipcMain } from "electron";
+import type ElectronStore from "electron-store";
 import type { Except } from "type-fest";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
-import type { StoryRequest } from "#/types/story";
-import { apps } from "@/apps";
-import { captionImages, createStory, maxTokenMap } from "@/ipc/story";
-import { logError, logger } from "@/services/logger";
-import { downloadsStore, inventoryStore, userStore } from "@/stores";
-import { pushToStore } from "@/stores/utils";
-import { clone } from "@/utils/git";
-import { getCaptainDownloads, getUserData } from "@/utils/path-helpers";
+import { apps } from "@/electron/apps";
+import { captionImages, createStory, maxTokenMap } from "@/electron/ipc/story";
+import { logError, logger } from "@/electron/services/logger";
+import { downloadsStore, inventoryStore } from "@/electron/stores";
+import { pushToStore } from "@/electron/stores/utils";
+import { handleCaptainAction } from "@/electron/utils/captain-action";
+import { clone } from "@/electron/utils/git";
+import { getCaptainDownloads, getUserData } from "@/electron/utils/path-helpers";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
+import type { StoryRequest } from "@/shared/types/story";
 
 ipcMain.on(
 	APP_MESSAGE_KEY,
@@ -63,11 +64,17 @@ ipcMain.on(
 
 								const keyPath = destination.replaceAll("/", ".");
 
-								pushToStore(inventoryStore, keyPath, {
-									id: repository,
-									modelPath: getCaptainDownloads(destination, repository),
-									label,
-								});
+								pushToStore(
+									inventoryStore as unknown as ElectronStore<
+										Record<string, unknown>
+									>,
+									keyPath,
+									{
+										id: repository,
+										modelPath: getCaptainDownloads(destination, repository),
+										label,
+									}
+								);
 
 								downloadsStore.delete(repository);
 							},
@@ -152,48 +159,6 @@ ipcMain.on(
 		}
 	}
 );
-
-/**
- * Defines a tree structure where each key can either be another `FunctionTree` or a function that takes
- * a properties object and performs an action. This structure allows for nested, dynamic function calls.
- */
-export interface FunctionTree {
-	[key: string]: FunctionTree | ((properties: Record<string, unknown>) => void);
-}
-
-/**
- * An implementation of the `FunctionTree` interface to store functions related to user data management.
- * It currently includes a `set` function for updating user store properties.
- */
-export const functions: FunctionTree = {
-	userStore: {
-		set(properties: Record<string, unknown>) {
-			for (const key in properties) {
-				if (Object.hasOwn(properties, key)) {
-					userStore.set(key, properties[key]);
-				}
-			}
-		},
-	},
-};
-
-/**
- * Handles actions directed at the `captain` entity by invoking functions specified by a function path within the `functions` tree.
- * The function to be invoked is determined based on the provided `functionPath`, and it is called with the provided `parameters`.
- *
- * @param {Object} payload - An object containing the details of the action to be performed.
- * @param {string} payload.id - The path to the function within the `functions` tree.
- * @param {Record<string, unknown>} payload.parameters - The parameters to be passed to the function.
- */
-export function handleCaptainAction({
-	id: functionPath,
-	parameters,
-}: VectorStoreDocument["payload"]) {
-	const function_ = getProperty(functions, functionPath);
-	if (typeof function_ === "function") {
-		function_(parameters ?? {});
-	}
-}
 
 /**
  * Sets up an IPC listener for `CAPTAIN_ACTION` messages. When a message is received, it attempts to handle

@@ -3,8 +3,8 @@ import path from "path";
 
 import { protocol } from "electron";
 
-import { LOCAL_PROTOCOL } from "#/constants";
-import { logError } from "@/services/logger";
+import { logError } from "@/electron/services/logger";
+import { LOCAL_PROTOCOL } from "@/shared/constants";
 
 /**
  * Handles requests to a custom protocol for serving local files in an Electron application.

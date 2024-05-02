@@ -8,16 +8,16 @@ import { ipcMain } from "electron";
 import type { ExecaChildProcess } from "execa";
 import { execa } from "execa";
 
-import { jsonStringify } from "#/object";
-import { cleanPath } from "#/string";
-import { logError, logger } from "@/services/logger";
-import { createDirectory } from "@/utils/fs";
+import { logError, logger } from "@/electron/services/logger";
+import { createDirectory } from "@/electron/utils/fs";
 import {
 	getCaptainData,
 	getCaptainDownloads,
 	getCaptainTemporary,
 	getDirectory,
-} from "@/utils/path-helpers";
+} from "@/electron/utils/path-helpers";
+import { jsonStringify } from "@/shared/object";
+import { cleanPath } from "@/shared/string";
 
 let process_: ExecaChildProcess<string> | undefined;
 let cache = "";

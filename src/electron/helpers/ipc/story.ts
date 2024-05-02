@@ -6,10 +6,10 @@ import { OpenAI } from "openai";
 // @ts-ignore
 import type { ChatCompletionContentPart } from "openai/resources";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
-import type { FormInput, StoryRequest } from "#/types/story";
-import { keyStore } from "@/stores";
+import { keyStore } from "@/electron/stores";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
+import type { FormInput, StoryRequest } from "@/shared/types/story";
 
 export interface Mapping {
 	length: Record<FormInput["length"], string>;

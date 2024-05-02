@@ -8,10 +8,10 @@ import Typography from "@mui/joy/Typography";
 import type { InferGetStaticPropsType } from "next";
 import { useTranslation } from "next-i18next";
 
-import { I18nLink } from "@/atoms/i18n-link";
-import { makeStaticProperties } from "@/ions/i18n/get-static";
-import { Illustration } from "@/organisms/illustration";
-import { LanguageSelectList } from "@/organisms/language-select";
+import { I18nLink } from "@/client/atoms/i18n-link";
+import { makeStaticProperties } from "@/client/ions/i18n/get-static";
+import { Illustration } from "@/client/organisms/illustration";
+import { LanguageSelectList } from "@/client/organisms/language-select";
 
 export function LanguageSettings() {
 	const { t } = useTranslation(["common", "installer"]);
@@ -65,4 +65,4 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 
 export const getStaticProps = makeStaticProperties(["common", "installer"]);
 
-export { getStaticPaths } from "@/ions/i18n/get-static";
+export { getStaticPaths } from "@/client/ions/i18n/get-static";

@@ -11,11 +11,11 @@ import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
 
-import { DynamicIcon } from "@/atoms/icons/dynamic";
-import { Logo } from "@/atoms/logo";
-import { handleCaptainAction } from "@/ions/handlers/action";
-import { makeStaticProperties } from "@/ions/i18n/get-static";
-import { getContrastColor } from "@/ions/utils/color";
+import { DynamicIcon } from "@/client/atoms/icons/dynamic";
+import { Logo } from "@/client/atoms/logo";
+import { handleCaptainAction } from "@/client/ions/handlers/action";
+import { makeStaticProperties } from "@/client/ions/i18n/get-static";
+import { getContrastColor } from "@/client/ions/utils/color";
 
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["common", "labels"]);
@@ -100,4 +100,4 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 
 export const getStaticProps = makeStaticProperties(["common", "texts", "labels"]);
 
-export { getStaticPaths } from "@/ions/i18n/get-static";
+export { getStaticPaths } from "@/client/ions/i18n/get-static";

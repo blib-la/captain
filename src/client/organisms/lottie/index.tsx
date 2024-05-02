@@ -1,11 +1,11 @@
 import { useId } from "react";
 
-import { LottiePlayer } from "@/atoms/lottie-player";
-import { IllustrationBox } from "@/organisms/illustration-box";
+import { LottiePlayer } from "@/client/atoms/lottie-player";
+import { IllustrationBox } from "@/client/organisms/illustration-box";
 
 /*
 Const LottiePlayer = dynamic(
-	() => import("@/atoms/lottie-player").then(module_ => module_.LottiePlayer),
+	() => import("@/client/atoms/lottie-player").then(module_ => module_.LottiePlayer),
 	{ ssr: false }
 );
 */

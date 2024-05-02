@@ -1,8 +1,8 @@
 import { useAtom } from "jotai";
 import { useCallback, useEffect } from "react";
 
-import { imagesAtom, selectedImageAtom } from "@/ions/atoms";
-import { useColumns } from "@/ions/hooks/columns";
+import { imagesAtom, selectedImageAtom } from "@/client/ions/atoms";
+import { useColumns } from "@/client/ions/hooks/columns";
 
 export function useKeyboardControlledImagesNavigation({
 	onBeforeChange,

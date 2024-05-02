@@ -8,9 +8,9 @@ import {
 import type { ScrollOptions, SearchOptions } from "@captn/utils/types";
 import { ipcMain } from "electron";
 
-import { VECTOR_STORE_COLLECTION } from "#/constants";
-import { logError } from "@/services/logger";
-import { VectorStore } from "@/services/vector-store";
+import { logError } from "@/electron/services/logger";
+import { VectorStore } from "@/electron/services/vector-store";
+import { VECTOR_STORE_COLLECTION } from "@/shared/constants";
 
 ipcMain.on(
 	VECTOR_STORE_SEARCH_KEY,
@@ -32,7 +32,7 @@ ipcMain.on(VECTOR_STORE_SCROLL_KEY, async (event, { options }: { options?: Scrol
 	try {
 		const vectorStore = VectorStore.getInstance;
 
-		const { points } = await vectorStore.scroll(VECTOR_STORE_COLLECTION, options);
+		const { points } = await vectorStore.scroll(VECTOR_STORE_COLLECTION, options)!;
 		event.sender.send(VECTOR_STORE_SCROLL_RESULT_KEY, points);
 	} catch (error) {
 		event.sender.send(ERROR_KEY, error);

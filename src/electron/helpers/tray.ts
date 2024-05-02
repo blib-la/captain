@@ -1,7 +1,7 @@
 import { app, Menu, Tray } from "electron";
 
-import { getDirectory } from "@/utils/path-helpers";
-import { openApp, openCore } from "@/windows";
+import { getDirectory } from "@/electron/utils/path-helpers";
+import { openApp, openCore } from "@/electron/windows";
 
 export const contextMenu = Menu.buildFromTemplate([
 	{

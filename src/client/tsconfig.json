@@ -1,5 +1,15 @@
 {
   "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "Bundler",
+    "baseUrl": ".",
+    "paths": {
+      "@/client/*": ["./*"],
+      "@/shared/*": ["../shared/*"],
+      "~package": ["../../package.json"]
+    },
+    "module": "esnext"
+  },
   "include": [
     "**/*.d.ts",
     "**/*.ts",
@@ -7,21 +17,5 @@
   ],
   "exclude": [
     "node_modules"
-  ],
-  "compilerOptions": {
-    "moduleResolution": "Bundler",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "#/*": [
-        "../shared/*"
-      ],
-      "~package": [
-        "../../package.json"
-      ]
-    },
-    "module": "esnext"
-  }
+  ]
 }

@@ -35,7 +35,7 @@ export function extractH1Headings(markdownText: string): string[] {
  * Here, "captainId" refers to the `data-captainid` attribute of an HTML element, identifying the target for the command.
  *
  * @param {string} action - The action string to be parsed, incorporating the command, target element's captainId, optional value, and optional options.
- * @returns An object containing the parsed parts of the action: { command, captainId, value, options }.
+ * @returns An object containing the parsed parts of the action.
  *   - `command`: The action to perform (e.g., focus, click, type).
  *   - `captainId`: Identifier for the target element (matches `data-captainid` attribute).
  *   - `value`: Optional data relevant to the command (e.g., text to type).

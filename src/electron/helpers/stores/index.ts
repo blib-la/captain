@@ -1,17 +1,17 @@
 import Store from "electron-store";
 
-import { buildKey } from "#/build-key";
-import { KEY } from "#/enums";
 import type {
 	DownloadsSettings,
 	InventorySettings,
 	KeysSettings,
 	MarketplaceSettings,
 	UserSettings,
-} from "@/types";
+} from "@/electron/types";
+import { buildKey } from "@/shared/build-key";
+import { KEY } from "@/shared/enums";
 
 // Ensure that core settings are loaded before the stores are instantiated.
-import "@/core-setup";
+import "@/electron/core-setup";
 
 /**
  * `userStore` is dedicated to storing user preferences and settings, encapsulated within the `UserSettings` interface.

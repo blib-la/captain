@@ -2,7 +2,7 @@ import { DownloadState } from "@captn/utils/constants";
 
 import { modifyState, traverseAndModify } from "../download-restart";
 
-import type { DownloadsSettings } from "@/types";
+import type { DownloadsSettings } from "@/electron/types";
 
 describe("modifyState", () => {
 	it("should return DONE when the input state is RESTART", () => {

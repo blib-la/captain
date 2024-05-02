@@ -2,27 +2,27 @@ import { DownloadState } from "@captn/utils/constants";
 import type { BrowserWindowConstructorOptions } from "electron";
 import { app, ipcMain, Menu } from "electron";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
-import { isProduction } from "#/flags";
-import manifest from "#/manifest.json";
-import type { Manifest } from "#/types/manifest";
-import { initLocalProtocol } from "@/init-local-protocol";
-import { runStartup } from "@/run-startup";
-import { logger } from "@/services/logger";
-import { appSettingsStore } from "@/stores";
-import { createTray } from "@/tray";
-import { isCoreApp, isCoreView } from "@/utils/core";
-import { handleDeepLink } from "@/utils/handle-deep-link";
-import { checkUpdates, listenForUpdates } from "@/utils/update";
-import { initialize, populateFromDocuments, reset } from "@/utils/vector-store";
+import { initLocalProtocol } from "@/electron/init-local-protocol";
+import { runStartup } from "@/electron/run-startup";
+import { logger } from "@/electron/services/logger";
+import { appSettingsStore } from "@/electron/stores";
+import { createTray } from "@/electron/tray";
+import { isCoreApp, isCoreView } from "@/electron/utils/core";
+import { handleDeepLink } from "@/electron/utils/handle-deep-link";
+import { checkUpdates, listenForUpdates } from "@/electron/utils/update";
+import { initialize, populateFromDocuments, reset } from "@/electron/utils/vector-store";
 import {
 	createInstallerWindow,
 	handleCoreAppWindow,
 	openApp,
 	openCore,
 	openPreviewApp,
-} from "@/windows";
+} from "@/electron/windows";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
+import { isProduction } from "@/shared/flags";
+import manifest from "@/shared/manifest.json";
+import type { Manifest } from "@/shared/types/manifest";
 import package_ from "~package";
 
 /**

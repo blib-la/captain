@@ -1,8 +1,8 @@
 import { handleDeepLink } from "../handle-deep-link";
 
-import { keyStore } from "@/stores";
+import { keyStore } from "@/electron/stores";
 
-jest.mock("@/stores", () => ({
+jest.mock("@/electron/stores", () => ({
 	keyStore: {
 		set: jest.fn(),
 	},

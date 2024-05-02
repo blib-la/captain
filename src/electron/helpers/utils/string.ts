@@ -1,6 +1,6 @@
 import JSON5 from "json5";
 
-import { logError } from "@/services/logger";
+import { logError } from "@/electron/services/logger";
 
 export function parseJsonFromString(inputString: string) {
 	// Regular expression to match code blocks with or without language specifier

@@ -4,13 +4,13 @@ import path from "node:path";
 import { USER_LANGUAGE_KEY } from "@captn/utils/constants";
 import { ipcMain } from "electron";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
-import { keyStore, userStore } from "@/stores";
-import { sendToAllWindows } from "@/stores/watchers";
-import { clone, lfs } from "@/utils/git";
-import { getCaptainData } from "@/utils/path-helpers";
-import { readFilesRecursively } from "@/utils/read-files-recursively";
+import { keyStore, userStore } from "@/electron/stores";
+import { sendToAllWindows } from "@/electron/stores/watchers";
+import { clone, lfs } from "@/electron/utils/git";
+import { getCaptainData } from "@/electron/utils/path-helpers";
+import { readFilesRecursively } from "@/electron/utils/read-files-recursively";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
 
 ipcMain.on(USER_LANGUAGE_KEY, (_event, language) => {
 	userStore.set("language", language);

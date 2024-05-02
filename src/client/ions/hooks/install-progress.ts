@@ -2,8 +2,8 @@ import { DownloadState } from "@captn/utils/constants";
 import type { Progress } from "electron-dl";
 import { useCallback, useEffect, useState } from "react";
 
-import { buildKey } from "#/build-key";
-import { ID } from "#/enums";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
 
 export function useInstallProgress({ state }: { state: DownloadState }) {
 	const [status, setStatus] = useState(state);

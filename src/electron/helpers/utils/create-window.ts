@@ -4,11 +4,11 @@ import type { BrowserWindowConstructorOptions, Rectangle } from "electron";
 import { BrowserWindow, shell } from "electron";
 import Store from "electron-store";
 
-import { buildKey } from "#/build-key";
-import { LOCAL_PROTOCOL } from "#/constants";
-import { ID } from "#/enums";
-import { getCaptainData } from "@/utils/path-helpers";
-import { ensureVisibleOnSomeDisplay, getCurrentPosition } from "@/utils/window";
+import { getCaptainData } from "@/electron/utils/path-helpers";
+import { ensureVisibleOnSomeDisplay, getCurrentPosition } from "@/electron/utils/window";
+import { buildKey } from "@/shared/build-key";
+import { LOCAL_PROTOCOL } from "@/shared/constants";
+import { ID } from "@/shared/enums";
 
 /**
  * Creates a new Electron BrowserWindow with specified options.

@@ -3,19 +3,19 @@ import { DOWNLOADS_MESSAGE_KEY, DownloadEvent, DownloadState } from "@captn/util
 import { download } from "electron-dl";
 import type ElectronStore from "electron-store";
 
-import { jsonStringify } from "#/object";
-import { apps } from "@/apps";
-import { logger } from "@/services/logger";
-import { appSettingsStore, downloadsStore, inventoryStore } from "@/stores";
-import { pushToStore } from "@/stores/utils";
-import { sendToAllWindows } from "@/stores/watchers";
+import { apps } from "@/electron/apps";
+import { logger } from "@/electron/services/logger";
+import { appSettingsStore, downloadsStore, inventoryStore } from "@/electron/stores";
+import { pushToStore } from "@/electron/stores/utils";
+import { sendToAllWindows } from "@/electron/stores/watchers";
 import {
 	getCaptainApps,
 	getCaptainDownloads,
 	getCaptainTemporary,
 	getDirectory,
-} from "@/utils/path-helpers";
-import { unpack } from "@/utils/unpack";
+} from "@/electron/utils/path-helpers";
+import { unpack } from "@/electron/utils/unpack";
+import { jsonStringify } from "@/shared/object";
 
 function handleDownloadCompletion(
 	item: DownloadItem,

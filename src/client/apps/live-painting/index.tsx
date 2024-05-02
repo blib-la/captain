@@ -32,8 +32,8 @@ import {
 import type { IllustrationStyles } from "./text-to-image";
 import { illustrationStyles } from "./text-to-image";
 
-import { randomSeed } from "#/number";
-import { RequiredModelsAlert } from "@/apps/live-painting/required-models-alert";
+import { RequiredModelsAlert } from "@/client/apps/live-painting/required-models-alert";
+import { randomSeed } from "@/shared/number";
 
 export function LivePainting() {
 	const { t } = useTranslation(["common", "labels"]);
