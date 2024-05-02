@@ -4,20 +4,27 @@
   "out": "documentation/docs/api",
   "entryPoints": ["src"],
   "exclude": [
-    "**/*test.ts",
+    "**/*.test.ts",
     "**/__tests__/**",
     "**/__mocks__/**",
+    "**/*.d.ts",
     "./src/client/.next/**",
+    "./src/client/apps/**",
+    "./src/client/pages/**",
+    "./src/client/public/**",
     "./src/client/next.config.js",
+    "./src/electron/preload.ts",
+    "./src/electron/app-preload.ts",
+    "./src/electron/background.ts",
     "./documentation/**"
   ],
   "entryPointStrategy": "expand",
   "plugin": ["typedoc-plugin-markdown"],
   "markedOptions": {
     "gfm": true,
-    "tables": true,
-    "excludePrivate": true,
-    "excludeProtected": true,
-    "excludeExternals": true
-  }
+    "tables": true
+  },
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeExternals": true
 }

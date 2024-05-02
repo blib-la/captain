@@ -45,8 +45,10 @@ const config: Config = {
 			"docusaurus-plugin-typedoc",
 			{
 				tsconfig: "../tsconfig.json",
-
 				entryPoints: ["../src"],
+				sidebar: {
+					fullNames: false, // Ensures only short names are used in the sidebar
+				},
 			},
 		],
 	],

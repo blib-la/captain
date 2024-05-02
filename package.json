@@ -16,6 +16,7 @@
     "coverage:merge": "nyc merge ./coverage/merge ./coverage/combined-coverage.json",
     "coverage:report": "nyc report --temp-dir ./coverage/merge --report-dir ./coverage/report --reporter lcov --reporter text",
     "dev": "nextron",
+    "typedoc:generate": "npx typedoc",
     "eslint": "eslint \"src/{**/*,*}.{ts,tsx}\"",
     "postinstall": "electron-builder install-app-deps",
     "ncu": "npx npm-check-updates@latest -u",
