@@ -27,12 +27,12 @@ jobs:
       - name: Install the dependencies for Captain
         run: npm i
 
-      - name: Build the type docs for Captain
-        run: npm run typedoc:generate
-
       - name: Install the dependencies for the homepage
         run: npm i
         working-directory: homepage
+
+      - name: Build the type docs for Captain
+        run: npm run typedoc:generate
 
       - name: Build the homepage
         run: npm run build
