@@ -42,7 +42,9 @@ import { LOCAL_PROTOCOL } from "@/shared/constants";
  * - This setup assumes that the application has permission to access the files it attempts to serve,
  *   and appropriate security measures are in place to safeguard sensitive data.
  * @example
+ * ```jsx
  * <img src={`${LOCAL_PROTOCOL}://C:/path/to/your/image.png`} />
+ * ```
  */
 export function initLocalProtocol() {
 	protocol.handle(LOCAL_PROTOCOL, async request => {

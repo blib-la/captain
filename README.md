@@ -19,7 +19,6 @@
   </a>
 </div>
 
-
 <p align="center">
 Explore, create, and innovate with Captain, your all-in-one platform to build and use AI
 apps effortlessly on your own computer.
@@ -57,17 +56,16 @@ Captain's core apps transform your thoughts into vivid artworks and captivating 
 
 <!-- toc -->
 
-- [Getting Started](#getting-started)
-  * [Prerequisites](#prerequisites)
-  * [Installation](#installation)
-- [First steps](#first-steps)
-  * [Download models](#download-models)
-  * [Navigate Captain with a Prompt](#navigate-captain-with-a-prompt)
-  * [Generate a Story](#generate-a-story)
-- [Community](#community)
-- [Contribute](#contribute)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
+-   [Getting Started](#getting-started)
+    -   [Prerequisites](#prerequisites)
+    -   [Installation](#installation)
+-   [First steps](#first-steps)
+    -   [Download models](#download-models)
+    -   [Navigate Captain with a Prompt](#navigate-captain-with-a-prompt)
+    -   [Generate a Story](#generate-a-story)
+-   [Community](#community)
+-   [Contribute](#contribute)
+-   [Acknowledgments](#acknowledgments)
 
 <!-- tocstop -->
 
@@ -146,11 +144,8 @@ Let's connect and tell us what you think about Captain:
 ## Contribute
 
 Join us on deck! If you're looking to contribute, our
-[Contribution Guidelines](https://github.com/blib-la/captain/blob/alpha/.github/CONTRIBUTING.md) will help you get started.
-
-## License
-
-Captain is proudly open source, available under the [AGPL 3.0 License](./LICENSE).
+[Contribution Guidelines](https://github.com/blib-la/captain/blob/alpha/.github/CONTRIBUTING.md)
+will help you get started.
 
 ## Acknowledgments
 

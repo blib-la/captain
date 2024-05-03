@@ -1,0 +1,45 @@
+name: Publish the homepage to GitHub Pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "alpha"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - name: Install the dependencies for Captain
+        run: npm i
+
+      - name: Install the dependencies for the homepage
+        run: npm i
+        working-directory: homepage
+
+      - name: Build the type docs for Captain
+        run: npm run typedoc:generate
+
+      - name: Build the homepage
+        run: npm run build
+        working-directory: homepage
+
+      - name: Deploy the homepage to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./homepage/build
