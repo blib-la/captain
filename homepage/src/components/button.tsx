@@ -1,33 +1,40 @@
 import Link from "@docusaurus/Link";
 import clsx from "clsx";
+import type { ComponentProps } from "react";
 
-export interface ButtonProperties {
+export interface ButtonProperties extends Omit<ComponentProps<"button">, "children"> {
 	label: string;
-	className?: string;
-	onClick(): void;
 }
 
-export function Button({ className, label, onClick }: ButtonProperties) {
+export function Button({ className, label, type = "button", ...rest }: ButtonProperties) {
 	return (
-		<button
-			className={clsx("button button--secondary button--block", className)}
-			onClick={onClick}
-		>
+		<button type={type} className={clsx("button button--block", className)} {...rest}>
 			{label}
 		</button>
 	);
 }
 
-export interface ButtonLinkProperties {
+export interface ButtonLinkProperties extends Omit<ComponentProps<"a">, "children"> {
 	label: string;
-	className?: string;
-	to: string;
+	to?: string;
 }
 
-export function ButtonLink({ className, label, to }: ButtonLinkProperties) {
-	return (
-		<Link to={to} className={clsx("button button--secondary button--block", className)}>
-			{label}
-		</Link>
-	);
+export function ButtonLink({ className, label, to, href, ...rest }: ButtonLinkProperties) {
+	if (to) {
+		return (
+			<Link to={to} className={clsx("button", className)} {...rest}>
+				{label}
+			</Link>
+		);
+	}
+
+	if (href) {
+		return (
+			<a href={href} className={clsx("button", className)} {...rest}>
+				{label}
+			</a>
+		);
+	}
+
+	return null;
 }

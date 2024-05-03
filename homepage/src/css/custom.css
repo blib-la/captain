@@ -5,28 +5,236 @@
  */
 
 /* You can override the default Infima variables here. */
+
+/**
+export const palette: Palette = {
+	grey: {
+		50: "#F2F2F2",
+		100: "#D6D6D6",
+		200: "#B2B2B2",
+		300: "#969696",
+		400: "#8E8E8E",
+		500: "#717676",
+		600: "#5A5A5A",
+		700: "#444444",
+		800: "#2E2E2E",
+		900: "#191919",
+	},
+	blue: {
+		50: "#E4F1FF",
+		100: "#C8DCFF",
+		200: "#A9C5FF",
+		300: "#88ACFF",
+		400: "#6691FF",
+		500: "#296BFA",
+		600: "#1D59D3",
+		700: "#1A47AD",
+		800: "#163285",
+		900: "#122464",
+	},
+	teal: {
+		50: "#E5F5F1",
+		100: "#C9E2DB",
+		200: "#ADD1C7",
+		300: "#8FC0B2",
+		400: "#6FAF9D",
+		500: "#20827c",
+		600: "#1C746E",
+		700: "#186660",
+		800: "#135852",
+		900: "#0F4A44",
+	},
+	green: {
+		50: "#E5F9E7",
+		100: "#C0EDC2",
+		200: "#9AE19D",
+		300: "#75D678",
+		400: "#4FCB53",
+		500: "#058649",
+		600: "#04743E",
+		700: "#036233",
+		800: "#025128",
+		900: "#01411D",
+	},
+	lime: {
+		50: "#F1F8E2",
+		100: "#D9E5B8",
+		200: "#C1D28E",
+		300: "#A9BF64",
+		400: "#91AC3A",
+		500: "#4D822F",
+		600: "#436E29",
+		700: "#395A23",
+		800: "#2F461D",
+		900: "#253217",
+	},
+	yellow: {
+		50: "#FFF3D6",
+		100: "#FFE4AB",
+		200: "#FFD47F",
+		300: "#FFC353",
+		400: "#E6AA28",
+		500: "#9F6B00",
+		600: "#7F5400",
+		700: "#5E3F00",
+		800: "#3E2900",
+		900: "#1F1400",
+	},
+	orange: {
+		50: "#FFE9DF",
+		100: "#FFC4A8",
+		200: "#FF9E72",
+		300: "#FF783C",
+		400: "#FF561B",
+		500: "#D3410C",
+		600: "#AC340B",
+		700: "#852709",
+		800: "#5E1B08",
+		900: "#3E1206",
+	},
+	red: {
+		50: "#FFE6E5",
+		100: "#FFC2BF",
+		200: "#FF9D99",
+		300: "#FF7673",
+		400: "#FF4F4C",
+		500: "#DF2F2D",
+		600: "#B02625",
+		700: "#811D1C",
+		800: "#611717",
+		900: "#4D1212",
+	},
+	pink: {
+		50: "#FDF2F9",
+		100: "#FCE8F3",
+		200: "#FAD1E8",
+		300: "#F8ABD4",
+		400: "#F686BA",
+		500: "#DB2777",
+		600: "#BE185D",
+		700: "#9D174D",
+		800: "#831843",
+		900: "#6D1835",
+	},
+	violet: {
+		50: "#ECE7FF",
+		100: "#D1C5FF",
+		200: "#B6A2FF",
+		300: "#927fff",
+		400: "#806aff",
+		500: "#6C5EF5",
+		600: "#594ED3",
+		700: "#463EB0",
+		800: "#352D8C",
+		900: "#281E6A",
+	},
+};
+ */
 :root {
-	--color-primary: #20827c;
-	--text-light: #fff;
+	/* Primary */
 	--ifm-color-primary: #20827c;
 	--ifm-color-primary-dark: #1c746e;
-	--ifm-color-primary-darker: #186660;
-	--ifm-color-primary-darkest: #0f4a44;
+	--ifm-color-primary-darker: #1c746e;
+	--ifm-color-primary-darkest: #186660;
 	--ifm-color-primary-light: #6faf9d;
 	--ifm-color-primary-lighter: #8fc0b2;
-	--ifm-color-primary-lightest: #c9e2db;
+	--ifm-color-primary-lightest: #add1c7;
+
+	/* Secondary */
+	--ifm-color-secondary: #296bfa;
+	--ifm-color-secondary-dark: #1d59d3;
+	--ifm-color-secondary-darker: #1a47ad;
+	--ifm-color-secondary-darkest: #163285;
+	--ifm-color-secondary-light: #6691ff;
+	--ifm-color-secondary-lighter: #88acff;
+	--ifm-color-secondary-lightest: #a9c5ff;
+
+	/* Warning */
+	--ifm-color-warning: #9f6b00;
+	--ifm-color-warning-dark: #7f5400;
+	--ifm-color-warning-darker: #5e3f00;
+	--ifm-color-warning-darkest: #3e2900;
+	--ifm-color-warning-light: #e6aa28;
+	--ifm-color-warning-lighter: #ffc353;
+	--ifm-color-warning-lightest: #ffd47f;
+
+	/* Danger */
+	--ifm-color-danger: #df2f2d;
+	--ifm-color-danger-dark: #b02625;
+	--ifm-color-danger-darker: #811d1c;
+	--ifm-color-danger-darkest: #611717;
+	--ifm-color-danger-light: #ff4f4c;
+	--ifm-color-danger-lighter: #ff7673;
+	--ifm-color-danger-lightest: #ff9d99;
+
+	/* Info */
+	--ifm-color-info: #6c5ef5;
+	--ifm-color-info-dark: #594ed3;
+	--ifm-color-info-darker: #463eb0;
+	--ifm-color-info-darkest: #352d8c;
+	--ifm-color-info-light: #806aff;
+	--ifm-color-info-lighter: #927fff;
+	--ifm-color-info-lightest: #b6a2ff;
+
+	/* Success */
+	--ifm-color-success: #058649;
+	--ifm-color-success-dark: #04743e;
+	--ifm-color-success-darker: #036233;
+	--ifm-color-success-darkest: #036233;
+	--ifm-color-success-light: #4fcb53;
+	--ifm-color-success-lighter: #75d678;
+	--ifm-color-success-lightest: #9ae19d;
+
+	/* Neutral */
+	--ifm-color-neutral: #717676;
+	--ifm-color-neutral-dark: #5a5a5a;
+	--ifm-color-neutral-darker: #444444;
+	--ifm-color-neutral-darkest: #2e2e2e;
+	--ifm-color-neutral-light: #8e8e8e;
+	--ifm-color-neutral-lighter: #969696;
+	--ifm-color-neutral-lightest: #b2b2b2;
+
+	/* Core Colors */
+	--background-color-body: #fff;
+	--background-color-sheet: #f2f2f2;
+
+	--ifm-background-color: var(--background-color-body);
+	--ifm-navbar-background-color: var(--background-color-sheet);
+	--ifm-footer-background-color: var(--background-color-sheet);
+	--ifm-card-background-color: var(--background-color-sheet);
+
+	/* Core Shapes */
+	--ifm-global-radius: 0;
+
+	/* Code */
 	--ifm-code-font-size: 100%;
 	--docusaurus-highlighted-code-line-bg: rgba(0 0 0 / 10%);
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
-[data-theme="dark"] {
-	--ifm-color-primary: #8FC0B2;
-	--ifm-color-primary-dark: #6FAF9D;
-	--ifm-color-primary-darker: #20827c;
-	--ifm-color-primary-darkest: #1C746E;
-	--ifm-color-primary-light: #ADD1C7;
-	--ifm-color-primary-lighter: #C9E2DB;
-	--ifm-color-primary-lightest: #E5F5F1;
+:root[data-theme="dark"] {
+	/* Core Colors */
+	--background-color-body: #fff;
+	--background-color-sheet: #191919;
+
+	/* Code */
 	--docusaurus-highlighted-code-line-bg: rgba(0 0 0 / 30%);
+}
+
+/* Default */
+.button {
+	text-decoration: none;
+}
+.button,
+.button:hover,
+.button:active {
+	color: currentColor;
+}
+
+/* Force white text in all buttons */
+.button.button--primary,
+.button.button--secondary,
+.button.button--danger,
+.button.button--success,
+.button.button--warning {
+	color: #fff;
 }

@@ -80,6 +80,11 @@ const config: Config = {
 					to: "/supporters",
 				},
 				{
+					label: "Marketplace",
+					position: "left",
+					to: "/marketplace",
+				},
+				{
 					href: "https://github.com/blib-la/captain",
 					label: "GitHub",
 					position: "right",
