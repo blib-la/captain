@@ -24,3 +24,6 @@ playwright-report
 .nyc_output
 .pytest_cache
 
+
+# homepage
+homepage/docs

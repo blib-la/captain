@@ -1,7 +1,7 @@
 {
   "$schema": "https://typedoc.org/schema.json",
   "tsconfig": "tsconfig.json",
-  "out": "documentation/docs/api",
+  "out": "homepage/docs/api",
   "entryPoints": ["src"],
   "exclude": [
     "**/*.test.ts",
@@ -17,7 +17,7 @@
     "./src/electron/preload.ts",
     "./src/electron/app-preload.ts",
     "./src/electron/background.ts",
-    "./documentation/**"
+    "./homepage/**"
   ],
   "entryPointStrategy": "expand",
   "plugin": ["typedoc-plugin-markdown"],

@@ -20,7 +20,7 @@
       "@/electron/*": ["./src/electron/helpers/*"],
       "@/shared/*": ["./src/shared/*"],
       "~package": ["./package.json"],
-      "@site/*": ["./documentation/*"]
+      "@site/*": ["./homepage/*"]
     }
   },
   "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx"],
