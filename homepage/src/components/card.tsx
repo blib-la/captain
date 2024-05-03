@@ -35,20 +35,11 @@ export function Card({ title, media, children, className, button }: CardProperti
 			{button && (
 				<div className="card__footer">
 					{button.__type === "button" ? (
-						<Button
-							label={button.label}
-							className={clsx(
-								"button button--secondary button--block",
-								button.className
-							)}
-							onClick={button.onClick}
-						/>
+						<Button {...button} className={clsx("button--block", button.className)} />
 					) : (
 						<ButtonLink
-							label={button.label}
-							to={button.to}
-							href={button.href}
-							className={button.className}
+							{...button}
+							className={clsx("button--block", button.className)}
 						/>
 					)}
 				</div>

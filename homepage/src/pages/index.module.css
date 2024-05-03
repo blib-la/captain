@@ -8,8 +8,6 @@
 	text-align: center;
 	position: relative;
 	overflow: hidden;
-	background: var(--color-primary);
-	color: var(--text-light);
 }
 
 @media screen and (width <= 996px) {
@@ -29,13 +27,40 @@
 	margin-top: 2rem;
 }
 
+.alert:has(.close) {
+	padding-top: 2.5rem;
+}
+
+.unregistered-alert {
+	position: fixed;
+	z-index: 10;
+	bottom: 0;
+	right: 0;
+	margin-right: 0.5rem;
+	margin-bottom: 0.5rem;
+}
+
+.svg-icon {
+	font-size: 1.5rem;
+	height: 1em;
+	width: 1em;
+	fill: currentColor;
+}
+
+.close {
+	display: flex;
+	padding: 0.5rem;
+	position: absolute;
+	top: 0;
+	right: 0;
+}
 
 .flex1 {
-	flex: 1
+	flex: 1;
 }
 
 .flex-stretch {
-	display: flex
+	display: flex;
 }
 
 .image-fill {
