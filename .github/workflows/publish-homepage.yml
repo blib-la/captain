@@ -25,13 +25,13 @@ jobs:
           cache: "npm"
 
       - name: Install the dependencies for Captain
-        run: npm ci
+        run: npm i
 
       - name: Build the type docs for Captain
         run: npm run typedoc:generate
 
       - name: Install the dependencies for the homepage
-        run: npm ci
+        run: npm i
         working-directory: homepage
 
       - name: Build the homepage
