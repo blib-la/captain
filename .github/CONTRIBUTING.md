@@ -41,22 +41,6 @@ Before you begin, ensure you have Node.js installed (the version can be found in
     npm i
     ```
 
-3. **Python Environment**: Captain requires an embedded Python environment. To set this up:
-
-    - Clone the [embed-my-python](https://github.com/blib-la/embed-my-python) repository to a
-      location of your choice.
-
-    - For Windows users, run the following script to create the "python-embedded" folder required by
-      Captain:
-
-        ```powershell
-        .\embed-my-python-win.ps1 -v 3.10.11 -r \full\path\to\captain\requirements.txt -d \full\path\to\captain\resources\python-embedded -a ..\.
-        ```
-
-    **Note**: It's crucial to remove any existing `python-embedded` folder in
-    [captain/resources](../resources/) before running the script. This ensures your environment
-    matches the defined dependencies in [captain/requirements.txt](../requirements.txt).
-
 ## Community Communication
 
 To foster a vibrant and supportive community, we have set up a Discord server for all contributors
