@@ -37,3 +37,12 @@
 .flex-stretch {
 	display: flex
 }
+
+.image-fill {
+	position: absolute;
+	inset: 0;
+	height: 100%;
+	width: 100%;
+	object-fit: cover;
+	object-position: center;
+}

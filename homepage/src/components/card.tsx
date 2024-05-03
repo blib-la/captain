@@ -47,6 +47,7 @@ export function Card({ title, media, children, className, button }: CardProperti
 						<ButtonLink
 							label={button.label}
 							to={button.to}
+							href={button.href}
 							className={button.className}
 						/>
 					)}

@@ -3,6 +3,6 @@
   "extends": "@docusaurus/tsconfig",
   "compilerOptions": {
     "baseUrl": ".",
-    "lib": ["es2021"]
+    "lib": ["es2022"]
   }
 }

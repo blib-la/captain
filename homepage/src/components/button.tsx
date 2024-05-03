@@ -21,13 +21,26 @@ export function Button({ className, label, onClick }: ButtonProperties) {
 export interface ButtonLinkProperties {
 	label: string;
 	className?: string;
-	to: string;
+	href?: string;
+	to?: string;
 }
 
-export function ButtonLink({ className, label, to }: ButtonLinkProperties) {
-	return (
-		<Link to={to} className={clsx("button button--secondary button--block", className)}>
-			{label}
-		</Link>
-	);
+export function ButtonLink({ className, label, to, href }: ButtonLinkProperties) {
+	if (to) {
+		return (
+			<Link to={to} className={clsx("button button--secondary button--block", className)}>
+				{label}
+			</Link>
+		);
+	}
+
+	if (href) {
+		return (
+			<a href={href} className={clsx("button button--secondary button--block", className)}>
+				{label}
+			</a>
+		);
+	}
+
+	return null;
 }
