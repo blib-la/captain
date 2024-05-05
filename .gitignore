@@ -26,4 +26,8 @@ playwright-report
 
 
 # homepage
-homepage/docs
+homepage/pages/captain-core/client/atoms
+homepage/pages/captain-core/client/ions
+homepage/pages/captain-core/client/organisms
+homepage/pages/captain-core/electron
+homepage/pages/captain-core/shared

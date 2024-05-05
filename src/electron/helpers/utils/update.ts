@@ -5,10 +5,9 @@ import { autoUpdater } from "electron-updater";
 
 import { logError, logger } from "@/electron/services/logger";
 import { appSettingsStore } from "@/electron/stores";
+import type { Manifest, OS, Resource } from "@/electron/types";
 import { buildKey } from "@/shared/build-key";
 import { ID } from "@/shared/enums";
-import type { Resource } from "@/shared/types/install";
-import type { Manifest, OS } from "@/shared/types/manifest";
 
 /**
  * Checks for available updates based on the installed versions of resources.

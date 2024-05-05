@@ -1,0 +1,20 @@
+# Organisms Folder
+
+## Overview
+The Organisms folder contains complex UI components that integrate multiple molecules and atoms to form large, functional sections of the application interface. These components typically serve as distinct features or entire interface segments that provide significant user interactions.
+
+## Contents
+- **Auto-Grid**: An auto-filling grid layout that dynamically adjusts to content.
+- **Color Mode Selector**: A switcher for toggling between light, dark, and default color themes.
+- **Illustration & Illustration Box**: Components for displaying and adapting illustrations, with the ability to invert black & white images based on the current color scheme.
+- **Installer**: UI elements specifically designed for the application's installation screens.
+- **Language Select**: Features language selection interfaces, including a detailed list and a dropdown, each integrated with national flags.
+- **Layout**: Predefined layouts for various application windows, such as the core window.
+- **Lottie**: A robust player for rendering Lottie animations.
+- **Password Field**: A secure input field for passwords with an option to toggle visibility.
+- **Quote Loop**: Cycles through text quotes at set intervals, enriching user engagement.
+- **Tab**: Utilized in the core window to provide tabbed navigation within the title bar.
+- **Zoom Image**: An interactive tool for image zooming and panning, used in preview applications.
+
+## Usage
+Organisms are designed for use in specific application contexts where a combination of functionality and design is needed. They provide comprehensive UI solutions by combining simpler components into more substantial, ready-to-use interface sections.

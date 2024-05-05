@@ -1,0 +1,39 @@
+{
+  "index": {
+    "title": "Home",
+    "display": "hidden",
+    "theme": {
+      "layout": "full",
+      "sidebar": false,
+      "breadcrumb": false,
+      "toc": false,
+      "pagination": false
+    }
+  },
+  "captain-core": {
+    "title": "Captain Core",
+    "type": "page"
+  },
+  "marketplace": {
+    "title": "Marketplace",
+    "type": "page",
+    "theme": {
+      "layout": "full",
+      "sidebar": false,
+      "breadcrumb": false,
+      "toc": false,
+      "pagination": false
+    }
+  },
+  "supporters": {
+    "type": "page",
+    "title": "Supporters",
+    "theme": {
+      "sidebar": false,
+      "layout": "full",
+      "breadcrumb": false,
+      "toc": false,
+      "pagination": false
+    }
+  }
+}

@@ -8,11 +8,11 @@ const version = process.argv[2];
 
 // Template for the new content to insert between <!-- releases --> and <!-- releasesstop -->
 const releasesTemplate = `
-<p align="center">
+<div align="center">
   <a href="https://github.com/blib-la/captain/releases/download/v${version}/Captain-Setup-${version}.exe">
     <img alt="Windows" src="https://img.shields.io/badge/Windows-Download Now-2c2?style=for-the-badge"/>
   </a>
-</p>
+</div>
 `;
 
 // Read README.md

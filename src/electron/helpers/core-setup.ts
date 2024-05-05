@@ -6,8 +6,9 @@ import { app, protocol } from "electron";
 import contextMenu from "electron-context-menu";
 import serve from "electron-serve";
 
+import { gotTheLock } from "@/electron/flags";
 import { LOCAL_PROTOCOL } from "@/shared/constants";
-import { gotTheLock, isDevelopment, isProduction, isTest } from "@/shared/flags";
+import { isDevelopment, isProduction, isTest } from "@/shared/flags";
 
 if (gotTheLock || isTest) {
 	if (isProduction) {
