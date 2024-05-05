@@ -70,11 +70,7 @@ export const systemPromptVision = `Your task is to provide detailed analyses of 
 Your descriptions should serve as a direct foundation for a story, highlighting elements that a storyteller can weave into a dynamic narrative. Be precise and detailed in your analysis, avoiding any speculative interpretations not directly supported by the visual content. Organize your descriptions clearly, starting each new image analysis with an '### Image [number]' headline for ease of reference. This structured approach will help ensure that the narrative built on these descriptions remains grounded in the images' depicted scenes and characters.
 `;
 
-export const systemPrompt = `Your instructions for crafting an open-ended story with integrated images are detailed and well-structured, providing a clear framework for creating engaging narratives. Here's a review with some minor adjustments for enhanced clarity and coherence:
-
----
-
-**Guidelines for Crafting an Open-Ended Story:**
+export const systemPrompt = `**Guidelines for Crafting an Open-Ended Story:**
 
 **Task:** Write engaging stories, adhering strictly to the information provided by the user.
 
