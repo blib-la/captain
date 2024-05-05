@@ -2,7 +2,7 @@ import { defaults } from "jest-config";
 
 const jestConfig = {
 	...defaults,
-	roots: ["<rootDir>/src/client"],
+	roots: ["<rootDir>/../src/client"],
 	testMatch: ["**/?(*.)test.ts?(x)"],
 	transform: {
 		"^.+\\.(t|j)sx?$": [
@@ -19,12 +19,12 @@ const jestConfig = {
 		],
 	},
 	moduleNameMapper: {
-		"@/client/(.*)": "<rootDir>/src/client/$1",
-		"@/shared/(.*)": "<rootDir>/src/shared/$1",
-		"~package": "<rootDir>/package.json",
+		"@/client/(.*)": "<rootDir>/../src/client/$1",
+		"@/shared/(.*)": "<rootDir>/../src/shared/$1",
+		"~package": "<rootDir>/../package.json",
 	},
 	collectCoverage: true,
-	coverageDirectory: "./coverage/client",
+	coverageDirectory: "../coverage/client",
 	coverageProvider: "v8",
 	coverageReporters: ["lcov", "text", "json"],
 	coverageThreshold: {

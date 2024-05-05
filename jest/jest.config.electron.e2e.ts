@@ -2,7 +2,7 @@ import { defaults } from "jest-config";
 
 const jestConfig = {
 	...defaults,
-	roots: ["<rootDir>/src/electron"],
+	roots: ["<rootDir>/../src/electron"],
 	testMatch: ["**/*.test.e2e.ts"],
 	transform: {
 		"^.+\\.(ts)$": ["@swc/jest"],
@@ -16,12 +16,12 @@ const jestConfig = {
 		],
 	},
 	moduleNameMapper: {
-		"@/electron/(.*)": "<rootDir>/src/electron/helpers/$1",
-		"@/shared/(.*)": "<rootDir>/src/shared/$1",
-		"~package": "<rootDir>/package.json",
+		"@/electron/(.*)": "<rootDir>/../src/electron/helpers/$1",
+		"@/shared/(.*)": "<rootDir>/../src/shared/$1",
+		"~package": "<rootDir>/../package.json",
 	},
 	collectCoverage: true,
-	coverageDirectory: "./coverage/electron/e2e",
+	coverageDirectory: "../coverage/electron/e2e",
 	coverageProvider: "v8",
 	coverageReporters: ["lcov", "text", "json"],
 	coverageThreshold: {
