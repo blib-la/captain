@@ -26,6 +26,7 @@ playwright-report
 
 
 # homepage
+homepage/out
 homepage/pages/captain-core/client/atoms
 homepage/pages/captain-core/client/ions
 homepage/pages/captain-core/client/organisms
