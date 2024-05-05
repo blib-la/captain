@@ -76,6 +76,9 @@ import "@/electron/ipc/downloads";
 // Import marketplace
 import "@/electron/ipc/marketplace";
 
+// Import third party apps
+import "@/electron/ipc/third-party-apps";
+
 let unsubscribe: (() => Promise<void>) | undefined;
 if (gotTheLock || isTest) {
 	// Register user installed apps

@@ -34,6 +34,7 @@ ipcMain.on(
 				appId: string;
 				vae?: string;
 				model?: string;
+				model_type: "stable-diffusion-xl" | "stable-diffusion";
 			}>;
 			appId: string;
 		}
@@ -46,6 +47,7 @@ ipcMain.on(
 			stablefast,
 			model = "stabilityai/sdxl/sd_xl_base_1.0_0.9vae.safetensors",
 			vae = "madebyollin/taesdxl",
+			model_type = "stable-diffusion-xl",
 		} = message.payload;
 
 		createDirectory(getCaptainTemporary("text-to-image"));
@@ -66,7 +68,7 @@ ipcMain.on(
 			"--vae_path",
 			getCaptainDownloads("stable-diffusion/vae", cleanPath(vae)),
 			"--model_type",
-			"stable-diffusion-xl",
+			model_type,
 			"--output_image_path",
 			outputFile,
 			"--debug",

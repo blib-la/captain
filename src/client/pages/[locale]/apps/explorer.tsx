@@ -24,6 +24,7 @@ import { FileIcon, defaultStyles } from "react-file-icon";
 
 import { DynamicIcon } from "@/client/atoms/icons/dynamic";
 import { handleCaptainAction } from "@/client/ions/handlers/action";
+import { useThirdPartyAppsPath } from "@/client/ions/hooks/third-party-apps-path";
 import { makeStaticProperties } from "@/client/ions/i18n/get-static";
 import { getContrastColor } from "@/client/ions/utils/color";
 
@@ -87,6 +88,7 @@ export function PreviewIcon({ item }: { item: VectorStoreResponse }) {
 				>
 					<DynamicIcon
 						icon={item.payload.icon || item.payload.type || "none"}
+						appId={item.payload.id}
 						sx={{
 							fontSize: 32,
 							color: "currentColor",
@@ -110,6 +112,8 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			groupBy(uniqueData, item => item.payload.type),
 		[uniqueData]
 	);
+
+	useThirdPartyAppsPath();
 
 	return (
 		<AppFrame

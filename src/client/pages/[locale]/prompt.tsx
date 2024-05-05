@@ -18,7 +18,9 @@ import { Logo } from "@/client/atoms/logo";
 import { Captain } from "@/client/atoms/logo/captain";
 import { handleCaptainAction } from "@/client/ions/handlers/action";
 import { useResizeObserver } from "@/client/ions/hooks/resize-observer";
+import { useThirdPartyAppsPath } from "@/client/ions/hooks/third-party-apps-path";
 import { makeStaticProperties } from "@/client/ions/i18n/get-static";
+import { getContrastColor } from "@/client/ions/utils/color";
 import { buildKey } from "@/shared/build-key";
 import { ID } from "@/shared/enums";
 
@@ -61,6 +63,7 @@ export default function Page() {
 
 	useAutoFocusIPC(promptReference);
 	useAutoSizerWindow(frameReference);
+	useThirdPartyAppsPath();
 
 	return (
 		<Box
@@ -212,9 +215,27 @@ export default function Page() {
 											handleCaptainAction(suggestion);
 										}}
 									>
-										<ListItemDecorator>
+										<ListItemDecorator
+											sx={{
+												m: 0,
+												height: 40,
+												width: 40,
+												display: "flex",
+												justifyContent: "center",
+												alignItems: "center",
+												bgcolor: suggestion.payload.iconColor,
+												color: suggestion.payload.iconColor
+													? getContrastColor(suggestion.payload.iconColor)
+													: undefined,
+												borderRadius: "md",
+											}}
+										>
 											{suggestion.payload.icon ? (
-												<DynamicIcon icon={suggestion.payload.icon} />
+												<DynamicIcon
+													sx={{ fontSize: 24, color: "currentColor" }}
+													icon={suggestion.payload.icon}
+													appId={suggestion.payload.id}
+												/>
 											) : (
 												<Logo
 													sx={{ fontSize: 24, color: "currentColor" }}
