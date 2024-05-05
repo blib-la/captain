@@ -3,10 +3,12 @@ import type { BrowserWindowConstructorOptions } from "electron";
 import { app, ipcMain, Menu } from "electron";
 
 import { initLocalProtocol } from "@/electron/init-local-protocol";
+import manifest from "@/electron/manifest.json";
 import { runStartup } from "@/electron/run-startup";
 import { logger } from "@/electron/services/logger";
 import { appSettingsStore } from "@/electron/stores";
 import { createTray } from "@/electron/tray";
+import type { Manifest } from "@/electron/types";
 import { isCoreApp, isCoreView } from "@/electron/utils/core";
 import { handleDeepLink } from "@/electron/utils/handle-deep-link";
 import { checkUpdates, listenForUpdates } from "@/electron/utils/update";
@@ -21,8 +23,6 @@ import {
 import { buildKey } from "@/shared/build-key";
 import { ID } from "@/shared/enums";
 import { isProduction } from "@/shared/flags";
-import manifest from "@/shared/manifest.json";
-import type { Manifest } from "@/shared/types/manifest";
 import package_ from "~package";
 
 /**

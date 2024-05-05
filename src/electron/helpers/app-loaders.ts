@@ -13,7 +13,32 @@ import { jsonStringify } from "@/shared/object";
 
 export const appLoaders: Record<string, electronServe.loadURL> = {};
 
+/**
+ * Represents a unique key for identifying multiple window configurations.
+ * Each key is a combination of a base identifier and the suffix '-window'.
+ *
+ * @example
+ * ```
+ * const windowKey: MultiWindowKey = "app-window";
+ * ```
+ */
 export type MultiWindowKey = `${string}-window`;
+
+/**
+ * Describes the configuration for multiple windows in an application, including the main window.
+ * This type maps window identifiers (including 'main-window') to their respective configuration,
+ * which includes standard BrowserWindow constructor options and an optional route.
+ *
+ * The `route` property can be used to specify the initial URL or frontend route the window should display.
+ *
+ * @example
+ * ```
+ * const windowsConfig: MultiWindowConfiguration = {
+ *   "main-window": { width: 800, height: 600, route: "/home" },
+ *   "settings-window": { width: 600, height: 400, route: "/settings" }
+ * };
+ * ```
+ */
 export type MultiWindowConfiguration = Record<
 	MultiWindowKey | "main-window",
 	BrowserWindowConstructorOptions & { route?: string }

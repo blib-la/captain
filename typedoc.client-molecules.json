@@ -1,0 +1,24 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "tsconfig": "tsconfig.json",
+  "out": "homepage/pages/captain-core/client/molecules",
+  "entryPoints": ["src/client/molecules"],
+  "exclude": [
+    "**/*.test.ts",
+    "**/__tests__/**",
+    "**/__mocks__/**",
+    "**/*.d.ts"
+  ],
+  "readme": "./src/client/molecules/README.md",
+  "entryPointStrategy": "expand",
+  "plugin": ["typedoc-plugin-markdown"],
+  "markedOptions": {
+    "gfm": true,
+    "tables": true
+  },
+  "hideBreadcrumbs": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeExternals": true,
+  "excludeReferences": true
+}

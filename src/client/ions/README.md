@@ -1,0 +1,12 @@
+# Ions Folder
+
+## Overview
+The `ions` folder is integral to the client architecture, hosting non-renderable parts essential for the app's core functionalities. This includes Jotai atoms for state management, Day.js configurations for internationalization, and specialized React hooks that are not part of the SDK.
+
+## Contents
+- **Jotai Atoms**: Manage state across the app, such as `requiresRestartAtom` which flags if a restart is needed after changes.
+- **Day.js Configurations**: Setup for handling international date formats and functionalities, ensuring the app meets global usability standards.
+- **React Hooks**: Internal hooks that provide advanced functionalities and are essential for the app's operational logic. These may later move to public SDK packages.
+
+## Usage
+Developers should refer to these components when needing to manage state or extend functionality that affects the app globally. These are not intended for direct modification but can be extended or utilized within new client components as needed.

@@ -1,51 +1,37 @@
 {
-  "name": "documentation",
-  "version": "0.0.0",
-  "private": true,
+  "name": "homepage",
+  "version": "1.0.0",
+  "description": "homepage for captain",
+  "main": "n.a.",
   "scripts": {
-    "docusaurus": "docusaurus",
-    "start": "docusaurus start",
-    "build": "docusaurus build",
-    "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy",
-    "clear": "docusaurus clear",
-    "serve": "docusaurus serve",
-    "write-translations": "docusaurus write-translations",
-    "write-heading-ids": "docusaurus write-heading-ids",
-    "typecheck": "tsc"
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/blib-la/captain.git"
+  },
+  "author": "Gregor Adams <greg@pixelass.com>",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/blib-la/captain/issues"
+  },
+  "homepage": "https://github.com/blib-la/captain#readme",
   "dependencies": {
-    "@captn/utils": "^0.24.0",
-    "@docusaurus/core": "3.3.0",
-    "@docusaurus/preset-classic": "3.3.0",
-    "@mdx-js/react": "^3.0.1",
     "axios": "^1.6.8",
     "clsx": "^2.1.1",
-    "prism-react-renderer": "^2.3.1",
+    "next": "^14.2.3",
+    "nextra": "^2.13.4",
+    "nextra-theme-docs": "^2.13.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "swr": "^2.2.5"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "3.2.1",
-    "@docusaurus/tsconfig": "3.2.1",
-    "@docusaurus/types": "3.2.1",
-    "humanize-string": "^3.0.0",
-    "typescript": "~5.2.2"
-  },
-  "browserslist": {
-    "production": [
-      ">0.5%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 3 chrome version",
-      "last 3 firefox version",
-      "last 5 safari version"
-    ]
-  },
-  "engines": {
-    "node": ">=18.0"
+    "@svgr/webpack": "^8.1.0",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3"
   }
 }

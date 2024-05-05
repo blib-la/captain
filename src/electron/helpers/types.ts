@@ -312,3 +312,49 @@ export interface InventorySettings {
 		other: { filePath: string; id: string }[];
 	};
 }
+
+/**
+ * Represents a single source from which a resource can be downloaded.
+ * This includes details about the source URL, the destination path on the local system,
+ * the name of the file, its size, and whether it needs to be unzipped after download.
+ *
+ * @property {string} url - The URL from which the resource can be downloaded.
+ * @property {string} destination - The local file system path where the resource should be saved.
+ * @property {string} name - The name of the resource file.
+ * @property {string} size - The size of the file, typically in bytes or as a human-readable string.
+ * @property {boolean} unzip - Whether the file should be unzipped after download.
+ */
+export interface ResourceSource {
+	url: string;
+	destination: string;
+	name: string;
+	size: string;
+	unzip: boolean;
+}
+
+/**
+ * Defines a resource that can be used within an application.
+ * A resource includes a name, version, and a list of sources from which the resource can be obtained.
+ *
+ * @property {string} name - The name of the resource.
+ * @property {string} version - The version of the resource.
+ * @property {ResourceSource[]} sources - An array of `ResourceSource` objects representing the different sources from which the resource can be downloaded.
+ */
+export interface Resource {
+	name: string;
+	version: string;
+	sources: ResourceSource[];
+}
+
+/**
+ * Represents the supported operating systems.
+ */
+export type OS = "windows" | "macos" | "linux";
+
+/**
+ * Describes the structure of a manifest that contains resources grouped by operating system.
+ * Each operating system can have a list of resources specific to it, allowing for flexible resource management across different platforms.
+ */
+export type Manifest = {
+	[K in OS]?: Resource[];
+};

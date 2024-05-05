@@ -41,7 +41,12 @@ import { illustrationStyles } from "../text-to-image";
 import { FlagUs } from "@/client/atoms/flags/us";
 import { useResettableState } from "@/client/ions/hooks/resettable-state";
 import { getContrastColor } from "@/client/ions/utils/color";
-import type { Repository } from "@/shared/types";
+
+export interface Repository {
+	modelPath: string;
+	id: string;
+	label: string;
+}
 
 export interface ColorSelectorProperties
 	extends Except<

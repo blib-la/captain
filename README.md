@@ -27,11 +27,11 @@ apps effortlessly on your own computer.
 ---
 
 <!-- releases -->
-<p align="center">
+<div align="center">
   <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-alpha.62/Captain-Setup-1.0.0-alpha.62.exe">
     <img alt="Windows" src="https://img.shields.io/badge/Windows-Download Now-2c2?style=for-the-badge"/>
   </a>
-</p>
+</div>
 <!-- releasesstop -->
 
 <div align="center">

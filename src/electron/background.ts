@@ -3,10 +3,11 @@ import { app } from "electron";
 import { main } from "./main";
 
 import { registerApps } from "@/electron/app-loaders";
+import { gotTheLock } from "@/electron/flags";
 import { logger } from "@/electron/services/logger";
 import { watchStores } from "@/electron/stores/watchers";
 import { cleanFiles } from "@/electron/utils/clean-files";
-import { gotTheLock, isTest } from "@/shared/flags";
+import { isTest } from "@/shared/flags";
 
 // Import core setup module.
 // This ensures the core setup process is executed explicitly, even though it may already be called
