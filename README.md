@@ -28,7 +28,7 @@ apps effortlessly on your own computer.
 
 <!-- releases -->
 <div align="center">
-  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-alpha.62/Captain-Setup-1.0.0-alpha.62.exe">
+  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-alpha.63/Captain-Setup-1.0.0-alpha.63.exe">
     <img alt="Windows" src="https://img.shields.io/badge/Windows-Download Now-2c2?style=for-the-badge"/>
   </a>
 </div>
@@ -56,16 +56,16 @@ Captain's core apps transform your thoughts into vivid artworks and captivating 
 
 <!-- toc -->
 
--   [Getting Started](#getting-started)
-    -   [Prerequisites](#prerequisites)
-    -   [Installation](#installation)
--   [First steps](#first-steps)
-    -   [Download models](#download-models)
-    -   [Navigate Captain with a Prompt](#navigate-captain-with-a-prompt)
-    -   [Generate a Story](#generate-a-story)
--   [Community](#community)
--   [Contribute](#contribute)
--   [Acknowledgments](#acknowledgments)
+- [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
+- [First steps](#first-steps)
+  * [Download models](#download-models)
+  * [Navigate Captain with a Prompt](#navigate-captain-with-a-prompt)
+  * [Generate a Story](#generate-a-story)
+- [Community](#community)
+- [Contribute](#contribute)
+- [Acknowledgments](#acknowledgments)
 
 <!-- tocstop -->
 

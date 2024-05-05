@@ -1,3 +1,10 @@
+# [1.0.0-alpha.63](https://github.com/blib-la/captain/compare/v1.0.0-alpha.62...v1.0.0-alpha.63) (2024-05-05)
+
+
+### Bug Fixes
+
+* system prompt has irritating text ([#264](https://github.com/blib-la/captain/issues/264)) ([384f13f](https://github.com/blib-la/captain/commit/384f13f2c49ea5df2b22690bc05dae4fe199657c))
+
 # [1.0.0-alpha.62](https://github.com/blib-la/captain/compare/v1.0.0-alpha.61...v1.0.0-alpha.62) (2024-05-01)
 
 
