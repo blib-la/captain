@@ -11,7 +11,7 @@
     "build": "nextron build",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "codacy:analyze": "npx codacy-analysis-cli analyze --directory . --project-token lRf0M6Zh5GIRAgU3JasT",
-    "copy-reports": "cpy \"./coverage/shared/coverage-final.json\" ./coverage/merge --rename=shared.json --flat && cpy \"./coverage/electron/coverage-final.json\" ./coverage/merge --rename=electron.json --flat && cpy \"./coverage/client/coverage-final.json\" ./coverage/merge --rename=client.json --flat",
+    "copy-reports": "cpy \"./jest/coverage/shared/coverage-final.json\" ./coverage/merge --rename=shared.json --flat && cpy \"./jest/coverage/electron/coverage-final.json\" ./coverage/merge --rename=electron.json --flat && cpy \"./jest/coverage/client/coverage-final.json\" ./coverage/merge --rename=client.json --flat",
     "precoverage:merge": "mkdirp ./coverage/merge && npm run copy-reports",
     "coverage:merge": "nyc merge ./coverage/merge ./coverage/combined-coverage.json",
     "coverage:report": "nyc report --temp-dir ./coverage/merge --report-dir ./coverage/report --reporter lcov --reporter text",
