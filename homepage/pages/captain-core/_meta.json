@@ -1,6 +1,6 @@
 {
   "index": "Overview",
-  "client": "Client",
   "shared": "Shared",
+  "client": "Client",
   "electron": "Electron"
 }
