@@ -1,8 +1,21 @@
 import { useAtom } from "jotai";
+import { atom } from "jotai/index";
 import { useCallback, useEffect } from "react";
 
-import { imagesAtom, selectedImageAtom } from "@/client/ions/atoms";
 import { useColumns } from "@/client/ions/hooks/columns";
+
+export interface DatasetEntry {
+	files: string;
+	servedFiles: string;
+	image: string;
+	imageFile: string;
+	servedImageFile: string;
+	captionFile: string;
+	caption: string;
+	selected?: boolean;
+}
+export const imagesAtom = atom<DatasetEntry[]>([]);
+export const selectedImageAtom = atom(0);
 
 export function useKeyboardControlledImagesNavigation({
 	onBeforeChange,
