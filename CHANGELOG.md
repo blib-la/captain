@@ -1,3 +1,10 @@
+# [1.0.0-alpha.64](https://github.com/blib-la/captain/compare/v1.0.0-alpha.63...v1.0.0-alpha.64) (2024-05-06)
+
+
+### Features
+
+* add support for custom icons ([#266](https://github.com/blib-la/captain/issues/266)) ([fc6563e](https://github.com/blib-la/captain/commit/fc6563e2806d11276c8290488dd895e1cbacd331)), closes [#207](https://github.com/blib-la/captain/issues/207)
+
 # [1.0.0-alpha.63](https://github.com/blib-la/captain/compare/v1.0.0-alpha.62...v1.0.0-alpha.63) (2024-05-05)
 
 
