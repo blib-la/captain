@@ -18,7 +18,7 @@
     "dev": "nextron",
     "typedoc:generate": "run-p typedoc:client typedoc:electron typedoc:shared typedoc:create-captain-app typedoc:captn-**",
     "posttypedoc:generate": "node ./scripts/nextra-meta.mjs",
-    "typedoc:client": "run-s typedoc:client-atoms typedoc:client-ions typedoc:client-organisms",
+    "typedoc:client": "run-p typedoc:client-atoms typedoc:client-ions typedoc:client-organisms",
     "typedoc:client-atoms": "npx typedoc --options typedoc.client-atoms.json",
     "typedoc:client-ions": "npx typedoc --options typedoc.client-ions.json",
     "typedoc:client-molecules": "npx typedoc --options typedoc.client-molecules.json",
