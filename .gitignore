@@ -32,3 +32,8 @@ homepage/pages/captain-core/client/ions
 homepage/pages/captain-core/client/organisms
 homepage/pages/captain-core/electron
 homepage/pages/captain-core/shared
+homepage/pages/captain-sdk/create-captain-app
+homepage/pages/captain-sdk/joy
+homepage/pages/captain-sdk/react
+homepage/pages/captain-sdk/theme
+homepage/pages/captain-sdk/utils

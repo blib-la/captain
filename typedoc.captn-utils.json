@@ -1,0 +1,24 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "tsconfig": "tsconfig.captn.json",
+  "out": "homepage/pages/captain-sdk/utils",
+  "entryPoints": ["node_modules/@captn/utils/dist/esm"],
+  "exclude": [
+    "**/*.test.ts",
+    "**/__tests__/**",
+    "**/__mocks__/**",
+    "**/*.d.ts"
+  ],
+  "readme": "./node_modules/@captn/utils/README.md",
+  "entryPointStrategy": "expand",
+  "plugin": ["typedoc-plugin-markdown"],
+  "markedOptions": {
+    "gfm": true,
+    "tables": true
+  },
+  "hideBreadcrumbs": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeExternals": false,
+  "excludeReferences": true
+}

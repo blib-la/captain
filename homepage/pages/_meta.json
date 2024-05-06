@@ -11,7 +11,11 @@
     }
   },
   "captain-core": {
-    "title": "Captain Core",
+    "title": "Core API",
+    "type": "page"
+  },
+  "captain-sdk": {
+    "title": "SDK",
     "type": "page"
   },
   "marketplace": {

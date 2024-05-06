@@ -3,8 +3,11 @@ import fs from "node:fs";
 import path from "node:path";
 
 // Define your source and destination directories using ESM syntax
-const templateDirectory = path.join(process.cwd(), "homepage/pages/_captain-core");
-const outputDirectory = path.join(process.cwd(), "homepage/pages/captain-core");
+const templateDirectoryCore = path.join(process.cwd(), "homepage/pages/_captain-core");
+const outputDirectoryCore = path.join(process.cwd(), "homepage/pages/captain-core");
+
+const templateDirectorySdk = path.join(process.cwd(), "homepage/pages/_captain-sdk");
+const outputDirectorySdk = path.join(process.cwd(), "homepage/pages/captain-sdk");
 
 // Recursive function to copy files using ESM syntax
 function copyMetaFiles(source, destination) {
@@ -22,9 +25,14 @@ function copyMetaFiles(source, destination) {
 }
 
 // Create the destination directory if it doesn't exist
-if (!fs.existsSync(outputDirectory)) {
-	fs.mkdirSync(outputDirectory, { recursive: true });
+if (!fs.existsSync(outputDirectoryCore)) {
+	fs.mkdirSync(outputDirectoryCore, { recursive: true });
+}
+
+if (!fs.existsSync(outputDirectorySdk)) {
+	fs.mkdirSync(outputDirectorySdk, { recursive: true });
 }
 
 // Start the copying process
-copyMetaFiles(templateDirectory, outputDirectory);
+copyMetaFiles(templateDirectoryCore, outputDirectoryCore);
+copyMetaFiles(templateDirectorySdk, outputDirectorySdk);
