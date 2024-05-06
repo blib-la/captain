@@ -1,0 +1,8 @@
+{
+  "index": "Overview",
+  "create-captain-app": "Create Captain App",
+  "utils": "@captn/utils",
+  "theme": "@captn/theme",
+  "react": "@captn/react",
+  "joy": "@captn/joy"
+}
