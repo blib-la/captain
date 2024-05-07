@@ -8,7 +8,7 @@ import { ComfyUI } from "@/electron/services/comfyui";
 ipcMain.on(
 	APP_MESSAGE_KEY,
 	async <T>(
-		_event: IpcMainEvent,
+		event: IpcMainEvent,
 		{ message, appId }: { message: SDKMessage<T>; appId: string }
 	) => {
 		const channel = `${appId}:${APP_MESSAGE_KEY}`;
@@ -21,7 +21,7 @@ ipcMain.on(
 				const { promptId } = await ComfyUI.getInstance.queueWorkflow(workflow, appId);
 
 				// Send the promptId back to the sender
-				_event.sender.send(channel, {
+				event.sender.send(channel, {
 					action: "comfyui:promptId",
 					payload: { promptId },
 				});
@@ -32,7 +32,7 @@ ipcMain.on(
 			case "comfyui:registerClient": {
 				// Register the client and receive updates from ComfyUI
 				ComfyUI.getInstance.registerClient(appId, data => {
-					_event.sender.send(channel, {
+					event.sender.send(channel, {
 						action: "comfyui:update",
 						payload: { data },
 					});
