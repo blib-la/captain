@@ -1,3 +1,14 @@
 {
-  "reject": ["eslint", "next", "sharp", "semantic-release", "@semantic-release/github"]
+  "reject": [
+    "eslint",
+    "next",
+    "sharp",
+    "semantic-release",
+    "@semantic-release/github",
+    "electron-serve",
+    "electron-store",
+    "electron-context-menu",
+    "electron-dl",
+    "typedoc-plugin-markdown"
+  ]
 }
