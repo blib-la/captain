@@ -118,7 +118,9 @@ export class ComfyUI {
 		const pythonBinaryPath = getCaptainDownloads("comfyui-portable/python_embeded/python.exe");
 		const scriptPath = getCaptainDownloads("comfyui-portable/ComfyUI/main.py");
 		const modelPaths = getCaptainTemporary("comfyui/model_paths.yaml");
-		const outputPath = getCaptainData("files");
+		const outputPath = getCaptainData("files/comfyui");
+
+		createDirectory(outputPath);
 
 		const scriptArguments = [
 			"--listen",
