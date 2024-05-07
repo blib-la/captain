@@ -57,7 +57,7 @@
     "sharp": "0.33.2"
   },
   "devDependencies": {
-    "@captn/joy": "^0.28.0",
+    "@captn/joy": "^0.28.1",
     "@captn/react": "^0.28.0",
     "@captn/theme": "^0.28.0",
     "@captn/utils": "^0.28.0",
