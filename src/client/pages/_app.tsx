@@ -21,6 +21,7 @@ function App({ Component, pageProps }: AppProps) {
 
 	const isPrompt = pathname === "/[locale]/prompt";
 	const isCore = pathname.startsWith("/[locale]/core");
+	const isComfyUI = pathname.startsWith("/comfy-ui");
 	// Intended abuse of useMemo to allow changes on server and client mount
 	useMemo(() => {
 		// We need to set is before the render to tell dayjs to change the locale
@@ -46,7 +47,7 @@ function App({ Component, pageProps }: AppProps) {
 			</Head>
 
 			<CssBaseline />
-			<ActionListeners />
+			{!isComfyUI && <ActionListeners />}
 			{isPrompt && (
 				<Global
 					styles={css({

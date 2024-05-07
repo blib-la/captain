@@ -2,8 +2,7 @@ import { localFile } from "@captn/utils/string";
 import Box from "@mui/joy/Box";
 import type { SxProps } from "@mui/joy/styles/types";
 import type { DefaultComponentProps } from "@mui/material/OverridableComponent";
-import type { SvgIconProps } from "@mui/material/SvgIcon";
-import type { SvgIconTypeMap } from "@mui/material/SvgIcon";
+import type { SvgIconProps, SvgIconTypeMap } from "@mui/material/SvgIcon";
 import { useAtom } from "jotai/index";
 import dynamic from "next/dynamic";
 import type { ComponentType } from "react";
@@ -25,6 +24,7 @@ const Settings = dynamic(() => import("@mui/icons-material/Settings"));
 const ShoppingBag = dynamic(() => import("@mui/icons-material/ShoppingBag"));
 const Stream = dynamic(() => import("@mui/icons-material/Stream"));
 const QuestionMark = dynamic(() => import("@mui/icons-material/QuestionMark"));
+const ResistorNodeIcon = dynamic(() => import("./resistor-node-icon"));
 
 const iconCache: Record<
 	string,
@@ -40,6 +40,7 @@ const iconCache: Record<
 	LightMode,
 	MenuBook,
 	QuestionMark,
+	ResistorNodeIcon,
 	Settings,
 	ShoppingBag,
 	Stream,

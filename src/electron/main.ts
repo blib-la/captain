@@ -17,6 +17,7 @@ import {
 	createInstallerWindow,
 	handleCoreAppWindow,
 	openApp,
+	openComfyUI,
 	openCore,
 	openPreviewApp,
 } from "@/electron/windows";
@@ -92,7 +93,9 @@ export async function main() {
 				query?: Record<string, string>;
 			}
 		) => {
-			if (isCoreView(appId)) {
+			if (appId === "comfy-ui") {
+				await openComfyUI();
+			} else if (isCoreView(appId)) {
 				await openCore(appId, action);
 			} else if (appId === "preview") {
 				await openPreviewApp(query);
