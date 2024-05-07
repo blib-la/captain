@@ -1,3 +1,5 @@
 {
-  "README": "Overview"
+  "README": {
+    "display": "hidden"
+  }
 }

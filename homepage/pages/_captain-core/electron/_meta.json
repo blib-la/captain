@@ -1,4 +1,7 @@
 {
+  "README": {
+    "display": "hidden"
+  },
   "classes": "Classes",
   "interfaces": "Interfaces"
 }

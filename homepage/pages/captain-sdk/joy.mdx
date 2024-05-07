@@ -1,0 +1,108 @@
+import { Tabs } from 'nextra/components'
+
+# @captn/joy
+
+The `@captn/joy` package provides a suite of UI components and utilities that facilitate building attractive and consistent interfaces for applications within the Captain framework. Built on top of the MUI Joy library, it extends and customizes its components to fit the specific needs of Captain applications, ensuring seamless integration and enhanced user experiences.
+
+## Features
+
+- **Theme Customization**: Extends MUI Joy's theme capabilities to include custom colors and styles specific to the Captain ecosystem.
+- **App Frame**: Provides a structured container for application interfaces, integrating essential UI components such as title bars.
+- **Title Bar**: Customizable title bar component with window control actions (minimize, maximize, close).
+- **Custom Scrollbars**: Enhances the default scrollbar appearance for a more consistent and appealing look across platforms.
+
+## Installation
+
+To add the `@captn/joy` package to your project, run the following command:
+
+<Tabs items={["npm", "yarn", "pnpm"]}>
+	<Tabs.Tab>
+		```shell
+		npm install @captn/joy
+		```
+	</Tabs.Tab>
+	<Tabs.Tab>
+		```shell
+		yarn add @captn/joy
+		```
+	</Tabs.Tab>
+	<Tabs.Tab>
+		```shell
+		pnpm add @captn/joy
+		```
+	</Tabs.Tab>
+</Tabs>
+
+## Usage
+
+### Theme Customization
+
+`@captn/joy` extends MUI Joy's theme with additional colors and utility functions for more dynamic theming capabilities.
+
+```javascript
+import { ThemeProvider } from '@captn/joy';
+
+function MyApp() {
+  return (
+    <ThemeProvider>
+      {/* Your component tree */}
+    </ThemeProvider>
+  );
+}
+```
+
+### App Frame and Title Bar
+
+Embed your application within an `AppFrame` and include a `TitleBar` to handle window controls seamlessly and display your app title.
+
+```tsx
+import { AppFrame, TitleBar } from '@captn/joy';
+
+function MyApplication() {
+  return (
+      <AppFrame titleBar={<TitleBar>My Custom App</TitleBar>}>
+      {/* Content of your application */}
+    </AppFrame>
+  );
+}
+```
+
+### Custom Scrollbars
+
+Use the `CustomScrollbars` component to apply consistent scrollbars throughout your application.
+
+```tsx
+import { CustomScrollbars } from '@captn/joy';
+
+function MyScrollableComponent() {
+  return (
+    <CustomScrollbars>
+      {/* Scrollable content here */}
+    </CustomScrollbars>
+  );
+}
+```
+
+### Required Downloads
+
+Use the `RequiredDownloads` to show a note about required resources that need to be downloaded.
+
+
+```tsx
+import { RequiredDownloads } from "@captn/joy/required-downloads";
+
+import models from "./models.json";
+
+export default function App() {
+  return (
+    <div>
+      <RequiredDownloads allRequiredDownloads={models} />
+      {/* Rest of the application */}
+    </div>
+  );
+}
+```
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the tags on this repository.

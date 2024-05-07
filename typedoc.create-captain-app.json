@@ -9,7 +9,7 @@
     "**/__mocks__/**",
     "**/*.d.ts"
   ],
-  "readme": "./node_modules/create-captain-app/README.md",
+  "readme": "./stub.md",
   "entryPointStrategy": "expand",
   "plugin": ["typedoc-plugin-markdown"],
   "markedOptions": {

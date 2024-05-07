@@ -9,7 +9,7 @@
     "**/__mocks__/**",
     "**/*.d.ts"
   ],
-  "readme": "./src/client/organisms/README.md",
+  "readme": "./stub.md",
   "entryPointStrategy": "expand",
   "plugin": ["typedoc-plugin-markdown"],
   "markedOptions": {

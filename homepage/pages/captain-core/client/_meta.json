@@ -1,4 +1,7 @@
 {
+  "README": {
+    "display": "hidden"
+  },
   "ions": "Ions",
   "atoms": "Atoms",
   "molecules": "Molecules",

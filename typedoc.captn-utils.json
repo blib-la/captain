@@ -10,7 +10,7 @@
     "**/*.d.ts",
     "node_modules/@captn/utils/dist/esm/index.js"
   ],
-  "readme": "./node_modules/@captn/utils/README.md",
+  "readme": "./stub.md",
   "entryPointStrategy": "expand",
   "plugin": ["typedoc-plugin-markdown"],
   "markedOptions": {

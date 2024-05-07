@@ -1,9 +1,20 @@
+import { Callout } from "nextra/components";
+
 # Client Folder
 
 ## Overview
 The `client` folder contains the Next.js application that powers the front end of our application, generating a static site that delivers the core functionalities such as the dashboard, settings, downloads, and marketplace. This folder follows an extended version of Atomic Design, accommodating our unique components and state management needs.
 
+<Callout type="info">
+We proudly adopt [Brad Frost's Atomic Design](https://atomicdesign.bradfrost.com/) methodology to structure our UI components. This approach allows us to maintain a highly modular and scalable interface. Atomic Design helps us systematically arrange components into ions, atoms, molecules, and organisms, making our application robust and maintainable. We highly recommend exploring this methodology to appreciate how it benefits our design processes and enhances the developer experience.
+</Callout>
+
 ## Atomic Design Extended
+
+<Callout type="info">
+We extend the traditional Atomic Design framework by incorporating **Ions**, inspired by Brad Frost's ideas on [Extending Atomic Design](https://bradfrost.com/blog/post/extending-atomic-design/). Ions include non-renderable components like state managers and internationalization configurations, enhancing our application's architecture.
+</Callout>
+
 Our implementation of atomic design incorporates:
 - [**Ions**](/captain-core/client/ions): Non-renderable parts such as Jotai atoms, Day.js configurations for internationalization, and internal React hooks. These components form the underlying functionalities that support state management and theming across the app.
 - [**Atoms**](/captain-core/client/atoms): UI components that are the foundational building blocks of our user interface, such as buttons and input fields.
