@@ -1,3 +1,10 @@
+# [1.0.0-alpha.65](https://github.com/blib-la/captain/compare/v1.0.0-alpha.64...v1.0.0-alpha.65) (2024-05-08)
+
+
+### Features
+
+* added ComfyUI ([#271](https://github.com/blib-la/captain/issues/271)) ([fa648cd](https://github.com/blib-la/captain/commit/fa648cda4a05b72124c28b9bd1f1e83f478d629d)), closes [#274](https://github.com/blib-la/captain/issues/274)
+
 # [1.0.0-alpha.64](https://github.com/blib-la/captain/compare/v1.0.0-alpha.63...v1.0.0-alpha.64) (2024-05-06)
 
 
