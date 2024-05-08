@@ -344,7 +344,7 @@ describe("ComfyUI", () => {
 
 		// Verify axios was called with correct arguments
 		expect(mockedAxios.post).toHaveBeenCalledWith(`http://127.0.0.1:${port}/prompt`, {
-			prompt,
+			prompt: workflow,
 			client_id: clientId,
 		});
 	});
