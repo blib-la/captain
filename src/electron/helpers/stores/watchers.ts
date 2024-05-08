@@ -1,5 +1,4 @@
 import { USER_LANGUAGE_KEY, USER_THEME_KEY } from "@captn/utils/constants";
-import type { Unsubscribe } from "conf/dist/source/types";
 import { BrowserWindow } from "electron";
 
 import { appSettingsStore, downloadsStore, inventoryStore, userStore } from "@/electron/stores";
@@ -20,7 +19,7 @@ export function sendToAllWindows<T>(key: string, value: T) {
 }
 
 export function watchStores() {
-	const subscriptions: Unsubscribe[] = [];
+	const subscriptions: (() => void)[] = [];
 	downloadsStore.store = traverseAndModify(downloadsStore.store);
 	appSettingsStore.set("requiresRestart", false);
 	subscriptions.push(

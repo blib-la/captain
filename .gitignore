@@ -17,6 +17,7 @@ app
 dist
 build
 doc
+tsconfig.tsbuildinfo
 
 # test
 coverage
