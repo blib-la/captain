@@ -17,7 +17,6 @@ export default function ComfyUI() {
 		const unsubscribe = window.ipc.on(
 			buildKey([ID.COMFYUI_PORT], { suffix: ":get" }),
 			(port_: string) => {
-				console.log({ port_ });
 				setPort(port_);
 			}
 		);
