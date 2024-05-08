@@ -4,6 +4,7 @@ import type { IpcMainEvent } from "electron";
 import { ipcMain } from "electron";
 
 import { ComfyUI } from "@/electron/services/comfyui";
+import type { NodeChain } from "@/shared/types/comfyui";
 
 ipcMain.on(
 	APP_MESSAGE_KEY,
@@ -15,7 +16,7 @@ ipcMain.on(
 
 		switch (message.action) {
 			case "comfyui:queue": {
-				const { workflow } = message.payload as { workflow: object };
+				const { workflow } = message.payload as { workflow: NodeChain };
 
 				// Add the workflow into the queue
 				const { promptId } = await ComfyUI.getInstance.queueWorkflow(workflow, appId);
