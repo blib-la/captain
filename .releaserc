@@ -47,6 +47,9 @@
           },
           {
             "path": "dist/latest.yml"
+          },
+          {
+            "path": "dist/Captain-Setup*.exe.blockmap"
           }
         ]
       }
