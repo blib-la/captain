@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/client/*": ["./src/client/*"],
+      "@/electron/*": ["./src/electron/helpers/*"],
+      "@/shared/*": ["./src/shared/*"],
+      "~package": ["./package.json"],
+      "@site/*": ["./homepage/*"]
+    }
+  },
+  "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx", "node_modules/@captn/**/dist/esm/**/*.js", "node_modules/create-captain-app/**/dist/**/*.js"],
+}

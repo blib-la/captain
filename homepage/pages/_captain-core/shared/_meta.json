@@ -1,4 +1,6 @@
 {
-  "README": "Overview",
+  "README": {
+    "display": "hidden"
+  },
   "enums": "Enums"
 }

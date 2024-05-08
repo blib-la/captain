@@ -1,0 +1,32 @@
+import { Callout } from "nextra/components";
+
+# Shared Folder
+
+## Overview
+The `shared` folder serves as a central hub for constants, types, and utility functions that are utilized by both the client/render process (Next.js part) and the Electron/main process. This setup ensures consistency and reusability of core components throughout the application.
+
+## What's Inside
+
+- **Types**: Located in the `types/` subfolder, these files define structures that are integral to the application's functionality. Key type files include:
+    - [`marketplace.ts`](/captain-core/shared/modules/types_marketplace): Types for marketplace interactions.
+    - [`story.ts`](/captain-core/shared/modules/types_story): Types for storytelling features.
+
+- [**`build-key.ts`**](/captain-core/shared/modules/build_key): Utility for generating unique keys for events and handlers, enhancing the application's security measures.
+
+- [**`constants.ts`**](/captain-core/shared/modules/constants): Repository of constants that are widely used across different parts of the application.
+
+- **`enums.ts`**: Contains enums such as [`KEY`](/captain-core/shared/enums/enums.KEY) for accessing Electron stores and [`ID`](/captain-core/shared/enums/enums.ID) for UUIDs used across the application.
+
+- [**`flags.ts`**](/captain-core/shared/modules/flags): Boolean flags, such as `isDevelopment`, `isProduuction` and `isTest`, which help manage environment-specific features and settings.
+
+- **Utility Modules**:
+    - [`number.ts`](/captain-core/shared/modules/number): Functions for number manipulation and validation.
+    - [`object.ts`](captain-core/shared/modules/object): Helpers for dealing with object creation and manipulation.
+    - [`string.ts`](captain-core/shared/modules/string): Utilities for string processing and formatting.
+
+<Callout type="info">
+Components in the `shared` folder can be seamlessly integrated into both client and Electron parts of the app. Import any module using the TypeScript path alias `@/shared/*`, which simplifies access and maintains clean code organization.
+</Callout>
+
+## Documentation
+For comprehensive details on each component within the `shared` folder, visit our detailed documentation sections under `/captain/shared/**`. These documents are accessible via the sidebar navigation in our main documentation portal.

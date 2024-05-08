@@ -1,0 +1,19 @@
+# Atoms Folder
+
+## Overview
+The Atoms folder houses the foundational UI elements used throughout the client application. These elements are the simplest individual units within our design system, designed for high reusability and consistency across various parts of the application.
+
+## Contents
+- **Flags**: Simplified country flags as SVGs, integral for international representations.
+- [**i18n-Link**](/captain-core/client/atoms/modules/i18n_link): A component that wraps [`next/link`](https://nextjs.org/docs/app/api-reference/components/link) to support internationalized routing seamlessly.
+- [**Icons**](/captain-core/client/atoms/modules/icons): Custom icons using `mui SvgIcon` that extend beyond the offerings of [`@mui/icons-material`](https://mui.com/material-ui/material-icons/).
+- [**Image**](/captain-core/client/atoms/modules/image_styled): A styled [`next/image`](https://nextjs.org/docs/pages/api-reference/components/image) component configured with a default aspect ratio of 1 (square), enhancing visual consistency.
+- Logo: Includes proprietary logos such as the [Blibla](/captain-core/client/atoms/modules/logo) and [Captain logos](/captain-core/client/atoms/modules/logo_captain), used across the application for branding.
+- [**Lottie-Player**](/captain-core/client/atoms/modules/lottie_player): A wrapper for [`@lottiefiles/react-lottie-player`](https://github.com/LottieFiles/lottie-react), providing rich, animated graphics.
+- [**Screen-Reader-Only**](/captain-core/client/atoms/modules/screen_reader_only): Utilities designed to enhance accessibility by making certain elements perceptible only to screen readers.
+
+## Usage
+Atoms are the building blocks for more complex components and are used to maintain a consistent design and functionality throughout the app. While they currently reside locally within the project, plans are in place to migrate many of these components to our [**`@captn/*`**](https://github.com/blib-la/captn) packages to standardize and streamline their use across different projects and third-party applications.
+
+## Future Updates
+Developers should be aware that several atoms are slated for migration to our centralized packages, which will affect how they are imported and used in future application updates. This transition is part of our ongoing efforts to enhance modularity and reusability.

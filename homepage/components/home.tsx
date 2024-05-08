@@ -7,6 +7,7 @@ import SvgOnlineCourses from "../assets/illustrations/online-courses.svg";
 import SvgSale from "../assets/illustrations/sale.svg";
 import SvgTools from "../assets/illustrations/tools.svg";
 import SvgYourAI from "../assets/illustrations/your-ai.svg";
+import { latestRelease } from "../latest-release";
 import { tw } from "../utils/tw";
 
 interface CardData {
@@ -106,16 +107,20 @@ export function Cards() {
 export function Hero() {
 	return (
 		<section className="relative w-full h-[70dvh] md:h-[50vh] text-center flex flex-col justify-center items-center">
-			<h1 className="text-4xl md:text-6xl font-bold">Captain: Bring Your Ideas to Life</h1>
-			<h2 className="text-xl md:text-2xl mt-8">A platform that evolves to your needs</h2>
+			<h1 className="text-4xl md:text-6xl font-bold">
+				The platform that evolves to your needs
+			</h1>
+			<h2 className="text-xl md:text-2xl mt-8">
+				Your all-in-one platform to build and use AI apps effortlessly on your own computer
+			</h2>
 			<div className="mt-8">
 				<Link
-					href="https://github.com/blib-la/captain"
+					href={latestRelease}
 					target="_blank"
 					className={tw`
 								inline-block
-								py-2
-								px-4
+								py-4
+								px-8
 
 								bg-teal-600
 								hover:bg-teal-700
@@ -123,8 +128,21 @@ export function Hero() {
 								text-white
 
 								font-bold
-							`}
+								text-nowrap
+						`}
 				>
+					<svg
+						viewBox="0 0 24 24"
+						aria-hidden="true"
+						height={24}
+						width={24}
+						className="mr-2 inline-block"
+					>
+						<path
+							fill="currentColor"
+							d="M3,12V6.75L9,5.43V11.91L3,12M20,3V11.75L10,11.9V5.21L20,3M3,13L9,13.09V19.9L3,18.75V13M20,13.25V22L10,20.09V13.1L20,13.25Z"
+						/>
+					</svg>
 					Download Captain
 				</Link>
 			</div>
