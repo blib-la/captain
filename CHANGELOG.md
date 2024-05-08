@@ -1,3 +1,10 @@
+# [1.0.0-alpha.67](https://github.com/blib-la/captain/compare/v1.0.0-alpha.66...v1.0.0-alpha.67) (2024-05-08)
+
+
+### Bug Fixes
+
+* add the "latest-release.ts" as a commit ([#276](https://github.com/blib-la/captain/issues/276)) ([ffa0f79](https://github.com/blib-la/captain/commit/ffa0f79e95d791e1472881fe672f2264216344a4))
+
 # [1.0.0-alpha.66](https://github.com/blib-la/captain/compare/v1.0.0-alpha.65...v1.0.0-alpha.66) (2024-05-08)
 
 
