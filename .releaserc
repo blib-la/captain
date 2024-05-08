@@ -33,7 +33,8 @@
         "assets": [
           "README.md",
           "CHANGELOG.md",
-          "package.json"
+          "package.json",
+          "homepage/latest-release.ts"
         ],
         "message": "chore(release): ${nextRelease.version} \n\n${nextRelease.notes}"
       }
