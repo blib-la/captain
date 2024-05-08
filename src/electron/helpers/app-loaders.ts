@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import path from "path";
 
 import type { BrowserWindowConstructorOptions } from "electron";
-import type electronServe from "electron-serve";
+import type { LoadURL } from "electron-serve";
 import serve from "electron-serve";
 import { globbySync } from "globby";
 import matter from "gray-matter";
@@ -11,7 +11,7 @@ import { logger } from "@/electron/services/logger";
 import { getCaptainApps } from "@/electron/utils/path-helpers";
 import { jsonStringify } from "@/shared/object";
 
-export const appLoaders: Record<string, electronServe.loadURL> = {};
+export const appLoaders: Record<string, LoadURL> = {};
 
 /**
  * Represents a unique key for identifying multiple window configurations.

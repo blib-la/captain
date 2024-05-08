@@ -20,6 +20,8 @@ jobs:
           node-version-file: '.nvmrc'
       - name: Install dependencies
         run: npm install
+      - name: test types tsc:noEmit
+        run: npm run tsc:noEmit
       - name: Run all jest tests
         run: npm run test:all
       - name: Codacy Coverage
