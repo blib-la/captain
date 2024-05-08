@@ -12,7 +12,7 @@ import {
 	getCaptainDownloads,
 	getCaptainTemporary,
 } from "@/electron/utils/path-helpers";
-import type { QueueWorkflowResponse } from "@/shared/types/comfyui";
+import type { NodeChain, QueueWorkflowResponse } from "@/shared/types/comfyui";
 
 type SystemStats = {
 	system: {
@@ -171,11 +171,11 @@ export class ComfyUI {
 
 		// Listen for stdout and stderr
 		if (this.debug && this.process.stdout && this.process.stderr) {
-			this.process.stdout.on("data", data => {
+			this.process.stdout.on("data", (data: ArrayBuffer) => {
 				logger.info(data.toString());
 			});
 
-			this.process.stderr.on("data", data => {
+			this.process.stderr.on("data", (data: ArrayBuffer) => {
 				logger.info(data.toString());
 			});
 		}
@@ -220,25 +220,25 @@ export class ComfyUI {
 	 * @private
 	 */
 	private setupWebSocket(clientId: string, handleMessage: WebSocketMessageHandler) {
-		const websocket = new WebSocket(`ws://${this.url}/ws?clientId=${clientId}`);
+		const webSocket = new WebSocket(`ws://${this.url}/ws?clientId=${clientId}`);
 
-		websocket.on("open", () => {
+		webSocket.on("open", () => {
 			logger.info("WebSocket connection established", clientId);
 		});
 
-		websocket.on("message", data => {
+		webSocket.on("message", data => {
 			handleMessage(JSON.parse(data.toString()));
 		});
 
-		websocket.on("close", () => {
+		webSocket.on("close", () => {
 			logger.info("WebSocket connection closed", clientId);
 		});
 
-		websocket.on("error", error => {
+		webSocket.on("error", error => {
 			logError(error, `WebSocket error for ${clientId}`);
 		});
 
-		this.clients.set(clientId, websocket);
+		this.clients.set(clientId, webSocket);
 	}
 
 	/**
@@ -282,7 +282,10 @@ export class ComfyUI {
 	 * @returns {Promise<QueueWorkflowResponse>} The response from the server including prompt ID and any node errors.
 	 * @throws {Error} Throws an error if the request to queue the workflow fails.
 	 */
-	public async queueWorkflow(prompt: object, clientId: string): Promise<QueueWorkflowResponse> {
+	public async queueWorkflow(
+		prompt: NodeChain,
+		clientId: string
+	): Promise<QueueWorkflowResponse> {
 		const url = `http://${this.url}/prompt`;
 		try {
 			const response = await axios.post(url, { prompt, client_id: clientId });
