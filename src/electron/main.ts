@@ -42,6 +42,7 @@ import package_ from "~package";
  * - In production mode, it removes the default application menu to align with the custom UI design.
  */
 export async function main() {
+	logger.transports.file.getFile().clear();
 	logger.info(`main(): started with version: ${package_.version}`);
 	appSettingsStore.set("version", package_.version);
 

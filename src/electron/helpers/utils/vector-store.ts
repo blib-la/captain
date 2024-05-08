@@ -18,12 +18,8 @@ import matter from "gray-matter";
 import { PORTS } from "@/electron/constants";
 import { CustomHuggingFaceTransformersEmbeddings } from "@/electron/langchain/custom-hugging-face-transformers-embeddings";
 import { VectorStore } from "@/electron/services/vector-store";
-import {
-	getCaptainData,
-	getCaptainDownloads,
-	getDirectory,
-	normalizePath,
-} from "@/electron/utils/path-helpers";
+import { normalizePath } from "@/electron/utils/normalize-path";
+import { getCaptainData, getCaptainDownloads, getDirectory } from "@/electron/utils/path-helpers";
 import { splitDocument } from "@/electron/utils/split-documents";
 import { VECTOR_STORE_COLLECTION } from "@/shared/constants";
 import { extractH1Headings } from "@/shared/string";
