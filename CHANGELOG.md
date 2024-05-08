@@ -1,3 +1,10 @@
+# [1.0.0-alpha.68](https://github.com/blib-la/captain/compare/v1.0.0-alpha.67...v1.0.0-alpha.68) (2024-05-08)
+
+
+### Bug Fixes
+
+* scope logger for dev and clear file on startup ([#277](https://github.com/blib-la/captain/issues/277)) ([8f8843d](https://github.com/blib-la/captain/commit/8f8843d00e5b950a948245858515fbec8dabe133))
+
 # [1.0.0-alpha.67](https://github.com/blib-la/captain/compare/v1.0.0-alpha.66...v1.0.0-alpha.67) (2024-05-08)
 
 
