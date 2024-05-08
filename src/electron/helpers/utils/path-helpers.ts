@@ -6,11 +6,8 @@ import path from "path";
 
 import { app } from "electron";
 
+import { normalizePath } from "@/electron/utils/normalize-path";
 import { isDevelopment, isTest } from "@/shared/flags";
-
-export function normalizePath(pathname: string) {
-	return pathname.replaceAll("\\", "/");
-}
 
 export const resourcesDirectory =
 	isTest || isDevelopment
