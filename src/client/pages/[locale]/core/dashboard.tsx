@@ -17,7 +17,6 @@ import { handleCaptainAction } from "@/client/ions/handlers/action";
 import { useThirdPartyAppsPath } from "@/client/ions/hooks/third-party-apps-path";
 import { makeStaticProperties } from "@/client/ions/i18n/get-static";
 import { getContrastColor } from "@/client/ions/utils/color";
-
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["common", "labels"]);
 
@@ -45,6 +44,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 				<Alert color="primary" variant="soft" sx={{ m: 4, p: 4 }}>
 					<Typography level="title-lg">{t("texts:howToUseCaptain")}</Typography>
 				</Alert>
+
 				<List
 					sx={{
 						display: "grid",

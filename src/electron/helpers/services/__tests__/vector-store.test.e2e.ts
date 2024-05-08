@@ -69,13 +69,13 @@ describe("VectorStore Integration Tests", () => {
 	beforeAll(async () => {
 		env.localModelPath = path.join(process.cwd(), "models");
 
-		const embedding = new CustomHuggingFaceTransformersEmbeddings({
+		const embeddings = new CustomHuggingFaceTransformersEmbeddings({
 			modelName: "Xenova/all-MiniLM-L6-v2",
 			maxTokens: 128,
 			stripNewLines: true,
 		});
 
-		vectorStore = await VectorStore.init(embedding);
+		vectorStore = await VectorStore.init({ port: 1234, embeddings });
 
 		await vectorStore.deleteCollection(collectionName);
 		await vectorStore.deleteCollection(collectionName2);

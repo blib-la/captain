@@ -3,8 +3,6 @@ const path = require("path");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const cwd = process.cwd();
 
-console.log({ cwd });
-
 module.exports = {
 	mainSrcDir: "src/electron",
 	rendererSrcDir: "src/client",

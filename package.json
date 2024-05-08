@@ -95,6 +95,7 @@
     "@types/react-window": "^1.8.8",
     "@types/sort-json": "^2.0.3",
     "@types/uuid": "^9.0.8",
+    "@types/ws": "^8.5.10",
     "@typescript-eslint/eslint-plugin": "^7.8.0",
     "@typescript-eslint/parser": "^7.8.0",
     "@xenova/transformers": "github:xenova/transformers.js#v3",
@@ -130,6 +131,7 @@
     "file-type": "^19.0.0",
     "framer-motion": "^11.1.9",
     "fs-extra": "^11.2.0",
+    "get-port": "^7.1.0",
     "globby": "14.0.1",
     "gray-matter": "^4.0.3",
     "husky": "^9.0.11",
@@ -184,7 +186,9 @@
     "typescript": "^5.4.5",
     "use-debounce": "^10.0.0",
     "uuid": "^9.0.1",
-    "webpack": "^5.91.0"
+    "webpack": "^5.91.0",
+    "ws": "^8.17.0",
+    "yaml": "^2.4.2"
   },
   "optionalDependencies": {
     "@swc/core-darwin-arm64": "^1.5.3",
