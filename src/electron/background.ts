@@ -54,6 +54,7 @@ import "@/electron/ipc/sdk";
 // listeners.
 import "@/electron/ipc/sdk/text-to-image";
 import "@/electron/ipc/sdk/image-to-image";
+import "@/electron/ipc/sdk/comfyui";
 
 // Import install handlers and listeners
 import "@/electron/ipc/install";

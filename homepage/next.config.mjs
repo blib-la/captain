@@ -3,6 +3,7 @@ import createNextra from "nextra";
 const withNextra = createNextra({
 	theme: "nextra-theme-docs",
 	themeConfig: "./theme.config.jsx",
+	defaultShowCopyCode: true,
 });
 
 /**

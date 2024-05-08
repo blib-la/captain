@@ -1,3 +1,10 @@
 {
-  "reject": ["eslint", "next", "sharp", "semantic-release", "@semantic-release/github"]
+  "reject": [
+    "eslint",
+    "next",
+    "sharp",
+    "semantic-release",
+    "@semantic-release/github",
+    "typedoc-plugin-markdown"
+  ]
 }

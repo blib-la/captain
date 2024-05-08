@@ -23,23 +23,42 @@ export class VectorStore {
 	private client: QdrantClient | null = null;
 	private process: ExecaChildProcess<string> | undefined;
 	private embeddings: EmbeddingsInterface;
+	private host: string;
+	private port: number;
 	private url: string;
 
-	private constructor(embeddings: EmbeddingsInterface) {
+	private constructor(host: string, port: number, embeddings: EmbeddingsInterface) {
+		this.host = host;
+		this.port = port;
+		this.url = `http://${this.host}:${this.port}`;
+
 		this.embeddings = embeddings;
-		this.url = "http://127.0.0.1:6333";
 	}
 
 	/**
-	 * Initializes the VectorStore singleton instance with the specified embeddings model.
-	 * This method starts the Qdrant service and initializes the Qdrant client.
+	 * Initializes the VectorStore service as a singleton instance.
+	 * This method starts the service and initializes the client if not already initialized.
 	 *
-	 * @param {EmbeddingsInterface} embeddings - The embeddings model to be used for document vectorization.
-	 * @returns {Promise<VectorStore>} The initialized VectorStore singleton instance.
+	 * @param {object} options - Configuration options for initializing VectorStore.
+	 * @param {string} [options.host="127.0.0.1"] - The host address of the VectorStore server.
+	 * @param {number} options.port - The port of the VectorStore server.
+	 * @param {EmbeddingsInterface} options.embeddings - The embeddings interface used by the VectorStore service.
+	 *
+	 * @returns {Promise<VectorStore>} The singleton instance of the VectorStore class.
+	 *
+	 * @throws {Error} Throws an error if the service fails to start or the client cannot be initialized.
 	 */
-	public static async init(embeddings: EmbeddingsInterface): Promise<VectorStore> {
+	public static async init({
+		host = "127.0.0.1",
+		port = 6333,
+		embeddings,
+	}: {
+		host?: string;
+		port: number;
+		embeddings: EmbeddingsInterface;
+	}): Promise<VectorStore> {
 		if (!VectorStore.instance) {
-			VectorStore.instance = new VectorStore(embeddings);
+			VectorStore.instance = new VectorStore(host, port, embeddings);
 			await VectorStore.instance.start();
 			await VectorStore.instance.initializeClient();
 		}

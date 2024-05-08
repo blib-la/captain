@@ -1,5 +1,7 @@
 import { apps } from "@/electron/apps";
-import { logger } from "@/electron/services/logger";
+import { PORTS } from "@/electron/constants";
+import { ComfyUI } from "@/electron/services/comfyui";
+import { logError, logger } from "@/electron/services/logger";
 import { loadURL } from "@/electron/utils/load-window";
 import { createCoreWindow, createPromptWindow } from "@/electron/windows";
 
@@ -20,4 +22,11 @@ export async function runStartup() {
 	});
 	apps.core.focus();
 	logger.info(`runStartup(): focused core window`);
+
+	logger.info("runStartup(): ComfyUI is starting");
+	try {
+		ComfyUI.init({ port: PORTS.COMFYUI, debug: true });
+	} catch (error) {
+		logError(error, "Can't start ComfyUI");
+	}
 }

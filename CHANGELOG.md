@@ -1,3 +1,31 @@
+# [1.0.0-alpha.68](https://github.com/blib-la/captain/compare/v1.0.0-alpha.67...v1.0.0-alpha.68) (2024-05-08)
+
+
+### Bug Fixes
+
+* scope logger for dev and clear file on startup ([#277](https://github.com/blib-la/captain/issues/277)) ([8f8843d](https://github.com/blib-la/captain/commit/8f8843d00e5b950a948245858515fbec8dabe133))
+
+# [1.0.0-alpha.67](https://github.com/blib-la/captain/compare/v1.0.0-alpha.66...v1.0.0-alpha.67) (2024-05-08)
+
+
+### Bug Fixes
+
+* add the "latest-release.ts" as a commit ([#276](https://github.com/blib-la/captain/issues/276)) ([ffa0f79](https://github.com/blib-la/captain/commit/ffa0f79e95d791e1472881fe672f2264216344a4))
+
+# [1.0.0-alpha.66](https://github.com/blib-la/captain/compare/v1.0.0-alpha.65...v1.0.0-alpha.66) (2024-05-08)
+
+
+### Bug Fixes
+
+* added "blockmap" to releases ([#275](https://github.com/blib-la/captain/issues/275)) ([4bd1552](https://github.com/blib-la/captain/commit/4bd1552fb8fc58ff8293cd4fce86a96979fd51d2)), closes [#251](https://github.com/blib-la/captain/issues/251)
+
+# [1.0.0-alpha.65](https://github.com/blib-la/captain/compare/v1.0.0-alpha.64...v1.0.0-alpha.65) (2024-05-08)
+
+
+### Features
+
+* added ComfyUI ([#271](https://github.com/blib-la/captain/issues/271)) ([fa648cd](https://github.com/blib-la/captain/commit/fa648cda4a05b72124c28b9bd1f1e83f478d629d)), closes [#274](https://github.com/blib-la/captain/issues/274)
+
 # [1.0.0-alpha.64](https://github.com/blib-la/captain/compare/v1.0.0-alpha.63...v1.0.0-alpha.64) (2024-05-06)
 
 

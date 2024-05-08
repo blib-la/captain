@@ -11,6 +11,7 @@ import { createTray } from "@/electron/tray";
 import type { Manifest } from "@/electron/types";
 import { isCoreApp, isCoreView } from "@/electron/utils/core";
 import { handleDeepLink } from "@/electron/utils/handle-deep-link";
+import { initPorts } from "@/electron/utils/init-ports";
 import { checkUpdates, listenForUpdates } from "@/electron/utils/update";
 import { initialize, populateFromDocuments, reset } from "@/electron/utils/vector-store";
 import {
@@ -42,11 +43,15 @@ import package_ from "~package";
  * - In production mode, it removes the default application menu to align with the custom UI design.
  */
 export async function main() {
+	logger.transports.file.getFile().clear();
 	logger.info(`main(): started with version: ${package_.version}`);
 	appSettingsStore.set("version", package_.version);
 
 	await app.whenReady();
 	logger.info(`main(): app is ready`);
+
+	// Initialize the ports for third-party software
+	initPorts();
 
 	// Initialize the local protocol to allow serving files from disk
 	initLocalProtocol();
