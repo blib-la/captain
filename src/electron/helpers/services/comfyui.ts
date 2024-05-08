@@ -47,12 +47,12 @@ export enum ComfyUIStatus {
  * and handling workflow queueing and system status checks.
  */
 export class ComfyUI {
-	private static instance: ComfyUI | null = null;
+	public static instance: ComfyUI | null = null;
 	private process: ExecaChildProcess<string> | undefined;
 	private url: string;
 	private host: string;
 	private port: number;
-	private clients: Map<string, WebSocket> = new Map();
+	public clients: Map<string, WebSocket> = new Map();
 	private status: ComfyUIStatus = ComfyUIStatus.NOT_RUNNING;
 	private debug: boolean = false;
 
@@ -217,9 +217,8 @@ export class ComfyUI {
 	 *
 	 * @param {string} clientId - The unique identifier for the client.
 	 * @param {WebSocketMessageHandler} handleMessage - The function to call when a message is received on the WebSocket.
-	 * @private
 	 */
-	private setupWebSocket(clientId: string, handleMessage: WebSocketMessageHandler) {
+	public setupWebSocket(clientId: string, handleMessage: WebSocketMessageHandler) {
 		const webSocket = new WebSocket(`ws://${this.url}/ws?clientId=${clientId}`);
 
 		webSocket.on("open", () => {
@@ -239,6 +238,41 @@ export class ComfyUI {
 		});
 
 		this.clients.set(clientId, webSocket);
+	}
+
+	/**
+	 * Frees resources in the ComfyUI application by unloading models and/or freeing memory.
+	 * This method makes a POST request to the server to either unload models or free memory based on the provided parameters.
+	 *
+	 * @param {object} options - Configuration options for freeing resources.
+	 * @param {boolean} [options.unloadModels] - Optional flag to specify whether to unload the models loaded in memory.
+	 * @param {boolean} [options.freeMemory] - Optional flag to specify whether to free up memory resources.
+	 * @returns {Promise<boolean>} - Returns true if the operation was successful (HTTP status 200), otherwise false.
+	 *
+	 * @example
+	 * ```ts
+	 * const wasFreed = await comfyUI.getInstance.free({ unloadModels: true, freeMemory: true });
+	 * console.log(`Resources freed: ${wasFreed}`);
+	 * ```
+	 */
+	public async free({
+		unloadModels,
+		freeMemory,
+	}: {
+		unloadModels?: boolean;
+		freeMemory?: boolean;
+	}): Promise<boolean> {
+		try {
+			const response = await axios.post(`http://${this.url}/free`, {
+				unload_models: unloadModels,
+				free_memory: freeMemory,
+			});
+
+			return response.status === 200;
+		} catch (error) {
+			logError(error, "comfyUI free failed");
+			return false;
+		}
 	}
 
 	/**

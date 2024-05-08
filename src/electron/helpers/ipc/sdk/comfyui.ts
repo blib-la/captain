@@ -16,6 +16,7 @@ ipcMain.on(
 		{ message, appId }: { message: SDKMessage<T>; appId: string }
 	) => {
 		const channel = `${appId}:${APP_MESSAGE_KEY}`;
+		console.log({ message, appId });
 
 		switch (message.action) {
 			case "comfyui:queue": {
@@ -28,6 +29,27 @@ ipcMain.on(
 				event.sender.send(channel, {
 					action: "comfyui:promptId",
 					payload: { promptId },
+				});
+
+				break;
+			}
+
+			case "comfyui:free": {
+				const { unloadModels, freeMemory } = message.payload as {
+					unloadModels?: boolean;
+					freeMemory?: boolean;
+				};
+
+				console.log("freeing comfy????");
+
+				// Add the workflow into the queue
+				const wasFreed = await ComfyUI.getInstance.free({ unloadModels, freeMemory });
+				console.log("freeing comfy::::", { wasFreed });
+
+				// Send the promptId back to the sender
+				event.sender.send(channel, {
+					action: "comfyui:wasFreed",
+					payload: { wasFreed },
 				});
 
 				break;

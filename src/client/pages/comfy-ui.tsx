@@ -1,3 +1,4 @@
+import { useUnload } from "@captn/react/use-unload";
 import Box from "@mui/joy/Box";
 import CircularProgress from "@mui/joy/CircularProgress";
 import Head from "next/head";
@@ -5,6 +6,8 @@ import { useEffect, useState } from "react";
 
 import { buildKey } from "@/shared/build-key";
 import { ID } from "@/shared/enums";
+
+const APP_ID = "comfy-ui";
 
 export default function ComfyUI() {
 	const [port, setPort] = useState("");
@@ -22,6 +25,14 @@ export default function ComfyUI() {
 			unsubscribe();
 		};
 	}, []);
+
+	// Unload models and free memory when the window is closed
+	// TODO useUnload should allow type unknown
+	// This ugly hack will work until implemented
+	useUnload(APP_ID, "comfyui:free", {
+		unloadModels: true,
+		freeMemory: true,
+	} as unknown as string);
 
 	return (
 		<>
