@@ -10,7 +10,7 @@ import type { WebSocketMessageHandler } from "@/electron/services/comfyui";
 import { ComfyUI, ComfyUIStatus } from "@/electron/services/comfyui";
 import { logError, logger } from "@/electron/services/logger";
 import { getCaptainTemporary } from "@/electron/utils/path-helpers";
-import type { QueueWorkflowResponse } from "@/shared/types/comfyui";
+import type { NodeChain, QueueWorkflowResponse } from "@/shared/types/comfyui";
 
 jest.mock("axios");
 jest.mock("execa");
@@ -74,6 +74,15 @@ jest.mock("ws", () => jest.fn(() => mockWebSocket));
 
 describe("ComfyUI", () => {
 	const port = 1234;
+
+	const workflow: NodeChain = {
+		"3": {
+			inputs: {
+				seed: 416_138_702_284_529,
+			},
+			class_type: "test",
+		},
+	};
 
 	beforeEach(() => {
 		jest.clearAllMocks();
@@ -289,7 +298,6 @@ describe("ComfyUI", () => {
 		const instance = ComfyUI.getInstance;
 
 		// Prepare test data
-		const prompt = { nodes: [{ id: 1, name: "node1" }] };
 		const clientId = "test-client";
 		const mockResponseData = {
 			node_errors: [],
@@ -308,12 +316,12 @@ describe("ComfyUI", () => {
 		};
 
 		// Queue workflow and verify response
-		const result = await instance.queueWorkflow(prompt, clientId);
+		const result = await instance.queueWorkflow(workflow, clientId);
 		expect(result).toEqual(expectedResponse);
 
 		// Verify axios was called with correct arguments
 		expect(mockedAxios.post).toHaveBeenCalledWith(`http://127.0.0.1:${port}/prompt`, {
-			prompt,
+			prompt: workflow,
 			client_id: clientId,
 		});
 	});
@@ -325,7 +333,6 @@ describe("ComfyUI", () => {
 		const instance = ComfyUI.getInstance;
 
 		// Prepare test data
-		const prompt = { nodes: [{ id: 1, name: "node1" }] };
 		const clientId = "test-client";
 		const errorMessage = "Can't queue the workflow for ComfyUI";
 
@@ -333,7 +340,7 @@ describe("ComfyUI", () => {
 		mockedAxios.post.mockRejectedValueOnce(new Error(errorMessage));
 
 		// Try to queue workflow and catch error
-		await expect(instance.queueWorkflow(prompt, clientId)).rejects.toThrow(errorMessage);
+		await expect(instance.queueWorkflow(workflow, clientId)).rejects.toThrow(errorMessage);
 
 		// Verify axios was called with correct arguments
 		expect(mockedAxios.post).toHaveBeenCalledWith(`http://127.0.0.1:${port}/prompt`, {
