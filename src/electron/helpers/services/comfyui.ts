@@ -158,7 +158,7 @@ export class ComfyUI {
 			"--listen",
 			this.host,
 			"--port",
-			this.port,
+			this.port.toString(),
 			"--disable-auto-launch",
 			"--extra-model-paths-config",
 			modelPaths,
