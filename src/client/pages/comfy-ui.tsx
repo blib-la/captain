@@ -26,13 +26,11 @@ export default function ComfyUI() {
 		};
 	}, []);
 
-	// Unload models and free memory when the window is closed
-	// TODO useUnload should allow type unknown
-	// This ugly hack will work until implemented
+	// Unload models when the window is closed
 	useUnload(APP_ID, "comfyui:free", {
 		unloadModels: true,
-		freeMemory: true,
-	} as unknown as string);
+		freeMemory: false,
+	});
 
 	return (
 		<>
