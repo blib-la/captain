@@ -1,3 +1,10 @@
+# [1.0.0-alpha.66](https://github.com/blib-la/captain/compare/v1.0.0-alpha.65...v1.0.0-alpha.66) (2024-05-08)
+
+
+### Bug Fixes
+
+* added "blockmap" to releases ([#275](https://github.com/blib-la/captain/issues/275)) ([4bd1552](https://github.com/blib-la/captain/commit/4bd1552fb8fc58ff8293cd4fce86a96979fd51d2)), closes [#251](https://github.com/blib-la/captain/issues/251)
+
 # [1.0.0-alpha.65](https://github.com/blib-la/captain/compare/v1.0.0-alpha.64...v1.0.0-alpha.65) (2024-05-08)
 
 
