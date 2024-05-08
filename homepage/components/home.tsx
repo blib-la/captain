@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactElement } from "react";
 
+import SvgCaptain from "../assets/illustrations/captain.svg";
 import SvgCommunity from "../assets/illustrations/community.svg";
 import SvgEasyPeasy from "../assets/illustrations/easy-peasy.svg";
 import SvgOnlineCourses from "../assets/illustrations/online-courses.svg";
@@ -74,7 +75,8 @@ export function Card({ title, media, description }: CardProperties) {
 					className={tw`
 					relative
 					aspect-video
-					-mx-2 [_&_svg]:absolute
+					-mx-2
+					[_&_svg]:absolute
 					[_&_svg]:inset-0
 					[_&_svg]:h-full
 					[_&_svg]:w-full
@@ -106,9 +108,26 @@ export function Cards() {
 
 export function Hero() {
 	return (
-		<section className="relative w-full h-[70dvh] md:h-[50vh] text-center flex flex-col justify-center items-center">
-			<h1 className="text-4xl md:text-6xl font-bold">
-				The platform that evolves to your needs
+		<section className="relative w-full min-h-[70dvh] md:min-h-[50vh] py-4 text-center flex flex-col justify-center items-center">
+			<div
+				className={tw`
+					relative
+					w-full
+					max-h-[30dvh]
+					aspect-video
+					my-4
+					mx-2
+					[_&_svg]:absolute
+					[_&_svg]:inset-0
+					[_&_svg]:h-full
+					[_&_svg]:w-full
+					[_&_svg]:pointer-events-none
+				`}
+			>
+				<SvgCaptain />
+			</div>
+			<h1 className="text-2xl md:text-5xl font-bold">
+				The AI platform that evolves to your needs
 			</h1>
 			<h2 className="text-xl md:text-2xl mt-8">
 				Your all-in-one platform to build and use AI apps effortlessly on your own computer
