@@ -14,6 +14,7 @@ module.exports = {
 			background: "./src/electron/background.ts",
 			preload: "./src/electron/preload.ts",
 			"app-preload": "./src/electron/app-preload.ts",
+			"guarded-preload": "./src/electron/guarded-preload.ts",
 		};
 		return config;
 	},

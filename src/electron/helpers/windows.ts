@@ -6,8 +6,8 @@ import {
 	CHILD_MESSAGE_TO_CHILD_KEY,
 	CHILD_OPEN_KEY,
 } from "@captn/utils/constants";
-import type { BrowserWindowConstructorOptions } from "electron";
-import { app, type BrowserWindow, globalShortcut, ipcMain, screen } from "electron";
+import type { BrowserWindowConstructorOptions, BrowserWindow } from "electron";
+import { app, globalShortcut, ipcMain, screen } from "electron";
 
 import type { MultiWindowConfiguration, MultiWindowKey } from "@/electron/app-loaders";
 import { appLoaders, isMultiWindow } from "@/electron/app-loaders";
@@ -17,6 +17,7 @@ import { createWindow } from "@/electron/utils/create-window";
 import { loadURL } from "@/electron/utils/load-window";
 import { buildKey } from "@/shared/build-key";
 import { ID } from "@/shared/enums";
+import { isProduction } from "@/shared/flags";
 
 /**
  * Creates and displays the installer window with predefined dimensions.
@@ -266,6 +267,90 @@ export async function createAppWindow(
 	}
 
 	return appWindow;
+}
+
+/**
+ * Creates a new BrowserWindow instance with enhanced security settings suitable for loading locally served applications like ComfyUI.
+ * This function is designed to provide a secure environment by disabling Node.js integration, enabling context isolation, and
+ * supporting webview tags, aligning with best practices for security in Electron applications.
+ *
+ * The primary use of this function is to set up a BrowserWindow that can safely host web applications that do not require Node.js
+ * integration within the rendering process, mitigating potential security risks. While the window supports loading any URL, it is
+ * strongly advised to use it only for trusted, locally served content. The configuration explicitly allows webview tags, which are
+ * essential for embedding separate web content securely within the application.
+ *
+ * @param {string} id - The unique identifier for the app, used to determine the content
+ *                      loader and to namespace its protocol. This ID is crucial for loading
+ *                      the correct app resources and handling them in an isolated manner.
+ * @param {BrowserWindowConstructorOptions} [options={}] - Optional configuration options
+ *                                                         for customizing the new BrowserWindow instance.
+ *                                                         These options can dictate the visual and functional
+ *                                                         properties of the window, such as dimensions,
+ *                                                         frame visibility, and web preferences.
+ * @returns {Promise<BrowserWindow>} A promise that resolves to the created BrowserWindow instance.
+ *                                   This promise may reject if there is an issue with loading the
+ *                                   app's content, with errors logged to the console.
+ */
+export async function createGuardedWindow(
+	id: string,
+	options: BrowserWindowConstructorOptions = {}
+): Promise<BrowserWindow> {
+	return createWindow(id, {
+		minWidth: 800,
+		minHeight: 600,
+		width: 1200,
+		height: 1000,
+		...options,
+		webPreferences: {
+			webviewTag: true,
+			preload: path.join(__dirname, "guarded-preload.js"),
+		},
+	});
+}
+
+/**
+ * Opens an instance of ComfyUI within a securely configured BrowserWindow, created by the `createGuardedWindow` function.
+ * This function is tailored for safely loading and interacting with the ComfyUI application in either a development or
+ * production environment. It manages the window's lifecycle, handles error logging, and ensures that the UI is focused and
+ * ready for user interaction.
+ *
+ * In a production environment, the function attempts to load ComfyUI from a custom protocol URL, ensuring the application is
+ * loaded securely and efficiently. In a development setting, it loads ComfyUI from a localhost URL, which is determined by a
+ * port number provided as a command-line argument, facilitating testing and development workflows.
+ *
+ * This function also includes robust error handling to manage and log loading errors, enhancing reliability and maintainability.
+ * Additionally, it listens for the 'close' event to clean up resources by setting the window reference to null, ensuring that the
+ * application does not leak memory or resources.
+ *
+ * Finally, the function checks if the window is minimized when activated. If so, it restores and focuses the window to ensure that
+ * ComfyUI is immediately visible and ready for user interaction, enhancing user experience by making the application responsive and
+ * accessible upon launch.
+ *
+ * @returns {void} This function does not return a value; it operates asynchronously and modifies the application state by managing
+ * the BrowserWindow instance dedicated to ComfyUI.
+ */
+export async function openComfyUI(): Promise<void> {
+	apps.comfyUI ||= await createGuardedWindow("comfy-ui");
+	try {
+		if (isProduction) {
+			await apps.comfyUI.loadURL(`app://./comfy-ui`);
+		} else {
+			const port = process.argv[2];
+			await apps.comfyUI.loadURL(`http://localhost:${port}/comfy-ui`);
+		}
+	} catch (error) {
+		logger.error(`comfy ui load error: ${error}`);
+	}
+
+	apps.comfyUI.on("close", () => {
+		apps.comfyUI = null;
+	});
+
+	if (apps.comfyUI.isMinimized()) {
+		apps.comfyUI.restore();
+	}
+
+	apps.comfyUI.focus();
 }
 
 /**

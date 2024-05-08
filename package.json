@@ -52,10 +52,10 @@
     "sharp": "0.33.2"
   },
   "devDependencies": {
-    "@captn/joy": "^0.28.1",
-    "@captn/react": "^0.28.0",
-    "@captn/theme": "^0.28.0",
-    "@captn/utils": "^0.28.0",
+    "@captn/joy": "^0.29.0",
+    "@captn/react": "^0.29.0",
+    "@captn/theme": "^0.29.0",
+    "@captn/utils": "^0.29.0",
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@dnd-kit/core": "^6.1.0",

@@ -63,7 +63,7 @@ const mockWebSocket = {
 	close: jest.fn(),
 	// eslint-disable-next-line @typescript-eslint/ban-types
 	_events: {} as Record<string, Function>,
-	triggerEvent(event: string, ...arguments_: any[]) {
+	triggerEvent(event: string, ...arguments_: unknown[]) {
 		if (typeof this._events[event] === "function") {
 			this._events[event](...arguments_);
 		}
@@ -86,12 +86,12 @@ describe("ComfyUI", () => {
 
 	beforeEach(() => {
 		jest.clearAllMocks();
-		(ComfyUI as any).instance = null;
+		ComfyUI.instance = null;
 	});
 
 	it("should return an error if no instance exists", () => {
 		try {
-			const instance = ComfyUI.getInstance;
+			const _instance = ComfyUI.getInstance;
 		} catch (error) {
 			expect(error).toBeDefined();
 
@@ -160,7 +160,7 @@ describe("ComfyUI", () => {
 		const handleMessage: WebSocketMessageHandler = jest.fn();
 
 		// Call setupWebSocket
-		(instance as any).setupWebSocket(clientId, handleMessage);
+		instance.setupWebSocket(clientId, handleMessage);
 
 		// Verify WebSocket instance creation
 		expect(WebSocket).toHaveBeenCalledWith(`ws://127.0.0.1:${port}/ws?clientId=${clientId}`);
@@ -195,7 +195,7 @@ describe("ComfyUI", () => {
 		expect(logError).toHaveBeenCalledWith(testError, `WebSocket error for ${clientId}`);
 
 		// Ensure client ID is added to the clients map
-		expect((instance as any).clients.has(clientId)).toBe(true);
+		expect(instance.clients.has(clientId)).toBe(true);
 	});
 
 	it("should not set up WebSocket if the client is already registered", async () => {
@@ -208,11 +208,11 @@ describe("ComfyUI", () => {
 
 		// Mock `setupWebSocket` method to avoid testing its internals
 		const setupWebSocketSpy = jest
-			.spyOn(instance as any, "setupWebSocket")
+			.spyOn(instance, "setupWebSocket")
 			.mockImplementation(jest.fn());
 
 		// Add client to the map directly to simulate an existing client
-		(instance as any).clients.set(clientId, mockWebSocket);
+		instance.clients.set(clientId, mockWebSocket as unknown as WebSocket);
 
 		// Register client
 		instance.registerClient(clientId, handleMessage);
@@ -235,7 +235,7 @@ describe("ComfyUI", () => {
 
 		// Mock `setupWebSocket` method to verify it's called
 		const setupWebSocketSpy = jest
-			.spyOn(instance as any, "setupWebSocket")
+			.spyOn(instance, "setupWebSocket")
 			.mockImplementation(jest.fn());
 
 		// Register new client
@@ -257,18 +257,18 @@ describe("ComfyUI", () => {
 
 		// Mock `setupWebSocket` method to avoid testing its internals
 		const setupWebSocketSpy = jest
-			.spyOn(instance as any, "setupWebSocket")
+			.spyOn(instance, "setupWebSocket")
 			.mockImplementation(jest.fn());
 
 		// Add a client to the map directly to simulate an existing client
-		(instance as any).clients.set(clientId, mockWebSocket);
+		instance.clients.set(clientId, mockWebSocket as unknown as WebSocket);
 
 		// Unregister client
 		const result = instance.unregisterClient(clientId);
 
 		// Verify WebSocket is closed and client is removed
 		expect(mockWebSocket.close).toHaveBeenCalled();
-		expect((instance as any).clients.has(clientId)).toBe(false);
+		expect(instance.clients.has(clientId)).toBe(false);
 		expect(result).toEqual({ closed: true });
 
 		// Cleanup
@@ -287,7 +287,7 @@ describe("ComfyUI", () => {
 
 		// Verify WebSocket is not closed and client is not removed
 		expect(mockWebSocket.close).not.toHaveBeenCalled();
-		expect((instance as any).clients.has(clientId)).toBe(false);
+		expect(instance.clients.has(clientId)).toBe(false);
 		expect(result).toEqual({ notExist: true });
 	});
 
@@ -324,6 +324,37 @@ describe("ComfyUI", () => {
 			prompt: workflow,
 			client_id: clientId,
 		});
+	});
+
+	it("should correctly free resources based on the provided options", async () => {
+		const mockedAxios = axios as jest.Mocked<typeof axios>;
+		await ComfyUI.init({ port });
+		const instance = ComfyUI.getInstance;
+
+		// Mock axios POST response for the free method
+		mockedAxios.post.mockResolvedValueOnce({ status: 200 });
+		const unloadModels = true;
+		const freeMemory = true;
+
+		// Call the free method and store the result
+		const result = await instance.free({ unloadModels, freeMemory });
+
+		// Verify that the free method returns true when the operation is successful
+		expect(result).toBe(true);
+
+		// Verify axios was called with correct arguments
+		expect(mockedAxios.post).toHaveBeenCalledWith(`http://127.0.0.1:${port}/free`, {
+			unload_models: unloadModels,
+			free_memory: freeMemory,
+		});
+
+		// Test the failure case
+		mockedAxios.post.mockRejectedValueOnce(new Error("Freeing resources failed"));
+		const failedResult = await instance.free({ unloadModels, freeMemory });
+
+		// Verify that the free method returns false when the operation fails
+		expect(failedResult).toBe(false);
+		expect(logError).toHaveBeenCalledWith(expect.any(Error), "comfyUI free failed");
 	});
 
 	it("should throw an error if the workflow queuing fails", async () => {
