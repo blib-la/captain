@@ -3,15 +3,17 @@ import { PassThrough } from "stream";
 
 import axios from "axios";
 import { execa } from "execa";
+import WebSocket from "ws";
 import { stringify } from "yaml";
 
-import { ComfyUI } from "../comfyui";
-
+import type { WebSocketMessageHandler } from "@/electron/services/comfyui";
+import { ComfyUI, ComfyUIStatus } from "@/electron/services/comfyui";
+import { logError, logger } from "@/electron/services/logger";
 import { getCaptainTemporary } from "@/electron/utils/path-helpers";
+import type { QueueWorkflowResponse } from "@/shared/types/comfyui";
 
 jest.mock("axios");
 jest.mock("execa");
-jest.mock("ws");
 jest.mock("node:fs/promises");
 
 jest.mock("@/electron/services/logger", () => ({
@@ -53,9 +55,39 @@ jest.mock("@/electron/utils/fs", () => ({
 	});
 });
 
+const mockWebSocket = {
+	on: jest.fn((event, callback) => {
+		mockWebSocket._events[event] = callback;
+	}),
+	send: jest.fn(),
+	close: jest.fn(),
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	_events: {} as Record<string, Function>,
+	triggerEvent(event: string, ...arguments_: any[]) {
+		if (typeof this._events[event] === "function") {
+			this._events[event](...arguments_);
+		}
+	},
+};
+
+jest.mock("ws", () => jest.fn(() => mockWebSocket));
+
 describe("ComfyUI", () => {
+	const port = 1234;
+
 	beforeEach(() => {
 		jest.clearAllMocks();
+		(ComfyUI as any).instance = null;
+	});
+
+	it("should return an error if no instance exists", () => {
+		try {
+			const instance = ComfyUI.getInstance;
+		} catch (error) {
+			expect(error).toBeDefined();
+
+			expect((error as Error).message).toContain(`ComfyUI instance has not been initialized`);
+		}
 	});
 
 	it("should generate model paths config on init", async () => {
@@ -65,7 +97,7 @@ describe("ComfyUI", () => {
 		const expectedPath = "/path/to/temporary/comfyui/model_paths.yaml";
 		(getCaptainTemporary as jest.Mock).mockReturnValue(expectedPath);
 
-		await ComfyUI.init();
+		await ComfyUI.init({});
 
 		const expectedConfig = {
 			captain: {
@@ -80,38 +112,233 @@ describe("ComfyUI", () => {
 	});
 
 	it("should not be able to initialize twice", async () => {
-		const instance = await ComfyUI.init();
+		await ComfyUI.init({});
+		const instance = ComfyUI.getInstance;
 
 		// Try to initialize again
-		await ComfyUI.init();
+		await ComfyUI.init({});
 
 		// Ensure no new instance was created
 		expect(ComfyUI.getInstance).toBe(instance);
 	});
+
+	it("should be ready when init worked fine", async () => {
+		const status = await ComfyUI.init({});
+
+		expect(status).toBe(ComfyUIStatus.RUNNING);
+	});
+
+	it("should be not ready when init didn't work", async () => {
+		(axios.get as jest.Mock).mockImplementationOnce((url: string) => {
+			if (url.includes("/system_stats")) {
+				return Promise.reject(new Error("Server not reachable"));
+			}
+
+			return Promise.reject(new Error("not found"));
+		});
+
+		const status = await ComfyUI.init({ timeout: 1, maxRetries: 1 });
+
+		expect(status).toBe(ComfyUIStatus.FAILED_TO_START);
+	});
+
+	it("should set up WebSocket with correct event handlers", async () => {
+		await ComfyUI.init({ port });
+		const instance = ComfyUI.getInstance;
+
+		// Prepare test data
+		const clientId = "test-client";
+		const handleMessage: WebSocketMessageHandler = jest.fn();
+
+		// Call setupWebSocket
+		(instance as any).setupWebSocket(clientId, handleMessage);
+
+		// Verify WebSocket instance creation
+		expect(WebSocket).toHaveBeenCalledWith(`ws://127.0.0.1:${port}/ws?clientId=${clientId}`);
+
+		expect(mockWebSocket.on).toHaveBeenCalledWith("open", expect.any(Function));
+
+		// Check event handlers
+		expect(mockWebSocket.on).toHaveBeenNthCalledWith(1, "open", expect.any(Function));
+		expect(mockWebSocket.on).toHaveBeenNthCalledWith(2, "message", expect.any(Function));
+		expect(mockWebSocket.on).toHaveBeenNthCalledWith(3, "close", expect.any(Function));
+		expect(mockWebSocket.on).toHaveBeenNthCalledWith(4, "error", expect.any(Function));
+
+		// Simulate "open" event
+		const openHandler = (mockWebSocket.on as jest.Mock).mock.calls[0][1];
+		openHandler();
+		expect(logger.info).toHaveBeenCalledWith("WebSocket connection established", clientId);
+
+		// Simulate "message" event
+		const messageHandler = (mockWebSocket.on as jest.Mock).mock.calls[1][1];
+		messageHandler(JSON.stringify({ key: "value" }));
+		expect(handleMessage).toHaveBeenCalledWith({ key: "value" });
+
+		// Simulate "close" event
+		const closeHandler = (mockWebSocket.on as jest.Mock).mock.calls[2][1];
+		closeHandler();
+		expect(logger.info).toHaveBeenCalledWith("WebSocket connection closed", clientId);
+
+		// Simulate "error" event
+		const errorHandler = (mockWebSocket.on as jest.Mock).mock.calls[3][1];
+		const testError = new Error("WebSocket Error");
+		errorHandler(testError);
+		expect(logError).toHaveBeenCalledWith(testError, `WebSocket error for ${clientId}`);
+
+		// Ensure client ID is added to the clients map
+		expect((instance as any).clients.has(clientId)).toBe(true);
+	});
+
+	it("should not set up WebSocket if the client is already registered", async () => {
+		await ComfyUI.init({});
+		const instance = ComfyUI.getInstance;
+
+		// Prepare test data
+		const clientId = "test-client";
+		const handleMessage: WebSocketMessageHandler = jest.fn();
+
+		// Mock `setupWebSocket` method to avoid testing its internals
+		const setupWebSocketSpy = jest
+			.spyOn(instance as any, "setupWebSocket")
+			.mockImplementation(jest.fn());
+
+		// Add client to the map directly to simulate an existing client
+		(instance as any).clients.set(clientId, mockWebSocket);
+
+		// Register client
+		instance.registerClient(clientId, handleMessage);
+
+		// Verify WebSocket is not set up again
+		expect(setupWebSocketSpy).not.toHaveBeenCalled();
+		expect(mockWebSocket.on).not.toHaveBeenCalled();
+
+		// Cleanup
+		setupWebSocketSpy.mockRestore();
+	});
+
+	it("should set up WebSocket if the client is not already registered", async () => {
+		await ComfyUI.init({});
+		const instance = ComfyUI.getInstance;
+
+		// Prepare test data
+		const clientId = "new-client";
+		const handleMessage: WebSocketMessageHandler = jest.fn();
+
+		// Mock `setupWebSocket` method to verify it's called
+		const setupWebSocketSpy = jest
+			.spyOn(instance as any, "setupWebSocket")
+			.mockImplementation(jest.fn());
+
+		// Register new client
+		instance.registerClient(clientId, handleMessage);
+
+		// Verify WebSocket setup is triggered
+		expect(setupWebSocketSpy).toHaveBeenCalledWith(clientId, handleMessage);
+
+		// Cleanup
+		setupWebSocketSpy.mockRestore();
+	});
+
+	it("should close WebSocket and remove client if the client is registered", async () => {
+		await ComfyUI.init({});
+		const instance = ComfyUI.getInstance;
+
+		// Prepare test data
+		const clientId = "existing-client";
+
+		// Mock `setupWebSocket` method to avoid testing its internals
+		const setupWebSocketSpy = jest
+			.spyOn(instance as any, "setupWebSocket")
+			.mockImplementation(jest.fn());
+
+		// Add a client to the map directly to simulate an existing client
+		(instance as any).clients.set(clientId, mockWebSocket);
+
+		// Unregister client
+		const result = instance.unregisterClient(clientId);
+
+		// Verify WebSocket is closed and client is removed
+		expect(mockWebSocket.close).toHaveBeenCalled();
+		expect((instance as any).clients.has(clientId)).toBe(false);
+		expect(result).toEqual({ closed: true });
+
+		// Cleanup
+		setupWebSocketSpy.mockRestore();
+	});
+
+	it("should return notExist if the client is not registered", async () => {
+		await ComfyUI.init({});
+		const instance = ComfyUI.getInstance;
+
+		// Prepare test data
+		const clientId = "non-existing-client";
+
+		// Unregister non-existing client
+		const result = instance.unregisterClient(clientId);
+
+		// Verify WebSocket is not closed and client is not removed
+		expect(mockWebSocket.close).not.toHaveBeenCalled();
+		expect((instance as any).clients.has(clientId)).toBe(false);
+		expect(result).toEqual({ notExist: true });
+	});
+
+	it("should queue a workflow successfully and return the response", async () => {
+		const mockedAxios = axios as jest.Mocked<typeof axios>;
+
+		await ComfyUI.init({ port });
+		const instance = ComfyUI.getInstance;
+
+		// Prepare test data
+		const prompt = { nodes: [{ id: 1, name: "node1" }] };
+		const clientId = "test-client";
+		const mockResponseData = {
+			node_errors: [],
+			number: 1,
+			prompt_id: "prompt-123",
+		};
+
+		// Mock axios POST response
+		mockedAxios.post.mockResolvedValueOnce({ data: mockResponseData });
+
+		// Expected QueueWorkflowResponse
+		const expectedResponse: QueueWorkflowResponse = {
+			node_errors: [],
+			number: 1,
+			promptId: "prompt-123",
+		};
+
+		// Queue workflow and verify response
+		const result = await instance.queueWorkflow(prompt, clientId);
+		expect(result).toEqual(expectedResponse);
+
+		// Verify axios was called with correct arguments
+		expect(mockedAxios.post).toHaveBeenCalledWith(`http://127.0.0.1:${port}/prompt`, {
+			prompt,
+			client_id: clientId,
+		});
+	});
+
+	it("should throw an error if the workflow queuing fails", async () => {
+		const mockedAxios = axios as jest.Mocked<typeof axios>;
+
+		await ComfyUI.init({ port });
+		const instance = ComfyUI.getInstance;
+
+		// Prepare test data
+		const prompt = { nodes: [{ id: 1, name: "node1" }] };
+		const clientId = "test-client";
+		const errorMessage = "Can't queue the workflow for ComfyUI";
+
+		// Mock axios POST response to reject
+		mockedAxios.post.mockRejectedValueOnce(new Error(errorMessage));
+
+		// Try to queue workflow and catch error
+		await expect(instance.queueWorkflow(prompt, clientId)).rejects.toThrow(errorMessage);
+
+		// Verify axios was called with correct arguments
+		expect(mockedAxios.post).toHaveBeenCalledWith(`http://127.0.0.1:${port}/prompt`, {
+			prompt,
+			client_id: clientId,
+		});
+	});
 });
-
-//
-// describe("ComfyUI registerClient", () => {
-// 	it("should register a new client and setup WebSocket", () => {
-// 		const instance = ComfyUI.getInstance;
-// 		const mockSetupWebSocket = jest.fn();
-// 		instance.setupWebSocket = mockSetupWebSocket;
-
-// 		instance.registerClient("client1", jest.fn());
-
-// 		expect(mockSetupWebSocket).toHaveBeenCalledWith("client1", expect.any(Function));
-// 		expect(instance.clients.has("client1")).toBeTruthy();
-// 	});
-
-// 	it("should not register a client twice", () => {
-// 		const instance = ComfyUI.getInstance;
-// 		instance.registerClient("client1", jest.fn());
-
-// 		const mockSetupWebSocket = jest.fn();
-// 		instance.setupWebSocket = mockSetupWebSocket;
-
-// 		instance.registerClient("client1", jest.fn());
-
-// 		expect(mockSetupWebSocket).not.toHaveBeenCalled();
-// 	});
-// });

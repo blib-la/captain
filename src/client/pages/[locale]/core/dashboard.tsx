@@ -1,8 +1,6 @@
-import { useSDK } from "@captn/react/use-sdk";
 import { useVectorScroll } from "@captn/react/use-vector-store";
 import Alert from "@mui/joy/Alert";
 import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
 import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import ListItemButton from "@mui/joy/ListItemButton";
@@ -12,8 +10,6 @@ import Typography from "@mui/joy/Typography";
 import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
-
-import workflow from "./workflow.json";
 
 import { DynamicIcon } from "@/client/atoms/icons/dynamic";
 import { Logo } from "@/client/atoms/logo";
@@ -39,23 +35,6 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 
 	useThirdPartyAppsPath();
 
-	const { send } = useSDK<unknown, object>("dashboard", {
-		onMessage(message) {
-			switch (message.action) {
-				case "comfyui:update": {
-					const { data } = message.payload as { data: object };
-
-					console.log(data);
-					break;
-				}
-
-				default: {
-					break;
-				}
-			}
-		},
-	});
-
 	return (
 		<>
 			<Head>
@@ -66,29 +45,6 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 					<Typography level="title-lg">{t("texts:howToUseCaptain")}</Typography>
 				</Alert>
 
-				<Button
-					onClick={() => {
-						send({
-							action: "comfyui:registerClient",
-							payload: {},
-						});
-					}}
-				>
-					Register Client
-				</Button>
-
-				<Button
-					onClick={() => {
-						send({
-							action: "comfyui:queue",
-							payload: {
-								workflow,
-							},
-						});
-					}}
-				>
-					Start a workflow
-				</Button>
 				<List
 					sx={{
 						display: "grid",

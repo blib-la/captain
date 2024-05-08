@@ -5,9 +5,8 @@ import { execa, type ExecaChildProcess } from "execa";
 import WebSocket from "ws";
 import { stringify } from "yaml";
 
-import { createDirectory } from "../utils/fs";
-
 import { logError, logger } from "@/electron/services/logger";
+import { createDirectory } from "@/electron/utils/fs";
 import {
 	getCaptainData,
 	getCaptainDownloads,
@@ -34,7 +33,13 @@ type Device = {
 	torch_vram_free: number;
 };
 
-type WebSocketMessageHandler = (data: string) => void;
+export type WebSocketMessageHandler = (data: string) => void;
+
+export enum ComfyUIStatus {
+	NOT_RUNNING = "NOT_RUNNING",
+	RUNNING = "RUNNING",
+	FAILED_TO_START = "FAILED_TO_START",
+}
 
 /**
  * Manages the lifecycle and interactions of the ComfyUI server, including
@@ -46,12 +51,14 @@ export class ComfyUI {
 	private process: ExecaChildProcess<string> | undefined;
 	private url: string;
 	private host: string;
-	private port: string;
+	private port: number;
 	private clients: Map<string, WebSocket> = new Map();
+	private status: ComfyUIStatus = ComfyUIStatus.NOT_RUNNING;
+	private debug: boolean = false;
 
-	private constructor() {
-		this.host = "127.0.0.1";
-		this.port = "1338";
+	private constructor(host: string, port: number) {
+		this.host = host;
+		this.port = port;
 		this.url = `${this.host}:${this.port}`;
 	}
 
@@ -59,12 +66,35 @@ export class ComfyUI {
 	 * Initializes the ComfyUI service as a singleton instance.
 	 * This method configures the server, checks its readiness, and starts it if not already running.
 	 *
-	 * @returns {Promise<ComfyUI>} The singleton instance of the ComfyUI class.
+	 * @param {object} options - Configuration options for initializing ComfyUI.
+	 * @param {number} [options.timeout=2000] - The timeout in milliseconds for checking server readiness.
+	 * @param {number} [options.maxRetries=60] - The maximum number of retries for checking server readiness.
+	 * @param {boolean} [options.debug=false] - Enables or disables debug logging.
+	 * @param {string} [options.host="127.0.0.1"] - The host address of the ComfyUI server.
+	 * @param {number} [options.port=1337] - The port of the ComfyUI server.
+	 *
+	 * @returns {Promise<ComfyUIStatus>} The status of the ComfyUI server.
+	 *
 	 * @throws {Error} Throws an error if the server fails to start or is not ready after maximum retries.
 	 */
-	public static async init(): Promise<ComfyUI> {
+	public static async init({
+		timeout = 2000,
+		maxRetries = 60,
+		debug = false,
+		host = "127.0.0.1",
+		port = 1337,
+	}: {
+		timeout?: number;
+		maxRetries?: number;
+		debug?: boolean;
+		host?: string;
+		port?: number;
+	}): Promise<ComfyUIStatus> {
 		if (!ComfyUI.instance) {
-			ComfyUI.instance = new ComfyUI();
+			ComfyUI.instance = new ComfyUI(host, port);
+
+			// Enable / disable debugging output
+			ComfyUI.instance.debug = debug;
 
 			// Create the config to find the local models of the user
 			await ComfyUI.instance.generateModelPathsConfig();
@@ -73,17 +103,19 @@ export class ComfyUI {
 			await ComfyUI.instance.start();
 
 			// Make sure that the ComfyUI server is started
-			const isReady = await ComfyUI.instance.checkServerReady();
+			const isReady = await ComfyUI.instance.checkServerReady(timeout, maxRetries);
 
 			// The server is started
 			if (isReady) {
 				logger.info("ComfyUI is ready");
+				ComfyUI.instance.status = ComfyUIStatus.RUNNING;
 			} else {
 				logger.error(`ComfyUI is not ready after maximum retries`);
+				ComfyUI.instance.status = ComfyUIStatus.FAILED_TO_START;
 			}
 		}
 
-		return ComfyUI.instance;
+		return ComfyUI.instance.status;
 	}
 
 	/**
@@ -138,8 +170,8 @@ export class ComfyUI {
 		this.process = execa(pythonBinaryPath, ["-u", scriptPath, ...scriptArguments]);
 
 		// Listen for stdout and stderr
-		if (this.process.stdout && this.process.stderr) {
-			this.process.stdout.on("data", async data => {
+		if (this.debug && this.process.stdout && this.process.stderr) {
+			this.process.stdout.on("data", data => {
 				logger.info(data.toString());
 			});
 
@@ -157,14 +189,12 @@ export class ComfyUI {
 	 * @param {number} maxRetries - The maximum number of retries for checking server readiness.
 	 * @returns {Promise<boolean>} True if the server is ready, false otherwise.
 	 */
-	private async checkServerReady(
-		timeout: number = 2000,
-		maxRetries: number = 60
-	): Promise<boolean> {
+	private async checkServerReady(timeout: number, maxRetries: number): Promise<boolean> {
 		let retries = 0;
 		while (retries < maxRetries) {
 			try {
 				const response = await axios.get<SystemStats>(`http://${this.url}/system_stats`);
+
 				if (response.status === 200) {
 					return true;
 				}
@@ -190,25 +220,25 @@ export class ComfyUI {
 	 * @private
 	 */
 	private setupWebSocket(clientId: string, handleMessage: WebSocketMessageHandler) {
-		const ws = new WebSocket(`ws://${this.url}/ws?clientId=${clientId}`);
+		const websocket = new WebSocket(`ws://${this.url}/ws?clientId=${clientId}`);
 
-		ws.on("open", () => {
+		websocket.on("open", () => {
 			logger.info("WebSocket connection established", clientId);
 		});
 
-		ws.on("message", data => {
+		websocket.on("message", data => {
 			handleMessage(JSON.parse(data.toString()));
 		});
 
-		ws.on("close", () => {
+		websocket.on("close", () => {
 			logger.info("WebSocket connection closed", clientId);
 		});
 
-		ws.on("error", error => {
+		websocket.on("error", error => {
 			logError(error, `WebSocket error for ${clientId}`);
 		});
 
-		this.clients.set(clientId, ws);
+		this.clients.set(clientId, websocket);
 	}
 
 	/**
@@ -224,6 +254,24 @@ export class ComfyUI {
 		} else {
 			this.setupWebSocket(clientId, handleMessage);
 		}
+	}
+
+	/**
+	 * Unregisters a client by closing its WebSocket connection and removing it from the internal client list.
+	 * If the client does not exist, it returns an indication of non-existence.
+	 *
+	 * @param {string} clientId - The unique identifier of the client to unregister.
+	 * @returns {{ closed?: boolean; notExist?: boolean }} An object indicating whether the client was closed or did not exist.
+	 */
+	public unregisterClient(clientId: string) {
+		if (this.clients.has(clientId)) {
+			this.clients.get(clientId)?.close();
+			this.clients.delete(clientId);
+
+			return { closed: true };
+		}
+
+		return { notExist: true };
 	}
 
 	/**

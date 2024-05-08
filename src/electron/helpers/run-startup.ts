@@ -1,4 +1,5 @@
 import { apps } from "@/electron/apps";
+import { PORTS } from "@/electron/constants";
 import { ComfyUI } from "@/electron/services/comfyui";
 import { logError, logger } from "@/electron/services/logger";
 import { loadURL } from "@/electron/utils/load-window";
@@ -24,7 +25,7 @@ export async function runStartup() {
 
 	logger.info("runStartup(): ComfyUI is starting");
 	try {
-		ComfyUI.init();
+		ComfyUI.init({ port: PORTS.COMFYUI });
 	} catch (error) {
 		logError(error, "Can't start ComfyUI");
 	}

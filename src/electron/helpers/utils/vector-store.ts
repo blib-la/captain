@@ -15,6 +15,7 @@ import exifr from "exifr";
 import { globby } from "globby";
 import matter from "gray-matter";
 
+import { PORTS } from "@/electron/constants";
 import { CustomHuggingFaceTransformersEmbeddings } from "@/electron/langchain/custom-hugging-face-transformers-embeddings";
 import { VectorStore } from "@/electron/services/vector-store";
 import {
@@ -32,13 +33,14 @@ export async function initialize() {
 	env.allowRemoteModels = false;
 	env.allowLocalModels = true;
 
-	await VectorStore.init(
-		new CustomHuggingFaceTransformersEmbeddings({
+	await VectorStore.init({
+		port: PORTS.VECTOR_STORE,
+		embeddings: new CustomHuggingFaceTransformersEmbeddings({
 			modelName: "Xenova/all-MiniLM-L6-v2",
 			maxTokens: 128,
 			stripNewLines: true,
-		})
-	);
+		}),
+	});
 }
 
 export async function reset() {

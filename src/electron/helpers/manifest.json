@@ -1,14 +1,14 @@
 {
   "windows": [
     {
-      "name": "python-embedded",
+      "name": "comfyui-portable",
       "version": "1.0.0",
       "sources": [
         {
-          "url": "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/python-embedded-win.7z",
-          "destination": "python-embedded",
-          "name": "Python + Dependencies",
-          "size": "2.1 GB",
+          "url": "https://pub-aea7c308ba0147b69deba50a606e7743.r2.dev/comfyui-portable-win-nvidia_cu121_or_cpu_09_04_2024.7z",
+          "destination": "downloads/comfyui-portable",
+          "name": "ComfyUI + Python",
+          "size": "1.4 GB",
           "unzip": true
         }
       ]
