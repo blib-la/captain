@@ -1,3 +1,10 @@
+# [1.0.0-alpha.69](https://github.com/blib-la/captain/compare/v1.0.0-alpha.68...v1.0.0-alpha.69) (2024-05-08)
+
+
+### Features
+
+* add an app for comfyUI to run in captain ([#269](https://github.com/blib-la/captain/issues/269)) ([e71362d](https://github.com/blib-la/captain/commit/e71362dad2bd82e088b4cc92959972d94b241a1f))
+
 # [1.0.0-alpha.68](https://github.com/blib-la/captain/compare/v1.0.0-alpha.67...v1.0.0-alpha.68) (2024-05-08)
 
 
