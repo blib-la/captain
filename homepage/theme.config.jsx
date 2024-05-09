@@ -20,6 +20,7 @@ const themeConfig = {
 				property="og:description"
 				content="A platform that evolves to your needs and brings your ideas to life"
 			/>
+			<meta property="og:image" content="/images/social-card.png" />
 			<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" type="image/x-icon" />
 		</>
 	),
