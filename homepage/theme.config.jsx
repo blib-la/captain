@@ -16,7 +16,7 @@ const themeConfig = {
 	head: (
 		<>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-			<meta property="og:title" content="Captain" />
+			<meta property="og:title" content="Captain | The AI Platform" />
 			<meta
 				property="og:description"
 				content="Your all-in-one platform to build and use AI apps effortlessly on your own computer"
