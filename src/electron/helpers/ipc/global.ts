@@ -19,12 +19,18 @@ import { execa } from "execa";
 import { v4 } from "uuid";
 
 import { apps } from "@/electron/apps";
-import { logError } from "@/electron/services/logger";
+import { logError, logger } from "@/electron/services/logger";
 import { VectorStore } from "@/electron/services/vector-store";
 import { inventoryStore, downloadsStore, userStore, appSettingsStore } from "@/electron/stores";
 import { pushToStore } from "@/electron/stores/utils";
 import type { DownloadsSettings } from "@/electron/types";
-import { getCaptainData, getCaptainDownloads, getDirectory } from "@/electron/utils/path-helpers";
+import { createDirectory } from "@/electron/utils/fs";
+import {
+	getCaptainData,
+	getCaptainDownloads,
+	getDirectory,
+	getPythonEmbedded,
+} from "@/electron/utils/path-helpers";
 import { splitDocument } from "@/electron/utils/split-documents";
 import { unpack } from "@/electron/utils/unpack";
 import { buildKey } from "@/shared/build-key";
@@ -98,7 +104,7 @@ ipcMain.handle(buildKey([ID.FILE], { prefix: "path:", suffix: ":get" }), async (
 });
 
 async function writePngMetaData(filePath: string, description: string) {
-	const pythonBinaryPath = getCaptainData("python-embedded/python.exe");
+	const pythonBinaryPath = getPythonEmbedded("python.exe");
 	const scriptPath = getDirectory("python/png/main.py");
 	const scriptArguments = ["--image_path", filePath, "--description", description];
 
@@ -136,10 +142,7 @@ ipcMain.handle(
 		const { dir: directory, ext, base } = path.parse(filePath);
 		const fileType = getFileType(filePath);
 
-		// Ensure the directory exists, creating it if necessary
-		if (!existsSync(directory)) {
-			await fsp.mkdir(directory, { recursive: true });
-		}
+		createDirectory(directory);
 
 		// Write the file content
 		await fsp.writeFile(filePath, content, options);
@@ -245,6 +248,57 @@ ipcMain.handle(
 
 		// Copy the file
 		await fsp.copyFile(source, filePath);
+	}
+);
+
+ipcMain.on(
+	buildKey([ID.FILE], { suffix: ":copy-image-with-metadata" }),
+	async (
+		event,
+		{
+			source,
+			destination,
+			metadata,
+		}: {
+			source: string;
+			destination: string;
+			metadata?: { prompt?: string; description?: string; caption?: string };
+		}
+	) => {
+		const filePath = getCaptainData("files", cleanPath(destination));
+		const { dir: directory, ext } = path.parse(filePath);
+
+		// Copy the file
+		const id = v4();
+		await fsp.copyFile(source, filePath);
+		logger.info(`copy image from ${source} to ${filePath}`);
+		const fileName = `${id}${ext}`;
+		const destinationPath = path.join(directory, fileName);
+		await fsp.rename(filePath, destinationPath);
+		logger.info(`renamed image from ${filePath} to ${destinationPath}`);
+		if (metadata?.description) {
+			logger.info(
+				`add metadata to image at ${destinationPath} with description: ${metadata.description}`
+			);
+			await writePngMetaData(destinationPath, metadata.description);
+			const vectorStore = VectorStore.getInstance;
+
+			const operations = await vectorStore.upsert(VECTOR_STORE_COLLECTION, [
+				{
+					content: metadata.description,
+					payload: {
+						id: v4(),
+						label: fileName,
+						type: "image",
+						fileType: ext.replace(".", ""),
+						language: "en",
+						filePath: destinationPath,
+					},
+				},
+			]);
+
+			event.sender.send(VECTOR_STORE_SAVED_KEY, operations);
+		}
 	}
 );
 

@@ -42,6 +42,19 @@ export function getCaptainApps(...subpath: string[]): string {
 	return normalizePath(getCaptainData("apps", ...subpath));
 }
 
+export function getCaptainFiles(...subpath: string[]): string {
+	return normalizePath(getCaptainData("files", ...subpath));
+}
+
 export function getCaptainTemporary(...subpath: string[]): string {
 	return normalizePath(getCaptainData("temp", ...subpath));
+}
+
+export function getComfyUIPath(...subpath: string[]): string {
+	return getCaptainDownloads("comfyui-portable/ComfyUI", ...subpath);
+}
+
+export function getPythonEmbedded(...subpath: string[]): string {
+	// ComfyUI has a typo in "embedded" (embeded). Make sure to keep this as is.
+	return getCaptainDownloads("comfyui-portable/python_embeded", ...subpath);
 }

@@ -1,4 +1,5 @@
 import { useSDK } from "@captn/react/use-sdk";
+import { localFile } from "@captn/utils/string";
 import Box from "@mui/joy/Box";
 import { useAtom } from "jotai";
 
@@ -33,7 +34,7 @@ export function RenderingArea() {
 				display: "flex",
 			}}
 		>
-			{image && <img height={512} width={512} src={image} alt="" />}
+			{image && <img height={512} width={512} src={localFile(image)} alt="" />}
 		</Box>
 	);
 }
