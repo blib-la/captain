@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 import { Logo } from "./components/logo";
 
@@ -15,11 +16,12 @@ const themeConfig = {
 	head: (
 		<>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-			<meta property="og:title" content="Captain" />
+			<meta property="og:title" content="Captain | The AI Platform" />
 			<meta
 				property="og:description"
-				content="A platform that evolves to your needs and brings your ideas to life"
+				content="Your all-in-one platform to build and use AI apps effortlessly on your own computer"
 			/>
+			<meta property="og:image" content="/images/social-card.png" />
 			<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" type="image/x-icon" />
 		</>
 	),
@@ -30,8 +32,9 @@ const themeConfig = {
 	primaryHue: 176,
 	primarySaturation: 60,
 	useNextSeoProps() {
+		const { asPath } = useRouter();
 		return {
-			titleTemplate: "%s – Captain",
+			titleTemplate: asPath === "/" ? "Captain - The AI platform" : "%s – Captain",
 		};
 	},
 	project: {
