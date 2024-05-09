@@ -1,7 +1,7 @@
 import { useAtom } from "jotai/index";
 import { useEffect } from "react";
 
-import { comfyUIPathAtom } from "@/client/ions/atoms";
+import { comfyUIPathAtom, comfyUITemporaryPathAtom } from "@/client/ions/atoms";
 import { buildKey } from "@/shared/build-key";
 import { ID } from "@/shared/enums";
 
@@ -26,17 +26,22 @@ import { ID } from "@/shared/enums";
  *
  * @returns {void} This hook does not return a value; it solely operates side effects to manage state.
  */
-export function useComfyUIPath() {
+export function useComfyUIPath(): void {
 	const [, setComfyUIPath] = useAtom(comfyUIPathAtom);
+	const [, setComfyUITemporaryPath] = useAtom(comfyUITemporaryPathAtom);
 
 	useEffect(() => {
 		window.ipc.send(buildKey([ID.COMFYUI], { suffix: ":get-path" }));
-		const unsubscribe = window.ipc.on(buildKey([ID.COMFYUI], { suffix: ":path" }), path_ => {
-			setComfyUIPath(path_);
-		});
+		const unsubscribe = window.ipc.on(
+			buildKey([ID.COMFYUI], { suffix: ":path" }),
+			({ comfyUIFiles, temporary }) => {
+				setComfyUIPath(comfyUIFiles);
+				setComfyUITemporaryPath(temporary);
+			}
+		);
 
 		return () => {
 			unsubscribe();
 		};
-	}, [setComfyUIPath]);
+	}, [setComfyUIPath, setComfyUITemporaryPath]);
 }

@@ -5,7 +5,7 @@ import { ipcMain } from "electron";
 
 import { PORTS } from "@/electron/constants";
 import { ComfyUI } from "@/electron/services/comfyui";
-import { getCaptainFiles } from "@/electron/utils/path-helpers";
+import { getCaptainFiles, getComfyUIPath } from "@/electron/utils/path-helpers";
 import { buildKey } from "@/shared/build-key";
 import { ID } from "@/shared/enums";
 import type { NodeChain } from "@/shared/types/comfyui";
@@ -76,5 +76,8 @@ ipcMain.on(buildKey([ID.COMFYUI_PORT], { suffix: ":get" }), event => {
 });
 
 ipcMain.on(buildKey([ID.COMFYUI], { suffix: ":get-path" }), event => {
-	event.sender.send(buildKey([ID.COMFYUI], { suffix: ":path" }), getCaptainFiles("comfyui"));
+	event.sender.send(buildKey([ID.COMFYUI], { suffix: ":path" }), {
+		comfyUIFiles: getCaptainFiles("comfyui"),
+		temporary: getComfyUIPath("temp"),
+	});
 });

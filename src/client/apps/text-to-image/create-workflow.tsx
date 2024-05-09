@@ -4,15 +4,17 @@ export function createWorkflow({
 	seed = 1234,
 	steps = 20,
 	cfg = 7,
+	checkpointName = "stabilityai\\stable-diffusion-xl-base-1.0\\sd_xl_base_1.0_0.9vae.safetensors",
 }: {
 	prompt?: string;
 	negativePrompt?: string;
 	seed?: number;
 	steps?: number;
 	cfg?: number;
+	checkpointName?: string;
 }) {
 	return {
-		"3": {
+		kSampler: {
 			inputs: {
 				seed,
 				steps,
@@ -20,27 +22,26 @@ export function createWorkflow({
 				sampler_name: "euler",
 				scheduler: "normal",
 				denoise: 1,
-				model: ["4", 0],
-				positive: ["6", 0],
-				negative: ["7", 0],
-				latent_image: ["5", 0],
+				model: ["model", 0],
+				positive: ["prompt", 0],
+				negative: ["negativePrompt", 0],
+				latent_image: ["latentImage", 0],
 			},
 			class_type: "KSampler",
 			_meta: {
 				title: "KSampler",
 			},
 		},
-		"4": {
+		model: {
 			inputs: {
-				ckpt_name:
-					"stabilityai\\stable-diffusion-xl-base-1.0\\sd_xl_base_1.0_0.9vae.safetensors",
+				ckpt_name: checkpointName,
 			},
 			class_type: "CheckpointLoaderSimple",
 			_meta: {
 				title: "Load Checkpoint",
 			},
 		},
-		"5": {
+		latentImage: {
 			inputs: {
 				width: 1024,
 				height: 1024,
@@ -51,44 +52,44 @@ export function createWorkflow({
 				title: "Empty Latent Image",
 			},
 		},
-		"6": {
+		prompt: {
 			inputs: {
 				text: prompt,
-				clip: ["4", 1],
+				clip: ["model", 1],
 			},
 			class_type: "CLIPTextEncode",
 			_meta: {
 				title: "CLIP Text Encode (Prompt)",
 			},
 		},
-		"7": {
+		negativePrompt: {
 			inputs: {
 				text: negativePrompt,
-				clip: ["4", 1],
+				clip: ["model", 1],
 			},
 			class_type: "CLIPTextEncode",
 			_meta: {
 				title: "CLIP Text Encode (Prompt)",
 			},
 		},
-		"8": {
+		vaeDecode: {
 			inputs: {
-				samples: ["3", 0],
-				vae: ["4", 2],
+				samples: ["kSampler", 0],
+				vae: ["model", 2],
 			},
 			class_type: "VAEDecode",
 			_meta: {
 				title: "VAE Decode",
 			},
 		},
-		"9": {
+		output: {
 			inputs: {
 				filename_prefix: "images/captain",
-				images: ["8", 0],
+				images: ["vaeDecode", 0],
 			},
-			class_type: "SaveImage",
+			class_type: "PreviewImage",
 			_meta: {
-				title: "Save Image",
+				title: "Preview Image",
 			},
 		},
 	};

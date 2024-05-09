@@ -23,8 +23,10 @@ import {
 import type { IllustrationStyles } from "@/client/apps/live-painting/text-to-image";
 import { illustrationStyles } from "@/client/apps/live-painting/text-to-image";
 import { createWorkflow } from "@/client/apps/text-to-image/create-workflow";
-import { comfyUIPathAtom } from "@/client/ions/atoms";
+import { comfyUITemporaryPathAtom } from "@/client/ions/atoms";
 import { useComfyUIPath } from "@/client/ions/hooks/comfyui-path";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
 import { randomSeed } from "@/shared/number";
 
 interface ComfyUIExecuted {
@@ -48,7 +50,7 @@ export function TextToImage() {
 
 	// Global States
 	const [, setImage] = useAtom(imageAtom);
-	const [comfyUIPath] = useAtom(comfyUIPathAtom);
+	const [comfyUITemporaryPath] = useAtom(comfyUITemporaryPathAtom);
 
 	const { send } = useSDK<unknown, object>(APP_ID, {
 		onMessage(message) {
@@ -60,8 +62,20 @@ export function TextToImage() {
 
 					if (data.type === "executed") {
 						const { filename, subfolder } = data.data.output.images[0];
-						const image_ = `${comfyUIPath}/${subfolder}/${filename}`;
-						setImage(image_);
+						const temporaryImage =
+							`${comfyUITemporaryPath}/${subfolder}/${filename}`.replaceAll(
+								/\?+/g,
+								"/"
+							);
+						setImage(temporaryImage);
+						window.ipc.send(
+							buildKey([ID.FILE], { suffix: ":copy-image-with-metadata" }),
+							{
+								source: temporaryImage,
+								destination: `images/${filename}`,
+								metadata: { description: prompt },
+							}
+						);
 						setIsGenerating(false);
 					}
 
@@ -82,11 +96,12 @@ export function TextToImage() {
 		});
 	}, [send]);
 
-	useComfyUIPath();
 	useUnload(APP_ID, "comfyui:free", {
 		unloadModels: true,
 		freeMemory: false,
 	});
+
+	useComfyUIPath();
 
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
