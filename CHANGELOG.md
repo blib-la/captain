@@ -1,3 +1,10 @@
+# [1.0.0-alpha.70](https://github.com/blib-la/captain/compare/v1.0.0-alpha.69...v1.0.0-alpha.70) (2024-05-09)
+
+
+### Features
+
+* use comfy for image generation ([#280](https://github.com/blib-la/captain/issues/280)) ([02504c0](https://github.com/blib-la/captain/commit/02504c0154cea2594494d197d0e5e8c856840b6f))
+
 # [1.0.0-alpha.69](https://github.com/blib-la/captain/compare/v1.0.0-alpha.68...v1.0.0-alpha.69) (2024-05-08)
 
 
