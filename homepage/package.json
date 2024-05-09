@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "postbuild": "next-sitemap",
+    "start": "next start",
+    "serve": "npx serve ./out"
   },
   "repository": {
     "type": "git",
@@ -29,6 +31,7 @@
     "swr": "^2.2.5"
   },
   "devDependencies": {
+    "next-sitemap": "^4.2.3",
     "@svgr/webpack": "^8.1.0",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
