@@ -1,4 +1,5 @@
 import { useSDK } from "@captn/react/use-sdk";
+import { useUnload } from "@captn/react/use-unload";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
@@ -6,14 +7,13 @@ import CircularProgress from "@mui/joy/CircularProgress";
 import Sheet from "@mui/joy/Sheet";
 import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { imageAtom } from "./atoms";
-import { allRequiredDownloads, APP_ID } from "./constants";
-import { useUnload } from "./hooks";
+import { allRequiredDownloads } from "./constants";
 import { RenderingArea } from "./rendering-area";
 
-import { PromptSheet, RunButton, SaveButton } from "@/client/apps/live-painting/components";
+import { PromptSheet } from "@/client/apps/live-painting/components";
 import { RequiredModelsAlert } from "@/client/apps/live-painting/required-models-alert";
 import {
 	StyledButtonWrapper,
@@ -22,7 +22,21 @@ import {
 } from "@/client/apps/live-painting/styled";
 import type { IllustrationStyles } from "@/client/apps/live-painting/text-to-image";
 import { illustrationStyles } from "@/client/apps/live-painting/text-to-image";
+import { createWorkflow } from "@/client/apps/text-to-image/create-workflow";
+import { comfyUIPathAtom } from "@/client/ions/atoms";
+import { useComfyUIPath } from "@/client/ions/hooks/comfyui-path";
 import { randomSeed } from "@/shared/number";
+
+interface ComfyUIExecuted {
+	type: "executed";
+	data: {
+		output: {
+			images: { filename: string; subfolder: string }[];
+		};
+	};
+}
+
+const APP_ID = "text-to-image";
 
 export function TextToImage() {
 	const { t } = useTranslation(["common", "labels"]);
@@ -30,30 +44,27 @@ export function TextToImage() {
 	// Local States
 	const [prompt, setPrompt] = useState("");
 	const [illustrationStyle, setIllustrationStyle] = useState<IllustrationStyles>("childrensBook");
-	const [isRunning, setIsRunning] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
 	const [isGenerating, setIsGenerating] = useState(false);
 
 	// Global States
-	const [image] = useAtom(imageAtom);
+	const [, setImage] = useAtom(imageAtom);
+	const [comfyUIPath] = useAtom(comfyUIPathAtom);
 
-	const { send } = useSDK<unknown, string>(APP_ID, {
+	const { send } = useSDK<unknown, object>(APP_ID, {
 		onMessage(message) {
 			switch (message.action) {
-				case "text-to-image:started": {
-					setIsRunning(true);
-					setIsLoading(false);
-					break;
-				}
+				case "comfyui:update": {
+					const { data } = message.payload as {
+						data: ComfyUIExecuted;
+					};
 
-				case "text-to-image:stopped": {
-					setIsRunning(false);
-					setIsLoading(false);
-					break;
-				}
+					if (data.type === "executed") {
+						const { filename, subfolder } = data.data.output.images[0];
+						const image_ = `${comfyUIPath}/${subfolder}/${filename}`;
+						setImage(image_);
+						setIsGenerating(false);
+					}
 
-				case "text-to-image:generated": {
-					setIsGenerating(false);
 					break;
 				}
 
@@ -64,7 +75,18 @@ export function TextToImage() {
 		},
 	});
 
-	useUnload();
+	useEffect(() => {
+		send({
+			action: "comfyui:registerClient",
+			payload: {},
+		});
+	}, [send]);
+
+	useComfyUIPath();
+	useUnload(APP_ID, "comfyui:free", {
+		unloadModels: true,
+		freeMemory: false,
+	});
 
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
@@ -72,57 +94,30 @@ export function TextToImage() {
 			<StyledStickyHeader>
 				{/* Left Side of the header */}
 				<StyledButtonWrapper>
-					{/* Button to start and stop the live painting process */}
-					<RunButton
-						isLoading={isLoading}
-						isRunning={isRunning}
-						onStop={() => {
-							setIsLoading(true);
-							send({ action: "text-to-image:stop", payload: APP_ID });
-						}}
-						onStart={() => {
-							setIsLoading(true);
-							send({
-								action: "text-to-image:start",
-								payload: {
-									appId: APP_ID,
-									model: "stabilityai/sdxl/sd_xl_base_1.0_0.9vae.safetensors",
-									vae: "madebyollin/taesdxl",
-								},
-							});
-						}}
-					/>
-				</StyledButtonWrapper>
-				{/* Right Side of the header */}
-				<StyledButtonWrapper>
-					<Box sx={{ flex: 1 }} />
 					<Button
 						disabled={isGenerating}
 						startDecorator={isGenerating ? <CircularProgress /> : <PlayArrowIcon />}
 						onClick={() => {
-							if (isRunning) {
-								setIsGenerating(true);
-								send({
-									action: "text-to-image:settings",
-									payload: {
+							setIsGenerating(true);
+							send({
+								action: "comfyui:queue",
+								payload: {
+									workflow: createWorkflow({
 										prompt: [
 											prompt,
 											illustrationStyles[illustrationStyle],
 										].join(", "),
 										seed: randomSeed(),
-									},
-								});
-							}
+									}),
+								},
+							});
 						}}
 					>
 						{t("labels:generate")}
 					</Button>
-					{/* Save the image to disk (includes a control + s listener) */}
-					<SaveButton
-						image={image}
-						prompt={[prompt, illustrationStyles[illustrationStyle]].join(", ")}
-					/>
 				</StyledButtonWrapper>
+				{/* Right Side of the header */}
+				<StyledButtonWrapper />
 			</StyledStickyHeader>
 			<Sheet
 				sx={{
