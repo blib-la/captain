@@ -1,13 +1,6 @@
-import { useRequiredDownloads } from "@captn/react/use-required-downloads";
-import { useSDK } from "@captn/react/use-sdk";
 import { ClickAwayListener } from "@mui/base";
-import DownloadIcon from "@mui/icons-material/Download";
 import PaletteIcon from "@mui/icons-material/Palette";
-import PlayIcon from "@mui/icons-material/PlayArrow";
-import StopIcon from "@mui/icons-material/Stop";
 import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
-import CircularProgress from "@mui/joy/CircularProgress";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import type { IconButtonProps } from "@mui/joy/IconButton";
@@ -20,22 +13,15 @@ import Textarea from "@mui/joy/Textarea";
 import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
 import { useTranslation } from "next-i18next";
-import { type DetailedHTMLProps, type InputHTMLAttributes, useEffect, useState } from "react";
+import { type DetailedHTMLProps, type InputHTMLAttributes, useState } from "react";
 import type { Except } from "type-fest";
 
-import { allRequiredDownloads, APP_ID } from "../constants";
 import { StyledColorInput } from "../styled";
 import type { IllustrationStyles } from "../text-to-image";
 import { illustrationStyles } from "../text-to-image";
 
 import { FlagUs } from "@/client/atoms/flags/us";
 import { getContrastColor } from "@/client/ions/utils/color";
-
-export interface Repository {
-	modelPath: string;
-	id: string;
-	label: string;
-}
 
 export interface ColorSelectorProperties
 	extends Except<
@@ -156,85 +142,6 @@ export function TooltipButton({ label, children, ...properties }: TooltipButtonP
 	);
 }
 
-export function ModelSelect() {
-	const { t } = useTranslation(["common", "labels"]);
-
-	const [checkpoints, setCheckpoints] = useState<Repository[]>([]);
-	const [vae, setVae] = useState<Repository[]>([]);
-	const [isDownloading, setIsDownloading] = useState(false);
-	const hasModelAndVae = checkpoints.length > 0 && vae.length > 0;
-
-	const { send } = useSDK<unknown, string>(APP_ID, {});
-
-	useEffect(() => {
-		window.ipc.inventoryStore
-			.get<Repository[]>("stable-diffusion.checkpoints", [])
-			.then(checkpoints => {
-				setCheckpoints(checkpoints);
-			});
-
-		window.ipc.inventoryStore.get<Repository[]>("stable-diffusion.vae", []).then(vae => {
-			setVae(vae);
-		});
-
-		const unsubscribeCheckpoints = window.ipc.on(
-			"stable-diffusion.checkpoints",
-			checkpoints => {
-				setCheckpoints(checkpoints);
-			}
-		);
-
-		const unsubscribeVae = window.ipc.on("stable-diffusion.vae", vae => {
-			setVae(vae);
-		});
-		return () => {
-			unsubscribeCheckpoints();
-			unsubscribeVae();
-		};
-	}, []);
-
-	useEffect(() => {
-		if (hasModelAndVae) {
-			setIsDownloading(false);
-		}
-	}, [hasModelAndVae]);
-
-	return hasModelAndVae ? (
-		<Select variant="plain" defaultValue={checkpoints[0].id}>
-			{checkpoints.map(checkpoint => (
-				<Option key={checkpoint.id} value={checkpoint.id}>
-					{checkpoint.label}
-				</Option>
-			))}
-		</Select>
-	) : (
-		<Button
-			disabled={isDownloading}
-			startDecorator={isDownloading ? <CircularProgress /> : <DownloadIcon />}
-			onClick={() => {
-				setIsDownloading(true);
-				send({
-					action: "cloneRepositories:start",
-					payload: [
-						{
-							repository: "Blib-la/sd-turbo-fp16",
-							destination: "stable-diffusion/checkpoints",
-							label: "SD Turbo",
-						},
-						{
-							repository: "madebyollin/taesd",
-							destination: "stable-diffusion/vae",
-							label: "Taesd",
-						},
-					],
-				});
-			}}
-		>
-			{t("labels:download")}
-		</Button>
-	);
-}
-
 export interface PromptSheetProperties {
 	illustrationStyle: IllustrationStyles;
 	prompt: string;
@@ -310,43 +217,5 @@ export function PromptSheet({
 				/>
 			</FormControl>
 		</Sheet>
-	);
-}
-
-export interface RunButtonProperties {
-	isLoading: boolean;
-	isRunning: boolean;
-	onStop(): void;
-	onStart(): void;
-}
-
-export function RunButton({ isLoading, isRunning, onStart, onStop }: RunButtonProperties) {
-	const { t } = useTranslation(["common", "labels"]);
-	const { isCompleted: hasModelAndVae } = useRequiredDownloads(allRequiredDownloads);
-
-	return isRunning ? (
-		<Button
-			disabled={isLoading || !hasModelAndVae}
-			color="danger"
-			variant="soft"
-			startDecorator={isLoading ? <CircularProgress /> : <StopIcon />}
-			onClick={() => {
-				onStop();
-			}}
-		>
-			{t("labels:stop")}
-		</Button>
-	) : (
-		<Button
-			disabled={isLoading || !hasModelAndVae}
-			color="success"
-			variant="soft"
-			startDecorator={isLoading ? <CircularProgress /> : <PlayIcon />}
-			onClick={() => {
-				onStart();
-			}}
-		>
-			{t("labels:start")}
-		</Button>
 	);
 }
