@@ -10,7 +10,7 @@ import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
 
 import { imageAtom } from "./atoms";
-import { allRequiredDownloads } from "./constants";
+import { allRequiredDownloads, APP_ID } from "./constants";
 import { RenderingArea } from "./rendering-area";
 
 import { PromptSheet } from "@/client/apps/live-painting/components";
@@ -37,8 +37,6 @@ interface ComfyUIExecuted {
 		};
 	};
 }
-
-const APP_ID = "text-to-image";
 
 export function TextToImage() {
 	const { t } = useTranslation(["common", "labels"]);

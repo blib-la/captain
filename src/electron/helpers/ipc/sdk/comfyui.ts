@@ -5,6 +5,7 @@ import { ipcMain } from "electron";
 
 import { PORTS } from "@/electron/constants";
 import { ComfyUI } from "@/electron/services/comfyui";
+import { logger } from "@/electron/services/logger";
 import { getCaptainFiles, getComfyUIPath } from "@/electron/utils/path-helpers";
 import { buildKey } from "@/shared/build-key";
 import { ID } from "@/shared/enums";
@@ -55,6 +56,7 @@ ipcMain.on(
 			case "comfyui:registerClient": {
 				// Register the client and receive updates from ComfyUI
 				ComfyUI.getInstance.registerClient(appId, data => {
+					logger.info(`ComfyUI received register request from ${appId}`);
 					event.sender.send(channel, {
 						action: "comfyui:update",
 						payload: { data },

@@ -15,20 +15,7 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 	const [clearCounter] = useAtom(clearCounterAtom);
 	const canvasContainerReference = useRef<HTMLDivElement>(null);
 
-	const { send } = useSDK<unknown, string>(APP_ID, {
-		onMessage(message) {
-			switch (message.action) {
-				case "image-to-image:generated": {
-					break;
-				}
-
-				default: {
-					break;
-				}
-			}
-		},
-	});
-
+	const { send } = useSDK<unknown, object>(APP_ID, {});
 	function startDrawing(event: ReactPointerEvent) {
 		if (!canvas.current) {
 			return;
@@ -81,7 +68,8 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 				context.current.stroke();
 			}
 
-			send({ action: "image-to-image:dataUrl", payload: canvas.current.toDataURL() });
+			//
+			// send({ action: "image-to-image:dataUrl", payload: canvas.current.toDataURL() });
 		}
 
 		function handleMouseUp() {
@@ -143,7 +131,8 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 			context.current.fillStyle = "#ffffff";
 			context.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
 			context.current.fillRect(0, 0, canvas.current.width, canvas.current.height);
-			send({ action: "image-to-image:dataUrl", payload: canvas.current.toDataURL() });
+			//
+			// send({ action: "image-to-image:dataUrl", payload: canvas.current.toDataURL() });
 		}
 	}, [send, clearCounter]);
 
