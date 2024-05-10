@@ -1,26 +1,15 @@
 import { ClickAwayListener } from "@mui/base";
 import PaletteIcon from "@mui/icons-material/Palette";
 import Box from "@mui/joy/Box";
-import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
 import type { IconButtonProps } from "@mui/joy/IconButton";
 import IconButton from "@mui/joy/IconButton";
-import Option from "@mui/joy/Option";
-import Select from "@mui/joy/Select";
-import Sheet from "@mui/joy/Sheet";
 import Slider, { type SliderProps } from "@mui/joy/Slider";
-import Textarea from "@mui/joy/Textarea";
 import Tooltip from "@mui/joy/Tooltip";
-import Typography from "@mui/joy/Typography";
-import { useTranslation } from "next-i18next";
 import { type DetailedHTMLProps, type InputHTMLAttributes, useState } from "react";
 import type { Except } from "type-fest";
 
-import type { IllustrationStyles } from "../illustration-styles";
-import { illustrationStyles } from "../illustration-styles";
-import { StyledColorInput } from "../styled";
+import { StyledColorInput } from "./styled";
 
-import { FlagUs } from "@/client/atoms/flags/us";
 import { getContrastColor } from "@/client/ions/utils/color";
 
 export interface ColorSelectorProperties
@@ -55,12 +44,12 @@ export function ColorInputButton({ value, label, onChange }: ColorSelectorProper
 	);
 }
 
-export interface PopupSLiderProperties extends Except<SliderProps, "value"> {
+export interface PopupSliderProperties extends Except<SliderProps, "value"> {
 	label: string;
 	value: number;
 }
 
-export function PopupSlider({ label, value, children, ...properties }: PopupSLiderProperties) {
+export function PopupSlider({ label, value, children, ...properties }: PopupSliderProperties) {
 	const [isOpen, setIsOpen] = useState(false);
 	return (
 		<Tooltip
@@ -139,83 +128,5 @@ export function TooltipButton({ label, children, ...properties }: TooltipButtonP
 				{children}
 			</IconButton>
 		</Tooltip>
-	);
-}
-
-export interface PromptSheetProperties {
-	illustrationStyle: IllustrationStyles;
-	prompt: string;
-	onIllustrationStyleChange(value: IllustrationStyles): void;
-	onPromptChange(value: string): void;
-}
-
-export function PromptSheet({
-	illustrationStyle,
-	prompt,
-	onIllustrationStyleChange,
-	onPromptChange,
-}: PromptSheetProperties) {
-	const { t } = useTranslation(["common", "labels"]);
-	return (
-		<Sheet
-			variant="soft"
-			sx={{
-				display: "flex",
-				gap: 1,
-				flexDirection: { xs: "column", md: "row" },
-				px: 1,
-				py: 2,
-			}}
-		>
-			<FormControl sx={{ minWidth: 200 }}>
-				<FormLabel>{t("labels:artStyle")}</FormLabel>
-				<Select
-					value={illustrationStyle}
-					renderValue={option =>
-						option && (
-							<Typography>
-								{t(`labels:illustrationStyles.${option.value}`)}
-							</Typography>
-						)
-					}
-					onChange={(_event, value_) => {
-						if (value_) {
-							onIllustrationStyleChange(value_);
-						}
-					}}
-				>
-					{Object.entries(illustrationStyles).map(([key_]) => (
-						<Option
-							key={key_}
-							value={key_}
-							sx={{ flexDirection: "column", alignItems: "stretch" }}
-						>
-							<Typography>{t(`labels:illustrationStyles.${key_}`)}</Typography>
-							{key_ === "custom" && (
-								<Typography level="body-xs" component="div">
-									{t(`labels:illustrationStyles.customInfo`)}
-								</Typography>
-							)}
-						</Option>
-					))}
-				</Select>
-			</FormControl>
-			<FormControl sx={{ flex: 1 }}>
-				<FormLabel>{t("labels:prompt")}</FormLabel>
-				<Textarea
-					minRows={3}
-					maxRows={3}
-					value={prompt}
-					startDecorator={
-						<Typography startDecorator={<FlagUs />} level="body-xs">
-							{t("labels:promptInfo")}
-						</Typography>
-					}
-					onChange={event => {
-						onPromptChange(event.target.value);
-					}}
-				/>
-			</FormControl>
-		</Sheet>
 	);
 }

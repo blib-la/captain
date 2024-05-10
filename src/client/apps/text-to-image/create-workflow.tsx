@@ -3,12 +3,16 @@ export function createWorkflow({
 	negativePrompt = "",
 	seed = 1234,
 	steps = 20,
+	height,
+	width,
 	cfg = 7,
 	checkpointName = "stabilityai\\stable-diffusion-xl-base-1.0\\sd_xl_base_1.0_0.9vae.safetensors",
 }: {
 	prompt?: string;
 	negativePrompt?: string;
 	seed?: number;
+	height: number;
+	width: number;
 	steps?: number;
 	cfg?: number;
 	checkpointName?: string;
@@ -19,8 +23,8 @@ export function createWorkflow({
 				seed,
 				steps,
 				cfg,
-				sampler_name: "euler",
-				scheduler: "normal",
+				sampler_name: "dpmpp_2m_sde_gpu",
+				scheduler: "karras",
 				denoise: 1,
 				model: ["model", 0],
 				positive: ["prompt", 0],
@@ -43,8 +47,8 @@ export function createWorkflow({
 		},
 		latentImage: {
 			inputs: {
-				width: 1024,
-				height: 1024,
+				width,
+				height,
 				batch_size: 1,
 			},
 			class_type: "EmptyLatentImage",

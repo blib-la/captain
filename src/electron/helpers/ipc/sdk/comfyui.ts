@@ -7,7 +7,7 @@ import { ipcMain } from "electron";
 
 import { PORTS } from "@/electron/constants";
 import { ComfyUI } from "@/electron/services/comfyui";
-import { logger } from "@/electron/services/logger";
+import { logError, logger } from "@/electron/services/logger";
 import { getCaptainFiles, getComfyUIPath } from "@/electron/utils/path-helpers";
 import { buildKey } from "@/shared/build-key";
 import { ID } from "@/shared/enums";
@@ -46,10 +46,14 @@ ipcMain.on(
 
 				if (response) {
 					// Send the promptId back to the sender
-					event.sender.send(channel, {
-						action: "comfyui:promptId",
-						payload: { promptId: response.promptId },
-					});
+					try {
+						event.sender.send(channel, {
+							action: "comfyui:promptId",
+							payload: { promptId: response.promptId },
+						});
+					} catch (error) {
+						logError(error, "comfyui:promptId");
+					}
 				}
 
 				break;
@@ -79,10 +83,14 @@ ipcMain.on(
 				logger.info(`ComfyUI received register request from ${appId}`);
 				// Register the client and receive updates from ComfyUI
 				ComfyUI.getInstance.registerClient(appId, data => {
-					event.sender.send(channel, {
-						action: "comfyui:update",
-						payload: { data },
-					});
+					try {
+						event.sender.send(channel, {
+							action: "comfyui:update",
+							payload: { data },
+						});
+					} catch (error) {
+						logError(error, `comfyui:update from: ${appId}`);
+					}
 				});
 
 				break;
@@ -91,8 +99,13 @@ ipcMain.on(
 			case "comfyui:unregisterClient": {
 				logger.info(`ComfyUI received unrregister request from ${appId}`);
 				// Unregister the client and receive updates from ComfyUI
-				ComfyUI.getInstance.unregisterClient(appId);
-				await ComfyUI.getInstance.free({ unloadModels: true });
+				try {
+					ComfyUI.getInstance.unregisterClient(appId);
+					await ComfyUI.getInstance.free({ unloadModels: true });
+				} catch (error) {
+					logError(error, `comfyui:unregisterClient from ${appId}`);
+				}
+
 				break;
 			}
 

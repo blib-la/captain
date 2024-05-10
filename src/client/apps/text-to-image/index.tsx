@@ -11,32 +11,36 @@ import { useEffect, useState } from "react";
 
 import { imageAtom } from "./atoms";
 import { allRequiredDownloads, APP_ID } from "./constants";
-import { RenderingArea } from "./rendering-area";
+import { createWorkflow } from "./create-workflow";
 
-import { PromptSheet } from "@/client/apps/live-painting/components";
-import type { IllustrationStyles } from "@/client/apps/live-painting/illustration-styles";
-import { illustrationStyles } from "@/client/apps/live-painting/illustration-styles";
-import { RequiredModelsAlert } from "@/client/apps/live-painting/required-models-alert";
+import { PromptSheet } from "@/client/apps/shared/components";
+import type { IllustrationStyles } from "@/client/apps/shared/illustration-styles";
+import { illustrationStyles, injectPrompt } from "@/client/apps/shared/illustration-styles";
+import { RenderingArea } from "@/client/apps/shared/rendering-area";
+import { RequiredModelsAlert } from "@/client/apps/shared/required-models-alert";
 import {
 	StyledButtonWrapper,
 	StyledRenderingAreaWrapper,
 	StyledStickyHeader,
-} from "@/client/apps/live-painting/styled";
-import { createWorkflow } from "@/client/apps/text-to-image/create-workflow";
+} from "@/client/apps/shared/styled";
+import type { ComfyExecuted, ComfyStatusMessage } from "@/client/apps/shared/types";
 import { comfyUITemporaryPathAtom } from "@/client/ions/atoms";
 import { useComfyUIPath } from "@/client/ions/hooks/comfyui-path";
 import { buildKey } from "@/shared/build-key";
 import { ID } from "@/shared/enums";
 import { randomSeed } from "@/shared/number";
 
-interface ComfyUIExecuted {
-	type: "executed";
-	data: {
-		output: {
-			images: { filename: string; subfolder: string }[];
-		};
-	};
-}
+const sizes = [
+	{ height: 1536, width: 644 },
+	{ height: 1344, width: 768 },
+	{ height: 1216, width: 832 },
+	{ height: 1152, width: 896 },
+	{ height: 1024, width: 1024 },
+	{ height: 896, width: 1152 },
+	{ height: 832, width: 1216 },
+	{ height: 768, width: 1344 },
+	{ height: 644, width: 1536 },
+];
 
 export function TextToImage() {
 	const { t } = useTranslation(["common", "labels"]);
@@ -47,18 +51,22 @@ export function TextToImage() {
 	const [isGenerating, setIsGenerating] = useState(false);
 
 	// Global States
-	const [, setImage] = useAtom(imageAtom);
+	const [image, setImage] = useAtom(imageAtom);
 	const [comfyUITemporaryPath] = useAtom(comfyUITemporaryPathAtom);
+	const [size] = useState(sizes[3]);
+	const [queueSize, setQueueSize] = useState(0);
 
 	const { send } = useSDK<unknown, object>(APP_ID, {
 		onMessage(message) {
 			switch (message.action) {
 				case "comfyui:update": {
 					const { data } = message.payload as {
-						data: ComfyUIExecuted;
+						data: ComfyExecuted | ComfyStatusMessage;
 					};
-
-					if (data.type === "executed") {
+					if (data.type === "status") {
+						setQueueSize(data.data.status.exec_info.queue_remaining);
+						setIsGenerating(data.data.status.exec_info.queue_remaining > 0);
+					} else if (data.type === "executed") {
 						const { filename, subfolder } = data.data.output.images[0];
 						const temporaryImage =
 							`${comfyUITemporaryPath}/${subfolder}/${filename}`.replaceAll(
@@ -74,7 +82,6 @@ export function TextToImage() {
 								metadata: { description: prompt },
 							}
 						);
-						setIsGenerating(false);
 					}
 
 					break;
@@ -87,18 +94,20 @@ export function TextToImage() {
 		},
 	});
 
+	useUnload(APP_ID, "comfyui:unregisterClient", {});
+
 	useEffect(() => {
 		send({
 			action: "comfyui:registerClient",
 			payload: {},
 		});
+		return () => {
+			send({
+				action: "comfyui:unregisterClient",
+				payload: {},
+			});
+		};
 	}, [send]);
-
-	useUnload(APP_ID, "comfyui:free", {
-		unloadModels: true,
-		freeMemory: false,
-	});
-
 	useComfyUIPath();
 
 	return (
@@ -108,7 +117,8 @@ export function TextToImage() {
 				{/* Left Side of the header */}
 				<StyledButtonWrapper>
 					<Button
-						disabled={isGenerating}
+						//
+						// disabled={isGenerating}
 						startDecorator={isGenerating ? <CircularProgress /> : <PlayArrowIcon />}
 						onClick={() => {
 							setIsGenerating(true);
@@ -116,17 +126,23 @@ export function TextToImage() {
 								action: "comfyui:queue",
 								payload: {
 									workflow: createWorkflow({
-										prompt: [
+										height: size.height,
+										width: size.width,
+										cfg: 8.5,
+										steps: 35,
+										prompt: injectPrompt(
 											prompt,
-											illustrationStyles[illustrationStyle],
-										].join(", "),
+											illustrationStyles[illustrationStyle].positive
+										),
+										negativePrompt:
+											illustrationStyles[illustrationStyle].negative,
 										seed: randomSeed(),
 									}),
 								},
 							});
 						}}
 					>
-						{t("labels:generate")}
+						{t("labels:generate")} {Boolean(queueSize) && `(${queueSize})`}
 					</Button>
 				</StyledButtonWrapper>
 				{/* Right Side of the header */}
@@ -143,13 +159,15 @@ export function TextToImage() {
 			>
 				<StyledRenderingAreaWrapper
 					sx={{
+						position: "absolute",
+						inset: 0,
 						width: {
 							xs: "100%",
 							md: "100%",
 						},
 					}}
 				>
-					<RenderingArea />
+					<RenderingArea image={image} height={size.height} width={size.width} />
 				</StyledRenderingAreaWrapper>
 			</Sheet>
 			{/* The prompt to be used for generations (includes a selector for illustration styles for convenience) */}

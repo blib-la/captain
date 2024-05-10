@@ -10,7 +10,7 @@ export async function runStartup() {
 
 	logger.info("runStartup(): ComfyUI is starting");
 	try {
-		await ComfyUI.init({ port: PORTS.COMFYUI, debug: false });
+		await ComfyUI.init({ port: PORTS.COMFYUI, debug: true });
 	} catch (error) {
 		logError(error, "Can't start ComfyUI");
 	} finally {

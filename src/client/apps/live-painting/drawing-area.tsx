@@ -96,7 +96,6 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 			) {
 				canvasRenderCacheReference.current = canvasRenderReference.current;
 				timeoutId = window.setTimeout(() => {
-					console.log("send");
 					send({
 						action: "comfyui:upload-image",
 						payload: { dataURL: canvasRenderReference.current },

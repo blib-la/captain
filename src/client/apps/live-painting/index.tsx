@@ -5,7 +5,9 @@ import BrushIcon from "@mui/icons-material/Brush";
 import CasinoIcon from "@mui/icons-material/Casino";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SaveIcon from "@mui/icons-material/Save";
+import StopIcon from "@mui/icons-material/Stop";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import Sheet from "@mui/joy/Sheet";
@@ -16,55 +18,42 @@ import { useTranslation } from "next-i18next";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { clearCounterAtom, imageAtom, livePaintingOptionsAtom } from "./atoms";
-import { ColorInputButton, PopupSlider, PromptSheet, TooltipButton } from "./components";
+import { ColorInputButton, PopupSlider, TooltipButton } from "./components";
 import { allRequiredDownloads, APP_ID, FRAMES_PER_SECOND, MAX_QUEUE_LENGTH } from "./constants";
 import { createWorkflow } from "./create-workflow";
 import { DrawingArea } from "./drawing-area";
-import type { IllustrationStyles } from "./illustration-styles";
-import { injectPrompt } from "./illustration-styles";
-import { illustrationStyles } from "./illustration-styles";
-import { RenderingArea } from "./rendering-area";
-import { RequiredModelsAlert } from "./required-models-alert";
+
+import { PromptSheet } from "@/client/apps/shared/components";
+import type { IllustrationStyles } from "@/client/apps/shared/illustration-styles";
+import { illustrationStyles, injectPrompt } from "@/client/apps/shared/illustration-styles";
+import { RenderingArea } from "@/client/apps/shared/rendering-area";
+import { RequiredModelsAlert } from "@/client/apps/shared/required-models-alert";
 import {
 	StyledButtonWrapper,
 	StyledDrawingAreaWrapper,
 	StyledRenderingAreaWrapper,
 	StyledStickyHeader,
-} from "./styled";
-
+} from "@/client/apps/shared/styled";
+import type { ComfyExecuted, ComfyStatusMessage } from "@/client/apps/shared/types";
 import { comfyUITemporaryPathAtom } from "@/client/ions/atoms";
 import { useComfyUIPath } from "@/client/ions/hooks/comfyui-path";
 import { buildKey } from "@/shared/build-key";
 import { ID } from "@/shared/enums";
 import { randomSeed } from "@/shared/number";
 
-interface ComfyUIExecuted {
-	type: "executed";
-	data: {
-		output: {
-			images: { filename: string; subfolder: string }[];
-		};
-	};
-}
-
-interface ComfyStatusMessage {
-	type: "status";
-
-	data: {
-		status: {
-			exec_info: {
-				queue_remaining: number;
-			};
-		};
-	};
-}
-
-export function SaveButton({ image, prompt }: { image: string; prompt: string }) {
+export function SaveButton({
+	image,
+	prompt,
+	fileName,
+}: {
+	image: string;
+	prompt: string;
+	fileName: string;
+}) {
 	const { t } = useTranslation(["common", "labels"]);
 	const [saved, setSaved] = useResettableState(false, 3000);
 	const promptCache = useRef(prompt);
 	const imageCache = useRef(image);
-	const [fileName] = useState("");
 
 	const saveImage = useCallback(async () => {
 		if (fileName && image) {
@@ -99,6 +88,7 @@ export function SaveButton({ image, prompt }: { image: string; prompt: string })
 			window.removeEventListener("keydown", handleSave);
 		};
 	}, [saveImage]);
+
 	return (
 		<Button
 			color={saved ? "success" : "neutral"}
@@ -119,7 +109,7 @@ export function LivePainting() {
 	const [prompt, setPrompt] = useState("");
 	const [illustrationStyle, setIllustrationStyle] = useState<IllustrationStyles>("childrensBook");
 	const [seed, setSeed] = useState(randomSeed());
-	const [, setFileName] = useState("");
+	const [fileName, setFileName] = useState("");
 	const startedReference = useRef(false);
 	const [started, setStarted] = useState(false);
 
@@ -136,7 +126,7 @@ export function LivePainting() {
 			switch (message.action) {
 				case "comfyui:update": {
 					const { data } = message.payload as {
-						data: ComfyUIExecuted | ComfyStatusMessage;
+						data: ComfyExecuted | ComfyStatusMessage;
 					};
 					if (
 						data.type === "status" &&
@@ -146,14 +136,14 @@ export function LivePainting() {
 					}
 
 					if (data.type === "executed") {
-						const { filename: fileName_, subfolder } = data.data.output.images[0];
+						const { filename, subfolder } = data.data.output.images[0];
 						const temporaryImage =
-							`${comfyUITemporaryPath}/${subfolder}/${fileName_}`.replaceAll(
+							`${comfyUITemporaryPath}/${subfolder}/${filename}`.replaceAll(
 								/\?+/g,
 								"/"
 							);
 						setImage(temporaryImage);
-						setFileName(fileName_);
+						setFileName(filename);
 					}
 
 					break;
@@ -197,7 +187,10 @@ export function LivePainting() {
 						action: "comfyui:queue",
 						payload: {
 							workflow: createWorkflow({
-								prompt: injectPrompt(prompt, illustrationStyles[illustrationStyle]),
+								prompt: injectPrompt(
+									prompt,
+									illustrationStyles[illustrationStyle].positive
+								),
 								seed,
 							}),
 						},
@@ -223,6 +216,7 @@ export function LivePainting() {
 				{/* Left Side of the header */}
 				<StyledButtonWrapper>
 					<Button
+						startDecorator={started ? <StopIcon /> : <PlayArrowIcon />}
 						onClick={() => {
 							startedReference.current = !startedReference.current;
 							if (startedReference.current) {
@@ -232,7 +226,7 @@ export function LivePainting() {
 										workflow: createWorkflow({
 											prompt: injectPrompt(
 												prompt,
-												illustrationStyles[illustrationStyle]
+												illustrationStyles[illustrationStyle].positive
 											),
 											seed,
 										}),
@@ -305,7 +299,7 @@ export function LivePainting() {
 				<StyledButtonWrapper>
 					<Box sx={{ flex: 1 }} />
 					{/* Save the image to disk (includes a control + s listener) */}
-					<SaveButton image={image} prompt={prompt} />
+					<SaveButton image={image} prompt={prompt} fileName={fileName} />
 				</StyledButtonWrapper>
 			</StyledStickyHeader>
 			{/* Main Area includes the drawing and rendering area */}
@@ -339,7 +333,7 @@ export function LivePainting() {
 						flex: isOverlay ? 1 : undefined,
 					}}
 				>
-					<RenderingArea />
+					<RenderingArea image={image} height={512} width={512} />
 				</StyledRenderingAreaWrapper>
 			</Sheet>
 			{/* The prompt to be used for generations (includes a selector for illustration styles for convenience) */}
