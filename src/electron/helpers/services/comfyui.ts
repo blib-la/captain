@@ -241,6 +241,42 @@ export class ComfyUI {
 	}
 
 	/**
+	 * Uploads an image to the ComfyUI server.
+	 * This method uses FormData to append the image Blob along with metadata and then makes a POST request to upload the image.
+	 * It handles both success and error scenarios, logging the error if the upload fails.
+	 *
+	 * @param {string} appId - The application identifier used to uniquely name the image file.
+	 * @param {Blob} blob - The image data as a Blob, which will be sent to the server.
+	 *
+	 * @returns {Promise<void>} - Completes when the upload is done. If the upload fails, it logs the error.
+	 *
+	 * @example
+	 * ```ts
+	 * // Example of calling uploadImage
+	 * const imageBlob = new Blob([imageData], { type: 'image/png' });
+	 * comfyUI.uploadImage('myAppId', imageBlob)
+	 *     .then(() => console.log('Image uploaded successfully'))
+	 *     .catch(error => console.error('Failed to upload image', error));
+	 * ```
+	 *
+	 * @throws {Error} - Throws an error if the axios POST request fails to send the image.
+	 */
+	public async uploadImage(appId: string, blob: Blob): Promise<void> {
+		const formData = new FormData();
+
+		formData.append("image", blob, `${appId}.png`);
+
+		formData.append("overwrite", "true");
+
+		try {
+			await axios.post(`http://${this.url}/upload/image`, formData);
+		} catch (error) {
+			logError(error);
+			throw error;
+		}
+	}
+
+	/**
 	 * Frees resources in the ComfyUI application by unloading models and/or freeing memory.
 	 * This method makes a POST request to the server to either unload models or free memory based on the provided parameters.
 	 *
@@ -319,7 +355,7 @@ export class ComfyUI {
 	public async queueWorkflow(
 		prompt: NodeChain,
 		clientId: string
-	): Promise<QueueWorkflowResponse> {
+	): Promise<QueueWorkflowResponse | undefined> {
 		const url = `http://${this.url}/prompt`;
 		try {
 			const response = await axios.post(url, { prompt, client_id: clientId });

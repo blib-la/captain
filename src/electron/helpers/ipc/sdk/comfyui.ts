@@ -2,7 +2,6 @@ import { Buffer } from "node:buffer";
 
 import type { SDKMessage } from "@captn/react/types";
 import { APP_MESSAGE_KEY } from "@captn/utils/constants";
-import axios from "axios";
 import type { IpcMainEvent } from "electron";
 import { ipcMain } from "electron";
 
@@ -43,13 +42,15 @@ ipcMain.on(
 				const { workflow } = message.payload as { workflow: NodeChain };
 
 				// Add the workflow into the queue
-				const { promptId } = await ComfyUI.getInstance.queueWorkflow(workflow, appId);
+				const response = await ComfyUI.getInstance.queueWorkflow(workflow, appId);
 
-				// Send the promptId back to the sender
-				event.sender.send(channel, {
-					action: "comfyui:promptId",
-					payload: { promptId },
-				});
+				if (response) {
+					// Send the promptId back to the sender
+					event.sender.send(channel, {
+						action: "comfyui:promptId",
+						payload: { promptId: response.promptId },
+					});
+				}
 
 				break;
 			}
@@ -94,14 +95,7 @@ ipcMain.on(
 				try {
 					const blob = new Blob([dataURLToBuffer(dataURL)]);
 
-					const formData = new FormData();
-
-					formData.append("image", blob, `${appId}.png`);
-
-					formData.append("overwrite", "true");
-
-					// Now, make the POST request to the upload/image endpoint
-					await axios.post(`http://127.0.0.1:${PORTS.COMFYUI}/upload/image`, formData);
+					await ComfyUI.getInstance.uploadImage(appId, blob);
 				} catch (error) {
 					console.log(error);
 				}

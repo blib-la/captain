@@ -379,4 +379,75 @@ describe("ComfyUI", () => {
 			client_id: clientId,
 		});
 	});
+
+	it("should upload an image successfully", async () => {
+		// Mock axios to resolve the POST request
+		const mockedAxios = axios as jest.Mocked<typeof axios>;
+		mockedAxios.post.mockResolvedValue({ status: 200 });
+		await ComfyUI.init({ port });
+		const instance = ComfyUI.getInstance;
+		const appId = "testApp";
+		const blob = new Blob(["image data"], { type: "image/png" });
+
+		// Execute the uploadImage method
+		await expect(instance.uploadImage(appId, blob)).resolves.toBeUndefined();
+
+		// Expect axios.post to have been called once
+		expect(mockedAxios.post).toHaveBeenCalledTimes(1);
+
+		// Check the FormData instance passed to axios.post
+		const formData = mockedAxios.post.mock.calls[0][1] as FormData;
+		expect(formData).toBeInstanceOf(FormData);
+		// Expect(formData.getHeaders()["content-type"]).toContain("multipart/form-data");
+
+		// Check the correct endpoint was called
+		expect(mockedAxios.post).toHaveBeenCalledWith(
+			`http://127.0.0.1:${port}/upload/image`,
+			expect.any(FormData)
+		);
+	});
+
+	it("should log an error if the upload fails", async () => {
+		// Mock axios to reject the POST request
+		const mockedAxios = axios as jest.Mocked<typeof axios>;
+		const error = new Error("Upload failed");
+		mockedAxios.post.mockRejectedValue(error);
+		await ComfyUI.init({ port });
+		const instance = ComfyUI.getInstance;
+		const appId = "testApp";
+		const blob = new Blob(["image data"], { type: "image/png" });
+
+		// Execute the uploadImage method and expect it to throw
+		await expect(instance.uploadImage(appId, blob)).rejects.toThrow("Upload failed");
+
+		// Check that the error was logged using logError (assuming logError is also mocked correctly)
+		expect(logError).toHaveBeenCalledWith(error);
+
+		// Expect axios.post to have been called once
+		expect(mockedAxios.post).toHaveBeenCalledTimes(1);
+	});
+
+	it("should correctly append blob and metadata to FormData", async () => {
+		const mockedAxios = axios as jest.Mocked<typeof axios>;
+		await ComfyUI.init({ port });
+		const instance = ComfyUI.getInstance;
+		// Prepare a mock for FormData
+		const appendSpy = jest.spyOn(FormData.prototype, "append");
+
+		const appId = "testApp";
+		const blob = new Blob(["image data"], { type: "image/png" });
+
+		// Since we're only testing FormData handling, we can resolve the POST request
+		mockedAxios.post.mockResolvedValue({ status: 200 });
+
+		// Execute the uploadImage method
+		await instance.uploadImage(appId, blob);
+
+		// Check if FormData was correctly used
+		expect(appendSpy).toHaveBeenCalledWith("image", blob, `${appId}.png`);
+		expect(appendSpy).toHaveBeenCalledWith("overwrite", "true");
+
+		// Cleanup spy
+		appendSpy.mockRestore();
+	});
 });

@@ -46,6 +46,18 @@ interface ComfyUIExecuted {
 	};
 }
 
+interface ComfyStatusMessage {
+	type: "status";
+
+	data: {
+		status: {
+			exec_info: {
+				queue_remaining: number;
+			};
+		};
+	};
+}
+
 export function SaveButton({ image, prompt }: { image: string; prompt: string }) {
 	const { t } = useTranslation(["common", "labels"]);
 	const [saved, setSaved] = useResettableState(false, 3000);
@@ -120,10 +132,16 @@ export function LivePainting() {
 			switch (message.action) {
 				case "comfyui:update": {
 					const { data } = message.payload as {
-						data: ComfyUIExecuted;
+						data: ComfyUIExecuted | ComfyStatusMessage;
 					};
+					if (data.type === "status" && data.data.status.exec_info.queue_remaining < 2) {
+						console.log("We may queue");
+						receivedReference.current = true;
+					}
 
 					if (data.type === "executed") {
+						console.log("EXECTUTED");
+
 						const { filename: fileName_, subfolder } = data.data.output.images[0];
 						const temporaryImage =
 							`${comfyUITemporaryPath}/${subfolder}/${fileName_}`.replaceAll(
@@ -132,7 +150,6 @@ export function LivePainting() {
 							);
 						setImage(temporaryImage);
 						setFileName(fileName_);
-						receivedReference.current = true;
 					}
 
 					break;
@@ -156,21 +173,19 @@ export function LivePainting() {
 			payload: {},
 		});
 	}, [send]);
-
 	useEffect(() => {
 		let animationFrame = -1;
 		const fps = 5; // Adjust the frames per second
 		const fpsInterval = 1000 / fps;
 		let lastDrawTime = performance.now() - fpsInterval;
-
 		function sendPrompt() {
 			const now = performance.now();
 			const elapsed = now - lastDrawTime;
 
 			if (elapsed > fpsInterval) {
 				lastDrawTime = now - (elapsed % fpsInterval);
-
 				if (receivedReference.current) {
+					receivedReference.current = false;
 					send({
 						action: "comfyui:queue",
 						payload: {
@@ -190,19 +205,7 @@ export function LivePainting() {
 		return () => {
 			cancelAnimationFrame(animationFrame);
 		};
-	});
-	/*
-	UseEffect(() => {
-		send({
-			action: "comfyui:queue",
-			payload: {
-				workflow: createWorkflow({
-					prompt: [prompt, illustrationStyles[illustrationStyle]].join(", "),
-					seed,
-				}),
-			},
-		});
-	}, [send, prompt, seed, illustrationStyle]); */
+	}, [illustrationStyle, prompt, seed, send]);
 
 	useComfyUIPath();
 

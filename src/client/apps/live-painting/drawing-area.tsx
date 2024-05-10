@@ -14,6 +14,8 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 	const [livePaintingOptions] = useAtom(livePaintingOptionsAtom);
 	const [clearCounter] = useAtom(clearCounterAtom);
 	const canvasContainerReference = useRef<HTMLDivElement>(null);
+	const canvasRenderCacheReference = useRef<null | string>(null);
+	const canvasRenderReference = useRef("");
 
 	const { send } = useSDK<unknown, object>(APP_ID, {});
 	function startDrawing(event: ReactPointerEvent) {
@@ -85,20 +87,25 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 		}
 
 		function handleMouseUp() {
-			if (isDrawing.current) {
-				context.current?.closePath();
+			if (isDrawing.current && context.current) {
+				context.current.closePath();
 				isDrawing.current = false;
 			}
 
 			cancelAnimationFrame(animationFrame);
 			// Ensure the last drawing gets uploaded
-			if (sendTimeout !== null) {
+			if (sendTimeout !== null && canvas.current) {
 				clearTimeout(sendTimeout);
 				sendTimeout = window.setTimeout(() => {
-					send({
-						action: "comfyui:upload-image",
-						payload: { dataURL: canvas.current?.toDataURL() },
-					});
+					canvasRenderReference.current = canvas.current!.toDataURL();
+					if (canvasRenderCacheReference.current !== canvasRenderReference.current) {
+						send({
+							action: "comfyui:upload-image",
+							payload: { dataURL: canvasRenderReference.current },
+						});
+						canvasRenderCacheReference.current = canvasRenderReference.current;
+					}
+
 					sendTimeout = null;
 				}, 0);
 			}
