@@ -159,19 +159,28 @@ export function LivePainting() {
 
 	useEffect(() => {
 		let animationFrame = -1;
+		const fps = 5; // Adjust the frames per second
+		const fpsInterval = 1000 / fps;
+		let lastDrawTime = performance.now() - fpsInterval;
+
 		function sendPrompt() {
-			if (receivedReference.current) {
-				console.log("tick");
-				// ReceivedReference.current = false;
-				send({
-					action: "comfyui:queue",
-					payload: {
-						workflow: createWorkflow({
-							prompt: [prompt, illustrationStyles[illustrationStyle]].join(", "),
-							seed,
-						}),
-					},
-				});
+			const now = performance.now();
+			const elapsed = now - lastDrawTime;
+
+			if (elapsed > fpsInterval) {
+				lastDrawTime = now - (elapsed % fpsInterval);
+
+				if (receivedReference.current) {
+					send({
+						action: "comfyui:queue",
+						payload: {
+							workflow: createWorkflow({
+								prompt: [prompt, illustrationStyles[illustrationStyle]].join(", "),
+								seed,
+							}),
+						},
+					});
+				}
 			}
 
 			animationFrame = requestAnimationFrame(sendPrompt);
@@ -181,7 +190,7 @@ export function LivePainting() {
 		return () => {
 			cancelAnimationFrame(animationFrame);
 		};
-	}, [send, seed, prompt, illustrationStyle]);
+	});
 	/*
 	UseEffect(() => {
 		send({

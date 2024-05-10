@@ -29,7 +29,11 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 
 	useEffect(() => {
 		const canvasElement = canvas.current;
-		let animationFame: number;
+		let animationFrame: number;
+		let sendTimeout: number | null = null;
+		const fps = 5; // Adjust the frames per second
+		const uploadInterval = 1000 / fps; // Interval in milliseconds to throttle uploads
+
 		if (!canvasElement) {
 			return;
 		}
@@ -68,10 +72,16 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 				context.current.stroke();
 			}
 
-			send({
-				action: "comfyui:upload-image",
-				payload: { dataURL: canvas.current.toDataURL(), fileName: "live-painting.png" },
-			});
+			// Throttled send of the image
+			if (sendTimeout === null) {
+				sendTimeout = window.setTimeout(() => {
+					send({
+						action: "comfyui:upload-image",
+						payload: { dataURL: canvas.current?.toDataURL() },
+					});
+					sendTimeout = null;
+				}, uploadInterval);
+			}
 		}
 
 		function handleMouseUp() {
@@ -80,11 +90,22 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 				isDrawing.current = false;
 			}
 
-			cancelAnimationFrame(animationFame);
+			cancelAnimationFrame(animationFrame);
+			// Ensure the last drawing gets uploaded
+			if (sendTimeout !== null) {
+				clearTimeout(sendTimeout);
+				sendTimeout = window.setTimeout(() => {
+					send({
+						action: "comfyui:upload-image",
+						payload: { dataURL: canvas.current?.toDataURL() },
+					});
+					sendTimeout = null;
+				}, 0);
+			}
 		}
 
 		function handleMouseMove(event: MouseEvent) {
-			animationFame = requestAnimationFrame(() => {
+			animationFrame = requestAnimationFrame(() => {
 				draw(event);
 			});
 		}
@@ -104,7 +125,10 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 		return () => {
 			document.removeEventListener("mousemove", handleMouseMove);
 			document.removeEventListener("mouseup", handleMouseUp);
-			cancelAnimationFrame(animationFame);
+			cancelAnimationFrame(animationFrame);
+			if (sendTimeout !== null) {
+				clearTimeout(sendTimeout);
+			}
 		};
 	}, [send]);
 
@@ -135,7 +159,7 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 			context.current.fillRect(0, 0, canvas.current.width, canvas.current.height);
 			send({
 				action: "comfyui:upload-image",
-				payload: { dataURL: canvas.current.toDataURL(), fileName: "live-painting.png" },
+				payload: { dataURL: canvas.current.toDataURL() },
 			});
 		}
 	}, [send, clearCounter]);

@@ -86,7 +86,7 @@ ipcMain.on(
 			}
 
 			case "comfyui:upload-image": {
-				const { fileName, dataURL } = message.payload as {
+				const { dataURL } = message.payload as {
 					fileName: string;
 					dataURL: string;
 				};
@@ -96,7 +96,7 @@ ipcMain.on(
 
 					const formData = new FormData();
 
-					formData.append("image", blob, fileName);
+					formData.append("image", blob, `${appId}.png`);
 
 					formData.append("overwrite", "true");
 
