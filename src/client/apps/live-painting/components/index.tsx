@@ -1,11 +1,9 @@
 import { useRequiredDownloads } from "@captn/react/use-required-downloads";
 import { useSDK } from "@captn/react/use-sdk";
 import { ClickAwayListener } from "@mui/base";
-import CheckIcon from "@mui/icons-material/Check";
 import DownloadIcon from "@mui/icons-material/Download";
 import PaletteIcon from "@mui/icons-material/Palette";
 import PlayIcon from "@mui/icons-material/PlayArrow";
-import SaveIcon from "@mui/icons-material/Save";
 import StopIcon from "@mui/icons-material/Stop";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
@@ -22,16 +20,8 @@ import Textarea from "@mui/joy/Textarea";
 import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
 import { useTranslation } from "next-i18next";
-import {
-	type DetailedHTMLProps,
-	type InputHTMLAttributes,
-	useCallback,
-	useEffect,
-	useRef,
-	useState,
-} from "react";
+import { type DetailedHTMLProps, type InputHTMLAttributes, useEffect, useState } from "react";
 import type { Except } from "type-fest";
-import { v4 } from "uuid";
 
 import { allRequiredDownloads, APP_ID } from "../constants";
 import { StyledColorInput } from "../styled";
@@ -39,7 +29,6 @@ import type { IllustrationStyles } from "../text-to-image";
 import { illustrationStyles } from "../text-to-image";
 
 import { FlagUs } from "@/client/atoms/flags/us";
-import { useResettableState } from "@/client/ions/hooks/resettable-state";
 import { getContrastColor } from "@/client/ions/utils/color";
 
 export interface Repository {
@@ -242,58 +231,6 @@ export function ModelSelect() {
 			}}
 		>
 			{t("labels:download")}
-		</Button>
-	);
-}
-
-export function SaveButton({ image, prompt }: { image: string; prompt: string }) {
-	const { t } = useTranslation(["common", "labels"]);
-	const [saved, setSaved] = useResettableState(false, 3000);
-	const promptCache = useRef(prompt);
-	const imageCache = useRef(image);
-	const { writeFile } = useSDK<unknown, string>(APP_ID, {});
-	const saveImage = useCallback(async () => {
-		const id = v4();
-		await writeFile(
-			`images/${id}.png`,
-			image.split(";base64,").pop()!,
-			{
-				encoding: "base64",
-			},
-			promptCache.current
-		);
-		setSaved(true);
-	}, [image, writeFile, setSaved]);
-
-	useEffect(() => {
-		if (imageCache.current !== image) {
-			promptCache.current = prompt;
-		}
-
-		imageCache.current = image;
-	}, [image, prompt]);
-
-	useEffect(() => {
-		async function handleSave(event: KeyboardEvent) {
-			if (event.key === "s" && event.ctrlKey) {
-				event.preventDefault();
-				await saveImage();
-			}
-		}
-
-		window.addEventListener("keydown", handleSave);
-		return () => {
-			window.removeEventListener("keydown", handleSave);
-		};
-	}, [saveImage]);
-	return (
-		<Button
-			color={saved ? "success" : "neutral"}
-			variant="soft"
-			startDecorator={saved ? <CheckIcon /> : <SaveIcon />}
-			onClick={saveImage}
-		>
-			{saved ? t("labels:saved") : t("labels:save")}
 		</Button>
 	);
 }
