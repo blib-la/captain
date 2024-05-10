@@ -2,8 +2,8 @@ import type { RequiredDownload } from "@captn/utils/types";
 
 export const APP_ID = "live-painting";
 
-export const MAX_QUEUE_LENGTH = 2;
-export const FRAMES_PER_SECOND = 5;
+export const MAX_QUEUE_LENGTH = 1;
+export const FRAMES_PER_SECOND = 20;
 
 export const allRequiredDownloads: RequiredDownload[] = [
 	{
