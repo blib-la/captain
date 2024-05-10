@@ -4,8 +4,7 @@ import { useAtom } from "jotai";
 import { type PointerEvent as ReactPointerEvent, useEffect, useRef } from "react";
 
 import { clearCounterAtom, livePaintingOptionsAtom } from "./atoms";
-
-import { APP_ID } from "@/client/apps/live-painting/constants";
+import { APP_ID, FRAMES_PER_SECOND } from "./constants";
 
 export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 	const canvas = useRef<HTMLCanvasElement>(null);
@@ -23,118 +22,102 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 			return;
 		}
 
+		context.current ??= canvas.current.getContext("2d");
 		isDrawing.current = true;
 		const rect = canvas.current.getBoundingClientRect();
-		context.current?.beginPath();
-		context.current?.moveTo(event.clientX - rect.left, event.clientY - rect.top);
+
+		if (context.current) {
+			context.current.beginPath();
+			context.current.moveTo(event.clientX - rect.left, event.clientY - rect.top);
+		}
 	}
 
 	useEffect(() => {
 		const canvasElement = canvas.current;
 		let animationFrame: number;
-		let sendTimeout: number | null = null;
-		const fps = 5; // Adjust the frames per second
-		const uploadInterval = 1000 / fps; // Interval in milliseconds to throttle uploads
-
-		if (!canvasElement) {
-			return;
-		}
-
+		let timeoutId: number | null = null;
+		const uploadInterval = 1000 / FRAMES_PER_SECOND;
+		const pointer = { x: 0, y: 0 };
 		const dpr = window.devicePixelRatio || 1;
-		canvasElement.height = 512 * dpr;
-		canvasElement.width = 512 * dpr;
-		context.current = canvasElement.getContext("2d");
-		if (context.current) {
-			context.current.scale(dpr, dpr);
-		}
 
-		function draw(event: MouseEvent) {
-			if (!canvas.current) {
-				return;
-			}
-
-			const rect = canvas.current.getBoundingClientRect();
-			if (canvasContainerReference.current) {
-				canvasContainerReference.current.style.setProperty(
-					"--brushX",
-					`${event.clientX - rect.left}px`
-				);
-				canvasContainerReference.current.style.setProperty(
-					"--brushY",
-					`${event.clientY - rect.top}px`
-				);
-			}
-
-			if (!isDrawing.current) {
-				return;
-			}
+		if (canvasElement) {
+			canvasElement.height = 512 * dpr;
+			canvasElement.width = 512 * dpr;
+			context.current ??= canvasElement.getContext("2d");
 
 			if (context.current) {
-				context.current.lineTo(event.clientX - rect.left, event.clientY - rect.top);
-				context.current.stroke();
-			}
+				context.current.scale(dpr, dpr);
+				context.current.fillStyle = "#ffffff";
+				context.current.rect(0, 0, canvasElement.width, canvasElement.height);
+				context.current.fill();
 
-			// Throttled send of the image
-			if (sendTimeout === null) {
-				sendTimeout = window.setTimeout(() => {
-					send({
-						action: "comfyui:upload-image",
-						payload: { dataURL: canvas.current?.toDataURL() },
-					});
-					sendTimeout = null;
-				}, uploadInterval);
+				context.current.lineJoin = "round";
+				context.current.lineCap = "round";
+			}
+		}
+
+		function draw() {
+			if (canvasElement && context.current && isDrawing.current) {
+				context.current.lineTo(pointer.x, pointer.y);
+				context.current.stroke();
+				canvasRenderReference.current = canvasElement.toDataURL();
 			}
 		}
 
 		function handleMouseUp() {
-			if (isDrawing.current && context.current) {
+			isDrawing.current = false;
+			if (context.current) {
 				context.current.closePath();
-				isDrawing.current = false;
 			}
 
 			cancelAnimationFrame(animationFrame);
-			// Ensure the last drawing gets uploaded
-			if (sendTimeout !== null && canvas.current) {
-				clearTimeout(sendTimeout);
-				sendTimeout = window.setTimeout(() => {
-					canvasRenderReference.current = canvas.current!.toDataURL();
-					if (canvasRenderCacheReference.current !== canvasRenderReference.current) {
-						send({
-							action: "comfyui:upload-image",
-							payload: { dataURL: canvasRenderReference.current },
-						});
-						canvasRenderCacheReference.current = canvasRenderReference.current;
-					}
-
-					sendTimeout = null;
-				}, 0);
+			if (timeoutId !== null) {
+				clearTimeout(timeoutId);
+				timeoutId = null;
 			}
 		}
 
 		function handleMouseMove(event: MouseEvent) {
-			animationFrame = requestAnimationFrame(() => {
-				draw(event);
-			});
+			if (canvasElement) {
+				const rect = canvasElement.getBoundingClientRect();
+				pointer.x = event.clientX - rect.left;
+				pointer.y = event.clientY - rect.top;
+			}
+
+			if (canvasContainerReference.current) {
+				canvasContainerReference.current.style.setProperty("--brushX", `${pointer.x}px`);
+				canvasContainerReference.current.style.setProperty("--brushY", `${pointer.y}px`);
+			}
+
+			if (
+				timeoutId === null &&
+				canvasRenderReference.current &&
+				canvasRenderCacheReference.current !== canvasRenderReference.current
+			) {
+				canvasRenderCacheReference.current = canvasRenderReference.current;
+				timeoutId = window.setTimeout(() => {
+					console.log("send");
+					send({
+						action: "comfyui:upload-image",
+						payload: { dataURL: canvasRenderReference.current },
+					});
+					timeoutId = null;
+				}, uploadInterval);
+			}
+
+			animationFrame = requestAnimationFrame(draw);
 		}
 
-		if (context.current) {
-			context.current.fillStyle = "#ffffff";
-			context.current.rect(0, 0, canvasElement.width, canvasElement.height);
-			context.current.fill();
-
-			context.current.lineJoin = "round";
-			context.current.lineCap = "round";
-
-			document.addEventListener("mousemove", handleMouseMove, { passive: true });
-			document.addEventListener("mouseup", handleMouseUp);
-		}
+		document.addEventListener("mousemove", handleMouseMove, { passive: true });
+		document.addEventListener("mouseup", handleMouseUp);
 
 		return () => {
 			document.removeEventListener("mousemove", handleMouseMove);
 			document.removeEventListener("mouseup", handleMouseUp);
 			cancelAnimationFrame(animationFrame);
-			if (sendTimeout !== null) {
-				clearTimeout(sendTimeout);
+			if (timeoutId !== null) {
+				clearTimeout(timeoutId);
+				timeoutId = null;
 			}
 		};
 	}, [send]);

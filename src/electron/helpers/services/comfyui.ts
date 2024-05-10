@@ -333,7 +333,7 @@ export class ComfyUI {
 	 * @param {string} clientId - The unique identifier of the client to unregister.
 	 * @returns {{ closed?: boolean; notExist?: boolean }} An object indicating whether the client was closed or did not exist.
 	 */
-	public unregisterClient(clientId: string) {
+	public unregisterClient(clientId: string): { closed?: boolean; notExist?: boolean } {
 		if (this.clients.has(clientId)) {
 			this.clients.get(clientId)?.close();
 			this.clients.delete(clientId);

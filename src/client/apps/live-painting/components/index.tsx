@@ -16,9 +16,9 @@ import { useTranslation } from "next-i18next";
 import { type DetailedHTMLProps, type InputHTMLAttributes, useState } from "react";
 import type { Except } from "type-fest";
 
+import type { IllustrationStyles } from "../illustration-styles";
+import { illustrationStyles } from "../illustration-styles";
 import { StyledColorInput } from "../styled";
-import type { IllustrationStyles } from "../text-to-image";
-import { illustrationStyles } from "../text-to-image";
 
 import { FlagUs } from "@/client/atoms/flags/us";
 import { getContrastColor } from "@/client/ions/utils/color";

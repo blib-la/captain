@@ -17,20 +17,21 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { clearCounterAtom, imageAtom, livePaintingOptionsAtom } from "./atoms";
 import { ColorInputButton, PopupSlider, PromptSheet, TooltipButton } from "./components";
-import { allRequiredDownloads, APP_ID } from "./constants";
+import { allRequiredDownloads, APP_ID, FRAMES_PER_SECOND, MAX_QUEUE_LENGTH } from "./constants";
 import { createWorkflow } from "./create-workflow";
 import { DrawingArea } from "./drawing-area";
+import type { IllustrationStyles } from "./illustration-styles";
+import { injectPrompt } from "./illustration-styles";
+import { illustrationStyles } from "./illustration-styles";
 import { RenderingArea } from "./rendering-area";
+import { RequiredModelsAlert } from "./required-models-alert";
 import {
 	StyledButtonWrapper,
 	StyledDrawingAreaWrapper,
 	StyledRenderingAreaWrapper,
 	StyledStickyHeader,
 } from "./styled";
-import type { IllustrationStyles } from "./text-to-image";
-import { illustrationStyles } from "./text-to-image";
 
-import { RequiredModelsAlert } from "@/client/apps/live-painting/required-models-alert";
 import { comfyUITemporaryPathAtom } from "@/client/ions/atoms";
 import { useComfyUIPath } from "@/client/ions/hooks/comfyui-path";
 import { buildKey } from "@/shared/build-key";
@@ -119,6 +120,8 @@ export function LivePainting() {
 	const [illustrationStyle, setIllustrationStyle] = useState<IllustrationStyles>("childrensBook");
 	const [seed, setSeed] = useState(randomSeed());
 	const [, setFileName] = useState("");
+	const startedReference = useRef(false);
+	const [started, setStarted] = useState(false);
 
 	// Global States
 	const [livePaintingOptions, setLivePaintingOptions] = useAtom(livePaintingOptionsAtom);
@@ -127,6 +130,7 @@ export function LivePainting() {
 	const receivedReference = useRef(false);
 	const [comfyUITemporaryPath] = useAtom(comfyUITemporaryPathAtom);
 	const { send } = useSDK<unknown, object>(APP_ID, {});
+
 	useSDK<unknown, object>(APP_ID, {
 		onMessage(message) {
 			switch (message.action) {
@@ -134,14 +138,14 @@ export function LivePainting() {
 					const { data } = message.payload as {
 						data: ComfyUIExecuted | ComfyStatusMessage;
 					};
-					if (data.type === "status" && data.data.status.exec_info.queue_remaining < 2) {
-						console.log("We may queue");
+					if (
+						data.type === "status" &&
+						data.data.status.exec_info.queue_remaining < MAX_QUEUE_LENGTH
+					) {
 						receivedReference.current = true;
 					}
 
 					if (data.type === "executed") {
-						console.log("EXECTUTED");
-
 						const { filename: fileName_, subfolder } = data.data.output.images[0];
 						const temporaryImage =
 							`${comfyUITemporaryPath}/${subfolder}/${fileName_}`.replaceAll(
@@ -162,21 +166,24 @@ export function LivePainting() {
 		},
 	});
 
-	useUnload(APP_ID, "comfyui:free", {
-		unloadModels: true,
-		freeMemory: false,
-	});
+	useUnload(APP_ID, "comfyui:unregisterClient", {});
 
 	useEffect(() => {
 		send({
 			action: "comfyui:registerClient",
 			payload: {},
 		});
+		return () => {
+			send({
+				action: "comfyui:unregisterClient",
+				payload: {},
+			});
+		};
 	}, [send]);
+
 	useEffect(() => {
 		let animationFrame = -1;
-		const fps = 5; // Adjust the frames per second
-		const fpsInterval = 1000 / fps;
+		const fpsInterval = 1000 / FRAMES_PER_SECOND;
 		let lastDrawTime = performance.now() - fpsInterval;
 		function sendPrompt() {
 			const now = performance.now();
@@ -184,13 +191,13 @@ export function LivePainting() {
 
 			if (elapsed > fpsInterval) {
 				lastDrawTime = now - (elapsed % fpsInterval);
-				if (receivedReference.current) {
+				if (receivedReference.current && started) {
 					receivedReference.current = false;
 					send({
 						action: "comfyui:queue",
 						payload: {
 							workflow: createWorkflow({
-								prompt: [prompt, illustrationStyles[illustrationStyle]].join(", "),
+								prompt: injectPrompt(prompt, illustrationStyles[illustrationStyle]),
 								seed,
 							}),
 						},
@@ -201,11 +208,11 @@ export function LivePainting() {
 			animationFrame = requestAnimationFrame(sendPrompt);
 		}
 
-		requestAnimationFrame(sendPrompt);
+		animationFrame = requestAnimationFrame(sendPrompt);
 		return () => {
 			cancelAnimationFrame(animationFrame);
 		};
-	}, [illustrationStyle, prompt, seed, send]);
+	}, [illustrationStyle, prompt, seed, send, started]);
 
 	useComfyUIPath();
 
@@ -217,21 +224,26 @@ export function LivePainting() {
 				<StyledButtonWrapper>
 					<Button
 						onClick={() => {
-							send({
-								action: "comfyui:queue",
-								payload: {
-									workflow: createWorkflow({
-										prompt: [
-											prompt,
-											illustrationStyles[illustrationStyle],
-										].join(", "),
-										seed,
-									}),
-								},
-							});
+							startedReference.current = !startedReference.current;
+							if (startedReference.current) {
+								send({
+									action: "comfyui:queue",
+									payload: {
+										workflow: createWorkflow({
+											prompt: injectPrompt(
+												prompt,
+												illustrationStyles[illustrationStyle]
+											),
+											seed,
+										}),
+									},
+								});
+							}
+
+							setStarted(previousState => !previousState);
 						}}
 					>
-						Start
+						{started ? t("labels:stop") : t("labels:start")}
 					</Button>
 					{/* Switch to toggle the overlay layout mode */}
 					<Switch

@@ -16,13 +16,13 @@ import type { NodeChain } from "@/shared/types/comfyui";
 /**
  * Converts a data URL to a Node.js Buffer.
  * @param dataUrl The data URL to convert.
- * @returns A Buffer containing the binary data.
+ * @returns A Buffer containing the binary data or null.
  */
-function dataURLToBuffer(dataUrl: string): Buffer {
+function dataURLToBuffer(dataUrl: string): Buffer | null {
 	// Check if the URL is valid and split the content type and data
 	const matches = dataUrl.match(/^data:(.+);base64,(.*)$/);
 	if (!matches || matches.length !== 3) {
-		throw new Error("Invalid data URL.");
+		return null;
 	}
 
 	const base64Data = matches[2];
@@ -61,14 +61,16 @@ ipcMain.on(
 					freeMemory?: boolean;
 				};
 
-				// Add the workflow into the queue
 				const wasFreed = await ComfyUI.getInstance.free({ unloadModels, freeMemory });
-
-				// Send the promptId back to the sender
-				event.sender.send(channel, {
-					action: "comfyui:wasFreed",
-					payload: { wasFreed },
-				});
+				// The sender might be destroyed if an unload event triggered the action
+				try {
+					event.sender.send(channel, {
+						action: "comfyui:wasFreed",
+						payload: { wasFreed },
+					});
+				} catch (error) {
+					console.log(error);
+				}
 
 				break;
 			}
@@ -86,6 +88,14 @@ ipcMain.on(
 				break;
 			}
 
+			case "comfyui:unregisterClient": {
+				logger.info(`ComfyUI received unrregister request from ${appId}`);
+				// Unregister the client and receive updates from ComfyUI
+				ComfyUI.getInstance.unregisterClient(appId);
+				await ComfyUI.getInstance.free({ unloadModels: true });
+				break;
+			}
+
 			case "comfyui:upload-image": {
 				const { dataURL } = message.payload as {
 					fileName: string;
@@ -93,9 +103,12 @@ ipcMain.on(
 				};
 
 				try {
-					const blob = new Blob([dataURLToBuffer(dataURL)]);
+					const buffer = dataURLToBuffer(dataURL);
+					if (buffer) {
+						const blob = new Blob([buffer]);
 
-					await ComfyUI.getInstance.uploadImage(appId, blob);
+						await ComfyUI.getInstance.uploadImage(appId, blob);
+					}
 				} catch (error) {
 					console.log(error);
 				}

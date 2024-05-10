@@ -14,14 +14,14 @@ import { allRequiredDownloads, APP_ID } from "./constants";
 import { RenderingArea } from "./rendering-area";
 
 import { PromptSheet } from "@/client/apps/live-painting/components";
+import type { IllustrationStyles } from "@/client/apps/live-painting/illustration-styles";
+import { illustrationStyles } from "@/client/apps/live-painting/illustration-styles";
 import { RequiredModelsAlert } from "@/client/apps/live-painting/required-models-alert";
 import {
 	StyledButtonWrapper,
 	StyledRenderingAreaWrapper,
 	StyledStickyHeader,
 } from "@/client/apps/live-painting/styled";
-import type { IllustrationStyles } from "@/client/apps/live-painting/text-to-image";
-import { illustrationStyles } from "@/client/apps/live-painting/text-to-image";
 import { createWorkflow } from "@/client/apps/text-to-image/create-workflow";
 import { comfyUITemporaryPathAtom } from "@/client/ions/atoms";
 import { useComfyUIPath } from "@/client/ions/hooks/comfyui-path";
