@@ -68,8 +68,10 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 				context.current.stroke();
 			}
 
-			//
-			// send({ action: "image-to-image:dataUrl", payload: canvas.current.toDataURL() });
+			send({
+				action: "comfyui:upload-image",
+				payload: { dataURL: canvas.current.toDataURL(), fileName: "live-painting.png" },
+			});
 		}
 
 		function handleMouseUp() {
@@ -131,8 +133,10 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 			context.current.fillStyle = "#ffffff";
 			context.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
 			context.current.fillRect(0, 0, canvas.current.width, canvas.current.height);
-			//
-			// send({ action: "image-to-image:dataUrl", payload: canvas.current.toDataURL() });
+			send({
+				action: "comfyui:upload-image",
+				payload: { dataURL: canvas.current.toDataURL(), fileName: "live-painting.png" },
+			});
 		}
 	}, [send, clearCounter]);
 

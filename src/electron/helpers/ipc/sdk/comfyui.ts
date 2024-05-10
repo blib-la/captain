@@ -1,5 +1,8 @@
+import { Buffer } from "node:buffer";
+
 import type { SDKMessage } from "@captn/react/types";
 import { APP_MESSAGE_KEY } from "@captn/utils/constants";
+import axios from "axios";
 import type { IpcMainEvent } from "electron";
 import { ipcMain } from "electron";
 
@@ -10,6 +13,22 @@ import { getCaptainFiles, getComfyUIPath } from "@/electron/utils/path-helpers";
 import { buildKey } from "@/shared/build-key";
 import { ID } from "@/shared/enums";
 import type { NodeChain } from "@/shared/types/comfyui";
+
+/**
+ * Converts a data URL to a Node.js Buffer.
+ * @param dataUrl The data URL to convert.
+ * @returns A Buffer containing the binary data.
+ */
+function dataURLToBuffer(dataUrl: string): Buffer {
+	// Check if the URL is valid and split the content type and data
+	const matches = dataUrl.match(/^data:(.+);base64,(.*)$/);
+	if (!matches || matches.length !== 3) {
+		throw new Error("Invalid data URL.");
+	}
+
+	const base64Data = matches[2];
+	return Buffer.from(base64Data, "base64");
+}
 
 ipcMain.on(
 	APP_MESSAGE_KEY,
@@ -54,14 +73,38 @@ ipcMain.on(
 			}
 
 			case "comfyui:registerClient": {
+				logger.info(`ComfyUI received register request from ${appId}`);
 				// Register the client and receive updates from ComfyUI
 				ComfyUI.getInstance.registerClient(appId, data => {
-					logger.info(`ComfyUI received register request from ${appId}`);
 					event.sender.send(channel, {
 						action: "comfyui:update",
 						payload: { data },
 					});
 				});
+
+				break;
+			}
+
+			case "comfyui:upload-image": {
+				const { fileName, dataURL } = message.payload as {
+					fileName: string;
+					dataURL: string;
+				};
+
+				try {
+					const blob = new Blob([dataURLToBuffer(dataURL)]);
+
+					const formData = new FormData();
+
+					formData.append("image", blob, fileName);
+
+					formData.append("overwrite", "true");
+
+					// Now, make the POST request to the upload/image endpoint
+					await axios.post(`http://127.0.0.1:${PORTS.COMFYUI}/upload/image`, formData);
+				} catch (error) {
+					console.log(error);
+				}
 
 				break;
 			}

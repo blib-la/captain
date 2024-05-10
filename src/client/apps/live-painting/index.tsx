@@ -63,7 +63,7 @@ export function SaveButton({ image, prompt }: { image: string; prompt: string })
 		}
 
 		setSaved(true);
-	}, [image, setSaved, fileName]);
+	}, [image, setSaved, fileName, prompt]);
 
 	useEffect(() => {
 		if (imageCache.current !== image) {
@@ -112,10 +112,10 @@ export function LivePainting() {
 	const [livePaintingOptions, setLivePaintingOptions] = useAtom(livePaintingOptionsAtom);
 	const [image, setImage] = useAtom(imageAtom);
 	const [, setClearCounter] = useAtom(clearCounterAtom);
-
+	const receivedReference = useRef(false);
 	const [comfyUITemporaryPath] = useAtom(comfyUITemporaryPathAtom);
-
-	const { send } = useSDK<unknown, object>(APP_ID, {
+	const { send } = useSDK<unknown, object>(APP_ID, {});
+	useSDK<unknown, object>(APP_ID, {
 		onMessage(message) {
 			switch (message.action) {
 				case "comfyui:update": {
@@ -124,7 +124,6 @@ export function LivePainting() {
 					};
 
 					if (data.type === "executed") {
-						console.log(message);
 						const { filename: fileName_, subfolder } = data.data.output.images[0];
 						const temporaryImage =
 							`${comfyUITemporaryPath}/${subfolder}/${fileName_}`.replaceAll(
@@ -133,6 +132,7 @@ export function LivePainting() {
 							);
 						setImage(temporaryImage);
 						setFileName(fileName_);
+						receivedReference.current = true;
 					}
 
 					break;
@@ -145,6 +145,11 @@ export function LivePainting() {
 		},
 	});
 
+	useUnload(APP_ID, "comfyui:free", {
+		unloadModels: true,
+		freeMemory: false,
+	});
+
 	useEffect(() => {
 		send({
 			action: "comfyui:registerClient",
@@ -152,12 +157,33 @@ export function LivePainting() {
 		});
 	}, [send]);
 
-	useUnload(APP_ID, "comfyui:free", {
-		unloadModels: true,
-		freeMemory: false,
-	});
-
 	useEffect(() => {
+		let animationFrame = -1;
+		function sendPrompt() {
+			if (receivedReference.current) {
+				console.log("tick");
+				// ReceivedReference.current = false;
+				send({
+					action: "comfyui:queue",
+					payload: {
+						workflow: createWorkflow({
+							prompt: [prompt, illustrationStyles[illustrationStyle]].join(", "),
+							seed,
+						}),
+					},
+				});
+			}
+
+			animationFrame = requestAnimationFrame(sendPrompt);
+		}
+
+		requestAnimationFrame(sendPrompt);
+		return () => {
+			cancelAnimationFrame(animationFrame);
+		};
+	}, [send, seed, prompt, illustrationStyle]);
+	/*
+	UseEffect(() => {
 		send({
 			action: "comfyui:queue",
 			payload: {
@@ -167,7 +193,8 @@ export function LivePainting() {
 				}),
 			},
 		});
-	}, [send, prompt, seed, illustrationStyle]);
+	}, [send, prompt, seed, illustrationStyle]); */
+
 	useComfyUIPath();
 
 	return (
@@ -176,6 +203,24 @@ export function LivePainting() {
 			<StyledStickyHeader>
 				{/* Left Side of the header */}
 				<StyledButtonWrapper>
+					<Button
+						onClick={() => {
+							send({
+								action: "comfyui:queue",
+								payload: {
+									workflow: createWorkflow({
+										prompt: [
+											prompt,
+											illustrationStyles[illustrationStyle],
+										].join(", "),
+										seed,
+									}),
+								},
+							});
+						}}
+					>
+						Start
+					</Button>
 					{/* Switch to toggle the overlay layout mode */}
 					<Switch
 						checked={isOverlay}

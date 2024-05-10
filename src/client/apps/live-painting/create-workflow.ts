@@ -21,11 +21,11 @@ export function createWorkflow({
 				cfg,
 				sampler_name: "euler",
 				scheduler: "normal",
-				denoise: 1,
+				denoise: 0.9,
 				model: ["4", 0],
 				positive: ["6", 0],
 				negative: ["7", 0],
-				latent_image: ["5", 0],
+				latent_image: ["12", 0],
 			},
 			class_type: "KSampler",
 			_meta: {
@@ -89,6 +89,26 @@ export function createWorkflow({
 			class_type: "PreviewImage",
 			_meta: {
 				title: "Preview Image",
+			},
+		},
+		"11": {
+			inputs: {
+				image: "live-painting.png",
+				upload: "image",
+			},
+			class_type: "LoadImage",
+			_meta: {
+				title: "Load Image",
+			},
+		},
+		"12": {
+			inputs: {
+				pixels: ["11", 0],
+				vae: ["4", 2],
+			},
+			class_type: "VAEEncode",
+			_meta: {
+				title: "VAE Encode",
 			},
 		},
 	};
