@@ -2,6 +2,7 @@ import { CustomScrollbars } from "@captn/joy/custom-scrollbars";
 import { useRequiredDownloads } from "@captn/react/use-required-downloads";
 import CheckCircle from "@mui/icons-material/CheckCircle";
 import DownloadIcon from "@mui/icons-material/Download";
+import LinkIcon from "@mui/icons-material/Link";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import WarningIcon from "@mui/icons-material/Warning";
 import Alert from "@mui/joy/Alert";
@@ -10,7 +11,9 @@ import Button from "@mui/joy/Button";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import CardOverflow from "@mui/joy/CardOverflow";
+import Chip from "@mui/joy/Chip";
 import CircularProgress from "@mui/joy/CircularProgress";
+import JoyLink from "@mui/joy/Link";
 import Sheet from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
 import { useAtom } from "jotai";
@@ -47,6 +50,14 @@ async function fetchMarketplace(download: boolean, url: string): Promise<Marketp
 	});
 }
 
+const architectureColors = {
+	sdxl: "blue",
+	"sdxl-turbo": "violet",
+	"sd-2-1-turbo": "pink",
+	"sd-2-1": "orange",
+} as const;
+
+type Architecture = keyof typeof architectureColors;
 /**
  * An item in the Marketplace.
  *
@@ -104,14 +115,52 @@ function ItemCard({ payload }: { payload: MarketplacePayload }) {
 							objectFit: "cover",
 						}}
 					/>
+					<JoyLink
+						href={payload.link}
+						target="_blank"
+						sx={{
+							position: "absolute",
+							top: 0,
+							left: 0,
+							m: 0.5,
+							p: 0.5,
+							display: "flex",
+							".MuiCard-root:hover &": {
+								bgcolor: "grey.900",
+							},
+							".MuiCard-root:hover &:hover": {
+								bgcolor: "grey.800",
+							},
+							".MuiCard-root:hover &:active": {
+								bgcolor: "grey.700",
+							},
+						}}
+					>
+						<LinkIcon />
+					</JoyLink>
+					<Box sx={{ position: "absolute", bottom: 0, right: 0, m: 0.5 }}>
+						<Chip variant="plain">{payload.license}</Chip>
+					</Box>
+					<Box sx={{ position: "absolute", top: 0, right: 0, m: 0.5 }}>
+						<Chip
+							variant="soft"
+							color={architectureColors[payload.architecture as Architecture]}
+						>
+							{payload.architecture}
+						</Chip>
+					</Box>
 				</CardOverflow>
 			)}
 			<CardContent>
 				<Typography level="title-lg" component="h2">
 					{payload.label}
 				</Typography>
-				<Typography level="body-md">{payload.description}</Typography>
-				<Typography level="body-sm">{payload.author}</Typography>
+				<Chip color="neutral" variant="outlined">
+					{payload.author}
+				</Chip>
+				<Box sx={{ flex: 1 }}>
+					<Typography level="body-md">{payload.description}</Typography>
+				</Box>
 				<Button
 					disabled={isCompleted || isDownloading}
 					color="primary"
