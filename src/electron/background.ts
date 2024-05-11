@@ -34,12 +34,6 @@ import "@/electron/core-setup";
  */
 import "@/electron/ipc/listeners";
 
-/**
- * @deprecated Manages IPC for outdated storytelling or narrative-driven interactions.
- * Consider migrating to the new event handling approach outlined in "@/electron/ipc/sdk" or "@/electron/ipc/global".
- */
-import "@/electron/ipc/story";
-
 // Import modules for managing globally accessible functionalities.
 // This includes window management tasks such as minimizing, maximizing, or closing windows.
 import "@/electron/ipc/global"; // Manages global IPC events, including those related to window actions.
@@ -47,14 +41,13 @@ import "@/electron/ipc/global"; // Manages global IPC events, including those re
 /**
  * @deprecated
  */
-import "@/electron/ipc/sdk";
+import "@/electron/ipc/sdk/global";
 
 // Import SDK module for 3rd party integration.
 // This allows external applications to interact with the app through exposed handlers and
 // listeners.
-import "@/electron/ipc/sdk/text-to-image";
-import "@/electron/ipc/sdk/image-to-image";
 import "@/electron/ipc/sdk/comfyui";
+import "@/electron/ipc/sdk/story";
 
 // Import install handlers and listeners
 import "@/electron/ipc/install";
