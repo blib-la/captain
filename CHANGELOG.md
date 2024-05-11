@@ -1,3 +1,10 @@
+# [1.0.0-alpha.74](https://github.com/blib-la/captain/compare/v1.0.0-alpha.73...v1.0.0-alpha.74) (2024-05-11)
+
+
+### Bug Fixes
+
+* cannot update due to unsigned app ([#286](https://github.com/blib-la/captain/issues/286)) ([8ff97f9](https://github.com/blib-la/captain/commit/8ff97f95ce6833ea857e9bf91d1e0b1daa491536))
+
 # [1.0.0-alpha.73](https://github.com/blib-la/captain/compare/v1.0.0-alpha.72...v1.0.0-alpha.73) (2024-05-11)
 
 
