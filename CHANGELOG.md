@@ -1,3 +1,10 @@
+# [1.0.0-alpha.75](https://github.com/blib-la/captain/compare/v1.0.0-alpha.74...v1.0.0-alpha.75) (2024-05-11)
+
+
+### Features
+
+* move quit to bottom in tray ([#287](https://github.com/blib-la/captain/issues/287)) ([322dd62](https://github.com/blib-la/captain/commit/322dd62a1ee8dfa7e6737164e6fd9120e63ab290))
+
 # [1.0.0-alpha.74](https://github.com/blib-la/captain/compare/v1.0.0-alpha.73...v1.0.0-alpha.74) (2024-05-11)
 
 
