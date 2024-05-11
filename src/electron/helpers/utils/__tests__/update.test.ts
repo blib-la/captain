@@ -1,5 +1,14 @@
+import { autoUpdater } from "electron-updater";
+
+import {
+	checkUpdates,
+	checkCoreUpdates,
+	downloadCoreUpdate,
+	restartAndInstall,
+	listenForUpdates,
+} from "../update";
+
 import { appSettingsStore } from "@/electron/stores";
-import { checkUpdates } from "@/electron/utils/update";
 
 jest.mock("@/electron/stores", () => ({
 	appSettingsStore: {
@@ -27,6 +36,54 @@ jest.mock("electron", () => ({
 		}),
 	},
 }));
+
+jest.mock("electron-updater", () => ({
+	autoUpdater: {
+		checkForUpdatesAndNotify: jest.fn(),
+		downloadUpdate: jest.fn(),
+		quitAndInstall: jest.fn(),
+		allowPrerelease: false,
+		autoDownload: false,
+		on: jest.fn(),
+	},
+}));
+
+jest.mock("@/electron/services/logger", () => ({
+	logger: {
+		info: jest.fn(),
+	},
+	logError: jest.fn(),
+}));
+
+jest.mock("@/electron/apps", () => ({
+	apps: {
+		core: {
+			webContents: {
+				send: jest.fn(),
+			},
+		},
+	},
+}));
+
+jest.mock("@/electron/windows", () => ({
+	openCore: jest.fn(),
+}));
+
+jest.mock("@/shared/build-key", () => ({
+	buildKey: jest.fn((ids, options) => `${ids[0]}${options.suffix}`),
+}));
+
+describe("listenForUpdates", () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+		listenForUpdates();
+	});
+
+	it("should set allowPrerelease to true and autoDownload to false", () => {
+		expect(autoUpdater.allowPrerelease).toBe(true);
+		expect(autoUpdater.autoDownload).toBe(false);
+	});
+});
 
 describe("checkUpdates", () => {
 	const manifest = {
@@ -72,5 +129,26 @@ describe("checkUpdates", () => {
 
 		const updatesForMissingOS = checkUpdates(manifest, "linux");
 		expect(updatesForMissingOS).toEqual([]);
+	});
+});
+
+describe("checkCoreUpdates", () => {
+	it("should trigger an update check and notify the user", async () => {
+		await checkCoreUpdates();
+		expect(autoUpdater.checkForUpdatesAndNotify).toHaveBeenCalled();
+	});
+});
+
+describe("downloadCoreUpdate", () => {
+	it("should trigger the download of updates", async () => {
+		await downloadCoreUpdate();
+		expect(autoUpdater.downloadUpdate).toHaveBeenCalled();
+	});
+});
+
+describe("restartAndInstall", () => {
+	it("should restart the application and install the update", () => {
+		restartAndInstall();
+		expect(autoUpdater.quitAndInstall).toHaveBeenCalled();
 	});
 });

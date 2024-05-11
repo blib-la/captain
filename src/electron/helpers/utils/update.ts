@@ -36,7 +36,21 @@ export function checkUpdates(manifest: Manifest, os: OS): Resource[] {
 }
 
 /**
- * Sets up listeners for various events from electron-updater.
+ * Sets up listeners for various events from electron-updater to handle different stages of the update process.
+ * This function configures the update behavior and binds event handlers to specific update events to manage the application's response to these events effectively.
+ *
+ * Events handled:
+ * - "update-available": Logs the availability of an update and opens the core settings window to notify the user.
+ * - "update-downloaded": Logs the completion of an update download, opens the core settings, and notifies the user that the update is ready to install.
+ * - "error": Logs any errors that occur during the update process and notifies the user via the core settings window.
+ * - "checking-for-update": Logs when the updater starts checking for an update.
+ * - "update-not-available": Logs when no updates are available after a check and notifies the user.
+ * - "download-progress": Logs the progress of an ongoing download. This is particularly useful for debugging in development.
+ *
+ * Configurations:
+ * - Enables pre-release versions to be considered in updates.
+ * - Disables automatic download of updates; requires manual trigger to download.
+ * - Optionally sets a development-specific configuration to force update checks without needing to package the app (commented out by default).
  */
 export function listenForUpdates() {
 	// Enable pre-release versions
