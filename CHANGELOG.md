@@ -1,3 +1,10 @@
+# [1.0.0-alpha.73](https://github.com/blib-la/captain/compare/v1.0.0-alpha.72...v1.0.0-alpha.73) (2024-05-11)
+
+
+### Features
+
+* more info on marketplace cards ([#285](https://github.com/blib-la/captain/issues/285)) ([874c8ea](https://github.com/blib-la/captain/commit/874c8eacc199b3dbce34545eabf1eebbb6a26029))
+
 # [1.0.0-alpha.72](https://github.com/blib-la/captain/compare/v1.0.0-alpha.71...v1.0.0-alpha.72) (2024-05-11)
 
 
