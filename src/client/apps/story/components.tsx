@@ -93,8 +93,13 @@ export function SelectedImages() {
 						<Box>
 							<img
 								src={localFile(activeItem.filePath)}
-								style={{ width: "100%" }}
 								alt=""
+								style={{
+									width: "100%",
+									aspectRatio: 1,
+									objectFit: "contain",
+									objectPosition: "center",
+								}}
 							/>
 						</Box>
 					)}
@@ -107,8 +112,14 @@ export function SelectedImages() {
 							<Sheet variant="outlined" sx={{ display: "flex" }}>
 								<img
 									src={localFile(filePath)}
-									style={{ width: "100%", opacity: activeId === id ? 0 : 1 }}
 									alt=""
+									style={{
+										width: "100%",
+										aspectRatio: 1,
+										objectFit: "contain",
+										objectPosition: "center",
+										opacity: activeId === id ? 0 : 1,
+									}}
 								/>
 							</Sheet>
 						</SortableItem>
@@ -145,7 +156,7 @@ export function ImageSelectorCell({
 					key={image.filePath}
 					color={isSelected ? "primary" : "neutral"}
 					variant={isSelected ? "solid" : "plain"}
-					sx={{ p: 1 }}
+					sx={{ p: 1, m: 0.5 }}
 					onClick={() => {
 						setSelectedImages(previousState =>
 							isSelected
@@ -159,7 +170,13 @@ export function ImageSelectorCell({
 					<img
 						src={localFile(image.filePath)}
 						alt=""
-						style={{ height: "auto", width: "100%" }}
+						style={{
+							height: "auto",
+							width: "100%",
+							aspectRatio: 1,
+							objectFit: "contain",
+							objectPosition: "center",
+						}}
 					/>
 				</Button>
 			</Box>
