@@ -1,11 +1,12 @@
 import console from "node:console";
 
-import { BrowserWindow } from "electron";
 import { autoUpdater } from "electron-updater";
 
+import { apps } from "@/electron/apps";
 import { logError, logger } from "@/electron/services/logger";
 import { appSettingsStore } from "@/electron/stores";
 import type { Manifest, OS, Resource } from "@/electron/types";
+import { openCore } from "@/electron/windows";
 import { buildKey } from "@/shared/build-key";
 import { ID } from "@/shared/enums";
 
@@ -35,7 +36,21 @@ export function checkUpdates(manifest: Manifest, os: OS): Resource[] {
 }
 
 /**
- * Sets up listeners for various events from electron-updater.
+ * Sets up listeners for various events from electron-updater to handle different stages of the update process.
+ * This function configures the update behavior and binds event handlers to specific update events to manage the application's response to these events effectively.
+ *
+ * Events handled:
+ * - "update-available": Logs the availability of an update and opens the core settings window to notify the user.
+ * - "update-downloaded": Logs the completion of an update download, opens the core settings, and notifies the user that the update is ready to install.
+ * - "error": Logs any errors that occur during the update process and notifies the user via the core settings window.
+ * - "checking-for-update": Logs when the updater starts checking for an update.
+ * - "update-not-available": Logs when no updates are available after a check and notifies the user.
+ * - "download-progress": Logs the progress of an ongoing download. This is particularly useful for debugging in development.
+ *
+ * Configurations:
+ * - Enables pre-release versions to be considered in updates.
+ * - Disables automatic download of updates; requires manual trigger to download.
+ * - Optionally sets a development-specific configuration to force update checks without needing to package the app (commented out by default).
  */
 export function listenForUpdates() {
 	// Enable pre-release versions
@@ -47,39 +62,48 @@ export function listenForUpdates() {
 	// For local development without the need to pack the application
 	// autoUpdater.forceDevUpdateConfig = isDevelopment;
 
-	autoUpdater.on("update-available", data => {
+	autoUpdater.on("update-available", async data => {
 		logger.info("auto-update: update available");
 
-		const window_ = BrowserWindow.getFocusedWindow();
-		window_!.webContents.send(buildKey([ID.UPDATE], { suffix: ":available" }), data);
+		await openCore("settings");
+		apps.core!.webContents.send(buildKey([ID.UPDATE], { suffix: ":available" }), data);
 	});
 
-	autoUpdater.on("update-downloaded", data => {
-		logger.error("auto-update: update downloaded");
+	autoUpdater.on("update-downloaded", async data => {
+		logger.info("auto-update: update downloaded");
 
-		const window_ = BrowserWindow.getFocusedWindow();
-		window_!.webContents.send(buildKey([ID.UPDATE], { suffix: ":downloaded" }), data);
+		await openCore("settings");
+		apps.core!.webContents.send(buildKey([ID.UPDATE], { suffix: ":downloaded" }), data);
 	});
 
-	autoUpdater.on("error", data => {
+	autoUpdater.on("error", async data => {
 		logError(data, "auto-update");
+
+		await openCore("settings");
+		apps.core!.webContents.send(buildKey([ID.UPDATE], { suffix: ":error" }), data);
 	});
 
-	// TODO adjust implementation
 	autoUpdater.on("checking-for-update", () => {
 		logger.info("auto-update: on -> checking-for-update");
+
+		apps.core?.webContents.send(
+			buildKey([ID.UPDATE], { suffix: ":checking-for-update" }),
+			true
+		);
 	});
 
-	autoUpdater.on("update-not-available", data => {
+	autoUpdater.on("update-not-available", async data => {
 		logger.info("auto-update: on -> update-not-available", data);
-		const window_ = BrowserWindow.getFocusedWindow();
-		window_!.webContents.send(buildKey([ID.UPDATE], { suffix: ":not-available" }), data);
+
+		await openCore("settings");
+		apps.core!.webContents.send(buildKey([ID.UPDATE], { suffix: ":not-available" }), data);
 	});
 
-	// TODO adjust implementation
 	autoUpdater.on("download-progress", data => {
 		// Use native log here as this is only useful while developing
 		console.log("auto-update: on -> download-progress", data);
+
+		apps.core?.webContents.send(buildKey([ID.UPDATE], { suffix: ":error" }), data);
 	});
 }
 
