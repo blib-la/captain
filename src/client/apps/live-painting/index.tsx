@@ -119,6 +119,7 @@ export function LivePainting() {
 	const startedReference = useRef(false);
 	const [started, setStarted] = useState(false);
 	const [isGenerating, setIsGenerating] = useState(false);
+	const [checkpointName] = useState("stabilityai\\sd-turbo\\sd-turbo-fp16-emaoonly.safetensors");
 
 	// Global States
 	const [livePaintingOptions, setLivePaintingOptions] = useAtom(livePaintingOptionsAtom);
@@ -213,6 +214,7 @@ export function LivePainting() {
 									illustrationStyles[illustrationStyle].positive
 								),
 								seed,
+								checkpointName,
 							}),
 						},
 					});
@@ -226,7 +228,7 @@ export function LivePainting() {
 		return () => {
 			cancelAnimationFrame(animationFrame);
 		};
-	}, [illustrationStyle, prompt, seed, send, started]);
+	}, [checkpointName, illustrationStyle, prompt, seed, send, started]);
 
 	useComfyUIPath();
 
@@ -273,6 +275,7 @@ export function LivePainting() {
 												illustrationStyles[illustrationStyle].positive
 											),
 											seed,
+											checkpointName,
 										}),
 									},
 								});
