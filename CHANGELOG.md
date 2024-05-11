@@ -1,3 +1,10 @@
+# [1.0.0-alpha.71](https://github.com/blib-la/captain/compare/v1.0.0-alpha.70...v1.0.0-alpha.71) (2024-05-11)
+
+
+### Features
+
+* live painting comfy ([#282](https://github.com/blib-la/captain/issues/282)) ([8bdff8b](https://github.com/blib-la/captain/commit/8bdff8bee07ccd39adf8665e9e064f5c0ac95a26))
+
 # [1.0.0-alpha.70](https://github.com/blib-la/captain/compare/v1.0.0-alpha.69...v1.0.0-alpha.70) (2024-05-09)
 
 
