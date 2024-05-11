@@ -1,11 +1,12 @@
 import console from "node:console";
 
-import { BrowserWindow } from "electron";
 import { autoUpdater } from "electron-updater";
 
+import { apps } from "@/electron/apps";
 import { logError, logger } from "@/electron/services/logger";
 import { appSettingsStore } from "@/electron/stores";
 import type { Manifest, OS, Resource } from "@/electron/types";
+import { openCore } from "@/electron/windows";
 import { buildKey } from "@/shared/build-key";
 import { ID } from "@/shared/enums";
 
@@ -47,39 +48,48 @@ export function listenForUpdates() {
 	// For local development without the need to pack the application
 	// autoUpdater.forceDevUpdateConfig = isDevelopment;
 
-	autoUpdater.on("update-available", data => {
+	autoUpdater.on("update-available", async data => {
 		logger.info("auto-update: update available");
 
-		const window_ = BrowserWindow.getFocusedWindow();
-		window_!.webContents.send(buildKey([ID.UPDATE], { suffix: ":available" }), data);
+		await openCore("settings");
+		apps.core!.webContents.send(buildKey([ID.UPDATE], { suffix: ":available" }), data);
 	});
 
-	autoUpdater.on("update-downloaded", data => {
-		logger.error("auto-update: update downloaded");
+	autoUpdater.on("update-downloaded", async data => {
+		logger.info("auto-update: update downloaded");
 
-		const window_ = BrowserWindow.getFocusedWindow();
-		window_!.webContents.send(buildKey([ID.UPDATE], { suffix: ":downloaded" }), data);
+		await openCore("settings");
+		apps.core!.webContents.send(buildKey([ID.UPDATE], { suffix: ":downloaded" }), data);
 	});
 
-	autoUpdater.on("error", data => {
+	autoUpdater.on("error", async data => {
 		logError(data, "auto-update");
+
+		await openCore("settings");
+		apps.core!.webContents.send(buildKey([ID.UPDATE], { suffix: ":error" }), data);
 	});
 
-	// TODO adjust implementation
 	autoUpdater.on("checking-for-update", () => {
 		logger.info("auto-update: on -> checking-for-update");
+
+		apps.core?.webContents.send(
+			buildKey([ID.UPDATE], { suffix: ":checking-for-update" }),
+			true
+		);
 	});
 
-	autoUpdater.on("update-not-available", data => {
+	autoUpdater.on("update-not-available", async data => {
 		logger.info("auto-update: on -> update-not-available", data);
-		const window_ = BrowserWindow.getFocusedWindow();
-		window_!.webContents.send(buildKey([ID.UPDATE], { suffix: ":not-available" }), data);
+
+		await openCore("settings");
+		apps.core!.webContents.send(buildKey([ID.UPDATE], { suffix: ":not-available" }), data);
 	});
 
-	// TODO adjust implementation
 	autoUpdater.on("download-progress", data => {
 		// Use native log here as this is only useful while developing
 		console.log("auto-update: on -> download-progress", data);
+
+		apps.core?.webContents.send(buildKey([ID.UPDATE], { suffix: ":error" }), data);
 	});
 }
 
