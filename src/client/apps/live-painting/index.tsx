@@ -10,6 +10,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import StopIcon from "@mui/icons-material/Stop";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
+import CircularProgress from "@mui/joy/CircularProgress";
 import Sheet from "@mui/joy/Sheet";
 import Switch from "@mui/joy/Switch";
 import Typography from "@mui/joy/Typography";
@@ -34,7 +35,12 @@ import {
 	StyledRenderingAreaWrapper,
 	StyledStickyHeader,
 } from "@/client/apps/shared/styled";
-import type { ComfyExecuted, ComfyStatusMessage } from "@/client/apps/shared/types";
+import type {
+	ComfyCached,
+	ComfyExecuted,
+	ComfyExecuting,
+	ComfyStatusMessage,
+} from "@/client/apps/shared/types";
 import { comfyUITemporaryPathAtom } from "@/client/ions/atoms";
 import { useComfyUIPath } from "@/client/ions/hooks/comfyui-path";
 import { buildKey } from "@/shared/build-key";
@@ -112,6 +118,7 @@ export function LivePainting() {
 	const [fileName, setFileName] = useState("");
 	const startedReference = useRef(false);
 	const [started, setStarted] = useState(false);
+	const [isGenerating, setIsGenerating] = useState(false);
 
 	// Global States
 	const [livePaintingOptions, setLivePaintingOptions] = useAtom(livePaintingOptionsAtom);
@@ -119,31 +126,45 @@ export function LivePainting() {
 	const [, setClearCounter] = useAtom(clearCounterAtom);
 	const receivedReference = useRef(false);
 	const [comfyUITemporaryPath] = useAtom(comfyUITemporaryPathAtom);
-	const { send } = useSDK<unknown, object>(APP_ID, {});
 
-	useSDK<unknown, object>(APP_ID, {
+	const { send } = useSDK<unknown, unknown>(APP_ID, {
 		onMessage(message) {
 			switch (message.action) {
 				case "comfyui:update": {
 					const { data } = message.payload as {
-						data: ComfyExecuted | ComfyStatusMessage;
+						data: ComfyExecuted | ComfyExecuting | ComfyCached | ComfyStatusMessage;
 					};
-					if (
-						data.type === "status" &&
-						data.data.status.exec_info.queue_remaining < MAX_QUEUE_LENGTH
-					) {
-						receivedReference.current = true;
-					}
+					console.log(data);
+					switch (data.type) {
+						case "status": {
+							receivedReference.current =
+								data.data.status.exec_info.queue_remaining < MAX_QUEUE_LENGTH;
 
-					if (data.type === "executed") {
-						const { filename, subfolder } = data.data.output.images[0];
-						const temporaryImage =
-							`${comfyUITemporaryPath}/${subfolder}/${filename}`.replaceAll(
-								/\?+/g,
-								"/"
-							);
-						setImage(temporaryImage);
-						setFileName(filename);
+							break;
+						}
+
+						case "execution_cached": {
+							setIsGenerating(false);
+							break;
+						}
+
+						case "executed": {
+							const { filename, subfolder } = data.data.output.images[0];
+							const temporaryImage =
+								`${comfyUITemporaryPath}/${subfolder}/${filename}`.replaceAll(
+									/\?+/g,
+									"/"
+								);
+							setImage(temporaryImage);
+							setFileName(filename);
+							setIsGenerating(false);
+
+							break;
+						}
+
+						default: {
+							break;
+						}
 					}
 
 					break;
@@ -215,11 +236,34 @@ export function LivePainting() {
 			<StyledStickyHeader>
 				{/* Left Side of the header */}
 				<StyledButtonWrapper>
-					<Button
-						startDecorator={started ? <StopIcon /> : <PlayArrowIcon />}
-						onClick={() => {
-							startedReference.current = !startedReference.current;
-							if (startedReference.current) {
+					{started ? (
+						<Button
+							color="red"
+							startDecorator={
+								isGenerating ? <CircularProgress color="red" /> : <StopIcon />
+							}
+							onClick={() => {
+								startedReference.current = false;
+								setIsGenerating(false);
+								setStarted(false);
+							}}
+						>
+							{t("labels:stop")}
+						</Button>
+					) : (
+						<Button
+							color="green"
+							startDecorator={
+								isGenerating ? (
+									<CircularProgress color="green" />
+								) : (
+									<PlayArrowIcon />
+								)
+							}
+							onClick={() => {
+								startedReference.current = true;
+								setIsGenerating(true);
+								setStarted(true);
 								send({
 									action: "comfyui:queue",
 									payload: {
@@ -232,13 +276,11 @@ export function LivePainting() {
 										}),
 									},
 								});
-							}
-
-							setStarted(previousState => !previousState);
-						}}
-					>
-						{started ? t("labels:stop") : t("labels:start")}
-					</Button>
+							}}
+						>
+							{t("labels:start")}
+						</Button>
+					)}
 					{/* Switch to toggle the overlay layout mode */}
 					<Switch
 						checked={isOverlay}
