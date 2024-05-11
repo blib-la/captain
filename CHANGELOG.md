@@ -1,3 +1,10 @@
+# [1.0.0-alpha.76](https://github.com/blib-la/captain/compare/v1.0.0-alpha.75...v1.0.0-alpha.76) (2024-05-11)
+
+
+### Bug Fixes
+
+* core window must receive updates ([#288](https://github.com/blib-la/captain/issues/288)) ([5d32ac5](https://github.com/blib-la/captain/commit/5d32ac5197cfa83294eeed69b1db2d47814c95df))
+
 # [1.0.0-alpha.75](https://github.com/blib-la/captain/compare/v1.0.0-alpha.74...v1.0.0-alpha.75) (2024-05-11)
 
 
