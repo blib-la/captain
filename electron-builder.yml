@@ -36,3 +36,4 @@ asarUnpack:
 
 win:
   publisherName: Blibla
+  verifyUpdateCodeSignature: false
