@@ -5,13 +5,6 @@ import { openApp, openCore } from "@/electron/windows";
 
 export const contextMenu = Menu.buildFromTemplate([
 	{
-		label: "Quit Captain",
-		type: "normal",
-		click() {
-			app.quit();
-		},
-	},
-	{
 		label: "Open Dashboard",
 		type: "normal",
 		click() {
@@ -37,6 +30,13 @@ export const contextMenu = Menu.buildFromTemplate([
 		type: "normal",
 		click() {
 			openApp("explorer");
+		},
+	},
+	{
+		label: "Quit Captain",
+		type: "normal",
+		click() {
+			app.quit();
 		},
 	},
 ]);
