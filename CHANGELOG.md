@@ -1,3 +1,10 @@
+# [1.0.0-alpha.72](https://github.com/blib-la/captain/compare/v1.0.0-alpha.71...v1.0.0-alpha.72) (2024-05-11)
+
+
+### Bug Fixes
+
+* story images have overlap ([#283](https://github.com/blib-la/captain/issues/283)) ([2437ec1](https://github.com/blib-la/captain/commit/2437ec1678142327e62c843f472f3c570876b605))
+
 # [1.0.0-alpha.71](https://github.com/blib-la/captain/compare/v1.0.0-alpha.70...v1.0.0-alpha.71) (2024-05-11)
 
 
