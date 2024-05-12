@@ -1,3 +1,10 @@
+# [1.0.0-alpha.77](https://github.com/blib-la/captain/compare/v1.0.0-alpha.76...v1.0.0-alpha.77) (2024-05-12)
+
+
+### Bug Fixes
+
+* images are not written ([#289](https://github.com/blib-la/captain/issues/289)) ([039645c](https://github.com/blib-la/captain/commit/039645cc03c13bd9e9561d6253e9308145f459e2))
+
 # [1.0.0-alpha.76](https://github.com/blib-la/captain/compare/v1.0.0-alpha.75...v1.0.0-alpha.76) (2024-05-11)
 
 
