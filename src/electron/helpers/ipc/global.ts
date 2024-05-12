@@ -268,10 +268,17 @@ ipcMain.on(
 		const filePath = getCaptainData("files", cleanPath(destination));
 		const { dir: directory, ext } = path.parse(filePath);
 
-		// Copy the file
-		const id = v4();
-		await fsp.copyFile(source, filePath);
+		try {
+			createDirectory(directory);
+			// Copy the file
+			await fsp.copyFile(source, filePath);
+		} catch (error) {
+			logError(error, "createDirectory:copy-image-with-metadata");
+		}
+
 		logger.info(`copy image from ${source} to ${filePath}`);
+		const id = v4();
+
 		const fileName = `${id}${ext}`;
 		const destinationPath = path.join(directory, fileName);
 		await fsp.rename(filePath, destinationPath);
@@ -280,24 +287,32 @@ ipcMain.on(
 			logger.info(
 				`add metadata to image at ${destinationPath} with description: ${metadata.description}`
 			);
-			await writePngMetaData(destinationPath, metadata.description);
-			const vectorStore = VectorStore.getInstance;
+			try {
+				await writePngMetaData(destinationPath, metadata.description);
+			} catch (error) {
+				logError(error, "writePngMetaData:copy-image-with-metadata");
+			}
 
-			const operations = await vectorStore.upsert(VECTOR_STORE_COLLECTION, [
-				{
-					content: metadata.description,
-					payload: {
-						id: v4(),
-						label: fileName,
-						type: "image",
-						fileType: ext.replace(".", ""),
-						language: "en",
-						filePath: destinationPath,
+			try {
+				const vectorStore = VectorStore.getInstance;
+				const operations = await vectorStore.upsert(VECTOR_STORE_COLLECTION, [
+					{
+						content: metadata.description,
+						payload: {
+							id: v4(),
+							label: fileName,
+							type: "image",
+							fileType: ext.replace(".", ""),
+							language: "en",
+							filePath: destinationPath,
+						},
 					},
-				},
-			]);
+				]);
 
-			event.sender.send(VECTOR_STORE_SAVED_KEY, operations);
+				event.sender.send(VECTOR_STORE_SAVED_KEY, operations);
+			} catch (error) {
+				logError(error, "vectorStore.upsert:copy-image-with-metadata");
+			}
 		}
 	}
 );
