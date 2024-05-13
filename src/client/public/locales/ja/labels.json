@@ -66,6 +66,7 @@
     "sad": "悲しい",
     "suspenseful": "サスペンス"
   },
+  "negativePrompt": "ネガティブプロンプト",
   "overlay": "オーバーレイ",
   "placeholder": {
     "characters": "少年の名前はエリン、彼の犬の名前はラフィです",
@@ -76,6 +77,7 @@
   "privacy": "プライバシー",
   "prompt": "プロンプト",
   "promptInfo": "プロンプトは英語で記入してください。",
+  "promptStrength": "プロンプトの強度",
   "randomize": "ランダム化",
   "readStory": "ストーリー閲覧",
   "removeAllImages": "すべての画像を削除",
@@ -87,9 +89,14 @@
   "saveImage": "画像を保存",
   "seacrh": "検索",
   "security": "セキュリティ",
+  "seed": "シード",
+  "setFixedSeed": "固定シードを設定",
+  "setRandomSeed": "ランダムシードを設定",
   "sideBySide": "並列",
+  "size": "サイズ",
   "start": "開始",
   "starting": "キャプテンがスタートします",
+  "steps": "ステップ",
   "stop": "停止",
   "story": "物語",
   "style": {

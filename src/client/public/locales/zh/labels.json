@@ -66,6 +66,7 @@
     "sad": "悲伤",
     "suspenseful": "悬疑"
   },
+  "negativePrompt": "负面提示",
   "overlay": "叠加",
   "placeholder": {
     "characters": "男孩的名字是Erin，他的狗的名字是Ruffy",
@@ -76,6 +77,7 @@
   "privacy": "隐私",
   "prompt": "提示",
   "promptInfo": "提示应该用英文书写。",
+  "promptStrength": "提示强度",
   "randomize": "随机化",
   "readStory": "阅读故事",
   "removeAllImages": "移除所有图片",
@@ -87,9 +89,14 @@
   "saveImage": "保存图片",
   "seacrh": "搜索",
   "security": "安全",
+  "seed": "种子",
+  "setFixedSeed": "设置固定种子",
+  "setRandomSeed": "设置随机种子",
   "sideBySide": "并排",
+  "size": "大小",
   "start": "开始",
   "starting": "船长即将启动",
+  "steps": "步骤",
   "stop": "停止",
   "story": "故事",
   "style": {

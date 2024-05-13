@@ -1,34 +1,37 @@
 import { localFile } from "@captn/utils/string";
 import Box from "@mui/joy/Box";
 
+import { ZoomImage } from "@/client/organisms/zoom-image";
+
 export function RenderingArea({
 	image,
-	height,
-	width,
+	zoomImage,
+	height = "100%",
+	width = "100%",
 }: {
 	image: string;
-	height: number;
-	width: number;
+	zoomImage?: boolean;
+	height?: number | string;
+	width?: number | string;
 }) {
 	return (
 		<Box
-			style={{ maxHeight: height, maxWidth: width }}
+			style={{ height, width }}
 			sx={{
 				display: "flex",
-				height: "100%",
-				width: "100%",
+				position: "relative",
 			}}
 		>
-			{image && (
-				<img
-					height="100%"
-					width="100%"
+			{image && zoomImage && <ZoomImage image={localFile(image)} />}
+			{image && !zoomImage && (
+				<Box
+					component="img"
 					src={localFile(image)}
-					alt=""
-					style={{
-						flex: 1,
-						width: "100%",
+					sx={{
+						position: "absolute",
+						inset: 0,
 						height: "100%",
+						width: "100%",
 						objectFit: "contain",
 						objectPosition: "center",
 					}}

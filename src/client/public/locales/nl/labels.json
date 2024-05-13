@@ -66,6 +66,7 @@
     "sad": "Droevig",
     "suspenseful": "Spannend"
   },
+  "negativePrompt": "Negatieve Prompt",
   "overlay": "Overlay",
   "placeholder": {
     "characters": "De naam van de jongen is Erin en de naam van zijn hond is Ruffy",
@@ -76,6 +77,7 @@
   "privacy": "Privacy",
   "prompt": "Prompt",
   "promptInfo": "De prompt moet in het Engels geschreven zijn.",
+  "promptStrength": "Prompt Sterkte",
   "randomize": "Willekeurig",
   "readStory": "Verhaal Lezen",
   "removeAllImages": "Alle afbeeldingen verwijderen",
@@ -87,9 +89,14 @@
   "saveImage": "Afbeelding opslaan",
   "seacrh": "Zoeken",
   "security": "Beveiliging",
+  "seed": "Seed",
+  "setFixedSeed": "Vaste Seed Instellen",
+  "setRandomSeed": "Willekeurige Seed Instellen",
   "sideBySide": "Zij aan Zij",
+  "size": "Grootte",
   "start": "Start",
   "starting": "Captain wordt gestart",
+  "steps": "Stappen",
   "stop": "Stop",
   "story": "Verhaal",
   "style": {

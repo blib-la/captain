@@ -66,6 +66,7 @@
     "sad": "Triste",
     "suspenseful": "Suspense"
   },
+  "negativePrompt": "Prompt Negativo",
   "overlay": "Sovrapposizione",
   "placeholder": {
     "characters": "Il nome del ragazzo è Erin e il nome del suo cane è Ruffy",
@@ -76,6 +77,7 @@
   "privacy": "Privacy",
   "prompt": "Prompt",
   "promptInfo": "Il prompt deve essere scritto in inglese.",
+  "promptStrength": "Forza del Prompt",
   "randomize": "Randomizza",
   "readStory": "Leggi Storia",
   "removeAllImages": "Rimuovi tutte le immagini",
@@ -87,9 +89,14 @@
   "saveImage": "Salva immagine",
   "seacrh": "Cerca",
   "security": "Sicurezza",
+  "seed": "Seme",
+  "setFixedSeed": "Imposta Seme Fisso",
+  "setRandomSeed": "Imposta Seme Casuale",
   "sideBySide": "Fianco a Fianco",
+  "size": "Dimensione",
   "start": "Avvia",
   "starting": "Il capitano sta iniziando",
+  "steps": "Passaggi",
   "stop": "Ferma",
   "story": "Storia",
   "style": {
