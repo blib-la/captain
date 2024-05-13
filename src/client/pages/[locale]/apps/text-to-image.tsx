@@ -1,5 +1,4 @@
 import { AppFrame } from "@captn/joy/app-frame";
-import { CustomScrollbars } from "@captn/joy/custom-scrollbars";
 import { TitleBar } from "@captn/joy/title-bar";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import Typography from "@mui/joy/Typography";
@@ -30,9 +29,8 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			<Head>
 				<title>{t("labels:textToImage")}</title>
 			</Head>
-			<CustomScrollbars>
-				<TextToImage />
-			</CustomScrollbars>
+
+			<TextToImage />
 		</AppFrame>
 	);
 }

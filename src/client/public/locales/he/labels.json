@@ -66,6 +66,7 @@
     "sad": "עצוב",
     "suspenseful": "מתח"
   },
+  "negativePrompt": "פרומפט שלילי",
   "overlay": "שכבה",
   "placeholder": {
     "characters": "שם הילד הוא ארין ושם הכלב שלו הוא ראפי",
@@ -76,6 +77,7 @@
   "privacy": "פרטיות",
   "prompt": "בקשה",
   "promptInfo": "ההקלדה צריכה להיות באנגלית.",
+  "promptStrength": "עוצמת הפרומפט",
   "randomize": "הפוך לאקראי",
   "readStory": "קרא סיפור",
   "removeAllImages": "הסר את כל התמונות",
@@ -87,9 +89,14 @@
   "saveImage": "שמור תמונה",
   "seacrh": "חיפוש",
   "security": "ביטחון",
+  "seed": "זרע",
+  "setFixedSeed": "הגדר זרע קבוע",
+  "setRandomSeed": "הגדר זרע אקראי",
   "sideBySide": "צד לצד",
+  "size": "גודל",
   "start": "התחל",
   "starting": "הקפטן מתחיל",
+  "steps": "שלבים",
   "stop": "עצור",
   "story": "סיפור",
   "style": {

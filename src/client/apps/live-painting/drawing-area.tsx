@@ -159,7 +159,6 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 			sx={{
 				width: 512,
 				height: 512,
-				boxShadow: isOverlay ? undefined : "sm",
 				position: "relative",
 				overflow: "hidden",
 				cursor: "none",

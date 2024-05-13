@@ -50,4 +50,5 @@ export const StyledStickyHeader = styled(Sheet)({
 	flexWrap: "wrap",
 	alignItems: "center",
 	flexShrink: 0,
+	py: 6,
 });

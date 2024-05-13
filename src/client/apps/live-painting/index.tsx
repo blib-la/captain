@@ -6,8 +6,10 @@ import CasinoIcon from "@mui/icons-material/Casino";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import SaveIcon from "@mui/icons-material/Save";
 import StopIcon from "@mui/icons-material/Stop";
+import Badge from "@mui/joy/Badge";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import CircularProgress from "@mui/joy/CircularProgress";
@@ -19,12 +21,17 @@ import { useTranslation } from "next-i18next";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { clearCounterAtom, imageAtom, livePaintingOptionsAtom } from "./atoms";
-import { ColorInputButton, PopupSlider, TooltipButton } from "./components";
 import { allRequiredDownloads, APP_ID, FRAMES_PER_SECOND, MAX_QUEUE_LENGTH } from "./constants";
 import { createWorkflow } from "./create-workflow";
 import { DrawingArea } from "./drawing-area";
 
-import { PromptSheet } from "@/client/apps/shared/components";
+import {
+	ColorInputButton,
+	PopupRadiusSlider,
+	PopupSlider,
+	PromptSheet,
+	TooltipButton,
+} from "@/client/apps/shared/components";
 import type { IllustrationStyles } from "@/client/apps/shared/illustration-styles";
 import { illustrationStyles, injectPrompt } from "@/client/apps/shared/illustration-styles";
 import { RenderingArea } from "@/client/apps/shared/rendering-area";
@@ -41,6 +48,7 @@ import type {
 	ComfyExecuting,
 	ComfyStatusMessage,
 } from "@/client/apps/shared/types";
+import { TimerIcon } from "@/client/atoms/icons/custom";
 import { comfyUITemporaryPathAtom } from "@/client/ions/atoms";
 import { useComfyUIPath } from "@/client/ions/hooks/comfyui-path";
 import { buildKey } from "@/shared/build-key";
@@ -115,6 +123,8 @@ export function LivePainting() {
 	const [prompt, setPrompt] = useState("");
 	const [illustrationStyle, setIllustrationStyle] = useState<IllustrationStyles>("childrensBook");
 	const [seed, setSeed] = useState(randomSeed());
+	const [cfg, setCfg] = useState(1);
+	const [steps, setSteps] = useState(1);
 	const [fileName, setFileName] = useState("");
 	const startedReference = useRef(false);
 	const [started, setStarted] = useState(false);
@@ -213,6 +223,8 @@ export function LivePainting() {
 									illustrationStyles[illustrationStyle].positive
 								),
 								seed,
+								steps,
+								cfg,
 							}),
 						},
 					});
@@ -226,7 +238,7 @@ export function LivePainting() {
 		return () => {
 			cancelAnimationFrame(animationFrame);
 		};
-	}, [illustrationStyle, prompt, seed, send, started]);
+	}, [illustrationStyle, prompt, seed, send, started, cfg, steps]);
 
 	useComfyUIPath();
 
@@ -264,18 +276,6 @@ export function LivePainting() {
 								startedReference.current = true;
 								setIsGenerating(true);
 								setStarted(true);
-								send({
-									action: "comfyui:queue",
-									payload: {
-										workflow: createWorkflow({
-											prompt: injectPrompt(
-												prompt,
-												illustrationStyles[illustrationStyle].positive
-											),
-											seed,
-										}),
-									},
-								});
 							}}
 						>
 							{t("labels:start")}
@@ -302,7 +302,7 @@ export function LivePainting() {
 						}}
 					/>
 					{/* Select the size of the brush */}
-					<PopupSlider
+					<PopupRadiusSlider
 						label={t("labels:brushSize")}
 						min={3}
 						max={100}
@@ -316,7 +316,7 @@ export function LivePainting() {
 						}}
 					>
 						<BrushIcon />
-					</PopupSlider>
+					</PopupRadiusSlider>
 					<Box sx={{ flex: 1 }} />
 					{/* Get a new random seed to allow a new generation */}
 					<TooltipButton
@@ -339,6 +339,42 @@ export function LivePainting() {
 				</StyledButtonWrapper>
 				{/* Right Side of the header */}
 				<StyledButtonWrapper>
+					<Badge badgeContent={cfg} variant="outlined" color="lime" size="sm">
+						<PopupSlider
+							label={t("labels:promptStrength")}
+							variant="soft"
+							color="lime"
+							valueLabelDisplay="on"
+							value={cfg}
+							min={0}
+							max={3}
+							step={0.25}
+							width={300}
+							onChange={(_, value) => {
+								setCfg(value as number);
+							}}
+						>
+							<PlaylistAddIcon />
+						</PopupSlider>
+					</Badge>
+					<Badge badgeContent={steps} variant="outlined" color="green" size="sm">
+						<PopupSlider
+							label={t("labels:steps")}
+							variant="soft"
+							color="green"
+							valueLabelDisplay="on"
+							value={steps}
+							min={1}
+							max={8}
+							step={1}
+							width={300}
+							onChange={(_, value) => {
+								setSteps(value as number);
+							}}
+						>
+							<TimerIcon />
+						</PopupSlider>
+					</Badge>
 					<Box sx={{ flex: 1 }} />
 					{/* Save the image to disk (includes a control + s listener) */}
 					<SaveButton image={image} prompt={prompt} fileName={fileName} />
@@ -348,6 +384,7 @@ export function LivePainting() {
 			<Sheet
 				sx={{
 					flex: 1,
+					minHeight: "100%",
 					display: "flex",
 					flexWrap: "wrap",
 					py: 2,
