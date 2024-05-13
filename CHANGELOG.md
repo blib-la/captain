@@ -1,3 +1,10 @@
+# [1.0.0-alpha.78](https://github.com/blib-la/captain/compare/v1.0.0-alpha.77...v1.0.0-alpha.78) (2024-05-13)
+
+
+### Features
+
+* add several controls to image generations ([#298](https://github.com/blib-la/captain/issues/298)) ([4bb1e1a](https://github.com/blib-la/captain/commit/4bb1e1a243d5851c366b5def07f1bdb3d08145fc))
+
 # [1.0.0-alpha.77](https://github.com/blib-la/captain/compare/v1.0.0-alpha.76...v1.0.0-alpha.77) (2024-05-12)
 
 
