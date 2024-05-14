@@ -34,6 +34,7 @@
   "generate": "צור",
   "help": "עזרה",
   "illustrationStyles": {
+    "bliblaStyle": "Blibla Style",
     "childrensBook": "ספר ילדים",
     "custom": "מותאם אישית",
     "customInfo": "כלול את הסגנון הרצוי בהקלדה",
@@ -45,9 +46,9 @@
   "image": "תמונה",
   "install": "התקנה",
   "installAndRestart": "התקן ואתחל",
-  "installationSuccess": "ההתקנה הושלמה",
   "installFailed": "ההתקנה נכשלה",
   "installUpdate": "עדכונים",
+  "installationSuccess": "ההתקנה הושלמה",
   "length": {
     "long": "ארוך",
     "medium": "בינוני",
@@ -85,8 +86,8 @@
   "restart": "הפעלה מחדש",
   "retry": "נסה שוב",
   "save": "שמור",
-  "saved": "נשמר",
   "saveImage": "שמור תמונה",
+  "saved": "נשמר",
   "seacrh": "חיפוש",
   "security": "ביטחון",
   "seed": "זרע",

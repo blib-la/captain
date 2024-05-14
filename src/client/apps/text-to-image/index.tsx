@@ -1,5 +1,6 @@
 import { useSDK } from "@captn/react/use-sdk";
 import { useUnload } from "@captn/react/use-unload";
+import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import Badge from "@mui/joy/Badge";
@@ -10,6 +11,8 @@ import Chip from "@mui/joy/Chip";
 import CircularProgress from "@mui/joy/CircularProgress";
 import Sheet from "@mui/joy/Sheet";
 import Stack from "@mui/joy/Stack";
+import Switch from "@mui/joy/Switch";
+import Tooltip from "@mui/joy/Tooltip";
 import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
@@ -52,6 +55,7 @@ export function TextToImage() {
 	const [size, setSize] = useState(sizes[4]);
 	const [cfg, setCfg] = useState(7.5);
 	const [steps, setSteps] = useState(30);
+	const [enableLora, setEnableLora] = useState(false);
 	const [lastSeed, setLastSeed] = useState(randomSeed());
 	const [seed, setSeed] = useState(-1);
 	const [queueSize, setQueueSize] = useState(0);
@@ -162,6 +166,9 @@ export function TextToImage() {
 													illustrationStyles[illustrationStyle].negative
 												),
 												seed: usedSeed,
+												loraName: enableLora
+													? "blib-la\\blibla_style_lora_sdxl\\blibla_styles_sdxl.safetensors"
+													: undefined,
 											}),
 										},
 									});
@@ -204,6 +211,10 @@ export function TextToImage() {
 							setSeed(seed_);
 						}}
 					/>
+				</StyledButtonWrapper>
+				<StyledButtonWrapper>
+					{/* Right Side of the header */}
+
 					<Badge badgeContent={cfg} variant="outlined" color="lime" size="sm">
 						<PopupSlider
 							label={t("labels:promptStrength")}
@@ -240,9 +251,18 @@ export function TextToImage() {
 							<TimerIcon />
 						</PopupSlider>
 					</Badge>
+
+					<Tooltip title="LoRA">
+						<Switch
+							startDecorator={<AutoFixHighIcon />}
+							checked={enableLora}
+							onChange={event => {
+								setEnableLora(event.target.checked);
+							}}
+						/>
+					</Tooltip>
+					<Box sx={{ flex: 1 }} />
 				</StyledButtonWrapper>
-				{/* Right Side of the header */}
-				<StyledButtonWrapper />
 			</StyledStickyHeader>
 			<Stack sx={{ flex: 1, flexDirection: { lg: "row-reverse" } }}>
 				<Sheet

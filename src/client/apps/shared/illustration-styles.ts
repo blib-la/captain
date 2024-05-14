@@ -1,6 +1,9 @@
 const negativePromptBase = "worst quality, blurry, lowres, deformed, bad anatomy, bad hands";
 
-export const illustrationStyles = {
+export const illustrationStyles: Record<
+	string,
+	{ positive: string; negative: string; plus?: boolean }
+> = {
 	childrensBook: {
 		positive:
 			"watercolor painting of {prompt}, whimsical storybook illustration, soft edges, vibrant highlights, best quality, highres, 4k, pastel background, colorful accents",
@@ -25,6 +28,12 @@ export const illustrationStyles = {
 		positive:
 			"novel illustration of {prompt}, visual storytelling, partially colored, hand colored etching, best quality, highres, 4k",
 		negative: `${negativePromptBase}, photo, 3d render, poorly drawn, {prompt}`,
+	},
+	bliblaStyle: {
+		plus: true,
+		positive:
+			"modern caricature lithography of an exaggerated cartoon character, {prompt}, highly detailed facial features, highres digital art, 4k resolution, best quality, handcolored etching",
+		negative: `${negativePromptBase}, photo {prompt}`,
 	},
 	custom: {
 		positive: "{prompt}",

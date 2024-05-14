@@ -34,6 +34,7 @@
   "generate": "Generar",
   "help": "Ayuda",
   "illustrationStyles": {
+    "bliblaStyle": "Blibla Style",
     "childrensBook": "Libro Infantil",
     "custom": "Personalizado",
     "customInfo": "Incluye el estilo deseado en el prompt",
@@ -45,9 +46,9 @@
   "image": "Imagen",
   "install": "Instalar",
   "installAndRestart": "Instalar y reiniciar",
-  "installationSuccess": "Instalación completa",
   "installFailed": "Instalación fallida",
   "installUpdate": "Actualizaciones",
+  "installationSuccess": "Instalación completa",
   "length": {
     "long": "Largo",
     "medium": "Medio",
@@ -85,8 +86,8 @@
   "restart": "Reiniciar",
   "retry": "Intentar de nuevo",
   "save": "Guardar",
-  "saved": "Guardado",
   "saveImage": "Guardar imagen",
+  "saved": "Guardado",
   "seacrh": "Buscar",
   "security": "Seguridad",
   "seed": "Semilla",

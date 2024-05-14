@@ -34,6 +34,7 @@
   "generate": "生成する",
   "help": "ヘルプ",
   "illustrationStyles": {
+    "bliblaStyle": "Blibla Style",
     "childrensBook": "児童書",
     "custom": "カスタム",
     "customInfo": "プロンプトに希望のスタイルを含めてください",
@@ -45,9 +46,9 @@
   "image": "画像",
   "install": "インストール",
   "installAndRestart": "インストールして再起動",
-  "installationSuccess": "インストール完了",
   "installFailed": "インストールに失敗しました",
   "installUpdate": "アップデート",
+  "installationSuccess": "インストール完了",
   "length": {
     "long": "長編",
     "medium": "中編",
@@ -85,8 +86,8 @@
   "restart": "再起動",
   "retry": "再試行",
   "save": "保存",
-  "saved": "保存済み",
   "saveImage": "画像を保存",
+  "saved": "保存済み",
   "seacrh": "検索",
   "security": "セキュリティ",
   "seed": "シード",

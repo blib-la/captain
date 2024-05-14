@@ -34,6 +34,7 @@
   "generate": "Создать",
   "help": "Помощь",
   "illustrationStyles": {
+    "bliblaStyle": "Blibla Style",
     "childrensBook": "Детская книга",
     "custom": "На заказ",
     "customInfo": "Укажите желаемый стиль в подсказке",
@@ -45,9 +46,9 @@
   "image": "Изображение",
   "install": "Установить",
   "installAndRestart": "Установить и перезагрузить",
-  "installationSuccess": "Установка завершена",
   "installFailed": "Не удалось установить",
   "installUpdate": "Обновления",
+  "installationSuccess": "Установка завершена",
   "length": {
     "long": "Длинная",
     "medium": "Средняя",
@@ -85,8 +86,8 @@
   "restart": "Перезапустить",
   "retry": "Попробовать снова",
   "save": "Сохранить",
-  "saved": "Сохранено",
   "saveImage": "Сохранить изображение",
+  "saved": "Сохранено",
   "seacrh": "Поиск",
   "security": "Безопасность",
   "seed": "Сид",

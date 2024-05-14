@@ -1,4 +1,5 @@
 import { ClickAwayListener } from "@mui/base";
+import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import CasinoIcon from "@mui/icons-material/Casino";
 import GpsFixedIcon from "@mui/icons-material/GpsFixed";
 import PaletteIcon from "@mui/icons-material/Palette";
@@ -83,13 +84,17 @@ export function PromptSheet({
 						}
 					}}
 				>
-					{Object.entries(illustrationStyles).map(([key_]) => (
+					{Object.entries(illustrationStyles).map(([key_, value_]) => (
 						<Option
 							key={key_}
 							value={key_}
 							sx={{ flexDirection: "column", alignItems: "stretch" }}
 						>
-							<Typography>{t(`labels:illustrationStyles.${key_}`)}</Typography>
+							<Typography
+								startDecorator={value_.plus ? <AutoFixHighIcon /> : undefined}
+							>
+								{t(`labels:illustrationStyles.${key_}`)}
+							</Typography>
 							{key_ === "custom" && (
 								<Typography level="body-xs" component="div">
 									{t(`labels:illustrationStyles.customInfo`)}
