@@ -112,6 +112,7 @@ describe("ComfyUI", () => {
 			captain: {
 				base_path: "/path/to/downloads",
 				checkpoints: "stable-diffusion/checkpoints",
+				loras: "stable-diffusion/loras",
 			},
 		};
 		const expectedYAML = stringify(expectedConfig);
