@@ -32,8 +32,8 @@ export const illustrationStyles: Record<
 	bliblaStyle: {
 		plus: true,
 		positive:
-			"modern caricature lithography of an exaggerated cartoon character, {prompt}, highly detailed facial features, highres digital art, 4k resolution, best quality, handcolored etching",
-		negative: `${negativePromptBase}, photo {prompt}`,
+			"a caricature lithography of a cartoon character with exaggerated facial features, a parody of {prompt}, highres digital art, 4k resolution, best quality, nostalgic handcolored etching",
+		negative: `worst quality, lowres, blurry, smudge, framed, photo, signature, artist name, text, {prompt}`,
 	},
 	custom: {
 		positive: "{prompt}",
