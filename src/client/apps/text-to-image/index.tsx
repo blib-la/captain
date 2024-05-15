@@ -15,12 +15,11 @@ import Sheet from "@mui/joy/Sheet";
 import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
 import { useAtom } from "jotai";
-import { atomWithStorage } from "jotai/utils";
 import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 
-import { imageAtom } from "./atoms";
+import { imageAtom, selectedLoraAtom } from "./atoms";
 import { allRequiredDownloads, APP_ID } from "./constants";
 import { createWorkflow } from "./create-workflow";
 
@@ -62,7 +61,6 @@ interface StableDiffusion {
 	vae?: Inventory[];
 }
 
-const selectedLoraAtom = atomWithStorage(`${APP_ID}_selectedLora`, "none");
 export function TextToImage() {
 	const { t } = useTranslation(["common", "labels"]);
 
@@ -89,6 +87,13 @@ export function TextToImage() {
 	const [image, setImage] = useAtom(imageAtom);
 	const [comfyUITemporaryPath] = useAtom(comfyUITemporaryPathAtom);
 	const [selectedLora, setSelectedLora] = useAtom(selectedLoraAtom);
+
+	// Set the lora and ensure the required backward slashes for windows.
+	// TODO handle macOS and Linux
+	let loraName: string;
+	if (selectedLora !== "none") {
+		loraName = selectedLora.replaceAll("/", "\\");
+	}
 
 	const { send } = useSDK<unknown, object>(APP_ID, {
 		onMessage(message) {
@@ -142,11 +147,8 @@ export function TextToImage() {
 			});
 		};
 	}, [send]);
+
 	useComfyUIPath();
-	let loraName: string;
-	if (selectedLora !== "none") {
-		loraName = selectedLora.replaceAll("/", "\\");
-	}
 
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
