@@ -76,12 +76,12 @@ export function TextToImage() {
 	const [illustrationStyle, setIllustrationStyle] = useState<IllustrationStyles>("bliblaStyle");
 	const [isGenerating, setIsGenerating] = useState(false);
 	const { data } = useSWR("stable-diffusion", () =>
-		window.ipc.inventoryStore.get("stable-diffusion")
+		window.ipc.inventoryStore.get<StableDiffusion>("stable-diffusion")
 	);
 
-	const loras = (data as StableDiffusion)?.loras ?? [];
+	const loras = data?.loras ?? [];
 	//
-	// const checkpoints = (data as StableDiffusion)?.checkpoints ?? [];
+	// const checkpoints = data?.checkpoints ?? [];
 
 	// Global States
 	const [image, setImage] = useAtom(imageAtom);
