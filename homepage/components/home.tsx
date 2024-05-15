@@ -134,12 +134,33 @@ export function Hero() {
 			</h2>
 			<div className="mt-8">
 				<Link
-					href={latestRelease}
+					href="https://stats.sender.net/forms/eZk7Ja/view"
 					target="_blank"
 					className={tw`
 								inline-block
 								py-4
 								px-8
+
+								bg-blue-600
+								hover:bg-blue-700
+								active:bg-blue-800
+								text-white
+
+								font-bold
+								text-nowrap
+						`}
+				>
+					Subscribe to Captain News
+				</Link>
+			</div>
+			<div className="mt-8">
+				<Link
+					href={latestRelease}
+					target="_blank"
+					className={tw`
+								inline-block
+								py-2
+								px-4
 
 								bg-teal-600
 								hover:bg-teal-700
