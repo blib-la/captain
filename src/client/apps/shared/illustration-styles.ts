@@ -40,7 +40,7 @@ export const illustrationStyles: Record<
 		positive: "{prompt}, highres digital art, 4k resolution, best quality",
 		negative: `worst quality, lowres, blurry, smudge, framed, photo, signature, artist name, text, {prompt}`,
 	},
-	bliblaLeather: {
+	bliblaUsedLeather: {
 		plus: true,
 		positive:
 			"a used leather {prompt}, made of leather, weathered, visible stitching, scuffed, stained",
@@ -51,7 +51,7 @@ export const illustrationStyles: Record<
 		positive: "caricature of {prompt}, exaggerated facial features",
 		negative: "worst quality, blurry, lowres, bad hands, {prompt}",
 	},
-	bliblaHonore: {
+	bliblaHonoreDaumier: {
 		plus: true,
 		positive:
 			"a caricature of {prompt}, lithography, inspired by honore daumier, best quality, highres, 4k resolution",
