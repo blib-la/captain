@@ -1,5 +1,6 @@
 import { useSDK } from "@captn/react/use-sdk";
 import { useUnload } from "@captn/react/use-unload";
+import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import Badge from "@mui/joy/Badge";
@@ -280,6 +281,7 @@ export function TextToImage() {
 					<Box component="label" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
 						<Typography>LoRA</Typography>
 						<Select
+							startDecorator={<AutoFixHighIcon />}
 							value={selectedLora}
 							sx={{ width: 200 }}
 							onChange={(_event, value) => {
