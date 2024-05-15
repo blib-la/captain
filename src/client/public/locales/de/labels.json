@@ -34,7 +34,13 @@
   "generate": "Generieren",
   "help": "Hilfe",
   "illustrationStyles": {
+    "bliblaArtStyle": "Blibla Art Style",
+    "bliblaCaricature": "Karikatur",
+    "bliblaEugeneAtget": "Eugene Atget",
+    "bliblaHonoreDaumier": "Honoré Daumier",
     "bliblaStyle": "Blibla Style",
+    "bliblaThomasRowlandson": "Thomas Rowlandson",
+    "bliblaUsedLeather": "Gebrauchtes Leder",
     "childrensBook": "Kinderbuch",
     "custom": "Eigener",
     "customInfo": "Den gewünschten Stil in dem Prompt angeben",
@@ -68,6 +74,7 @@
     "suspenseful": "Spannend"
   },
   "negativePrompt": "Negativer Prompt",
+  "none": "Keine",
   "overlay": "Überlagerung",
   "placeholder": {
     "characters": "Der Name des Jungen ist Erin und sein Hund heißt Ruffy",
@@ -88,7 +95,7 @@
   "save": "Speichern",
   "saveImage": "Bild speichern",
   "saved": "Gespeichert",
-  "seacrh": "Suche",
+  "search": "Suche",
   "security": "Sicherheit",
   "seed": "Seed",
   "setFixedSeed": "Festen Seed setzen",

@@ -11,6 +11,7 @@ export const allRequiredDownloads: RequiredDownload[] = [
 		id: "stabilityai/sdxl-turbo",
 		source: "https://huggingface.co/stabilityai/sdxl-turbo/resolve/main/sd_xl_turbo_1.0_fp16.safetensors?download=true",
 		destination: "stable-diffusion/checkpoints",
+		fileName: "sd_xl_turbo_1.0_fp16.safetensors",
 		unzip: false,
 	},
 ];

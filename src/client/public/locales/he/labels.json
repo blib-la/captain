@@ -34,7 +34,13 @@
   "generate": "צור",
   "help": "עזרה",
   "illustrationStyles": {
+    "bliblaArtStyle": "Blibla Art Style",
+    "bliblaCaricature": "קריקטורה",
+    "bliblaEugeneAtget": "Eugene Atget",
+    "bliblaHonoreDaumier": "Honoré Daumier",
     "bliblaStyle": "Blibla Style",
+    "bliblaThomasRowlandson": "Thomas Rowlandson",
+    "bliblaUsedLeather": "עור משומש",
     "childrensBook": "ספר ילדים",
     "custom": "מותאם אישית",
     "customInfo": "כלול את הסגנון הרצוי בהקלדה",
@@ -68,6 +74,7 @@
     "suspenseful": "מתח"
   },
   "negativePrompt": "פרומפט שלילי",
+  "none": "אף אחד",
   "overlay": "שכבה",
   "placeholder": {
     "characters": "שם הילד הוא ארין ושם הכלב שלו הוא ראפי",
@@ -88,7 +95,7 @@
   "save": "שמור",
   "saveImage": "שמור תמונה",
   "saved": "נשמר",
-  "seacrh": "חיפוש",
+  "search": "חיפוש",
   "security": "ביטחון",
   "seed": "זרע",
   "setFixedSeed": "הגדר זרע קבוע",

@@ -34,7 +34,13 @@
   "generate": "生成する",
   "help": "ヘルプ",
   "illustrationStyles": {
+    "bliblaArtStyle": "Blibla Art Style",
+    "bliblaCaricature": "カリカチュア",
+    "bliblaEugeneAtget": "Eugene Atget",
+    "bliblaHonoreDaumier": "Honoré Daumier",
     "bliblaStyle": "Blibla Style",
+    "bliblaThomasRowlandson": "Thomas Rowlandson",
+    "bliblaUsedLeather": "使用済みの革",
     "childrensBook": "児童書",
     "custom": "カスタム",
     "customInfo": "プロンプトに希望のスタイルを含めてください",
@@ -68,6 +74,7 @@
     "suspenseful": "サスペンス"
   },
   "negativePrompt": "ネガティブプロンプト",
+  "none": "なし",
   "overlay": "オーバーレイ",
   "placeholder": {
     "characters": "少年の名前はエリン、彼の犬の名前はラフィです",
@@ -88,7 +95,7 @@
   "save": "保存",
   "saveImage": "画像を保存",
   "saved": "保存済み",
-  "seacrh": "検索",
+  "search": "検索",
   "security": "セキュリティ",
   "seed": "シード",
   "setFixedSeed": "固定シードを設定",

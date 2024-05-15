@@ -32,8 +32,41 @@ export const illustrationStyles: Record<
 	bliblaStyle: {
 		plus: true,
 		positive:
-			"a caricature lithography of a cartoon character with exaggerated facial features, a parody of {prompt}, highres digital art, 4k resolution, best quality, nostalgic handcolored etching",
+			"a caricature lithography of a cartoon character with exaggerated facial features, a parody of {prompt}, highres digital art, 4k resolution, best quality, nostalgic hand colored etching",
 		negative: `worst quality, lowres, blurry, smudge, framed, photo, signature, artist name, text, {prompt}`,
+	},
+	bliblaArtStyle: {
+		plus: true,
+		positive: "{prompt}, highres digital art, 4k resolution, best quality",
+		negative: `worst quality, lowres, blurry, smudge, framed, photo, signature, artist name, text, {prompt}`,
+	},
+	bliblaLeather: {
+		plus: true,
+		positive:
+			"a used leather {prompt}, made of leather, weathered, visible stitching, scuffed, stained",
+		negative: "pristine, new, {prompt}",
+	},
+	bliblaCaricature: {
+		plus: true,
+		positive: "caricature of {prompt}, exaggerated facial features",
+		negative: "worst quality, blurry, lowres, bad hands, {prompt}",
+	},
+	bliblaHonore: {
+		plus: true,
+		positive:
+			"a caricature of {prompt}, lithography, inspired by honore daumier, best quality, highres, 4k resolution",
+		negative: "smudge, lowres, blurry, {prompt}",
+	},
+	bliblaEugeneAtget: {
+		plus: true,
+		positive:
+			"a nostalgic photo of {prompt}, inspired by eugene atget, antique, sepia tone, monochrome",
+		negative: `${negativePromptBase}, {prompt}`,
+	},
+	bliblaThomasRowlandson: {
+		plus: true,
+		positive: "{prompt}, hand colored etching, inspired by thomas rowlandson",
+		negative: `${negativePromptBase}, {prompt}`,
 	},
 	custom: {
 		positive: "{prompt}",

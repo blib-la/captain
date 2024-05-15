@@ -22,8 +22,9 @@ export interface Entry {
 }
 
 export interface StableDiffusion {
-	checkpoint: { [key: string]: Entry };
-	vae: { [key: string]: Entry };
+	checkpoint?: { [key: string]: Entry };
+	vae?: { [key: string]: Entry };
+	lora?: { [key: string]: Entry };
 }
 
 export interface Marketplace {

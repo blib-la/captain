@@ -34,7 +34,13 @@
   "generate": "Generar",
   "help": "Ayuda",
   "illustrationStyles": {
+    "bliblaArtStyle": "Blibla Art Style",
+    "bliblaCaricature": "Caricatura",
+    "bliblaEugeneAtget": "Eugene Atget",
+    "bliblaHonoreDaumier": "Honoré Daumier",
     "bliblaStyle": "Blibla Style",
+    "bliblaThomasRowlandson": "Thomas Rowlandson",
+    "bliblaUsedLeather": "Cuero usado",
     "childrensBook": "Libro Infantil",
     "custom": "Personalizado",
     "customInfo": "Incluye el estilo deseado en el prompt",
@@ -68,6 +74,7 @@
     "suspenseful": "Suspense"
   },
   "negativePrompt": "Prompt Negativo",
+  "none": "Ninguno",
   "overlay": "Superposición",
   "placeholder": {
     "characters": "El nombre del chico es Erin y el de su perro es Ruffy",
@@ -88,7 +95,7 @@
   "save": "Guardar",
   "saveImage": "Guardar imagen",
   "saved": "Guardado",
-  "seacrh": "Buscar",
+  "search": "Buscar",
   "security": "Seguridad",
   "seed": "Semilla",
   "setFixedSeed": "Establecer Semilla Fija",

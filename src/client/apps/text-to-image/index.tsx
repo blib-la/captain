@@ -1,6 +1,5 @@
 import { useSDK } from "@captn/react/use-sdk";
 import { useUnload } from "@captn/react/use-unload";
-import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import Badge from "@mui/joy/Badge";
@@ -9,13 +8,16 @@ import Button from "@mui/joy/Button";
 import ButtonGroup from "@mui/joy/ButtonGroup";
 import Chip from "@mui/joy/Chip";
 import CircularProgress from "@mui/joy/CircularProgress";
+import Option from "@mui/joy/Option";
+import Select from "@mui/joy/Select";
 import Sheet from "@mui/joy/Sheet";
 import Stack from "@mui/joy/Stack";
-import Switch from "@mui/joy/Switch";
-import Tooltip from "@mui/joy/Tooltip";
+import Typography from "@mui/joy/Typography";
 import { useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
+import useSWR from "swr";
 
 import { imageAtom } from "./atoms";
 import { allRequiredDownloads, APP_ID } from "./constants";
@@ -46,6 +48,20 @@ import { buildKey } from "@/shared/build-key";
 import { ID } from "@/shared/enums";
 import { randomSeed } from "@/shared/number";
 
+interface Inventory {
+	id: string;
+	filePath: string;
+	modelPath: string;
+	label: string;
+}
+
+interface StableDiffusion {
+	checkpoints?: Inventory[];
+	loras?: Inventory[];
+	vae?: Inventory[];
+}
+
+const selectedLoraAtom = atomWithStorage(`${APP_ID}_selectedLora`, "none");
 export function TextToImage() {
 	const { t } = useTranslation(["common", "labels"]);
 
@@ -55,16 +71,23 @@ export function TextToImage() {
 	const [size, setSize] = useState(sizes[4]);
 	const [cfg, setCfg] = useState(7.5);
 	const [steps, setSteps] = useState(30);
-	const [enableLora, setEnableLora] = useState(false);
 	const [lastSeed, setLastSeed] = useState(randomSeed());
 	const [seed, setSeed] = useState(-1);
 	const [queueSize, setQueueSize] = useState(0);
-	const [illustrationStyle, setIllustrationStyle] = useState<IllustrationStyles>("childrensBook");
+	const [illustrationStyle, setIllustrationStyle] = useState<IllustrationStyles>("bliblaStyle");
 	const [isGenerating, setIsGenerating] = useState(false);
+	const { data } = useSWR("stable-diffusion", () =>
+		window.ipc.inventoryStore.get("stable-diffusion")
+	);
+
+	const loras = (data as StableDiffusion)?.loras ?? [];
+	//
+	// const checkpoints = (data as StableDiffusion)?.checkpoints ?? [];
 
 	// Global States
 	const [image, setImage] = useAtom(imageAtom);
 	const [comfyUITemporaryPath] = useAtom(comfyUITemporaryPathAtom);
+	const [selectedLora, setSelectedLora] = useAtom(selectedLoraAtom);
 
 	const { send } = useSDK<unknown, object>(APP_ID, {
 		onMessage(message) {
@@ -119,13 +142,17 @@ export function TextToImage() {
 		};
 	}, [send]);
 	useComfyUIPath();
+	let loraName: string;
+	if (selectedLora !== "none") {
+		loraName = selectedLora.replaceAll("/", "\\");
+	}
 
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
 			<RequiredModelsAlert downloads={allRequiredDownloads} />
 			<StyledStickyHeader sx={{ py: 1 }}>
 				{/* Left Side of the header */}
-				<StyledButtonWrapper>
+				<StyledButtonWrapper sx={{ flex: "unset" }}>
 					<ButtonGroup variant="solid">
 						<Badge
 							badgeContent={queueSize}
@@ -166,9 +193,7 @@ export function TextToImage() {
 													illustrationStyles[illustrationStyle].negative
 												),
 												seed: usedSeed,
-												loraName: enableLora
-													? "blib-la\\blibla_style_lora_sdxl\\blibla_styles_sdxl.safetensors"
-													: undefined,
+												loraName,
 											}),
 										},
 									});
@@ -200,7 +225,7 @@ export function TextToImage() {
 							/>
 						</PopupButton>
 					</ButtonGroup>
-					<Box sx={{ flex: 1 }} />
+					<Box sx={{ pr: 2 }} />
 					<SeedField
 						value={seed}
 						lastSeed={lastSeed}
@@ -211,9 +236,7 @@ export function TextToImage() {
 							setSeed(seed_);
 						}}
 					/>
-				</StyledButtonWrapper>
-				<StyledButtonWrapper>
-					{/* Right Side of the header */}
+					<Box sx={{ pr: 2 }} />
 
 					<Badge badgeContent={cfg} variant="outlined" color="lime" size="sm">
 						<PopupSlider
@@ -251,16 +274,28 @@ export function TextToImage() {
 							<TimerIcon />
 						</PopupSlider>
 					</Badge>
-
-					<Tooltip title="LoRA">
-						<Switch
-							startDecorator={<AutoFixHighIcon />}
-							checked={enableLora}
-							onChange={event => {
-								setEnableLora(event.target.checked);
+					<Box sx={{ pr: 2 }} />
+				</StyledButtonWrapper>
+				<StyledButtonWrapper>
+					<Box component="label" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+						<Typography>LoRA</Typography>
+						<Select
+							value={selectedLora}
+							sx={{ width: 200 }}
+							onChange={(_event, value) => {
+								if (value) {
+									setSelectedLora(value);
+								}
 							}}
-						/>
-					</Tooltip>
+						>
+							<Option value="none">{t("labels:none")}</Option>
+							{loras.map(lora => (
+								<Option key={lora.id} value={lora.filePath}>
+									{lora.label}
+								</Option>
+							))}
+						</Select>
+					</Box>
 					<Box sx={{ flex: 1 }} />
 				</StyledButtonWrapper>
 			</StyledStickyHeader>
@@ -268,10 +303,7 @@ export function TextToImage() {
 				<Sheet
 					sx={{
 						flex: 1,
-						display: "flex",
-						py: 2,
 						position: "relative",
-						justifyContent: "center",
 					}}
 				>
 					<StyledRenderingAreaWrapper

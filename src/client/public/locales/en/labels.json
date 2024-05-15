@@ -34,7 +34,13 @@
   "generate": "Generate",
   "help": "Help",
   "illustrationStyles": {
+    "bliblaArtStyle": "Blibla Art Style",
+    "bliblaCaricature": "Caricature",
+    "bliblaEugeneAtget": "Eugene Atget",
+    "bliblaHonoreDaumier": "Honoré Daumier",
     "bliblaStyle": "Blibla Style",
+    "bliblaThomasRowlandson": "Thomas Rowlandson",
+    "bliblaUsedLeather": "Used Leather",
     "childrensBook": "Children's Book",
     "custom": "Custom",
     "customInfo": "Include the desired style in the prompt",
@@ -68,6 +74,7 @@
     "suspenseful": "Suspenseful"
   },
   "negativePrompt": "Negative Prompt",
+  "none": "None",
   "overlay": "Overlay",
   "placeholder": {
     "characters": "The boy's name is Erin and his dog's name is Ruffy",
@@ -88,7 +95,7 @@
   "save": "Save",
   "saveImage": "Save Image",
   "saved": "Saved",
-  "seacrh": "Search",
+  "search": "Search",
   "security": "Security",
   "seed": "Seed",
   "setFixedSeed": "Set Fixed Seed",

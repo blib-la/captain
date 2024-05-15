@@ -38,6 +38,7 @@ export default function ComfyUI() {
 			</Head>
 			{port ? (
 				<webview
+					allowpopups
 					src={`http://127.0.0.1:${port}/`}
 					style={{ position: "absolute", inset: 0 }}
 				/>

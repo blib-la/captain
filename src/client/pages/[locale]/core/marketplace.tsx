@@ -17,6 +17,7 @@ import JoyLink from "@mui/joy/Link";
 import Sheet from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
 import { useAtom } from "jotai";
+import { sortBy } from "lodash";
 import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
@@ -26,11 +27,7 @@ import useSWR from "swr";
 import { requiresRestartAtom } from "@/client/ions/atoms";
 import { useOnlineStatus } from "@/client/ions/hooks/online-status";
 import { makeStaticProperties } from "@/client/ions/i18n/get-static";
-import type {
-	Marketplace,
-	Payload as MarketplacePayload,
-	Entry as MarketplaceEntry,
-} from "@/shared/types/marketplace";
+import type { Marketplace, Payload as MarketplacePayload } from "@/shared/types/marketplace";
 
 const marketplaceUrl = "https://blib-la.github.io/captain-marketplace/captain.json";
 
@@ -55,6 +52,15 @@ const architectureColors = {
 	"sdxl-turbo": "violet",
 	"sd-2-1-turbo": "pink",
 	"sd-2-1": "orange",
+	"sd-1-5": "yellow",
+} as const;
+
+const architectureLabels = {
+	sdxl: "SDXL",
+	"sdxl-turbo": "SDXL turbo",
+	"sd-2-1-turbo": "SD turbo",
+	"sd-2-1": "SD 2.1",
+	"sd-1-5": "SD 1.5",
 } as const;
 
 type Architecture = keyof typeof architectureColors;
@@ -97,6 +103,7 @@ function ItemCard({ payload }: { payload: MarketplacePayload }) {
 			setRequiresRestart(true);
 		}
 	}, [isCompleted, mayRequireRestart, setRequiresRestart]);
+	console.log(payload);
 
 	return (
 		<Card variant="soft">
@@ -146,7 +153,9 @@ function ItemCard({ payload }: { payload: MarketplacePayload }) {
 							variant="soft"
 							color={architectureColors[payload.architecture as Architecture]}
 						>
-							{payload.architecture}
+							{architectureLabels[
+								payload.architecture as keyof typeof architectureLabels
+							] ?? payload.architecture}
 						</Chip>
 					</Box>
 				</CardOverflow>
@@ -257,11 +266,33 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 											gap: 1,
 										}}
 									>
-										{Object.entries(data.apps).map(
-											([key, item]: [string, MarketplaceEntry]) => (
-												<ItemCard key={key} payload={item.payload} />
+										{sortBy(Object.values(data.apps), "payload.label").map(
+											item => (
+												<ItemCard key={item.id} payload={item.payload} />
 											)
 										)}
+									</Box>
+								</Box>
+							)}
+							{data["stable-diffusion"] && data["stable-diffusion"].lora && (
+								<Box sx={{ p: 1 }}>
+									<Typography level="h3" component="h2" sx={{ mt: 1, mb: 2 }}>
+										LoRA
+									</Typography>
+									<Box
+										sx={{
+											display: "grid",
+											gridTemplateColumns:
+												"repeat(auto-fill, minmax(240px, 1fr))",
+											gap: 1,
+										}}
+									>
+										{sortBy(
+											Object.values(data["stable-diffusion"].lora),
+											"payload.label"
+										).map(item => (
+											<ItemCard key={item.id} payload={item.payload} />
+										))}
 									</Box>
 								</Box>
 							)}
@@ -278,14 +309,16 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 											gap: 1,
 										}}
 									>
-										{Object.entries(data["stable-diffusion"].checkpoint).map(
-											([key, item]: [string, MarketplaceEntry]) => (
-												<ItemCard key={key} payload={item.payload} />
-											)
-										)}
+										{sortBy(
+											Object.values(data["stable-diffusion"].checkpoint),
+											"payload.label"
+										).map(item => (
+											<ItemCard key={item.id} payload={item.payload} />
+										))}
 									</Box>
 								</Box>
 							)}
+
 							{data["stable-diffusion"] && data["stable-diffusion"].vae && (
 								<Box sx={{ p: 1 }}>
 									<Typography level="h3" component="h2" sx={{ mt: 1, mb: 2 }}>
@@ -299,11 +332,12 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 											gap: 1,
 										}}
 									>
-										{Object.entries(data["stable-diffusion"].vae).map(
-											([key, item]: [string, MarketplaceEntry]) => (
-												<ItemCard key={key} payload={item.payload} />
-											)
-										)}
+										{sortBy(
+											Object.values(data["stable-diffusion"].vae),
+											"payload.label"
+										).map(item => (
+											<ItemCard key={item.id} payload={item.payload} />
+										))}
 									</Box>
 								</Box>
 							)}

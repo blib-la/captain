@@ -34,7 +34,13 @@
   "generate": "生成",
   "help": "帮助",
   "illustrationStyles": {
+    "bliblaArtStyle": "Blibla Art Style",
+    "bliblaCaricature": "漫画",
+    "bliblaEugeneAtget": "Eugene Atget",
+    "bliblaHonoreDaumier": "Honoré Daumier",
     "bliblaStyle": "Blibla Style",
+    "bliblaThomasRowlandson": "Thomas Rowlandson",
+    "bliblaUsedLeather": "二手皮革",
     "childrensBook": "儿童书籍",
     "custom": "自定义",
     "customInfo": "在提示中包含所需的风格",
@@ -68,6 +74,7 @@
     "suspenseful": "悬疑"
   },
   "negativePrompt": "负面提示",
+  "none": "无",
   "overlay": "叠加",
   "placeholder": {
     "characters": "男孩的名字是Erin，他的狗的名字是Ruffy",
@@ -88,7 +95,7 @@
   "save": "保存",
   "saveImage": "保存图片",
   "saved": "已保存",
-  "seacrh": "搜索",
+  "search": "搜索",
   "security": "安全",
   "seed": "种子",
   "setFixedSeed": "设置固定种子",

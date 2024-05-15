@@ -34,7 +34,13 @@
   "generate": "Genereren",
   "help": "Hulp",
   "illustrationStyles": {
+    "bliblaArtStyle": "Blibla Art Style",
+    "bliblaCaricature": "Karikatuur",
+    "bliblaEugeneAtget": "Eugene Atget",
+    "bliblaHonoreDaumier": "Honoré Daumier",
     "bliblaStyle": "Blibla Style",
+    "bliblaThomasRowlandson": "Thomas Rowlandson",
+    "bliblaUsedLeather": "Gebruikt leer",
     "childrensBook": "Kinderboek",
     "custom": "Aangepast",
     "customInfo": "Voeg de gewenste stijl toe aan de prompt",
@@ -68,6 +74,7 @@
     "suspenseful": "Spannend"
   },
   "negativePrompt": "Negatieve Prompt",
+  "none": "Geen",
   "overlay": "Overlay",
   "placeholder": {
     "characters": "De naam van de jongen is Erin en de naam van zijn hond is Ruffy",
@@ -88,7 +95,7 @@
   "save": "Opslaan",
   "saveImage": "Afbeelding opslaan",
   "saved": "Opgeslagen",
-  "seacrh": "Zoeken",
+  "search": "Zoeken",
   "security": "Beveiliging",
   "seed": "Seed",
   "setFixedSeed": "Vaste Seed Instellen",

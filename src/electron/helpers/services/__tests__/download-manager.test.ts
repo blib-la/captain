@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import fsp from "node:fs/promises";
 
-import type { DownloadItem } from "@captn/utils/constants";
 import { DOWNLOADS_MESSAGE_KEY, DownloadEvent, DownloadState } from "@captn/utils/constants";
+import type { DownloadItem } from "@captn/utils/types";
 import type { BrowserWindow } from "electron";
 import { download } from "electron-dl";
 import { v4 } from "uuid";
@@ -153,6 +153,7 @@ describe("DownloadManager", () => {
 			id: v4(),
 			source: testDownloadFile,
 			destination: "test/download-manager",
+			fileName: "test.jpg",
 			label: "Test File",
 			createdAt: Date.now(),
 			state: DownloadState.IDLE,
@@ -167,6 +168,7 @@ describe("DownloadManager", () => {
 			id: v4(),
 			source: testDownloadFile,
 			destination: "test/download-manager",
+			fileName: "test.jpg",
 			label: "Test File",
 			createdAt: Date.now(),
 		};
@@ -192,6 +194,7 @@ describe("DownloadManager", () => {
 			id: v4(),
 			source: testDownloadFile,
 			destination: `test/download-manager/${index}`,
+			fileName: "test.jpg",
 			label: `Test File ${index}`,
 			createdAt: Date.now(),
 			state: DownloadState.IDLE,
@@ -230,6 +233,7 @@ describe("DownloadManager", () => {
 			source: testDownloadFile,
 			destination: "test/download-manager/fail",
 			label: "Failing Download",
+			fileName: "test.jpg",
 			createdAt: Date.now(),
 			state: DownloadState.IDLE,
 		};
@@ -267,6 +271,7 @@ describe("DownloadManager", () => {
 			id: v4(),
 			source: testDownloadFile,
 			destination: "test/download-manager/item1",
+			fileName: "test.jpg",
 			label: "Test File 1",
 			createdAt: Date.now(),
 			state: DownloadState.IDLE,
@@ -302,6 +307,7 @@ describe("DownloadManager", () => {
 			id: v4(),
 			source: `${testDownloadFile}${index}`,
 			destination: `test/download-manager/item${index}`,
+			fileName: "test.jpg",
 			label: `Test File ${index}`,
 			createdAt: Date.now(),
 			state: DownloadState.IDLE,
@@ -356,6 +362,7 @@ describe("DownloadManager", () => {
 			id: v4(),
 			source: testDownloadFile,
 			destination: "test/download-manager/progress",
+			fileName: "test.jpg",
 			label: "Progressive Download",
 			createdAt: Date.now(),
 			state: DownloadState.IDLE,
@@ -406,6 +413,7 @@ describe("DownloadManager", () => {
 			id: v4(),
 			source: "https://example.com/success.zip",
 			destination: "test/download-manager/unzip",
+			fileName: "test.jpg",
 			label: "Zip Download",
 			createdAt: Date.now(),
 			state: DownloadState.IDLE,
@@ -445,6 +453,7 @@ describe("DownloadManager", () => {
 			id: v4(),
 			source: "https://example.com/failure.zip",
 			destination: "test/download-manager/unzip-failure",
+			fileName: "test.jpg",
 			label: "Failed Zip Download",
 			createdAt: Date.now(),
 			state: DownloadState.FAILED,

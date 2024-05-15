@@ -34,7 +34,13 @@
   "generate": "Generuj",
   "help": "Pomoc",
   "illustrationStyles": {
+    "bliblaArtStyle": "Blibla Art Style",
+    "bliblaCaricature": "Karykatura",
+    "bliblaEugeneAtget": "Eugene Atget",
+    "bliblaHonoreDaumier": "Honoré Daumier",
     "bliblaStyle": "Blibla Style",
+    "bliblaThomasRowlandson": "Thomas Rowlandson",
+    "bliblaUsedLeather": "Używana skóra",
     "childrensBook": "Książka dla dzieci",
     "custom": "Własny",
     "customInfo": "Dołącz preferowany styl do promptu",
@@ -68,6 +74,7 @@
     "suspenseful": "Pełen napięcia"
   },
   "negativePrompt": "Negatywny Prompt",
+  "none": "Żaden",
   "overlay": "Nakładka",
   "placeholder": {
     "characters": "Imię chłopca to Erin, a jego psa to Ruffy",
@@ -88,7 +95,7 @@
   "save": "Zapisz",
   "saveImage": "Zapisz obraz",
   "saved": "Zapisano",
-  "seacrh": "Szukaj",
+  "search": "Szukaj",
   "security": "Bezpieczeństwo",
   "seed": "Ziarno",
   "setFixedSeed": "Ustaw Stałe Ziarno",

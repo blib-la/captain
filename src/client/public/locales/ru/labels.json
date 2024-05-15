@@ -34,7 +34,13 @@
   "generate": "Создать",
   "help": "Помощь",
   "illustrationStyles": {
+    "bliblaArtStyle": "Blibla Art Style",
+    "bliblaCaricature": "Карикатура",
+    "bliblaEugeneAtget": "Eugene Atget",
+    "bliblaHonoreDaumier": "Honoré Daumier",
     "bliblaStyle": "Blibla Style",
+    "bliblaThomasRowlandson": "Thomas Rowlandson",
+    "bliblaUsedLeather": "Использованная кожа",
     "childrensBook": "Детская книга",
     "custom": "На заказ",
     "customInfo": "Укажите желаемый стиль в подсказке",
@@ -68,6 +74,7 @@
     "suspenseful": "Захватывающее"
   },
   "negativePrompt": "Негативный запрос",
+  "none": "Нет",
   "overlay": "Наложение",
   "placeholder": {
     "characters": "Имя мальчика - Эрин, а его собаки - Раффи",
@@ -88,7 +95,7 @@
   "save": "Сохранить",
   "saveImage": "Сохранить изображение",
   "saved": "Сохранено",
-  "seacrh": "Поиск",
+  "search": "Поиск",
   "security": "Безопасность",
   "seed": "Сид",
   "setFixedSeed": "Установить фиксированный сид",
