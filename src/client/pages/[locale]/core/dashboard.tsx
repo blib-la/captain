@@ -7,6 +7,7 @@ import ListItemButton from "@mui/joy/ListItemButton";
 import ListItemContent from "@mui/joy/ListItemContent";
 import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import Typography from "@mui/joy/Typography";
+import { sortBy } from "lodash";
 import type { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useTranslation } from "next-i18next";
@@ -52,7 +53,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 						gap: 2,
 					}}
 				>
-					{items.map(item => (
+					{sortBy(items, "payload.label").map(item => (
 						<ListItem
 							key={item.id}
 							sx={{
