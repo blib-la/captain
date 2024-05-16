@@ -1,5 +1,5 @@
-import type { DownloadItem } from "@captn/utils/constants";
 import { DOWNLOADS_MESSAGE_KEY } from "@captn/utils/constants";
+import type { DownloadItem } from "@captn/utils/types";
 import { ipcMain } from "electron";
 
 import { apps } from "@/electron/apps";

@@ -128,6 +128,7 @@ export class ComfyUI {
 			captain: {
 				base_path: getCaptainDownloads(),
 				checkpoints: "stable-diffusion/checkpoints",
+				loras: "stable-diffusion/loras",
 			},
 		};
 

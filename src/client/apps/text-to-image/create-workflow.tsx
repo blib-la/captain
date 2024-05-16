@@ -1,3 +1,5 @@
+import type { NodeChain } from "@/shared/types/comfyui";
+
 export function createWorkflow({
 	prompt = "",
 	negativePrompt = "",
@@ -6,7 +8,9 @@ export function createWorkflow({
 	height,
 	width,
 	cfg = 7,
+	loraWeight = 1,
 	checkpointName = "stabilityai\\stable-diffusion-xl-base-1.0\\sd_xl_base_1.0_0.9vae.safetensors",
+	loraName,
 }: {
 	prompt?: string;
 	negativePrompt?: string;
@@ -16,8 +20,12 @@ export function createWorkflow({
 	steps?: number;
 	cfg?: number;
 	checkpointName?: string;
+	loraName?: string;
+	loraWeight?: number;
 }) {
-	return {
+	const hasLora = loraName && loraWeight > 0;
+	const finalModel = hasLora ? "lora" : "model";
+	const workflow: NodeChain = {
 		kSampler: {
 			inputs: {
 				seed,
@@ -26,24 +34,18 @@ export function createWorkflow({
 				sampler_name: "dpmpp_2m_sde_gpu",
 				scheduler: "karras",
 				denoise: 1,
-				model: ["model", 0],
+				model: [finalModel, 0],
 				positive: ["prompt", 0],
 				negative: ["negativePrompt", 0],
 				latent_image: ["latentImage", 0],
 			},
 			class_type: "KSampler",
-			_meta: {
-				title: "KSampler",
-			},
 		},
 		model: {
 			inputs: {
 				ckpt_name: checkpointName,
 			},
 			class_type: "CheckpointLoaderSimple",
-			_meta: {
-				title: "Load Checkpoint",
-			},
 		},
 		latentImage: {
 			inputs: {
@@ -52,29 +54,20 @@ export function createWorkflow({
 				batch_size: 1,
 			},
 			class_type: "EmptyLatentImage",
-			_meta: {
-				title: "Empty Latent Image",
-			},
 		},
 		prompt: {
 			inputs: {
 				text: prompt,
-				clip: ["model", 1],
+				clip: [finalModel, 1],
 			},
 			class_type: "CLIPTextEncode",
-			_meta: {
-				title: "CLIP Text Encode (Prompt)",
-			},
 		},
 		negativePrompt: {
 			inputs: {
 				text: negativePrompt,
-				clip: ["model", 1],
+				clip: [finalModel, 1],
 			},
 			class_type: "CLIPTextEncode",
-			_meta: {
-				title: "CLIP Text Encode (Prompt)",
-			},
 		},
 		vaeDecode: {
 			inputs: {
@@ -82,9 +75,6 @@ export function createWorkflow({
 				vae: ["model", 2],
 			},
 			class_type: "VAEDecode",
-			_meta: {
-				title: "VAE Decode",
-			},
 		},
 		output: {
 			inputs: {
@@ -92,9 +82,20 @@ export function createWorkflow({
 				images: ["vaeDecode", 0],
 			},
 			class_type: "PreviewImage",
-			_meta: {
-				title: "Preview Image",
-			},
 		},
 	};
+	if (hasLora) {
+		workflow.lora = {
+			inputs: {
+				lora_name: loraName,
+				strength_model: loraWeight,
+				strength_clip: loraWeight,
+				model: ["model", 0],
+				clip: ["model", 1],
+			},
+			class_type: "LoraLoader",
+		};
+	}
+
+	return workflow;
 }

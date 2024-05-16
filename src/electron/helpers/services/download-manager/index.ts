@@ -1,5 +1,5 @@
-import type { DownloadItem } from "@captn/utils/constants";
 import { DOWNLOADS_MESSAGE_KEY, DownloadEvent, DownloadState } from "@captn/utils/constants";
+import type { DownloadItem } from "@captn/utils/types";
 import { download } from "electron-dl";
 import type ElectronStore from "electron-store";
 
@@ -35,6 +35,7 @@ function handleDownloadCompletion(
 	downloadsStore.set(downloadKeyPath, item.state);
 	pushToStore(inventoryStore as unknown as ElectronStore<Record<string, unknown>>, keyPath, {
 		id: item.id,
+		filePath: [item.id, item.fileName].filter(Boolean).join("/").replaceAll("\\", "/"),
 		modelPath: targetDestination,
 		label: item.label,
 	});

@@ -1,6 +1,6 @@
 import { CustomScrollbars } from "@captn/joy/custom-scrollbars";
-import type { DownloadItem } from "@captn/utils/constants";
 import { DownloadEvent, DOWNLOADS_MESSAGE_KEY, DownloadState } from "@captn/utils/constants";
+import type { DownloadItem } from "@captn/utils/types";
 import BuildCircleIcon from "@mui/icons-material/BuildCircle";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DownloadingIcon from "@mui/icons-material/Downloading";
