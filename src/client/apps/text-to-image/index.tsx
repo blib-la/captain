@@ -17,7 +17,6 @@ import Typography from "@mui/joy/Typography";
 import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
-import useSWR from "swr";
 
 import { imageAtom, selectedLoraAtom } from "./atoms";
 import { allRequiredDownloads, APP_ID } from "./constants";
@@ -31,6 +30,8 @@ import {
 	SizeSelector,
 } from "@/client/apps/shared/components";
 import { sizes } from "@/client/apps/shared/constants";
+import type { StableDiffusion } from "@/client/apps/shared/hooks";
+import { useInventory } from "@/client/apps/shared/hooks";
 import type { IllustrationStyles } from "@/client/apps/shared/illustration-styles";
 import { illustrationStyles, injectPrompt } from "@/client/apps/shared/illustration-styles";
 import { RenderingArea } from "@/client/apps/shared/rendering-area";
@@ -48,19 +49,6 @@ import { buildKey } from "@/shared/build-key";
 import { ID } from "@/shared/enums";
 import { randomSeed } from "@/shared/number";
 
-interface Inventory {
-	id: string;
-	filePath: string;
-	modelPath: string;
-	label: string;
-}
-
-interface StableDiffusion {
-	checkpoints?: Inventory[];
-	loras?: Inventory[];
-	vae?: Inventory[];
-}
-
 export function TextToImage() {
 	const { t } = useTranslation(["common", "labels"]);
 
@@ -75,9 +63,7 @@ export function TextToImage() {
 	const [queueSize, setQueueSize] = useState(0);
 	const [illustrationStyle, setIllustrationStyle] = useState<IllustrationStyles>("bliblaStyle");
 	const [isGenerating, setIsGenerating] = useState(false);
-	const { data } = useSWR("stable-diffusion", () =>
-		window.ipc.inventoryStore.get<StableDiffusion>("stable-diffusion")
-	);
+	const { data } = useInventory<StableDiffusion>("stable-diffusion");
 
 	const loras = data?.loras ?? [];
 	//

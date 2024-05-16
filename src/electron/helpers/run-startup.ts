@@ -4,13 +4,14 @@ import { ComfyUI } from "@/electron/services/comfyui";
 import { logError, logger } from "@/electron/services/logger";
 import { loadURL } from "@/electron/utils/load-window";
 import { createCoreWindow, createPromptWindow } from "@/electron/windows";
+import { isDevelopment } from "@/shared/flags";
 
 export async function runStartup() {
 	logger.info(`runStartup(): started`);
 
 	logger.info("runStartup(): ComfyUI is starting");
 	try {
-		await ComfyUI.init({ port: PORTS.COMFYUI, debug: false });
+		await ComfyUI.init({ port: PORTS.COMFYUI, debug: isDevelopment });
 	} catch (error) {
 		logError(error, "Can't start ComfyUI");
 	} finally {
