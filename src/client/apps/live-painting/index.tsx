@@ -13,14 +13,21 @@ import Badge from "@mui/joy/Badge";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import CircularProgress from "@mui/joy/CircularProgress";
+import Option from "@mui/joy/Option";
+import Select from "@mui/joy/Select";
 import Sheet from "@mui/joy/Sheet";
 import Switch from "@mui/joy/Switch";
 import Typography from "@mui/joy/Typography";
 import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { clearCounterAtom, imageAtom, livePaintingOptionsAtom } from "./atoms";
+import {
+	clearCounterAtom,
+	imageAtom,
+	livePaintingOptionsAtom,
+	selectedCheckpointAtom,
+} from "./atoms";
 import { allRequiredDownloads, APP_ID, FRAMES_PER_SECOND, MAX_QUEUE_LENGTH } from "./constants";
 import { createWorkflow } from "./create-workflow";
 import { DrawingArea } from "./drawing-area";
@@ -32,6 +39,8 @@ import {
 	PromptSheet,
 	TooltipButton,
 } from "@/client/apps/shared/components";
+import type { StableDiffusion } from "@/client/apps/shared/hooks";
+import { useInventory } from "@/client/apps/shared/hooks";
 import type { IllustrationStyles } from "@/client/apps/shared/illustration-styles";
 import { illustrationStyles, injectPrompt } from "@/client/apps/shared/illustration-styles";
 import { RenderingArea } from "@/client/apps/shared/rendering-area";
@@ -130,12 +139,15 @@ export function LivePainting() {
 	const [started, setStarted] = useState(false);
 	const [isGenerating, setIsGenerating] = useState(false);
 
+	const { data } = useInventory<StableDiffusion>("stable-diffusion");
+
 	// Global States
 	const [livePaintingOptions, setLivePaintingOptions] = useAtom(livePaintingOptionsAtom);
 	const [image, setImage] = useAtom(imageAtom);
 	const [, setClearCounter] = useAtom(clearCounterAtom);
 	const receivedReference = useRef(false);
 	const [comfyUITemporaryPath] = useAtom(comfyUITemporaryPathAtom);
+	const [selectedCheckpoint, setSelectedCheckpoint] = useAtom(selectedCheckpointAtom);
 
 	const { send } = useSDK<unknown, unknown>(APP_ID, {
 		onMessage(message) {
@@ -144,7 +156,6 @@ export function LivePainting() {
 					const { data } = message.payload as {
 						data: ComfyExecuted | ComfyExecuting | ComfyCached | ComfyStatusMessage;
 					};
-					console.log(data);
 					switch (data.type) {
 						case "status": {
 							receivedReference.current =
@@ -187,6 +198,16 @@ export function LivePainting() {
 		},
 	});
 
+	const checkpoints = useMemo(() => {
+		if (data?.checkpoints) {
+			return data?.checkpoints.filter(checkpoint =>
+				checkpoint.label.toLowerCase().includes("turbo")
+			);
+		}
+
+		return [];
+	}, [data]);
+
 	useUnload(APP_ID, "comfyui:unregisterClient", {});
 
 	useEffect(() => {
@@ -210,7 +231,7 @@ export function LivePainting() {
 			const now = performance.now();
 			const elapsed = now - lastDrawTime;
 
-			if (elapsed > fpsInterval) {
+			if (elapsed > fpsInterval && selectedCheckpoint) {
 				lastDrawTime = now - (elapsed % fpsInterval);
 				if (receivedReference.current && started) {
 					receivedReference.current = false;
@@ -225,6 +246,9 @@ export function LivePainting() {
 								seed,
 								steps,
 								cfg,
+								// Set the lora and ensure the required backward slashes for windows.
+								// TODO handle macOS and Linux
+								checkpointName: selectedCheckpoint.replaceAll("/", "\\"),
 							}),
 						},
 					});
@@ -238,9 +262,13 @@ export function LivePainting() {
 		return () => {
 			cancelAnimationFrame(animationFrame);
 		};
-	}, [illustrationStyle, prompt, seed, send, started, cfg, steps]);
+	}, [selectedCheckpoint, illustrationStyle, prompt, seed, send, started, cfg, steps]);
 
 	useComfyUIPath();
+
+	useEffect(() => {
+		console.log({ selectedCheckpoint });
+	}, [selectedCheckpoint]);
 
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
@@ -264,6 +292,7 @@ export function LivePainting() {
 						</Button>
 					) : (
 						<Button
+							disabled={!selectedCheckpoint}
 							color="green"
 							startDecorator={
 								isGenerating ? (
@@ -375,6 +404,25 @@ export function LivePainting() {
 							<TimerIcon />
 						</PopupSlider>
 					</Badge>
+					<Box component="label" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+						<Typography>Checkpoint</Typography>
+						<Select
+							value={selectedCheckpoint}
+							sx={{ width: 200 }}
+							onChange={(_event, value) => {
+								if (value) {
+									setSelectedCheckpoint(value);
+								}
+							}}
+						>
+							{checkpoints.map(checkpoint => (
+								<Option key={checkpoint.id} value={checkpoint.filePath}>
+									{checkpoint.label}
+								</Option>
+							))}
+						</Select>
+					</Box>
+
 					<Box sx={{ flex: 1 }} />
 					{/* Save the image to disk (includes a control + s listener) */}
 					<SaveButton image={image} prompt={prompt} fileName={fileName} />
