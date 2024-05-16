@@ -1,3 +1,10 @@
+# [1.0.0-alpha.79](https://github.com/blib-la/captain/compare/v1.0.0-alpha.78...v1.0.0-alpha.79) (2024-05-16)
+
+
+### Features
+
+* ensure consistent sorting of apps ([#300](https://github.com/blib-la/captain/issues/300)) ([ae6b8e4](https://github.com/blib-la/captain/commit/ae6b8e4af806e73bbb17264799b702724d46a54d))
+
 # [1.0.0-alpha.78](https://github.com/blib-la/captain/compare/v1.0.0-alpha.77...v1.0.0-alpha.78) (2024-05-13)
 
 
