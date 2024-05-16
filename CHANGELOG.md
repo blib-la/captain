@@ -1,3 +1,10 @@
+# [1.0.0-alpha.81](https://github.com/blib-la/captain/compare/v1.0.0-alpha.80...v1.0.0-alpha.81) (2024-05-16)
+
+
+### Features
+
+* add model selection to live painting app ([#301](https://github.com/blib-la/captain/issues/301)) ([d8d8d97](https://github.com/blib-la/captain/commit/d8d8d976776c90b4bd54564bc24851ccc7154be6))
+
 # [1.0.0-alpha.80](https://github.com/blib-la/captain/compare/v1.0.0-alpha.79...v1.0.0-alpha.80) (2024-05-16)
 
 
