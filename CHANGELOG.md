@@ -1,3 +1,10 @@
+# [1.0.0-alpha.80](https://github.com/blib-la/captain/compare/v1.0.0-alpha.79...v1.0.0-alpha.80) (2024-05-16)
+
+
+### Features
+
+* add LoRAs ([#299](https://github.com/blib-la/captain/issues/299)) ([756f8c8](https://github.com/blib-la/captain/commit/756f8c80eb0356e4fd022397fbb48f7d5c76b98d))
+
 # [1.0.0-alpha.79](https://github.com/blib-la/captain/compare/v1.0.0-alpha.78...v1.0.0-alpha.79) (2024-05-16)
 
 
