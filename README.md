@@ -2,7 +2,33 @@
     <img src="https://github.com/blib-la/captain/assets/1148334/63796c40-34e2-487a-b891-a333ef5a8102" alt="Download Captain" width="300"/>
 </p>
 
-<h1 align="center">Captain</h1>
+<h1 align="center">Captain | The AI Platform</h1>
+<p align="center">
+Explore, create, and innovate with Captain, your all-in-one platform to build and use AI
+apps effortlessly on your own computer.
+</p>
+<p align="center">
+    <img src="https://github.com/blib-la/captain/assets/1148334/8d23166e-dc0a-402d-a919-d44013140edc" alt="the global search" />
+</p>
+
+---
+
+<!-- releases -->
+<div align="center">
+  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-alpha.81/Captain-Setup-1.0.0-alpha.81.exe">
+    <img alt="Windows" src="https://img.shields.io/badge/Windows-Download Now-2c2?style=for-the-badge"/>
+  </a>
+</div>
+<!-- releasesstop -->
+
+
+<div align="center">
+  <img alt="MacOS" src="https://img.shields.io/badge/MacOS-Coming Soon-white?style=for-the-badge"/>
+  <img alt="Linux" src="https://img.shields.io/badge/Linux-Coming Soon-white?style=for-the-badge"/>
+</div>
+
+---
+
 
 <div align="center">
     <img alt="Status: ALPHA" src="https://img.shields.io/badge/Status-ALPHA-purple?style=for-the-badge"/>
@@ -19,64 +45,31 @@
   </a>
 </div>
 
-<p align="center">
-Explore, create, and innovate with Captain, your all-in-one platform to build and use AI
-apps effortlessly on your own computer.
-</p>
-
 ---
 
-<!-- releases -->
-<div align="center">
-  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-alpha.81/Captain-Setup-1.0.0-alpha.81.exe">
-    <img alt="Windows" src="https://img.shields.io/badge/Windows-Download Now-2c2?style=for-the-badge"/>
-  </a>
-</div>
-<!-- releasesstop -->
+## What is Captain?
 
-<div align="center">
-  <img alt="MacOS" src="https://img.shields.io/badge/MacOS-Coming Soon-white?style=for-the-badge"/>
-  <img alt="Linux" src="https://img.shields.io/badge/Linux-Coming Soon-white?style=for-the-badge"/>
-</div>
+Captain is a tool that helps you use AI directly on your computer. It is designed to be easy to use and keeps all your data private. With Captain, you can:
 
----
+- **Start applications quickly**: Just like using Spotlight on a Mac, you can start different AI apps with a few keystrokes.
+- **Use core apps**: Generate images and turn them into stories using AI.
+- **Use AI without the internet**: Run AI models on your computer without needing to connect to the internet.
+- **Build your own AI apps**: If you know how to make a website, you can easily create AI applications.
+- **Search your data easily**: Find documents and data quickly with natual language search commands.
 
-## Captain in Action
+## Why use Captain?
 
-Bring your ideas to life using Captain's intuitive UI. Just type in what you want to do and let
-Captain's core apps transform your thoughts into vivid artworks and captivating stories.
+- **Privacy**: Your data stays on your computer. We don’t see or store your data.
+- **Easy to use**: If you can use a computer, you can use Captain. It’s that simple.
+- **Free to start**: Get started for free and explore what you can do with AI.
 
-<p align="center">
-    <a href="https://www.youtube.com/watch?v=tf2OSggA0f8"><img src="https://github.com/blib-la/captain/assets/492378/dcff212a-8bfd-4657-9298-5d4e919461c7" alt="Captain Promo featuring Live Painting and Story Creation" /></a>
-</p>
 
----
-
-<h2>Table of Contents</h2>
-
-<!-- toc -->
-
-- [Getting Started](#getting-started)
-  * [Prerequisites](#prerequisites)
-  * [Installation](#installation)
-- [First steps](#first-steps)
-  * [Download models](#download-models)
-  * [Navigate Captain with a Prompt](#navigate-captain-with-a-prompt)
-  * [Generate a Story](#generate-a-story)
-- [Community](#community)
-- [Contribute](#contribute)
-- [Acknowledgments](#acknowledgments)
-
-<!-- tocstop -->
-
----
-
-## Getting Started
+## Get started
 
 ### Prerequisites
 
 This is an alpha-release that has a focus on the hardware that we own ourselves, so Captain
-currently only works with this base setup:
+currently works best with this base setup:
 
 -   Windows with a NVIDIA GPU
 -   [NVIDIA CUDA Toolkit for Windows](https://developer.nvidia.com/cuda-downloads?target_os=Windows&target_arch=x86_64)
@@ -85,69 +78,56 @@ currently only works with this base setup:
 
 ### Installation
 
-1. Download `Captain.exe` using the button above or from the
-   [releases](https://github.com/blib-la/captain/releases)
-2. Run `Captain.exe` to launch the Installation Wizard
-    1. Installation Warning for Unsigned App: As Captain is currently in ALPHA, it's releases are
-       not validated by Microsoft. This doesn't indicate any security issue and since Captain is
-       open source, you can review the source code at any time yourself
-    2. Click on "More Info"
-    3. You'll then see the option to "Run anyway". Click it to proceed with the installation.
-3. Decide where Captain should be installed
-4. Run Captain, which will launch the Installer
-5. Follow the steps, some of them take longer as Captain needs to download some large files
-6. When everything is downloaded, Captain will initialize and then start
-    1. When you are asked to allow [Qdrant](https://qdrant.tech/) to access your network, just allow
-       it, as Captain needs Qdrant to work
+Follow these steps to install Captain on your computer:
 
-🎉 Congrats, you are done with the installation.
+1. **Download Captain**: Click the download button above or go to the [releases page](https://github.com/blib-la/captain/releases) to get the Captain installer.
 
-## First steps
+2. **Start Installation**:
+    - Open the file you downloaded (`Captain-Setup-x.x.x.exe`).
+    - You might see a warning because Captain is in ALPHA and not signed by Microsoft. This is normal for now and doesn't mean it's unsafe. You can check our code anytime because it’s open source.
+    - Click on "More Info", then click "Run anyway" to continue.
 
-### Download models
+3. **Choose Install Location**:
+    - Pick where you want Captain installed on your computer.
 
-Captain needs the models to use AI on your computer, so you have full control over everything.
-That's why you need to download them in order to use the "Live Painting" app.
+4. **Install Captain**:
+    - Run the installer and follow the on-screen instructions. Some steps may take a bit longer because large files need to be downloaded.
 
-![blibla_captain_download_essential_models](https://github.com/blib-la/captain/assets/492378/ed2e0ad0-fe75-42b9-96ab-686e7360ed8f)
+5. **Complete Setup**:
+    - After all files are downloaded, Captain will start up.
+    - If asked to allow [Qdrant](https://qdrant.tech/) network access, please allow it. Captain needs Qdrant to operate properly.
+
+🎉 Now Captain is ready for you to use!
 
 ### Navigate Captain with a Prompt
 
-You can interact with Captain by using the **Prompt**. This is a special window that you can open by
-using the keyboard-shortcut: **CTRL + ALT + Space**.
+You can interact with Captain using the **Prompt**, a special window that opens with the keyboard shortcut **CTRL + ALT + Space**.
 
-When the **Prompt** is open, you can start built-in AI apps or change the settings of Captain:
+When the **Prompt** is open, you can start built-in AI apps or adjust Captain's settings quickly:
 
--   `I want to draw something`: Select _Live Painting_ to start drawing
--   `Create a story`: Select _Generate a Story_ to generate stories based on the images you created
--   `Switch to dark mode`
+- **`I want to draw something`**: Choose _Live Painting_ to start creating your artwork.
+- **`Create a story`**: Select _Story_ to generate narratives based on your images.
+- **`Switch to dark mode`**: Change the theme to dark mode for a different visual experience.
 
-### Generate a Story
+### Access the Dashboard
 
-Captain currently has no AI that can write text locally, so we rely on GPT-4 from OpenAI. Captain
-consumes GPT via the API, which means that your data will not be used for training.
+For more detailed management and exploration of Captain's capabilities, open the dashboard:
 
-In order to use the app, you need to:
+- **Open the Dashboard**: Use the dashboard to access the marketplace, where you can find and install new AI apps. It’s also the place to manage app settings and view all installed apps.
+- **Monitor Activities**: Keep an eye on ongoing processes like current downloads, ensuring you are up-to-date with all new additions and updates.
+- **Configure and Customize**: From the dashboard, adjust settings to tailor the apps to your needs, enhancing your experience with Captain's full suite of tools.
 
-1. Create an [OpenAI API Key](https://platform.openai.com/api-keys)
-2. Open the **Prompt** and type "Settings"
-3. Enter your `OpenAI API Key`
+### Use the Explorer
 
-Now you can generate stories by opening the `Generate a story` app.
+- **Find Content with Explorer**: The Explorer tool helps you search for and locate images, stories, and other documents stored in the local vector database. This powerful feature enables you to quickly access and organize all your AI-generated content or imported files. 
 
 ## Community
 
-Let's connect and tell us what you think about Captain:
+Join our community and get more information about Captain:
 
 [![Discord](https://img.shields.io/discord/1091306623819059300?color=7289da&label=Discord&logo=discord&logoColor=fff&style=for-the-badge)](https://discord.com/invite/m3TBB9XEkb)
 
 ## Contribute
 
-Join us on deck! If you're looking to contribute, our
-[Contribution Guidelines](https://github.com/blib-la/captain/blob/alpha/.github/CONTRIBUTING.md)
-will help you get started.
+Join us on deck! If you're looking to contribute, our [Contribution Guidelines](https://github.com/blib-la/captain/blob/alpha/.github/CONTRIBUTING.md) will help you get started.
 
-## Acknowledgments
-
-Hats off to our contributors, community, and everyone who supports Captain. Together, we're
-navigating the exciting waters of AI.
