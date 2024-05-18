@@ -518,4 +518,45 @@ describe("DownloadManager", () => {
 
 		expect(appSettingsStore.set).toHaveBeenCalledWith("requiresRestart", true);
 	});
+
+	it("should handle flat file downloads correctly", async () => {
+		const item: DownloadItem = {
+			id: v4(),
+			source: testDownloadFile,
+			destination: "test/download-manager",
+			fileName: "test.jpg",
+			label: "Flat File",
+			createdAt: Date.now(),
+			state: DownloadState.IDLE,
+			unzip: true,
+			flat: true,
+		};
+
+		(download as jest.Mock).mockImplementation((_window, _url, options) =>
+			Promise.resolve().then(() => {
+				options.onStarted();
+				options.onCompleted({
+					path: `test/path/${item.fileName.replace(".jpg", ".zip")}`,
+					filename: item.fileName.replace(".jpg", ".zip"),
+				});
+			})
+		);
+		downloadManager.addToQueue(item);
+
+		await new Promise(resolve => {
+			setImmediate(resolve);
+		});
+
+		expect(unpack).toHaveBeenCalled();
+		const targetPath = `${getCaptainDownloads("test/download-manager", item.id)}/test.jpg`;
+		expect(fsp.rename).toHaveBeenCalledWith(
+			`${getCaptainDownloads("test/download-manager", item.id)}/test`,
+			targetPath
+		);
+
+		expect(sendToAllWindows).toHaveBeenCalledWith(DOWNLOADS_MESSAGE_KEY, {
+			action: DownloadEvent.COMPLETED,
+			payload: { ...item, state: DownloadState.DONE },
+		});
+	});
 });

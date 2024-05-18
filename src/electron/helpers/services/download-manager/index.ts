@@ -241,7 +241,6 @@ export class DownloadManager {
 									file.filename.replace(/\.zip$/, ""),
 								].join("/");
 								const targetPath = [targetDestination, item.fileName].join("/");
-								console.log({ sourcePath, targetPath });
 								await fsp.rename(sourcePath, targetPath);
 							}
 
