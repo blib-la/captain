@@ -48,10 +48,26 @@ export function watchStores() {
 			}
 		),
 		inventoryStore.onDidChange(
+			"stable-diffusion.loras" as keyof typeof inventoryStore.store,
+			loras => {
+				if (loras) {
+					sendToAllWindows("stable-diffusion.loras", loras);
+				}
+			}
+		),
+		inventoryStore.onDidChange(
 			"stable-diffusion.vae" as keyof typeof inventoryStore.store,
 			vae => {
 				if (vae) {
 					sendToAllWindows("stable-diffusion.vae", vae);
+				}
+			}
+		),
+		inventoryStore.onDidChange(
+			"comfyui.custom_nodes" as keyof typeof inventoryStore.store,
+			customNodes => {
+				if (customNodes) {
+					sendToAllWindows("comfyui.custom_nodes", customNodes);
 				}
 			}
 		),

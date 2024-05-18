@@ -113,6 +113,7 @@ describe("ComfyUI", () => {
 				base_path: "/path/to/downloads",
 				checkpoints: "stable-diffusion/checkpoints",
 				loras: "stable-diffusion/loras",
+				custom_nodes: "comfyui/custom_nodes",
 			},
 		};
 		const expectedYAML = stringify(expectedConfig);
