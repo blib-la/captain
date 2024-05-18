@@ -27,7 +27,12 @@ export interface StableDiffusion {
 	lora?: { [key: string]: Entry };
 }
 
+export interface ComfyUI {
+	custom_nodes?: { [key: string]: Entry };
+}
+
 export interface Marketplace {
 	"stable-diffusion": StableDiffusion;
 	apps: { [key: string]: Entry };
+	comfyui: ComfyUI;
 }

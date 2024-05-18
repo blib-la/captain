@@ -48,6 +48,7 @@ async function fetchMarketplace(download: boolean, url: string): Promise<Marketp
 }
 
 const architectureColors = {
+	python: "grey",
 	sdxl: "blue",
 	"sdxl-turbo": "violet",
 	"sd-2-1-turbo": "pink",
@@ -56,6 +57,7 @@ const architectureColors = {
 } as const;
 
 const architectureLabels = {
+	python: "Python",
 	sdxl: "SDXL",
 	"sdxl-turbo": "SDXL turbo",
 	"sd-2-1-turbo": "SD turbo",
@@ -93,7 +95,7 @@ function ItemCard({ payload }: { payload: MarketplacePayload }) {
 	}
 
 	useEffect(() => {
-		if (!isCompleted && type === "app") {
+		if (!isCompleted && ["app", "comfyui-extension"].includes(type)) {
 			setMayRequireRestart(true);
 		}
 	}, [isCompleted, type]);
@@ -133,13 +135,13 @@ function ItemCard({ payload }: { payload: MarketplacePayload }) {
 							p: 0.5,
 							display: "flex",
 							".MuiCard-root:hover &": {
-								bgcolor: "grey.900",
+								bgcolor: "background.body",
 							},
 							".MuiCard-root:hover &:hover": {
-								bgcolor: "grey.800",
+								bgcolor: "background.level1",
 							},
 							".MuiCard-root:hover &:active": {
-								bgcolor: "grey.700",
+								bgcolor: "background.level2",
 							},
 						}}
 					>
@@ -168,7 +170,9 @@ function ItemCard({ payload }: { payload: MarketplacePayload }) {
 					{payload.author}
 				</Chip>
 				<Box sx={{ flex: 1 }}>
-					<Typography level="body-md">{payload.description}</Typography>
+					<Typography level="body-md" mb={1}>
+						{payload.description}
+					</Typography>
 				</Box>
 				<Button
 					disabled={isCompleted || isDownloading}
@@ -253,94 +257,178 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 
 					{data && (
 						<CustomScrollbars>
-							{data.apps && (
-								<Box sx={{ p: 1 }}>
-									<Typography level="h3" component="h2" sx={{ mt: 1, mb: 2 }}>
-										Apps
-									</Typography>
-									<Box
-										sx={{
-											display: "grid",
-											gridTemplateColumns:
-												"repeat(auto-fill, minmax(240px, 1fr))",
-											gap: 1,
-										}}
-									>
-										{sortBy(Object.values(data.apps), "payload.label").map(
-											item => (
+							<Box sx={{ minHeight: "100%", pb: 2 }}>
+								{data.apps && (
+									<Box sx={{ px: 1, pb: 2 }}>
+										<Sheet
+											sx={{
+												position: "sticky",
+												top: 0,
+												zIndex: 2,
+												display: "flex",
+											}}
+										>
+											<Typography level="h3" component="h2" sx={{ my: 1 }}>
+												Apps
+											</Typography>
+										</Sheet>
+										<Box
+											sx={{
+												display: "grid",
+												gridTemplateColumns:
+													"repeat(auto-fill, minmax(240px, 1fr))",
+												gap: 1,
+											}}
+										>
+											{sortBy(Object.values(data.apps), "payload.label").map(
+												item => (
+													<ItemCard
+														key={item.id}
+														payload={item.payload}
+													/>
+												)
+											)}
+										</Box>
+									</Box>
+								)}
+								{data["stable-diffusion"] && data["stable-diffusion"].lora && (
+									<Box sx={{ px: 1, pb: 2 }}>
+										<Sheet
+											sx={{
+												position: "sticky",
+												top: 0,
+												zIndex: 2,
+												display: "flex",
+											}}
+										>
+											<Typography level="h3" component="h2" sx={{ my: 1 }}>
+												LoRA
+											</Typography>
+										</Sheet>
+										<Box
+											sx={{
+												display: "grid",
+												gridTemplateColumns:
+													"repeat(auto-fill, minmax(240px, 1fr))",
+												gap: 1,
+											}}
+										>
+											{sortBy(
+												Object.values(data["stable-diffusion"].lora),
+												"payload.label"
+											).map(item => (
 												<ItemCard key={item.id} payload={item.payload} />
-											)
-										)}
+											))}
+										</Box>
 									</Box>
-								</Box>
-							)}
-							{data["stable-diffusion"] && data["stable-diffusion"].lora && (
-								<Box sx={{ p: 1 }}>
-									<Typography level="h3" component="h2" sx={{ mt: 1, mb: 2 }}>
-										LoRA
-									</Typography>
-									<Box
-										sx={{
-											display: "grid",
-											gridTemplateColumns:
-												"repeat(auto-fill, minmax(240px, 1fr))",
-											gap: 1,
-										}}
-									>
-										{sortBy(
-											Object.values(data["stable-diffusion"].lora),
-											"payload.label"
-										).map(item => (
-											<ItemCard key={item.id} payload={item.payload} />
-										))}
-									</Box>
-								</Box>
-							)}
-							{data["stable-diffusion"] && data["stable-diffusion"].checkpoint && (
-								<Box sx={{ p: 1 }}>
-									<Typography level="h3" component="h2" sx={{ mt: 1, mb: 2 }}>
-										Checkpoints
-									</Typography>
-									<Box
-										sx={{
-											display: "grid",
-											gridTemplateColumns:
-												"repeat(auto-fill, minmax(240px, 1fr))",
-											gap: 1,
-										}}
-									>
-										{sortBy(
-											Object.values(data["stable-diffusion"].checkpoint),
-											"payload.label"
-										).map(item => (
-											<ItemCard key={item.id} payload={item.payload} />
-										))}
-									</Box>
-								</Box>
-							)}
+								)}
 
-							{data["stable-diffusion"] && data["stable-diffusion"].vae && (
-								<Box sx={{ p: 1 }}>
-									<Typography level="h3" component="h2" sx={{ mt: 1, mb: 2 }}>
-										VAE
-									</Typography>
-									<Box
-										sx={{
-											display: "grid",
-											gridTemplateColumns:
-												"repeat(auto-fill, minmax(240px, 1fr))",
-											gap: 1,
-										}}
-									>
-										{sortBy(
-											Object.values(data["stable-diffusion"].vae),
-											"payload.label"
-										).map(item => (
-											<ItemCard key={item.id} payload={item.payload} />
-										))}
+								{data["stable-diffusion"] &&
+									data["stable-diffusion"].checkpoint && (
+										<Box sx={{ px: 1, pb: 2 }}>
+											<Sheet
+												sx={{
+													position: "sticky",
+													top: 0,
+													zIndex: 2,
+													display: "flex",
+												}}
+											>
+												<Typography
+													level="h3"
+													component="h2"
+													sx={{ my: 1 }}
+												>
+													Checkpoints
+												</Typography>
+											</Sheet>
+											<Box
+												sx={{
+													display: "grid",
+													gridTemplateColumns:
+														"repeat(auto-fill, minmax(240px, 1fr))",
+													gap: 1,
+												}}
+											>
+												{sortBy(
+													Object.values(
+														data["stable-diffusion"].checkpoint
+													),
+													"payload.label"
+												).map(item => (
+													<ItemCard
+														key={item.id}
+														payload={item.payload}
+													/>
+												))}
+											</Box>
+										</Box>
+									)}
+
+								{data["stable-diffusion"] && data["stable-diffusion"].vae && (
+									<Box sx={{ px: 1, pb: 2 }}>
+										<Sheet
+											sx={{
+												position: "sticky",
+												top: 0,
+												zIndex: 2,
+												display: "flex",
+											}}
+										>
+											<Typography level="h3" component="h2" sx={{ my: 1 }}>
+												VAE
+											</Typography>
+										</Sheet>
+										<Box
+											sx={{
+												display: "grid",
+												gridTemplateColumns:
+													"repeat(auto-fill, minmax(240px, 1fr))",
+												gap: 1,
+											}}
+										>
+											{sortBy(
+												Object.values(data["stable-diffusion"].vae),
+												"payload.label"
+											).map(item => (
+												<ItemCard key={item.id} payload={item.payload} />
+											))}
+										</Box>
 									</Box>
-								</Box>
-							)}
+								)}
+
+								{data.comfyui && data.comfyui.custom_nodes && (
+									<Box sx={{ px: 1, pb: 2 }}>
+										<Sheet
+											sx={{
+												position: "sticky",
+												top: 0,
+												zIndex: 2,
+												display: "flex",
+											}}
+										>
+											<Typography level="h3" component="h2" sx={{ my: 1 }}>
+												ComfyUI
+											</Typography>
+										</Sheet>
+										<Box
+											sx={{
+												display: "grid",
+												gridTemplateColumns:
+													"repeat(auto-fill, minmax(240px, 1fr))",
+												gap: 1,
+											}}
+										>
+											{sortBy(
+												Object.values(data.comfyui.custom_nodes),
+												"payload.label"
+											).map(item => (
+												<ItemCard key={item.id} payload={item.payload} />
+											))}
+										</Box>
+									</Box>
+								)}
+							</Box>
 						</CustomScrollbars>
 					)}
 				</Box>

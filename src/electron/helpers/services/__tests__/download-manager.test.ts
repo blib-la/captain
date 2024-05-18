@@ -10,6 +10,7 @@ import { v4 } from "uuid";
 import { DownloadManager } from "../download-manager";
 
 import { apps } from "@/electron/apps";
+import { appSettingsStore } from "@/electron/stores";
 import { sendToAllWindows } from "@/electron/stores/watchers";
 import { getCaptainDownloads } from "@/electron/utils/path-helpers";
 import { unpack } from "@/electron/utils/unpack";
@@ -55,22 +56,11 @@ jest.mock("electron-dl", () => {
 		download: jest.fn(),
 	};
 });
-jest.mock("electron-dl", () => {
-	const originalModule = jest.requireActual("electron-dl");
 
-	return {
-		...originalModule,
-		download: jest.fn(),
-	};
-});
-jest.mock("electron-dl", () => {
-	const originalModule = jest.requireActual("electron-dl");
-
-	return {
-		...originalModule,
-		download: jest.fn(),
-	};
-});
+jest.mock("node:fs/promises", () => ({
+	...jest.requireActual("node:fs/promises"),
+	rename: jest.fn(),
+}));
 
 jest.mock("@/electron/stores", () => ({
 	inventoryStore: {
@@ -78,6 +68,10 @@ jest.mock("@/electron/stores", () => ({
 		set: jest.fn(),
 	},
 	downloadsStore: {
+		get: jest.fn(),
+		set: jest.fn(),
+	},
+	appSettingsStore: {
 		get: jest.fn(),
 		set: jest.fn(),
 	},
@@ -472,5 +466,97 @@ describe("DownloadManager", () => {
 		});
 
 		jest.clearAllMocks();
+	});
+
+	it("should handle downloads for apps correctly", async () => {
+		const item: DownloadItem = {
+			id: v4(),
+			source: testDownloadFile,
+			destination: "apps",
+			fileName: "app.exe",
+			label: "Test App",
+			createdAt: Date.now(),
+			state: DownloadState.IDLE,
+		};
+
+		downloadManager.addToQueue(item);
+
+		await new Promise(resolve => {
+			setImmediate(resolve);
+		});
+
+		expect(sendToAllWindows).toHaveBeenCalledWith(DOWNLOADS_MESSAGE_KEY, {
+			action: DownloadEvent.COMPLETED,
+			payload: { ...item, state: DownloadState.RESTART },
+		});
+
+		expect(appSettingsStore.set).toHaveBeenCalledWith("requiresRestart", true);
+	});
+
+	it("should handle downloads for comfyui custom nodes correctly", async () => {
+		const item: DownloadItem = {
+			id: v4(),
+			source: testDownloadFile,
+			destination: "comfyui/custom_nodes",
+			fileName: "node.zip",
+			label: "Test Node",
+			createdAt: Date.now(),
+			state: DownloadState.IDLE,
+			unzip: true,
+		};
+
+		downloadManager.addToQueue(item);
+
+		await new Promise(resolve => {
+			setImmediate(resolve);
+		});
+
+		expect(sendToAllWindows).toHaveBeenCalledWith(DOWNLOADS_MESSAGE_KEY, {
+			action: DownloadEvent.COMPLETED,
+			payload: { ...item, state: DownloadState.RESTART },
+		});
+
+		expect(appSettingsStore.set).toHaveBeenCalledWith("requiresRestart", true);
+	});
+
+	it("should handle flat file downloads correctly", async () => {
+		const item: DownloadItem = {
+			id: v4(),
+			source: testDownloadFile,
+			destination: "test/download-manager",
+			fileName: "test.jpg",
+			label: "Flat File",
+			createdAt: Date.now(),
+			state: DownloadState.IDLE,
+			unzip: true,
+			flat: true,
+		};
+
+		(download as jest.Mock).mockImplementation((_window, _url, options) =>
+			Promise.resolve().then(() => {
+				options.onStarted();
+				options.onCompleted({
+					path: `test/path/${item.fileName.replace(".jpg", ".zip")}`,
+					filename: item.fileName.replace(".jpg", ".zip"),
+				});
+			})
+		);
+		downloadManager.addToQueue(item);
+
+		await new Promise(resolve => {
+			setImmediate(resolve);
+		});
+
+		expect(unpack).toHaveBeenCalled();
+		const targetPath = `${getCaptainDownloads("test/download-manager", item.id)}/test.jpg`;
+		expect(fsp.rename).toHaveBeenCalledWith(
+			`${getCaptainDownloads("test/download-manager", item.id)}/test`,
+			targetPath
+		);
+
+		expect(sendToAllWindows).toHaveBeenCalledWith(DOWNLOADS_MESSAGE_KEY, {
+			action: DownloadEvent.COMPLETED,
+			payload: { ...item, state: DownloadState.DONE },
+		});
 	});
 });

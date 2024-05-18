@@ -1,3 +1,6 @@
+import fsp from "node:fs/promises";
+import path from "node:path";
+
 import { DOWNLOADS_MESSAGE_KEY, DownloadEvent, DownloadState } from "@captn/utils/constants";
 import type { DownloadItem } from "@captn/utils/types";
 import { download } from "electron-dl";
@@ -8,6 +11,7 @@ import { logger } from "@/electron/services/logger";
 import { appSettingsStore, downloadsStore, inventoryStore } from "@/electron/stores";
 import { pushToStore } from "@/electron/stores/utils";
 import { sendToAllWindows } from "@/electron/stores/watchers";
+import { normalizePath } from "@/electron/utils/normalize-path";
 import {
 	getCaptainApps,
 	getCaptainDownloads,
@@ -20,23 +24,30 @@ import { jsonStringify } from "@/shared/object";
 function handleDownloadCompletion(
 	item: DownloadItem,
 	{
-		isApp,
+		requiresRestart,
 		downloadKeyPath,
 		keyPath,
 		targetDestination,
-	}: { isApp: boolean; downloadKeyPath: string; keyPath: string; targetDestination: string }
+	}: {
+		requiresRestart: boolean;
+		downloadKeyPath: string;
+		keyPath: string;
+		targetDestination: string;
+	}
 ) {
 	item.state = DownloadState.DONE;
-	if (isApp) {
+	if (requiresRestart) {
 		item.state = DownloadState.RESTART;
 		appSettingsStore.set("requiresRestart", true);
 	}
 
 	downloadsStore.set(downloadKeyPath, item.state);
+	const filePath = item.flat ? "" : [item.id, item.fileName].filter(Boolean).join("/");
+	const modelPath = item.flat ? [targetDestination, item.fileName].join("/") : targetDestination;
 	pushToStore(inventoryStore as unknown as ElectronStore<Record<string, unknown>>, keyPath, {
 		id: item.id,
-		filePath: [item.id, item.fileName].filter(Boolean).join("/").replaceAll("\\", "/"),
-		modelPath: targetDestination,
+		filePath: normalizePath(filePath),
+		modelPath: normalizePath(modelPath),
 		label: item.label,
 	});
 	sendToAllWindows(DOWNLOADS_MESSAGE_KEY, {
@@ -176,9 +187,13 @@ export class DownloadManager {
 	private async startDownload(item: DownloadItem): Promise<void> {
 		// Apps should be in apps, not in downloads/apps
 		const isApp = item.destination === "apps";
-		const targetDestination = isApp
-			? getCaptainApps(item.id)
-			: getCaptainDownloads(item.destination, item.id);
+		const isComfyNodes = item.destination === "comfyui/custom_nodes";
+		let targetDestination = getCaptainDownloads(item.destination, item.id);
+		if (isApp) {
+			targetDestination = getCaptainApps(item.id);
+		} else if (isComfyNodes) {
+			targetDestination = getCaptainDownloads(item.destination);
+		}
 
 		// Prompt is our always open window, so we can use it for the download
 		const window_ = apps.prompt!;
@@ -221,8 +236,20 @@ export class DownloadManager {
 								targetDestination,
 								true
 							);
+							if (item.flat) {
+								const { name } = path.parse(file.filename);
+
+								const sourcePath = normalizePath(
+									[targetDestination, name].join("/")
+								);
+								const targetPath = normalizePath(
+									[targetDestination, item.fileName].join("/")
+								);
+								await fsp.rename(sourcePath, targetPath);
+							}
+
 							handleDownloadCompletion(item, {
-								isApp,
+								requiresRestart: isApp || isComfyNodes,
 								keyPath,
 								downloadKeyPath,
 								targetDestination,
@@ -239,7 +266,7 @@ export class DownloadManager {
 						}
 					} else {
 						handleDownloadCompletion(item, {
-							isApp,
+							requiresRestart: isApp || isComfyNodes,
 							keyPath,
 							downloadKeyPath,
 							targetDestination,
