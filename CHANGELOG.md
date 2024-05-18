@@ -1,3 +1,10 @@
+# [1.0.0-alpha.82](https://github.com/blib-la/captain/compare/v1.0.0-alpha.81...v1.0.0-alpha.82) (2024-05-18)
+
+
+### Features
+
+* allow custom nodes for comfyUI ([#302](https://github.com/blib-la/captain/issues/302)) ([d8134ce](https://github.com/blib-la/captain/commit/d8134ce44f2e197ad69d64d5da2e48d65145e516))
+
 # [1.0.0-alpha.81](https://github.com/blib-la/captain/compare/v1.0.0-alpha.80...v1.0.0-alpha.81) (2024-05-16)
 
 
