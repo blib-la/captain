@@ -1,4 +1,5 @@
 import fsp from "node:fs/promises";
+import path from "node:path";
 
 import { DOWNLOADS_MESSAGE_KEY, DownloadEvent, DownloadState } from "@captn/utils/constants";
 import type { DownloadItem } from "@captn/utils/types";
@@ -236,11 +237,14 @@ export class DownloadManager {
 								true
 							);
 							if (item.flat) {
-								const sourcePath = [
-									targetDestination,
-									file.filename.replace(/\.zip$/, ""),
-								].join("/");
-								const targetPath = [targetDestination, item.fileName].join("/");
+								const { name } = path.parse(file.filename);
+
+								const sourcePath = normalizePath(
+									[targetDestination, name].join("/")
+								);
+								const targetPath = normalizePath(
+									[targetDestination, item.fileName].join("/")
+								);
 								await fsp.rename(sourcePath, targetPath);
 							}
 
