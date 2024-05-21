@@ -1,4 +1,11 @@
-export const coreApps = ["live-painting", "story", "explorer", "text-to-image", "preview"] as const;
+export const coreApps = [
+	"live-painting",
+	"story",
+	"explorer",
+	"text-to-image",
+	"preview",
+	"assistant",
+] as const;
 
 export type AppId = (typeof coreApps)[number];
 
