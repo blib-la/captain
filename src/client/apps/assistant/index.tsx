@@ -1,5 +1,4 @@
 import { useSDK } from "@captn/react/use-sdk";
-import AssistantIcon from "@mui/icons-material/Assistant";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PersonIcon from "@mui/icons-material/Person";
@@ -32,6 +31,7 @@ import { v4 } from "uuid";
 import { APP_ID } from "./constants";
 
 import { Markdown } from "@/client/apps/shared/markdown";
+import ChatGPTIcon from "@/client/atoms/icons/chat-gpt";
 import type { ChatModel } from "@/shared/types/openai";
 
 interface MessageModel {
@@ -341,7 +341,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 										{message_.role === "user" ? (
 											<PersonIcon />
 										) : (
-											<AssistantIcon />
+											<ChatGPTIcon />
 										)}
 									</Avatar>
 								</ListItemDecorator>
@@ -370,7 +370,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 							>
 								<ListItemDecorator sx={{ position: "sticky", top: 0 }}>
 									<Avatar>
-										<AssistantIcon />
+										<ChatGPTIcon />
 									</Avatar>
 								</ListItemDecorator>
 								<ListItemContent
