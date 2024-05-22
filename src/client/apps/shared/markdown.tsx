@@ -25,7 +25,18 @@ export function Code({
 	const { t } = useTranslation(["labels"]);
 	return (
 		<Sheet color="primary" variant="soft" sx={{ p: 0.5 }}>
-			<Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+			<Sheet
+				color="primary"
+				variant="soft"
+				sx={{
+					position: "sticky",
+					zIndex: 1,
+					top: 0,
+					display: "flex",
+					justifyContent: "space-between",
+					alignItems: "center",
+				}}
+			>
 				{language ? (
 					<Chip size="sm" color="primary" variant="outlined">
 						{language.toUpperCase()}
@@ -41,7 +52,7 @@ export function Code({
 				>
 					<CopyAllIcon />
 				</IconButton>
-			</Box>
+			</Sheet>
 			<Box sx={{ overflowX: "auto" }}>
 				<SyntaxHighlighter
 					{...(rest as SyntaxHighlighterProps)}
