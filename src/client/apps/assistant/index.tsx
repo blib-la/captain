@@ -106,7 +106,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 	const [model, setModel] = useState(models[0].id);
 	const [error, setError] = useState("");
 	const [chats, setChats] = useState<(Except<ChatModel, "messages"> & { id: string })[]>([]);
-	const [hasOpenAiApiKey, setHasOpenAiApiKey] = useState(false);
+	const [isWarningOpen, setIsWarningOpen] = useState(false);
 
 	const firstRunReference = useRef(true);
 	const scrollContainerReference = useRef<HTMLDivElement | null>(null);
@@ -211,7 +211,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 	useEffect(() => {
 		window.ipc.send("hasOpenAiApiKey");
 		const unsubscribe = window.ipc.on("hasOpenAiApiKey", (hasKey: boolean) => {
-			setHasOpenAiApiKey(hasKey);
+			setIsWarningOpen(!hasKey);
 		});
 		return () => {
 			unsubscribe();
@@ -236,7 +236,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 			>
 				<Typography>{error}</Typography>
 			</Snackbar>
-			<Snackbar color="yellow" variant="solid" open={!hasOpenAiApiKey}>
+			<Snackbar color="yellow" variant="solid" open={isWarningOpen}>
 				<Typography>{t("texts:enterOpenAIAPIKey")}</Typography>
 			</Snackbar>
 
