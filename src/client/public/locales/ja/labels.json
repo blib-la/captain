@@ -23,6 +23,7 @@
   "downloading": "ダウンロード中",
   "downloads": "ダウンロード",
   "explorer": "エクスプローラー",
+  "favorite": "ピン留め",
   "finish": "完了",
   "finishing": "完成",
   "formLabel": {
@@ -77,6 +78,7 @@
   "negativePrompt": "ネガティブプロンプト",
   "none": "なし",
   "overlay": "オーバーレイ",
+  "pin": "ピン留め",
   "placeholder": {
     "characters": "少年の名前はエリン、彼の犬の名前はラフィです",
     "customStyle": "物語は風変わりでとても面白く、結末のないミステリーを含めるべきです",

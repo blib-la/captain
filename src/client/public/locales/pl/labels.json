@@ -23,6 +23,7 @@
   "downloading": "Pobieranie",
   "downloads": "Pobrania",
   "explorer": "Eksplorator",
+  "favorite": "Przypnij",
   "finish": "Zakończyć",
   "finishing": "Zakończenie",
   "formLabel": {
@@ -77,6 +78,7 @@
   "negativePrompt": "Negatywny Prompt",
   "none": "Żaden",
   "overlay": "Nakładka",
+  "pin": "Przypnij",
   "placeholder": {
     "characters": "Imię chłopca to Erin, a jego psa to Ruffy",
     "customStyle": "Historia powinna być osobliwa i bardzo zabawna, zawierać tajemnicę bez zakończenia",

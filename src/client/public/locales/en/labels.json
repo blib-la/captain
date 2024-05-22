@@ -23,6 +23,7 @@
   "downloading": "Downloading",
   "downloads": "Downloads",
   "explorer": "Explorer",
+  "favorite": "Favorite",
   "finish": "Finish",
   "finishing": "Finishing",
   "formLabel": {
@@ -77,6 +78,7 @@
   "negativePrompt": "Negative Prompt",
   "none": "None",
   "overlay": "Overlay",
+  "pin": "Pin",
   "placeholder": {
     "characters": "The boy's name is Erin and his dog's name is Ruffy",
     "customStyle": "The story should be quirky and very funny, include a mystery without closure",

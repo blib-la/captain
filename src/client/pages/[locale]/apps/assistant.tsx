@@ -12,11 +12,12 @@ import { makeStaticProperties } from "@/client/ions/i18n/get-static";
 
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["common", "labels"]);
+	const color = "lime";
 
 	return (
 		<AppFrame
 			titleBar={
-				<TitleBar>
+				<TitleBar color={color} variant="solid">
 					<Typography level="title-md" component="h1" startDecorator={<AssistantIcon />}>
 						{t("labels:assistant")}
 					</Typography>
@@ -27,7 +28,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 				<title>{t("labels:assistant")}</title>
 			</Head>
 			<Box sx={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column" }}>
-				<Assistant />
+				<Assistant color={color} />
 			</Box>
 		</AppFrame>
 	);

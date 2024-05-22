@@ -23,6 +23,7 @@
   "downloading": "Downloaden",
   "downloads": "Downloads",
   "explorer": "Verkenner",
+  "favorite": "Vastpinnen",
   "finish": "Voltooien",
   "finishing": "Afronding",
   "formLabel": {
@@ -77,6 +78,7 @@
   "negativePrompt": "Negatieve Prompt",
   "none": "Geen",
   "overlay": "Overlay",
+  "pin": "Vastpinnen",
   "placeholder": {
     "characters": "De naam van de jongen is Erin en de naam van zijn hond is Ruffy",
     "customStyle": "Het verhaal moet eigenzinnig en erg grappig zijn, inclusief een mysterie zonder afsluiting",

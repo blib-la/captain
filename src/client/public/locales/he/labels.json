@@ -23,6 +23,7 @@
   "downloading": "מוריד",
   "downloads": "הורדות",
   "explorer": "מציאן",
+  "favorite": "לנעוץ",
   "finish": "לסיים",
   "finishing": "סיום",
   "formLabel": {
@@ -77,6 +78,7 @@
   "negativePrompt": "פרומפט שלילי",
   "none": "אף אחד",
   "overlay": "שכבה",
+  "pin": "לנעוץ",
   "placeholder": {
     "characters": "שם הילד הוא ארין ושם הכלב שלו הוא ראפי",
     "customStyle": "הסיפור צריך להיות מוזר ומאוד מצחיק, לכלול מסתורין ללא סגירה",

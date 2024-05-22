@@ -1,20 +1,16 @@
-import type { OpenAIProvider } from "@ai-sdk/openai";
 import { createOpenAI } from "@ai-sdk/openai";
 import type { SDKMessage } from "@captn/react/types";
 import { APP_MESSAGE_KEY } from "@captn/utils/constants";
-import type { CoreMessage } from "ai";
 import { streamText } from "ai";
 import { ipcMain, type IpcMainEvent } from "electron";
 import Store from "electron-store";
+import type { Except } from "type-fest";
 import { v4 } from "uuid";
 
 import { keyStore } from "@/electron/stores";
+import type { ChatModel } from "@/shared/types/openai";
 
-const openAIAPiKey = keyStore.get("openAiApiKey");
-
-let openai: OpenAIProvider | null = openAIAPiKey ? createOpenAI({ apiKey: openAIAPiKey }) : null;
-
-export const openAIStore = new Store<Record<string, CoreMessage[]>>({
+export const openAIStore = new Store<Record<string, ChatModel>>({
 	name: "OPENAI_HISTORY",
 });
 
@@ -22,41 +18,115 @@ ipcMain.on(
 	APP_MESSAGE_KEY,
 	async (
 		event: IpcMainEvent,
-		{ message, appId }: { message: SDKMessage<{ input: string }>; appId: string }
+		{
+			message,
+			appId,
+		}: {
+			message: SDKMessage<{
+				input: string;
+				id: string;
+				update?: Partial<Except<ChatModel, "messages">>;
+			}>;
+			appId: string;
+		}
 	) => {
+		if (!message.action.startsWith("openai:")) {
+			return;
+		}
+
 		const channel = `${appId}:${APP_MESSAGE_KEY}`;
-		let messages = openAIStore.get(appId, []);
+		const chatId = message.payload.id;
+		let chat = openAIStore.get(chatId, { label: "New Chat", messages: [] });
 
 		switch (message.action) {
-			case "openai:clear": {
-				messages = [];
-				openAIStore.set(appId, messages);
-				event.sender.send(channel, {
-					action: "openai:messages",
-					payload: { messages },
-				});
+			case "openai:update": {
+				try {
+					const { update } = message.payload;
+					chat = { ...chat, ...update };
+					openAIStore.set(chatId, chat);
+					const chats = Object.entries(openAIStore.store).map(([id, value]) => ({
+						id,
+						label: value.label,
+						pinned: value.pinned,
+						favorite: value.favorite,
+					}));
+					event.sender.send(channel, {
+						action: "openai:chats",
+						payload: {
+							chats,
+						},
+					});
+				} catch (error) {
+					console.log(error);
+				}
+
+				break;
+			}
+
+			case "openai:delete": {
+				chat = { label: "New Chat", messages: [] };
+				openAIStore.delete(chatId);
+				try {
+					const chats = Object.entries(openAIStore.store).map(([id, value]) => ({
+						id,
+						label: value.label,
+						pinned: value.pinned,
+						favorite: value.favorite,
+					}));
+					event.sender.send(channel, {
+						action: "openai:chats",
+						payload: {
+							chats,
+						},
+					});
+				} catch (error) {
+					console.log(error);
+				}
+
 				break;
 			}
 
 			case "openai:history": {
 				event.sender.send(channel, {
 					action: "openai:messages",
-					payload: { messages: messages.map(message => ({ ...message, id: v4() })) },
+					payload: {
+						chat: {
+							...chat,
+							messages: chat.messages.map(message => ({ ...message, id: v4() })),
+						},
+					},
 				});
+				try {
+					const chats = Object.entries(openAIStore.store).map(([id, value]) => ({
+						id,
+						label: value.label,
+						pinned: value.pinned,
+						favorite: value.favorite,
+					}));
+					event.sender.send(channel, {
+						action: "openai:chats",
+						payload: {
+							chats,
+						},
+					});
+				} catch (error) {
+					console.log(error);
+				}
+
 				break;
 			}
 
 			case "openai:chat": {
 				try {
-					openai ??= createOpenAI({ apiKey: keyStore.get("openAiApiKey") });
+					const openai = createOpenAI({ apiKey: keyStore.get("openAiApiKey") });
 					const userInput = message.payload.input;
 
-					messages.push({ role: "user" as const, content: userInput });
-					openAIStore.set(appId, messages);
+					chat.messages.push({ role: "user" as const, content: userInput });
+					openAIStore.set(chatId, chat);
 
 					// Only send the last 10 messages
 					const limit = 10;
-					const limitedHistory = messages.slice(-limit);
+					const limitedHistory = chat.messages.slice(-limit);
 
 					const result = await streamText({
 						model: openai("gpt-3.5-turbo"),
@@ -73,8 +143,8 @@ ipcMain.on(
 						});
 					}
 
-					messages.push({ role: "assistant", content: fullResponse });
-					openAIStore.set(appId, messages);
+					chat.messages.push({ role: "assistant", content: fullResponse });
+					openAIStore.set(chatId, chat);
 					event.sender.send(channel, {
 						action: "openai:response",
 						payload: { output: fullResponse, done: true },

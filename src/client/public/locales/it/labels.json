@@ -23,6 +23,7 @@
   "downloading": "Scaricamento",
   "downloads": "Download",
   "explorer": "Esploratore",
+  "favorite": "Pinnare",
   "finish": "Completare",
   "finishing": "Conclusione",
   "formLabel": {
@@ -77,6 +78,7 @@
   "negativePrompt": "Prompt Negativo",
   "none": "Nessuno",
   "overlay": "Sovrapposizione",
+  "pin": "Pinnare",
   "placeholder": {
     "characters": "Il nome del ragazzo è Erin e il nome del suo cane è Ruffy",
     "customStyle": "La storia dovrebbe essere eccentrica e molto divertente, includere un mistero senza conclusione",
