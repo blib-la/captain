@@ -47,6 +47,7 @@ apps effortlessly on your own computer.
 
 ---
 
+
 ## What is Captain?
 
 Captain is a tool that helps you use AI directly on your computer. It is designed to be easy to use and keeps all your data private. With Captain, you can:
@@ -63,6 +64,11 @@ Captain is a tool that helps you use AI directly on your computer. It is designe
 - **Easy to use**: If you can use a computer, you can use Captain. It’s that simple.
 - **Free to start**: Get started for free and explore what you can do with AI.
 
+| | |
+| - | - |
+|![Screenshot 2024-05-22 183539](https://github.com/blib-la/captain/assets/1148334/5413a0fb-d051-4ef9-b11e-9352492e6c96)|![Screenshot 2024-05-22 182842](https://github.com/blib-la/captain/assets/1148334/111cdf8e-5725-4a3a-a623-feb62b35c7ea)|
+|![Screenshot 2024-05-22 183950](https://github.com/blib-la/captain/assets/1148334/f7d778ce-fff1-44cd-b62c-ae2baf0ecb80)|![Screenshot 2024-05-22 183554](https://github.com/blib-la/captain/assets/1148334/0883d896-5307-4f48-9aa4-5d707d0935a5)|
+|![Screenshot 2024-05-22 184238](https://github.com/blib-la/captain/assets/1148334/b64fbad4-1ba0-4ce0-8316-a92110917d9b)|![Screenshot 2024-05-22 183456](https://github.com/blib-la/captain/assets/1148334/e589e34f-f7df-4543-a57a-3e845f5c7dcc)|
 
 ## Get started
 
