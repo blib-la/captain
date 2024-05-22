@@ -42,14 +42,16 @@ export function Code({
 					<CopyAllIcon />
 				</IconButton>
 			</Box>
-			<SyntaxHighlighter
-				{...(rest as SyntaxHighlighterProps)}
-				PreTag="div"
-				language={language}
-				style={materialOceanic}
-			>
-				{code}
-			</SyntaxHighlighter>
+			<Box sx={{ overflowX: "auto" }}>
+				<SyntaxHighlighter
+					{...(rest as SyntaxHighlighterProps)}
+					PreTag="div"
+					language={language}
+					style={materialOceanic}
+				>
+					{code}
+				</SyntaxHighlighter>
+			</Box>
 		</Sheet>
 	);
 }

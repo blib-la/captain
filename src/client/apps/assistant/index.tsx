@@ -203,6 +203,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 					overflowY: "auto",
 					overflowX: "hidden",
 					width: 200,
+					flexShrink: 0,
 				}}
 			>
 				<List sx={{ width: "100%" }}>
@@ -330,7 +331,14 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 						))}
 				</List>
 			</Sheet>
-			<Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+			<Box
+				sx={{
+					flex: 1,
+					display: "flex",
+					flexDirection: "column",
+					width: "calc(100% - 200px)",
+				}}
+			>
 				<Sheet color={color} variant="soft" sx={{ py: 0.75, px: 1 }}>
 					<Box sx={{ display: "flex", gap: 1, width: "100%" }}>
 						<Select
@@ -408,6 +416,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 						flex: 1,
 						overflowY: "auto",
 						overflowX: "hidden",
+						maxWidth: "100%",
 					}}
 				>
 					<List
@@ -460,8 +469,14 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 								</ListItemDecorator>
 								<ListItemContent
 									sx={{
-										ml: message_.role === "user" ? 16 : 0,
-										mr: message_.role === "user" ? 0 : 16,
+										ml: {
+											md: message_.role === "user" ? 7 : 0,
+											lg: message_.role === "user" ? 15 : 0,
+										},
+										mr: {
+											md: message_.role === "user" ? 0 : 7,
+											lg: message_.role === "user" ? 0 : 15,
+										},
 									}}
 								>
 									<Sheet
