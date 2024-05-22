@@ -1,11 +1,12 @@
 import Box from "@mui/joy/Box";
+import Sheet from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
 import type { ReactNode } from "react";
 import type { Components } from "react-markdown";
 import ReactMarkdown from "react-markdown";
 import type { SyntaxHighlighterProps } from "react-syntax-highlighter";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { materialDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { materialOceanic } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import remarkGemoji from "remark-gemoji";
 interface ComponentProperties {
 	children?: ReactNode;
@@ -61,14 +62,21 @@ export const components: Partial<Components> = {
 		const { children, className, node: _node, ...rest } = properties;
 		const match = /language-(\w+)/.exec(className || "");
 		return match ? (
-			<SyntaxHighlighter
-				{...(rest as SyntaxHighlighterProps)}
-				PreTag="div"
-				language={match[1]}
-				style={materialDark}
-			>
-				{String(children).replace(/\n$/, "")}
-			</SyntaxHighlighter>
+			<Sheet color="neutral" variant="solid" sx={{ p: 0.5 }}>
+				<Sheet color="neutral" variant="soft">
+					<Typography level="body-xs" sx={{ p: 1, lineHeight: 1 }}>
+						{match[1].toUpperCase()}
+					</Typography>
+				</Sheet>
+				<SyntaxHighlighter
+					{...(rest as SyntaxHighlighterProps)}
+					PreTag="div"
+					language={match[1]}
+					style={materialOceanic}
+				>
+					{String(children).replace(/\n$/, "")}
+				</SyntaxHighlighter>
+			</Sheet>
 		) : (
 			<code {...rest} className={className}>
 				{children}

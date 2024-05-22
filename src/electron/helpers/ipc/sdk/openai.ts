@@ -23,7 +23,9 @@ ipcMain.on(
 			appId,
 		}: {
 			message: SDKMessage<{
-				input: string;
+				input?: string;
+				model?: string;
+				maxHistory?: number;
 				id: string;
 				update?: Partial<Except<ChatModel, "messages">>;
 			}>;
@@ -36,7 +38,11 @@ ipcMain.on(
 
 		const channel = `${appId}:${APP_MESSAGE_KEY}`;
 		const chatId = message.payload.id;
-		let chat = openAIStore.get(chatId, { label: "New Chat", messages: [] });
+		let chat = openAIStore.get(chatId, {
+			label: "New Chat",
+			messages: [],
+			model: "gpt-3.5-turbo",
+		});
 
 		switch (message.action) {
 			case "openai:update": {
@@ -64,7 +70,7 @@ ipcMain.on(
 			}
 
 			case "openai:delete": {
-				chat = { label: "New Chat", messages: [] };
+				chat = { label: "New Chat", messages: [], model: "gpt-3.5-turbo" };
 				openAIStore.delete(chatId);
 				try {
 					const chats = Object.entries(openAIStore.store).map(([id, value]) => ({
@@ -119,17 +125,19 @@ ipcMain.on(
 			case "openai:chat": {
 				try {
 					const openai = createOpenAI({ apiKey: keyStore.get("openAiApiKey") });
-					const userInput = message.payload.input;
+					const userInput = message.payload.input!;
+					const model = message.payload.model ?? "gpt-3.5-turbo";
 
 					chat.messages.push({ role: "user" as const, content: userInput });
+					chat.model = model;
 					openAIStore.set(chatId, chat);
 
-					// Only send the last 10 messages
-					const limit = 10;
+					// Only send the last N messages
+					const limit = message.payload.maxHistory ?? 10;
 					const limitedHistory = chat.messages.slice(-limit);
 
 					const result = await streamText({
-						model: openai("gpt-3.5-turbo"),
+						model: openai(model),
 						system: `You are a helpful, respectful and honest assistant.`,
 						messages: limitedHistory,
 					});

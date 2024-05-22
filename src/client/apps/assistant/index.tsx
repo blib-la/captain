@@ -18,6 +18,8 @@ import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import Menu from "@mui/joy/Menu";
 import MenuButton from "@mui/joy/MenuButton";
 import MenuItem from "@mui/joy/MenuItem";
+import Option from "@mui/joy/Option";
+import Select from "@mui/joy/Select";
 import Sheet from "@mui/joy/Sheet";
 import type { ColorPaletteProp } from "@mui/joy/styles";
 import Textarea from "@mui/joy/Textarea";
@@ -38,6 +40,25 @@ interface MessageModel {
 	role: "assistant" | "user";
 }
 
+const models = [
+	{
+		id: "gpt-3.5-turbo",
+		label: "GPT-3.5 Turbo",
+	},
+	{
+		id: "gpt-4-turbo",
+		label: "GPT-4 Turbo",
+	},
+	{
+		id: "gpt-4",
+		label: "GPT-4",
+	},
+	{
+		id: "gpt-4o",
+		label: "GPT-4o",
+	},
+];
+
 export function Assistant({ color }: { color: ColorPaletteProp }) {
 	const { t } = useTranslation(["labels", "common"]);
 	const [messages, setMessages] = useState<MessageModel[]>([]);
@@ -45,6 +66,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 	const [isGenerating, setIsGenerating] = useState(false);
 	const [input, setInput] = useState("");
 	const [chatId, setChatId] = useState("");
+	const [model, setModel] = useState(models[0].id);
 	const [chats, setChats] = useState<(Except<ChatModel, "messages"> & { id: string })[]>([]);
 
 	const firstRunReference = useRef(true);
@@ -79,6 +101,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 					};
 					firstRunReference.current = true;
 					setMessages(chat.messages);
+					setModel(chat.model);
 
 					break;
 				}
@@ -203,7 +226,9 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 														action: "openai:update",
 														payload: {
 															id: chat.id,
-															update: { favorite: !chat.favorite },
+															update: {
+																favorite: !chat.favorite,
+															},
 														},
 													});
 												}}
@@ -261,6 +286,24 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 				</List>
 			</Sheet>
 			<Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+				<Sheet color={color} variant="soft" sx={{ py: 0.75, px: 1 }}>
+					<Box sx={{ display: "flex" }}>
+						<Select
+							value={model}
+							onChange={(_event, value) => {
+								if (value) {
+									setModel(value);
+								}
+							}}
+						>
+							{models.map(model => (
+								<Option key={model.id} value={model.id}>
+									{model.label}
+								</Option>
+							))}
+						</Select>
+					</Box>
+				</Sheet>
 				<Box
 					ref={scrollContainerReference}
 					sx={{
@@ -286,7 +329,10 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 								}}
 							>
 								<ListItemDecorator
-									sx={theme => ({ position: "sticky", top: theme.spacing(0.5) })}
+									sx={theme => ({
+										position: "sticky",
+										top: theme.spacing(0.5),
+									})}
 								>
 									<Avatar
 										color={message_.role === "user" ? color : "neutral"}
@@ -371,7 +417,12 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 									]);
 									send({
 										action: "openai:chat",
-										payload: { input: input.trim(), id: chatId },
+										payload: {
+											input: input.trim(),
+											id: chatId,
+											model,
+											maxHistory: 10,
+										},
 									});
 								}}
 							>
