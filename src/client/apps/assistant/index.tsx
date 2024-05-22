@@ -86,7 +86,7 @@ export function ChatName({
 					setCurrentName(event.target.value);
 				}}
 				onBlur={() => {
-					if (onUpdate) {
+					if (onUpdate && currentName !== name) {
 						onUpdate(currentName);
 					}
 				}}
@@ -252,18 +252,17 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 			>
 				<List sx={{ width: "100%" }}>
 					<ListItem>
-						<ListItemDecorator>
+						<ListItemButton
+							color={color}
+							onClick={() => {
+								setChatId(v4());
+							}}
+						>
 							<ListItemDecorator>
 								<AddCommentIcon />
 							</ListItemDecorator>
-							<ListItemButton
-								onClick={() => {
-									setChatId(v4());
-								}}
-							>
-								{t("labels:newChat")}
-							</ListItemButton>
-						</ListItemDecorator>
+							<ListItemContent>{t("labels:newChat")}</ListItemContent>
+						</ListItemButton>
 					</ListItem>
 					{chats
 						.sort((a, b) => {
