@@ -261,7 +261,9 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 							<ListItemDecorator>
 								<AddCommentIcon />
 							</ListItemDecorator>
-							<ListItemContent>{t("labels:newChat")}</ListItemContent>
+							<ListItemContent>
+								<Typography noWrap>{t("labels:newChat")}</Typography>
+							</ListItemContent>
 						</ListItemButton>
 					</ListItem>
 					{chats
