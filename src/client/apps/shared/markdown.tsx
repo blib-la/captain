@@ -16,7 +16,10 @@ import type { Except } from "type-fest";
 interface ComponentProperties {
 	children?: ReactNode;
 }
-
+const codeMappers: Record<string, string> = {
+	svelte: "html",
+	vue: "html",
+};
 export function Code({
 	language,
 	code,
@@ -57,7 +60,7 @@ export function Code({
 				<SyntaxHighlighter
 					{...(rest as SyntaxHighlighterProps)}
 					PreTag="div"
-					language={language}
+					language={language && (codeMappers[language] ?? language)}
 					style={materialOceanic}
 				>
 					{code}
