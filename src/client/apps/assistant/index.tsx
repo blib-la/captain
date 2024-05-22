@@ -236,7 +236,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 			>
 				<Typography>{error}</Typography>
 			</Snackbar>
-			<Snackbar color="yellow" variant="solid" open={isWarningOpen}>
+			<Snackbar color="warning" variant="solid" open={isWarningOpen}>
 				<Typography>{t("texts:enterOpenAIAPIKey")}</Typography>
 			</Snackbar>
 
