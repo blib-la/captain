@@ -29,7 +29,12 @@ import Textarea from "@mui/joy/Textarea";
 import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
 import { useTranslation } from "next-i18next";
+import VirtualList from "rc-virtual-list";
+import type { ListRef } from "rc-virtual-list/es/List";
+import type { MutableRefObject } from "react";
+import { useMemo } from "react";
 import { useEffect, useRef, useState } from "react";
+import AutoSizer from "react-virtualized-auto-sizer";
 import type { Except } from "type-fest";
 import { v4 } from "uuid";
 
@@ -91,6 +96,125 @@ export function ChatName({
 					}
 				}}
 			/>
+		</Box>
+	);
+}
+
+export function Chat({
+	messages,
+	color,
+	firstRunReference,
+}: {
+	messages: MessageModel[];
+	color: ColorPaletteProp;
+	firstRunReference: MutableRefObject<boolean>;
+}) {
+	const { t } = useTranslation(["labels", "common"]);
+	const reference = useRef<ListRef | null>(null);
+
+	useEffect(() => {
+		if (reference.current) {
+			reference.current.scrollTo({ index: messages.length - 1, align: "bottom" });
+			firstRunReference.current = false;
+		}
+	}, [firstRunReference, messages]);
+
+	return (
+		<Box sx={theme => ({ flex: 1, position: "relative", "--ListItem-gap": theme.spacing(1) })}>
+			<AutoSizer disableWidth>
+				{({ height }) => (
+					<VirtualList
+						ref={reference}
+						itemKey="id"
+						data={messages}
+						height={height}
+						itemHeight={56}
+						styles={{
+							horizontalScrollBar: {
+								background: "var(--scrollbar-track-color)",
+								height: 6,
+							},
+							verticalScrollBar: {
+								background: "var(--scrollbar-track-color)",
+								width: 6,
+							},
+							horizontalScrollBarThumb: {
+								background: "var(--scrollbar-thumb-color)",
+								borderRadius: 0,
+							},
+							verticalScrollBarThumb: {
+								background: "var(--scrollbar-thumb-color)",
+								borderRadius: 0,
+							},
+						}}
+					>
+						{message => (
+							<ListItem
+								component="div"
+								sx={{
+									"--ListItemDecorator-size": "56px",
+									flexDirection: message.role === "user" ? "row-reverse" : "row",
+									alignItems: "flex-start",
+									p: 1,
+								}}
+							>
+								<ListItemDecorator
+									sx={theme => ({
+										position: "sticky",
+										top: theme.spacing(0.5),
+									})}
+								>
+									<Tooltip
+										title={
+											message.model
+												? modelNames[message.model] ??
+													t(`labels:${message.role}`)
+												: t(`labels:${message.role}`)
+										}
+									>
+										<Avatar
+											variant="soft"
+											color={
+												message.role === "user"
+													? color
+													: modelColors[
+															message.model ?? "gpt-3.5-turbo"
+														] ?? "neutral"
+											}
+										>
+											{message.role === "user" ? (
+												<PersonIcon />
+											) : (
+												<ChatGPTIcon />
+											)}
+										</Avatar>
+									</Tooltip>
+								</ListItemDecorator>
+								<ListItemContent
+									sx={{
+										ml: {
+											md: message.role === "user" ? 7 : 0,
+											lg: message.role === "user" ? 15 : 0,
+										},
+										mr: {
+											md: message.role === "user" ? 0 : 7,
+											lg: message.role === "user" ? 0 : 15,
+										},
+									}}
+								>
+									<Sheet
+										variant="soft"
+										sx={{ px: 2, py: 1, borderRadius: "sm" }}
+										color={message.role === "user" ? color : "neutral"}
+									>
+										<Markdown markdown={message.content} />
+									</Sheet>
+								</ListItemContent>
+							</ListItem>
+						)}
+					</VirtualList>
+				)}
+			</AutoSizer>
 		</Box>
 	);
 }
@@ -180,20 +304,6 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 			}
 		},
 	});
-
-	useEffect(() => {
-		const container = scrollContainerReference.current;
-		if (container) {
-			const threshold = 200;
-			const isNearBottom =
-				container.scrollHeight - container.scrollTop - container.clientHeight < threshold;
-
-			if (isNearBottom || firstRunReference.current) {
-				container.scrollTop = container.scrollHeight;
-				firstRunReference.current = false;
-			}
-		}
-	}, [messages, message]);
 
 	useEffect(() => {
 		const container = scrollContainerReference.current;
@@ -469,114 +579,25 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 						/>
 					</Box>
 				</Sheet>
-				<Box
-					ref={scrollContainerReference}
-					sx={{
-						flex: 1,
-						overflowY: "auto",
-						overflowX: "hidden",
-						maxWidth: "100%",
-					}}
-				>
-					<List
-						sx={{
-							"--ListItemDecorator-size": "56px",
-							flexShrink: 0,
-							width: "100%",
-							justifyContent: "flex-end",
-						}}
-					>
-						{messages.map(message_ => (
-							<ListItem
-								key={message_.id}
-								sx={{
-									flexDirection: message_.role === "user" ? "row-reverse" : "row",
-									alignItems: "flex-start",
-								}}
-							>
-								<ListItemDecorator
-									sx={theme => ({
-										position: "sticky",
-										top: theme.spacing(0.5),
-									})}
-								>
-									<Tooltip
-										title={
-											message_.model
-												? modelNames[message_.model] ??
-													t(`labels:${message_.role}`)
-												: t(`labels:${message_.role}`)
+				<Chat
+					color={color}
+					firstRunReference={firstRunReference}
+					messages={useMemo(
+						() =>
+							[
+								...messages,
+								message
+									? {
+											id: "newMessage",
+											content: message,
+											role: "assistant",
+											model,
 										}
-									>
-										<Avatar
-											variant="soft"
-											color={
-												message_.role === "user"
-													? color
-													: modelColors[
-															message_.model ?? "gpt-3.5-turbo"
-														] ?? "neutral"
-											}
-										>
-											{message_.role === "user" ? (
-												<PersonIcon />
-											) : (
-												<ChatGPTIcon />
-											)}
-										</Avatar>
-									</Tooltip>
-								</ListItemDecorator>
-								<ListItemContent
-									sx={{
-										ml: {
-											md: message_.role === "user" ? 7 : 0,
-											lg: message_.role === "user" ? 15 : 0,
-										},
-										mr: {
-											md: message_.role === "user" ? 0 : 7,
-											lg: message_.role === "user" ? 0 : 15,
-										},
-									}}
-								>
-									<Sheet
-										variant="soft"
-										sx={{ px: 2, py: 1, borderRadius: "sm" }}
-										color={message_.role === "user" ? color : "neutral"}
-									>
-										<Markdown markdown={message_.content} />
-									</Sheet>
-								</ListItemContent>
-							</ListItem>
-						))}
-						{message && (
-							<ListItem
-								sx={{
-									flexDirection: "row",
-									alignItems: "flex-start",
-								}}
-							>
-								<ListItemDecorator sx={{ position: "sticky", top: 0 }}>
-									<Avatar color={modelColors[model] ?? "neutral"} variant="soft">
-										<ChatGPTIcon />
-									</Avatar>
-								</ListItemDecorator>
-								<ListItemContent
-									sx={{
-										mr: 16,
-									}}
-								>
-									<Sheet
-										color="neutral"
-										variant="soft"
-										sx={{ px: 2, py: 1, borderRadius: "sm" }}
-									>
-										<Markdown markdown={message} />
-									</Sheet>
-								</ListItemContent>
-							</ListItem>
-						)}
-					</List>
-				</Box>
+									: null,
+							].filter(Boolean) as MessageModel[],
+						[messages, message]
+					)}
+				/>
 				<Box sx={{ p: 1 }}>
 					<Textarea
 						value={input}
