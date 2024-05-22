@@ -1,1 +1,1 @@
-export const APP_ID = "assisitant";
+export const APP_ID = "assistant";
