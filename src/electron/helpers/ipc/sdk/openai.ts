@@ -46,6 +46,7 @@ ipcMain.on(
 		});
 
 		switch (message.action) {
+			// Update the data of achat. Allows partial objects
 			case "openai:update": {
 				try {
 					const { update } = message.payload;
@@ -74,6 +75,7 @@ ipcMain.on(
 				break;
 			}
 
+			// Delete a chat from the store
 			case "openai:delete": {
 				chat = { label: "New Chat", messages: [], model: "gpt-3.5-turbo" };
 				openAIStore.delete(chatId);
@@ -101,6 +103,8 @@ ipcMain.on(
 				break;
 			}
 
+			// Get the entire history of chats and the currently selected chat
+			// The list of all chats does not include their messages
 			case "openai:history": {
 				event.sender.send(channel, {
 					action: "openai:messages",
@@ -135,6 +139,7 @@ ipcMain.on(
 				break;
 			}
 
+			// Send an input and trigger a chat generation
 			case "openai:chat": {
 				try {
 					const openai = createOpenAI({ apiKey: keyStore.get("openAiApiKey") });
