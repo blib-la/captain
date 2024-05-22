@@ -5,5 +5,5 @@ export interface ChatModel {
 	model: string;
 	pinned?: boolean;
 	favorite?: boolean;
-	messages: CoreMessage[];
+	messages: (CoreMessage & Record<string, unknown>)[];
 }

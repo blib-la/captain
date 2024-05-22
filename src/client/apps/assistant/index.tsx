@@ -9,6 +9,7 @@ import Avatar from "@mui/joy/Avatar";
 import Box from "@mui/joy/Box";
 import Dropdown from "@mui/joy/Dropdown";
 import IconButton from "@mui/joy/IconButton";
+import Input from "@mui/joy/Input";
 import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import ListItemButton from "@mui/joy/ListItemButton";
@@ -22,6 +23,7 @@ import Select from "@mui/joy/Select";
 import Sheet from "@mui/joy/Sheet";
 import type { ColorPaletteProp } from "@mui/joy/styles";
 import Textarea from "@mui/joy/Textarea";
+import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
 import { useTranslation } from "next-i18next";
 import { useEffect, useRef, useState } from "react";
@@ -38,6 +40,7 @@ interface MessageModel {
 	id: string;
 	content: string;
 	role: "assistant" | "user";
+	model?: string;
 }
 
 const models = [
@@ -46,12 +49,12 @@ const models = [
 		label: "GPT-3.5 Turbo",
 	},
 	{
-		id: "gpt-4-turbo",
-		label: "GPT-4 Turbo",
-	},
-	{
 		id: "gpt-4",
 		label: "GPT-4",
+	},
+	{
+		id: "gpt-4-turbo",
+		label: "GPT-4 Turbo",
 	},
 	{
 		id: "gpt-4o",
@@ -59,10 +62,49 @@ const models = [
 	},
 ];
 
+export const modelColors: Record<string, ColorPaletteProp> = {
+	"gpt-3.5-turbo": "neutral",
+	"gpt-4": "orange",
+	"gpt-4-turbo": "violet",
+	"gpt-4o": "blue",
+};
+
+export function ChatName({
+	name,
+	onUpdate,
+	color,
+}: {
+	name: string;
+	onUpdate(_label: string): void;
+	color: ColorPaletteProp;
+}) {
+	const [currentName, setCurrentName] = useState(name);
+	useEffect(() => {
+		setCurrentName(name);
+	}, [name]);
+	return (
+		<Input
+			color={color}
+			variant="solid"
+			value={currentName}
+			sx={{ width: 200 }}
+			onChange={event => {
+				setCurrentName(event.target.value);
+			}}
+			onBlur={() => {
+				if (onUpdate) {
+					onUpdate(currentName);
+				}
+			}}
+		/>
+	);
+}
+
 export function Assistant({ color }: { color: ColorPaletteProp }) {
 	const { t } = useTranslation(["labels", "common"]);
 	const [messages, setMessages] = useState<MessageModel[]>([]);
 	const [message, setMesssage] = useState("");
+	const [chatName, setChatName] = useState("");
 	const [isGenerating, setIsGenerating] = useState(false);
 	const [input, setInput] = useState("");
 	const [chatId, setChatId] = useState("");
@@ -76,15 +118,25 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 		onMessage(message) {
 			switch (message.action) {
 				case "openai:response": {
-					const { output, done } = message.payload as {
+					const {
+						output,
+						done,
+						model: model_,
+					} = message.payload as {
 						output: string;
 						done: boolean;
+						model: string;
 					};
 					if (done) {
 						setMesssage("");
 						setMessages(previousState => [
 							...previousState,
-							{ role: "assistant", content: output, id: v4() },
+							{
+								role: "assistant",
+								content: output,
+								id: v4(),
+								model: model_,
+							},
 						]);
 						setIsGenerating(false);
 					} else {
@@ -102,6 +154,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 					firstRunReference.current = true;
 					setMessages(chat.messages);
 					setModel(chat.model);
+					setChatName(chat.label);
 
 					break;
 				}
@@ -287,9 +340,12 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 			</Sheet>
 			<Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
 				<Sheet color={color} variant="soft" sx={{ py: 0.75, px: 1 }}>
-					<Box sx={{ display: "flex" }}>
+					<Box sx={{ display: "flex", gap: 1 }}>
 						<Select
+							color={color}
+							variant="solid"
 							value={model}
+							sx={{ width: 170 }}
 							onChange={(_event, value) => {
 								if (value) {
 									setModel(value);
@@ -302,6 +358,19 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 								</Option>
 							))}
 						</Select>
+						<ChatName
+							name={chatName}
+							color={color}
+							onUpdate={label => {
+								send({
+									action: "openai:update",
+									payload: {
+										id: chatId,
+										update: { label },
+									},
+								});
+							}}
+						/>
 					</Box>
 				</Sheet>
 				<Box
@@ -334,16 +403,24 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 										top: theme.spacing(0.5),
 									})}
 								>
-									<Avatar
-										color={message_.role === "user" ? color : "neutral"}
-										variant="soft"
-									>
-										{message_.role === "user" ? (
-											<PersonIcon />
-										) : (
-											<ChatGPTIcon />
-										)}
-									</Avatar>
+									<Tooltip title={message_.model ?? message_.role}>
+										<Avatar
+											variant="soft"
+											color={
+												message_.role === "user"
+													? color
+													: modelColors[
+															message_.model ?? "gpt-3.5-turbo"
+														] ?? "neutral"
+											}
+										>
+											{message_.role === "user" ? (
+												<PersonIcon />
+											) : (
+												<ChatGPTIcon />
+											)}
+										</Avatar>
+									</Tooltip>
 								</ListItemDecorator>
 								<ListItemContent
 									sx={{
@@ -352,9 +429,14 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 									}}
 								>
 									<Sheet
-										color={message_.role === "user" ? color : "neutral"}
 										variant="soft"
 										sx={{ px: 2, py: 1, borderRadius: "sm" }}
+										color={
+											message_.role === "user"
+												? color
+												: modelColors[message_.model ?? "gpt-3.5-turbo"] ??
+													"neutral"
+										}
 									>
 										<Markdown markdown={message_.content} />
 									</Sheet>
@@ -369,7 +451,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 								}}
 							>
 								<ListItemDecorator sx={{ position: "sticky", top: 0 }}>
-									<Avatar>
+									<Avatar color={modelColors[model] ?? "neutral"} variant="soft">
 										<ChatGPTIcon />
 									</Avatar>
 								</ListItemDecorator>
@@ -379,7 +461,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 									}}
 								>
 									<Sheet
-										color="neutral"
+										color={modelColors[model] ?? "neutral"}
 										variant="soft"
 										sx={{ px: 2, py: 1, borderRadius: "sm" }}
 									>

@@ -151,11 +151,11 @@ ipcMain.on(
 						});
 					}
 
-					chat.messages.push({ role: "assistant", content: fullResponse });
+					chat.messages.push({ role: "assistant", content: fullResponse, model });
 					openAIStore.set(chatId, chat);
 					event.sender.send(channel, {
 						action: "openai:response",
-						payload: { output: fullResponse, done: true },
+						payload: { output: fullResponse, done: true, model },
 					});
 				} catch (error) {
 					console.log(error);
