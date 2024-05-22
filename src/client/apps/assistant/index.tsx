@@ -560,6 +560,26 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 						onChange={event => {
 							setInput(event.target.value);
 						}}
+						onKeyDown={event => {
+							if (event.key === "Enter" && !event.shiftKey) {
+								event.preventDefault();
+								setIsGenerating(true);
+								setInput("");
+								setMessages(previousState => [
+									...previousState,
+									{ role: "user", content: input.trim(), id: v4() },
+								]);
+								send({
+									action: "openai:chat",
+									payload: {
+										input: input.trim(),
+										id: chatId,
+										model,
+										maxHistory: 10,
+									},
+								});
+							}
+						}}
 					/>
 				</Box>
 			</Box>
