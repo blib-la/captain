@@ -13,6 +13,7 @@
   "clickDownloadToStart": "Klik op \"Downloaden\" om te starten!",
   "close": "Sluiten",
   "color": "Kleur",
+  "copy": "Kopiëren",
   "createStory": "Verhaal Maken",
   "dashboard": "Dashboard",
   "delete": "Verwijderen",
@@ -124,5 +125,6 @@
   "unpacking": "Uitpakken",
   "update": "Bijwerken",
   "updateFailed": "Update mislukt",
-  "updateNow": "Nu bijwerken"
+  "updateNow": "Nu bijwerken",
+  "user": "Gebruiker"
 }

@@ -13,6 +13,7 @@
   "clickDownloadToStart": "Cliquez sur \"Télécharger\" pour commencer !",
   "close": "Fermer",
   "color": "Couleur",
+  "copy": "",
   "createStory": "Créer Histoire",
   "dashboard": "Tableau de bord",
   "delete": "Supprimer",
@@ -124,5 +125,6 @@
   "unpacking": "Déballage",
   "update": "Mettre à jour",
   "updateFailed": "Échec de la mise à jour",
-  "updateNow": "Mettre à jour maintenant"
+  "updateNow": "Mettre à jour maintenant",
+  "user": "Utilisateur"
 }

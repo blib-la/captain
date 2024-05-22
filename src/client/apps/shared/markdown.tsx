@@ -1,6 +1,10 @@
+import CopyAllIcon from "@mui/icons-material/CopyAll";
 import Box from "@mui/joy/Box";
+import Chip from "@mui/joy/Chip";
+import IconButton from "@mui/joy/IconButton";
 import Sheet from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
+import { useTranslation } from "next-i18next";
 import type { ReactNode } from "react";
 import type { Components } from "react-markdown";
 import ReactMarkdown from "react-markdown";
@@ -8,8 +12,46 @@ import type { SyntaxHighlighterProps } from "react-syntax-highlighter";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialOceanic } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import remarkGemoji from "remark-gemoji";
+import type { Except } from "type-fest";
 interface ComponentProperties {
 	children?: ReactNode;
+}
+
+export function Code({
+	language,
+	code,
+	...rest
+}: { code: string } & Except<SyntaxHighlighterProps, "children">) {
+	const { t } = useTranslation(["labels"]);
+	return (
+		<Sheet color="primary" variant="soft" sx={{ p: 0.5 }}>
+			<Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+				{language ? (
+					<Chip size="sm" color="primary" variant="outlined">
+						{language.toUpperCase()}
+					</Chip>
+				) : (
+					<Box />
+				)}
+				<IconButton
+					aria-label={t("labels:copy")}
+					onClick={() => {
+						navigator.clipboard.writeText(code);
+					}}
+				>
+					<CopyAllIcon />
+				</IconButton>
+			</Box>
+			<SyntaxHighlighter
+				{...(rest as SyntaxHighlighterProps)}
+				PreTag="div"
+				language={language}
+				style={materialOceanic}
+			>
+				{code}
+			</SyntaxHighlighter>
+		</Sheet>
+	);
 }
 
 export const components: Partial<Components> = {
@@ -62,21 +104,11 @@ export const components: Partial<Components> = {
 		const { children, className, node: _node, ...rest } = properties;
 		const match = /language-(\w+)/.exec(className || "");
 		return match ? (
-			<Sheet color="neutral" variant="solid" sx={{ p: 0.5 }}>
-				<Sheet color="neutral" variant="soft">
-					<Typography level="body-xs" sx={{ p: 1, lineHeight: 1 }}>
-						{match[1].toUpperCase()}
-					</Typography>
-				</Sheet>
-				<SyntaxHighlighter
-					{...(rest as SyntaxHighlighterProps)}
-					PreTag="div"
-					language={match[1]}
-					style={materialOceanic}
-				>
-					{String(children).replace(/\n$/, "")}
-				</SyntaxHighlighter>
-			</Sheet>
+			<Code
+				{...(rest as SyntaxHighlighterProps)}
+				language={match[1]}
+				code={String(children).replace(/\n$/, "")}
+			/>
 		) : (
 			<code {...rest} className={className}>
 				{children}

@@ -13,6 +13,7 @@
   "clickDownloadToStart": "点击“下载”开始！",
   "close": "关闭",
   "color": "颜色",
+  "copy": "复制",
   "createStory": "创建故事",
   "dashboard": "仪表板",
   "delete": "删除",
@@ -124,5 +125,6 @@
   "unpacking": "解压中",
   "update": "更新",
   "updateFailed": "更新失败",
-  "updateNow": "立即更新"
+  "updateNow": "立即更新",
+  "user": "用户"
 }

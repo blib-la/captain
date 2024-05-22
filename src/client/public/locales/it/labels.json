@@ -13,6 +13,7 @@
   "clickDownloadToStart": "Clicca su \"Scarica\" per iniziare!",
   "close": "Chiudi",
   "color": "Colore",
+  "copy": "Copia",
   "createStory": "Crea Storia",
   "dashboard": "Cruscotto",
   "delete": "Elimina",
@@ -124,5 +125,6 @@
   "unpacking": "Estrazione",
   "update": "Aggiorna",
   "updateFailed": "Aggiornamento fallito",
-  "updateNow": "Aggiorna ora"
+  "updateNow": "Aggiorna ora",
+  "user": "Utente"
 }

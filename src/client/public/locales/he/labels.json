@@ -13,6 +13,7 @@
   "clickDownloadToStart": "לחץ על \"הורד\" כדי להתחיל!",
   "close": "סגור",
   "color": "צבע",
+  "copy": "העתק",
   "createStory": "צור סיפור",
   "dashboard": "לוח בקרה",
   "delete": "מחק",
@@ -124,5 +125,6 @@
   "unpacking": "פותח",
   "update": "עדכון",
   "updateFailed": "עדכון נכשל",
-  "updateNow": "עדכן עכשיו"
+  "updateNow": "עדכן עכשיו",
+  "user": "משתמש"
 }

@@ -13,6 +13,7 @@
   "clickDownloadToStart": "Klicke auf \"Herunterladen\", um zu starten!",
   "close": "Schließen",
   "color": "Farbe",
+  "copy": "Kopieren",
   "createStory": "Erzählung erstellen",
   "dashboard": "Dashboard",
   "delete": "Löschen",
@@ -124,5 +125,6 @@
   "unpacking": "Entpacken",
   "update": "Aktualisieren",
   "updateFailed": "Update fehlgeschlagen",
-  "updateNow": "Jetzt aktualisieren"
+  "updateNow": "Jetzt aktualisieren",
+  "user": "Benutzer"
 }

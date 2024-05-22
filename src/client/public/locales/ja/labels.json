@@ -13,6 +13,7 @@
   "clickDownloadToStart": "「ダウンロード」をクリックして開始！",
   "close": "閉じる",
   "color": "色",
+  "copy": "コピー",
   "createStory": "ストーリー作成",
   "dashboard": "ダッシュボード",
   "delete": "削除",
@@ -124,5 +125,6 @@
   "unpacking": "解凍中",
   "update": "更新",
   "updateFailed": "更新に失敗しました",
-  "updateNow": "今すぐ更新"
+  "updateNow": "今すぐ更新",
+  "user": "ユーザー"
 }

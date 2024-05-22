@@ -13,6 +13,7 @@
   "clickDownloadToStart": "Click \"Download\" to start!",
   "close": "Close",
   "color": "Color",
+  "copy": "Copy",
   "createStory": "Create Story",
   "dashboard": "Dashboard",
   "delete": "Delete",
@@ -124,5 +125,6 @@
   "unpacking": "Unpacking",
   "update": "Update",
   "updateFailed": "Update failed",
-  "updateNow": "Update Now"
+  "updateNow": "Update Now",
+  "user": "User"
 }
