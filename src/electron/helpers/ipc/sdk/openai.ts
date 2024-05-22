@@ -7,6 +7,7 @@ import Store from "electron-store";
 import type { Except } from "type-fest";
 import { v4 } from "uuid";
 
+import { logError } from "@/electron/services/logger";
 import { keyStore } from "@/electron/stores";
 import type { ChatModel } from "@/shared/types/openai";
 
@@ -63,7 +64,11 @@ ipcMain.on(
 						},
 					});
 				} catch (error) {
-					console.log(error);
+					logError(error);
+					event.sender.send(channel, {
+						action: "openai:error",
+						payload: { error: error instanceof Error ? error.message : String(error) },
+					});
 				}
 
 				break;
@@ -86,7 +91,11 @@ ipcMain.on(
 						},
 					});
 				} catch (error) {
-					console.log(error);
+					logError(error);
+					event.sender.send(channel, {
+						action: "openai:error",
+						payload: { error: error instanceof Error ? error.message : String(error) },
+					});
 				}
 
 				break;
@@ -116,7 +125,11 @@ ipcMain.on(
 						},
 					});
 				} catch (error) {
-					console.log(error);
+					logError(error);
+					event.sender.send(channel, {
+						action: "openai:error",
+						payload: { error: error instanceof Error ? error.message : String(error) },
+					});
 				}
 
 				break;
@@ -158,7 +171,12 @@ ipcMain.on(
 						payload: { output: fullResponse, done: true, model },
 					});
 				} catch (error) {
-					console.log(error);
+					logError(error);
+
+					event.sender.send(channel, {
+						action: "openai:error",
+						payload: { error: error instanceof Error ? error.message : String(error) },
+					});
 				}
 
 				break;

@@ -1,4 +1,6 @@
 import { useSDK } from "@captn/react/use-sdk";
+import AddCommentIcon from "@mui/icons-material/AddComment";
+import CloseIcon from "@mui/icons-material/Close";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PersonIcon from "@mui/icons-material/Person";
@@ -21,6 +23,7 @@ import MenuItem from "@mui/joy/MenuItem";
 import Option from "@mui/joy/Option";
 import Select from "@mui/joy/Select";
 import Sheet from "@mui/joy/Sheet";
+import Snackbar from "@mui/joy/Snackbar";
 import type { ColorPaletteProp } from "@mui/joy/styles";
 import Textarea from "@mui/joy/Textarea";
 import Tooltip from "@mui/joy/Tooltip";
@@ -101,7 +104,9 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 	const [input, setInput] = useState("");
 	const [chatId, setChatId] = useState("");
 	const [model, setModel] = useState(models[0].id);
+	const [error, setError] = useState("");
 	const [chats, setChats] = useState<(Except<ChatModel, "messages"> & { id: string })[]>([]);
+	const [hasOpenAiApiKey, setHasOpenAiApiKey] = useState(false);
 
 	const firstRunReference = useRef(true);
 	const scrollContainerReference = useRef<HTMLDivElement | null>(null);
@@ -151,6 +156,15 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 					break;
 				}
 
+				case "openai:error": {
+					const { error: error_ } = message.payload as {
+						error: string;
+					};
+					setError(error_);
+
+					break;
+				}
+
 				case "openai:chats": {
 					const { chats: allChats } = message.payload as {
 						chats: (Except<ChatModel, "messages"> & { id: string })[];
@@ -194,8 +208,38 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 		}
 	}, [send, chatId]);
 
+	useEffect(() => {
+		window.ipc.send("hasOpenAiApiKey");
+		const unsubscribe = window.ipc.on("hasOpenAiApiKey", (hasKey: boolean) => {
+			setHasOpenAiApiKey(hasKey);
+		});
+		return () => {
+			unsubscribe();
+		};
+	}, []);
+
 	return (
 		<Box sx={{ flex: 1, display: "flex", height: "100%" }}>
+			<Snackbar
+				color="danger"
+				variant="outlined"
+				open={Boolean(error)}
+				endDecorator={
+					<IconButton
+						onClick={() => {
+							setError("");
+						}}
+					>
+						<CloseIcon />
+					</IconButton>
+				}
+			>
+				<Typography>{error}</Typography>
+			</Snackbar>
+			<Snackbar color="danger" variant="outlined" open={!hasOpenAiApiKey}>
+				<Typography>{t("texts:enterOpenAIAPIKey")}</Typography>
+			</Snackbar>
+
 			<Sheet
 				color="neutral"
 				variant="soft"
@@ -207,6 +251,20 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 				}}
 			>
 				<List sx={{ width: "100%" }}>
+					<ListItem>
+						<ListItemDecorator>
+							<ListItemDecorator>
+								<AddCommentIcon />
+							</ListItemDecorator>
+							<ListItemButton
+								onClick={() => {
+									setChatId(v4());
+								}}
+							>
+								{t("labels:newChat")}
+							</ListItemButton>
+						</ListItemDecorator>
+					</ListItem>
 					{chats
 						.sort((a, b) => {
 							if (a.pinned && b.pinned) {
