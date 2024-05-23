@@ -1,5 +1,6 @@
 import { useSDK } from "@captn/react/use-sdk";
 import AddCommentIcon from "@mui/icons-material/AddComment";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -107,6 +108,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 	const [error, setError] = useState("");
 	const [chats, setChats] = useState<(Except<ChatModel, "messages"> & { id: string })[]>([]);
 	const [isWarningOpen, setIsWarningOpen] = useState(false);
+	const [showScrollToBottom, setShowScrollToBottom] = useState(false);
 
 	const firstRunReference = useRef(true);
 	const scrollContainerReference = useRef<HTMLDivElement | null>(null);
@@ -398,10 +400,10 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 					width: "calc(100% - 200px)",
 				}}
 			>
-				<Sheet color={color} variant="soft" sx={{ py: 0.75, px: 1 }}>
+				<Sheet color="neutral" variant="soft" sx={{ py: 0.75, px: 1 }}>
 					<Box sx={{ display: "flex", gap: 1, width: "100%" }}>
 						<Select
-							color={color}
+							color="neutral"
 							variant="soft"
 							value={model}
 							sx={{ width: 250 }}
@@ -456,7 +458,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 						</Select>
 						<ChatName
 							name={chatName}
-							color={color}
+							color="neutral"
 							onUpdate={label => {
 								send({
 									action: "openai:update",
@@ -477,6 +479,14 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 						overflowX: "hidden",
 						maxWidth: "100%",
 					}}
+					onScroll={event => {
+						const container = event.target as HTMLDivElement;
+						const threshold = 200;
+						const isNearBottom =
+							container.scrollHeight - container.scrollTop - container.clientHeight <
+							threshold;
+						setShowScrollToBottom(!isNearBottom);
+					}}
 				>
 					<List
 						sx={{
@@ -492,6 +502,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 								sx={{
 									flexDirection: message_.role === "user" ? "row-reverse" : "row",
 									alignItems: "flex-start",
+									alignSelf: message_.role === "user" ? "flex-end" : "flex-start",
 								}}
 							>
 								<ListItemDecorator
@@ -526,18 +537,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 										</Avatar>
 									</Tooltip>
 								</ListItemDecorator>
-								<ListItemContent
-									sx={{
-										ml: {
-											md: message_.role === "user" ? 7 : 0,
-											lg: message_.role === "user" ? 15 : 0,
-										},
-										mr: {
-											md: message_.role === "user" ? 0 : 7,
-											lg: message_.role === "user" ? 0 : 15,
-										},
-									}}
-								>
+								<ListItemContent>
 									<Sheet
 										variant="soft"
 										sx={{ px: 2, py: 1, borderRadius: "sm" }}
@@ -577,7 +577,30 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 						)}
 					</List>
 				</Box>
-				<Box sx={{ p: 1 }}>
+				<Box sx={{ p: 1, position: "relative" }}>
+					<Box
+						sx={{
+							position: "absolute",
+							bottom: "100%",
+							left: "50%",
+							transform: "translateX(-50%)",
+							display: showScrollToBottom ? "flex" : "none",
+						}}
+					>
+						<IconButton
+							color={color}
+							variant="soft"
+							aria-label={t("labels:toEnd")}
+							onClick={() => {
+								const container = scrollContainerReference.current;
+								if (container) {
+									container.scrollTop = container.scrollHeight;
+								}
+							}}
+						>
+							<ArrowDownwardIcon />
+						</IconButton>
+					</Box>
 					<Textarea
 						value={input}
 						minRows={1}

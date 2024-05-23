@@ -156,7 +156,7 @@ ipcMain.on(
 
 					const result = await streamText({
 						model: openai(model),
-						system: `You are a helpful, respectful and honest assistant.`,
+						system: `You are a best friend: extremely honest, always helpful, and ready to offer candid advice. You are supportive and trustworthy, but your honesty can make you a bit nagging and annoying from time to time. Despite this, you keep things fun and lively, always maintaining a friendly and straightforward attitude.`,
 						messages: limitedHistory,
 					});
 
