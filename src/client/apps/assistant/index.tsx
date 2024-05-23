@@ -1,8 +1,10 @@
 import { useSDK } from "@captn/react/use-sdk";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import AssistantIcon from "@mui/icons-material/Assistant";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import GoogleIcon from "@mui/icons-material/Google";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PersonIcon from "@mui/icons-material/Person";
 import PushPinIcon from "@mui/icons-material/PushPin";
@@ -30,6 +32,7 @@ import Textarea from "@mui/joy/Textarea";
 import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
 import { useTranslation } from "next-i18next";
+import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 import type { Except } from "type-fest";
 import { v4 } from "uuid";
@@ -37,7 +40,9 @@ import { v4 } from "uuid";
 import { APP_ID } from "./constants";
 
 import { Markdown } from "@/client/apps/shared/markdown";
+import AnthropicIcon from "@/client/atoms/icons/anthropic";
 import ChatGPTIcon from "@/client/atoms/icons/chat-gpt";
+import MistralIcon from "@/client/atoms/icons/mistral";
 import type { ChatModel } from "@/shared/types/openai";
 
 interface MessageModel {
@@ -49,9 +54,15 @@ interface MessageModel {
 
 export const modelColors: Record<string, ColorPaletteProp> = {
 	"gpt-3.5-turbo": "neutral",
-	"gpt-4": "orange",
+	"gpt-4": "teal",
 	"gpt-4-turbo": "violet",
 	"gpt-4o": "blue",
+	"claude-3-haiku-20240307": "neutral",
+	"claude-3-sonnet-20240229": "teal",
+	"claude-3-opus-20240229": "blue",
+	"mistral-small-latest": "neutral",
+	"mistral-large-latest": "teal",
+	"models/gemini-1.5-pro-latest": "neutral",
 };
 
 export const modelNames: Record<string, string> = {
@@ -59,6 +70,19 @@ export const modelNames: Record<string, string> = {
 	"gpt-4": "GPT-4",
 	"gpt-4-turbo": "GPT-4 Turbo",
 	"gpt-4o": "GPT-4o",
+	"claude-3-haiku-20240307": "Claude Haiku",
+	"claude-3-sonnet-20240229": "Claude Sonnet",
+	"claude-3-opus-20240229": "Claude Opus",
+	"mistral-small-latest": "Mistral Small",
+	"mistral-large-latest": "Mistral Large",
+	"models/gemini-1.5-pro-latest": "Gemini 1.5 PRO",
+};
+
+const assistantIcons: Record<string, ReactNode> = {
+	gpt: <ChatGPTIcon />,
+	claude: <AnthropicIcon />,
+	mistral: <MistralIcon />,
+	"models/gemini": <GoogleIcon />,
 };
 
 const models = Object.entries(modelNames).map(([id, label]) => ({ id, label }));
@@ -113,10 +137,45 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 	const firstRunReference = useRef(true);
 	const scrollContainerReference = useRef<HTMLDivElement | null>(null);
 
+	const [modelPrefix] = model.split("-");
+
+	let apiKeyGetter = "";
+	let provider = "";
+
+	switch (modelPrefix) {
+		case "gpt": {
+			apiKeyGetter = "hasOpenAiApiKey";
+			provider = "OpenAI";
+			break;
+		}
+
+		case "claude": {
+			apiKeyGetter = "hasAnthropicApiKey";
+			provider = "Anthropic";
+			break;
+		}
+
+		case "mistral": {
+			apiKeyGetter = "hasMistralApiKey";
+			provider = "Mistral";
+			break;
+		}
+
+		case "models/gemini": {
+			apiKeyGetter = "hasGoogleGenerativeAiApiKey";
+			provider = "Google";
+			break;
+		}
+
+		default: {
+			break;
+		}
+	}
+
 	const { send } = useSDK<unknown, object>(APP_ID, {
 		onMessage(message) {
 			switch (message.action) {
-				case "openai:response": {
+				case "assistant:response": {
 					const {
 						output,
 						done,
@@ -146,7 +205,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 					break;
 				}
 
-				case "openai:messages": {
+				case "assistant:messages": {
 					const { chat } = message.payload as {
 						chat: Except<ChatModel, "messages"> & { messages: MessageModel[] };
 					};
@@ -158,7 +217,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 					break;
 				}
 
-				case "openai:error": {
+				case "assistant:error": {
 					const { error: error_ } = message.payload as {
 						error: string;
 					};
@@ -167,7 +226,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 					break;
 				}
 
-				case "openai:chats": {
+				case "assistant:chats": {
 					const { chats: allChats } = message.payload as {
 						chats: (Except<ChatModel, "messages"> & { id: string })[];
 					};
@@ -204,21 +263,28 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 		}
 
 		if (chatId) {
-			send({ action: "openai:history", payload: { id: chatId } });
+			send({ action: "assistant:history", payload: { id: chatId } });
 		} else {
 			setChatId(v4());
 		}
 	}, [send, chatId]);
 
 	useEffect(() => {
-		window.ipc.send("hasOpenAiApiKey");
-		const unsubscribe = window.ipc.on("hasOpenAiApiKey", (hasKey: boolean) => {
+		if (!apiKeyGetter) {
+			return;
+		}
+
+		console.log("checking", apiKeyGetter);
+
+		window.ipc.send(apiKeyGetter);
+		const unsubscribe = window.ipc.on(apiKeyGetter, (hasKey: boolean) => {
+			console.log("checked", apiKeyGetter, hasKey);
 			setIsWarningOpen(!hasKey);
 		});
 		return () => {
 			unsubscribe();
 		};
-	}, []);
+	}, [apiKeyGetter]);
 
 	return (
 		<Box sx={{ flex: 1, display: "flex", height: "100%" }}>
@@ -239,7 +305,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 				<Typography>{error}</Typography>
 			</Snackbar>
 			<Snackbar color="warning" variant="solid" open={isWarningOpen}>
-				<Typography>{t("texts:enterOpenAIAPIKey")}</Typography>
+				<Typography>{t("texts:enterCommonAPIKey", { provider })}</Typography>
 			</Snackbar>
 
 			<Sheet
@@ -319,7 +385,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 											<MenuItem
 												onClick={() => {
 													send({
-														action: "openai:update",
+														action: "assistant:update",
 														payload: {
 															id: chat.id,
 															update: { pinned: !chat.pinned },
@@ -341,7 +407,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 											<MenuItem
 												onClick={() => {
 													send({
-														action: "openai:update",
+														action: "assistant:update",
 														payload: {
 															id: chat.id,
 															update: {
@@ -365,7 +431,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 											<MenuItem
 												onClick={() => {
 													send({
-														action: "openai:delete",
+														action: "assistant:delete",
 														payload: { id: chat.id },
 													});
 												}}
@@ -432,7 +498,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 												size="sm"
 												color={modelColors[option.value] ?? "neutral"}
 											>
-												<ChatGPTIcon />
+												{assistantIcons[modelPrefix] ?? <AssistantIcon />}
 											</Avatar>
 										</ListItemDecorator>
 										<ListItemContent>
@@ -447,32 +513,36 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 								}
 							}}
 						>
-							{models.map(model => (
-								<Option
-									key={model.id}
-									value={model.id}
-									sx={{
-										"--ListItemDecorator-size": "48px",
-									}}
-								>
-									<ListItemDecorator>
-										<Avatar
-											size="sm"
-											color={modelColors[model.id] ?? "neutral"}
-										>
-											<ChatGPTIcon />
-										</Avatar>
-									</ListItemDecorator>
-									<ListItemContent>{model.label}</ListItemContent>
-								</Option>
-							))}
+							{models.map(model_ => {
+								const [modelPrefix_] = model_.id.split("-");
+
+								return (
+									<Option
+										key={model_.id}
+										value={model_.id}
+										sx={{
+											"--ListItemDecorator-size": "48px",
+										}}
+									>
+										<ListItemDecorator>
+											<Avatar
+												size="sm"
+												color={modelColors[model_.id] ?? "neutral"}
+											>
+												{assistantIcons[modelPrefix_] ?? <AssistantIcon />}
+											</Avatar>
+										</ListItemDecorator>
+										<ListItemContent>{model_.label}</ListItemContent>
+									</Option>
+								);
+							})}
 						</Select>
 						<ChatName
 							name={chatName}
 							color="neutral"
 							onUpdate={label => {
 								send({
-									action: "openai:update",
+									action: "assistant:update",
 									payload: {
 										id: chatId,
 										update: { label },
@@ -507,58 +577,65 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 							justifyContent: "flex-end",
 						}}
 					>
-						{messages.map(message_ => (
-							<ListItem
-								key={message_.id}
-								sx={{
-									flexDirection: message_.role === "user" ? "row-reverse" : "row",
-									alignItems: "flex-start",
-									alignSelf: message_.role === "user" ? "flex-end" : "flex-start",
-								}}
-							>
-								<ListItemDecorator
-									sx={theme => ({
-										position: "sticky",
-										top: theme.spacing(0.5),
-									})}
+						{messages.map(message_ => {
+							const [modelPrefix_] = (message_.model ?? "unknown").split("-");
+							return (
+								<ListItem
+									key={message_.id}
+									sx={{
+										flexDirection:
+											message_.role === "user" ? "row-reverse" : "row",
+										alignItems: "flex-start",
+										alignSelf:
+											message_.role === "user" ? "flex-end" : "flex-start",
+									}}
 								>
-									<Tooltip
-										title={
-											message_.model
-												? modelNames[message_.model] ??
-													t(`labels:${message_.role}`)
-												: t(`labels:${message_.role}`)
-										}
+									<ListItemDecorator
+										sx={theme => ({
+											position: "sticky",
+											top: theme.spacing(0.5),
+										})}
 									>
-										<Avatar
-											variant="soft"
-											color={
-												message_.role === "user"
-													? color
-													: modelColors[
-															message_.model ?? "gpt-3.5-turbo"
-														] ?? "neutral"
+										<Tooltip
+											title={
+												message_.model
+													? modelNames[message_.model] ??
+														t(`labels:${message_.role}`)
+													: t(`labels:${message_.role}`)
 											}
 										>
-											{message_.role === "user" ? (
-												<PersonIcon />
-											) : (
-												<ChatGPTIcon />
-											)}
-										</Avatar>
-									</Tooltip>
-								</ListItemDecorator>
-								<ListItemContent>
-									<Sheet
-										variant="soft"
-										sx={{ px: 2, py: 1, borderRadius: "sm" }}
-										color={message_.role === "user" ? color : "neutral"}
-									>
-										<Markdown markdown={message_.content} />
-									</Sheet>
-								</ListItemContent>
-							</ListItem>
-						))}
+											<Avatar
+												variant="soft"
+												color={
+													message_.role === "user"
+														? color
+														: modelColors[
+																message_.model ?? "gpt-3.5-turbo"
+															] ?? "neutral"
+												}
+											>
+												{message_.role === "user" ? (
+													<PersonIcon />
+												) : (
+													assistantIcons[modelPrefix_] ?? (
+														<AssistantIcon />
+													)
+												)}
+											</Avatar>
+										</Tooltip>
+									</ListItemDecorator>
+									<ListItemContent>
+										<Sheet
+											variant="soft"
+											sx={{ px: 2, py: 1, borderRadius: "sm" }}
+											color={message_.role === "user" ? color : "neutral"}
+										>
+											<Markdown markdown={message_.content} />
+										</Sheet>
+									</ListItemContent>
+								</ListItem>
+							);
+						})}
 						{message && (
 							<ListItem
 								sx={{
@@ -568,7 +645,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 							>
 								<ListItemDecorator sx={{ position: "sticky", top: 0 }}>
 									<Avatar color={modelColors[model] ?? "neutral"} variant="soft">
-										<ChatGPTIcon />
+										{assistantIcons[modelPrefix] ?? <AssistantIcon />}
 									</Avatar>
 								</ListItemDecorator>
 								<ListItemContent
@@ -637,7 +714,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 										{ role: "user", content: input.trim(), id: v4() },
 									]);
 									send({
-										action: "openai:chat",
+										action: "assistant:chat",
 										payload: {
 											input: input.trim(),
 											id: chatId,
@@ -663,7 +740,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 									{ role: "user", content: input.trim(), id: v4() },
 								]);
 								send({
-									action: "openai:chat",
+									action: "assistant:chat",
 									payload: {
 										input: input.trim(),
 										id: chatId,

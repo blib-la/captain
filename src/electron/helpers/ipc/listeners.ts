@@ -21,9 +21,48 @@ ipcMain.on(buildKey([ID.KEYS], { suffix: ":set-openAiApiKey" }), (_event, openAi
 	sendToAllWindows("hasOpenAiApiKey", Boolean(keyStore.get("openAiApiKey")));
 });
 
+ipcMain.on(buildKey([ID.KEYS], { suffix: ":set-anthropicApiKey" }), (_event, anthropicApiKey) => {
+	keyStore.set("anthropicApiKey", anthropicApiKey);
+	sendToAllWindows("hasAnthropicApiKey", Boolean(keyStore.get("anthropicApiKey")));
+});
+
+ipcMain.on(
+	buildKey([ID.KEYS], { suffix: ":set-googleGenerativeAiApiKey" }),
+	(_event, googleGenerativeAiApiKey) => {
+		keyStore.set("googleGenerativeAiApiKey", googleGenerativeAiApiKey);
+		sendToAllWindows(
+			"hasGoogleGenerativeAiApiKey",
+			Boolean(keyStore.get("googleGenerativeAiApiKey"))
+		);
+	}
+);
+
+ipcMain.on(buildKey([ID.KEYS], { suffix: ":set-mistralApiKey" }), (_event, mistralApiKey) => {
+	keyStore.set("mistralApiKey", mistralApiKey);
+	sendToAllWindows("hasMistralApiKey", Boolean(keyStore.get("mistralApiKey")));
+});
+
 ipcMain.on(buildKey([ID.KEYS], { suffix: ":get-openAiApiKey" }), event => {
 	const openAiApiKey = keyStore.get("openAiApiKey");
 	event.sender.send(buildKey([ID.KEYS], { suffix: ":openAiApiKey" }), openAiApiKey);
+});
+
+ipcMain.on(buildKey([ID.KEYS], { suffix: ":get-anthropicApiKey" }), event => {
+	const anthropicApiKey = keyStore.get("anthropicApiKey");
+	event.sender.send(buildKey([ID.KEYS], { suffix: ":anthropicApiKey" }), anthropicApiKey);
+});
+
+ipcMain.on(buildKey([ID.KEYS], { suffix: ":get-googleGenerativeAiApiKey" }), event => {
+	const googleGenerativeAiApiKey = keyStore.get("googleGenerativeAiApiKey");
+	event.sender.send(
+		buildKey([ID.KEYS], { suffix: ":googleGenerativeAiApiKey" }),
+		googleGenerativeAiApiKey
+	);
+});
+
+ipcMain.on(buildKey([ID.KEYS], { suffix: ":get-mistralApiKey" }), event => {
+	const mistralApiKey = keyStore.get("mistralApiKey");
+	event.sender.send(buildKey([ID.KEYS], { suffix: ":mistralApiKey" }), mistralApiKey);
 });
 
 ipcMain.on(buildKey([ID.DOWNLOADS], { suffix: ":clone" }), async (_event, data) => {

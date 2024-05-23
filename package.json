@@ -52,6 +52,9 @@
     "sharp": "0.33.2"
   },
   "devDependencies": {
+    "@ai-sdk/anthropic": "^0.0.15",
+    "@ai-sdk/google": "^0.0.15",
+    "@ai-sdk/mistral": "^0.0.12",
     "@ai-sdk/openai": "^0.0.13",
     "@captn/joy": "^0.31.0",
     "@captn/react": "^0.31.0",

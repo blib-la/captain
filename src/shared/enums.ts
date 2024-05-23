@@ -6,6 +6,7 @@
  */
 export enum KEY {
 	APP = "APP",
+	ASSISTANT = "ASSISTANT",
 	DOWNLOADS = "DOWNLOADS",
 	INVENTORY = "INVENTORY",
 	KEYS = "KEYS",

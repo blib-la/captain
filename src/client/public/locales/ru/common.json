@@ -13,6 +13,7 @@
     "system": "Система"
   },
   "comingSoon": "Скоро будет",
+  "commonApiKey": "Ключ API {{provider}}",
   "create": "Создать",
   "dataset": "Набор данных",
   "datasetName": "Название набора данных",
@@ -51,7 +52,6 @@
   "next": "Следующий",
   "noDatasets": "Нет наборов данных",
   "onlyCaptionEmptyItems": "Только элементы без подписи",
-  "openAiApiKey": "Ключ API OpenAI",
   "openFolder": "Открыть папку",
   "pages": {
     "dataset": {
@@ -75,10 +75,10 @@
     "settings": {
       "colorMode": "Цветовой режим",
       "colorModeDescription": "Настройте визуальный опыт, выбрав цветовую тему, которая соответствует вашим предпочтениям.",
+      "commonApiKeyDescription": "Введите свой ключ API {{provider}} для интеграции с сервисами {{provider}}.",
+      "commonSettings": "Настройки {{provider}}",
       "languageSettings": "Настройки языка",
       "languageSettingsDescription": "Настройте свой опыт, выбрав язык, на котором вам наиболее комфортно.",
-      "openAiApiKeyDescription": "Введите свой ключ API OpenAI для интеграции с сервисами OpenAI.",
-      "openAiSettings": "Настройки OpenAI",
       "runPodSettings": "Настройки RunPod",
       "stableDiffusionCheckpoints": "Контрольные точки Stable Diffusion",
       "stableDiffusionCheckpointsDescription": "Выберите папку с контрольными точками Stable Diffusion.",

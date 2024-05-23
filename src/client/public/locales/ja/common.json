@@ -13,6 +13,7 @@
     "system": "システム"
   },
   "comingSoon": "近日公開",
+  "commonApiKey": "{{provider}} APIキー",
   "create": "作成",
   "dataset": "データセット",
   "datasetName": "データセット名",
@@ -51,7 +52,6 @@
   "next": "次へ",
   "noDatasets": "データセットはありません",
   "onlyCaptionEmptyItems": "キャプションのないアイテムのみ",
-  "openAiApiKey": "OpenAI APIキー",
   "openFolder": "フォルダを開く",
   "pages": {
     "dataset": {
@@ -75,10 +75,10 @@
     "settings": {
       "colorMode": "カラーモード",
       "colorModeDescription": "好みに合ったカラーテーマを選択して視覚体験をカスタマイズします。",
+      "commonApiKeyDescription": "{{provider}}サービスとの統合を有効にするために、{{provider}} APIキーを入力してください。",
+      "commonSettings": "{{provider}}設定",
       "languageSettings": "言語設定",
       "languageSettingsDescription": "最も快適に使用できる言語を選択して体験をカスタマイズします。",
-      "openAiApiKeyDescription": "OpenAIサービスとの統合を有効にするために、OpenAI APIキーを入力してください。",
-      "openAiSettings": "OpenAI設定",
       "runPodSettings": "RunPod設定",
       "stableDiffusionCheckpoints": "Stable Diffusionのチェックポイント",
       "stableDiffusionCheckpointsDescription": "Stable Diffusionのチェックポイントが含まれるフォルダを選択してください。",
