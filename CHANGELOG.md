@@ -1,3 +1,10 @@
+# [1.0.0-alpha.83](https://github.com/blib-la/captain/compare/v1.0.0-alpha.82...v1.0.0-alpha.83) (2024-05-23)
+
+
+### Features
+
+* assistant with openAI ([#303](https://github.com/blib-la/captain/issues/303)) ([18d1256](https://github.com/blib-la/captain/commit/18d1256466bea291ecb7a1cc9db43f76aee421cb)), closes [#162](https://github.com/blib-la/captain/issues/162)
+
 # [1.0.0-alpha.82](https://github.com/blib-la/captain/compare/v1.0.0-alpha.81...v1.0.0-alpha.82) (2024-05-18)
 
 
