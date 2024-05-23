@@ -246,14 +246,15 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 				color="neutral"
 				variant="soft"
 				sx={{
-					overflowY: "auto",
-					overflowX: "hidden",
+					display: "flex",
+					flexDirection: "column",
+					overflow: "hidden",
 					width: 200,
 					flexShrink: 0,
 				}}
 			>
-				<List sx={{ width: "100%" }}>
-					<ListItem>
+				<List sx={{ flexGrow: 0 }}>
+					<ListItem variant="soft">
 						<ListItemButton
 							color={color}
 							onClick={() => {
@@ -268,6 +269,16 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 							</ListItemContent>
 						</ListItemButton>
 					</ListItem>
+				</List>
+				<List
+					sx={{
+						flex: 1,
+						width: "100%",
+						overflowY: "auto",
+						overflowX: "hidden",
+						flexShrink: 0,
+					}}
+				>
 					{chats
 						.sort((a, b) => {
 							if (a.pinned && b.pinned) {
