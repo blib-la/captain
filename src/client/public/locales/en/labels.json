@@ -5,6 +5,7 @@
   "app": "App",
   "art": "Art",
   "artStyle": "Art Style",
+  "assistant": "Assistant",
   "back": "Back",
   "brushSize": "Brush Size",
   "checkForUpdates": "Check for Updates",
@@ -12,6 +13,7 @@
   "clickDownloadToStart": "Click \"Download\" to start!",
   "close": "Close",
   "color": "Color",
+  "copy": "Copy",
   "createStory": "Create Story",
   "dashboard": "Dashboard",
   "delete": "Delete",
@@ -22,6 +24,7 @@
   "downloading": "Downloading",
   "downloads": "Downloads",
   "explorer": "Explorer",
+  "favorite": "Favorite",
   "finish": "Finish",
   "finishing": "Finishing",
   "formLabel": {
@@ -74,8 +77,10 @@
     "suspenseful": "Suspenseful"
   },
   "negativePrompt": "Negative Prompt",
+  "newChat": "New Chat",
   "none": "None",
   "overlay": "Overlay",
+  "pin": "Pin",
   "placeholder": {
     "characters": "The boy's name is Erin and his dog's name is Ruffy",
     "customStyle": "The story should be quirky and very funny, include a mystery without closure",
@@ -117,9 +122,11 @@
   "submitButtonText": "Submit",
   "text": "Text",
   "textToImage": "Text to Image",
+  "toEnd": "To End",
   "undefined": "Unknown",
   "unpacking": "Unpacking",
   "update": "Update",
   "updateFailed": "Update failed",
-  "updateNow": "Update Now"
+  "updateNow": "Update Now",
+  "user": "User"
 }

@@ -5,6 +5,7 @@
   "app": "应用",
   "art": "艺术",
   "artStyle": "艺术风格",
+  "assistant": "助手",
   "back": "返回",
   "brushSize": "笔刷大小",
   "checkForUpdates": "检查更新",
@@ -12,6 +13,7 @@
   "clickDownloadToStart": "点击“下载”开始！",
   "close": "关闭",
   "color": "颜色",
+  "copy": "复制",
   "createStory": "创建故事",
   "dashboard": "仪表板",
   "delete": "删除",
@@ -22,6 +24,7 @@
   "downloading": "下载中",
   "downloads": "下载",
   "explorer": "资源管理器",
+  "favorite": "固定",
   "finish": "完成",
   "finishing": "完成",
   "formLabel": {
@@ -74,8 +77,10 @@
     "suspenseful": "悬疑"
   },
   "negativePrompt": "负面提示",
+  "newChat": "新聊天",
   "none": "无",
   "overlay": "叠加",
+  "pin": "固定",
   "placeholder": {
     "characters": "男孩的名字是Erin，他的狗的名字是Ruffy",
     "customStyle": "故事应该是古怪且非常有趣的，包括一个没有结局的谜团",
@@ -117,9 +122,11 @@
   "submitButtonText": "提交",
   "text": "文本",
   "textToImage": "文字转图片",
+  "toEnd": "到结尾",
   "undefined": "未知",
   "unpacking": "解压中",
   "update": "更新",
   "updateFailed": "更新失败",
-  "updateNow": "立即更新"
+  "updateNow": "立即更新",
+  "user": "用户"
 }

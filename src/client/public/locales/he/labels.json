@@ -5,6 +5,7 @@
   "app": "אפליקציה",
   "art": "אמנות",
   "artStyle": "סגנון אומנותי",
+  "assistant": "עוזר",
   "back": "חזרה",
   "brushSize": "גודל מברשת",
   "checkForUpdates": "בדוק עדכונים",
@@ -12,6 +13,7 @@
   "clickDownloadToStart": "לחץ על \"הורד\" כדי להתחיל!",
   "close": "סגור",
   "color": "צבע",
+  "copy": "העתק",
   "createStory": "צור סיפור",
   "dashboard": "לוח בקרה",
   "delete": "מחק",
@@ -22,6 +24,7 @@
   "downloading": "מוריד",
   "downloads": "הורדות",
   "explorer": "מציאן",
+  "favorite": "לנעוץ",
   "finish": "לסיים",
   "finishing": "סיום",
   "formLabel": {
@@ -74,8 +77,10 @@
     "suspenseful": "מתח"
   },
   "negativePrompt": "פרומפט שלילי",
+  "newChat": "צ'אט חדש",
   "none": "אף אחד",
   "overlay": "שכבה",
+  "pin": "לנעוץ",
   "placeholder": {
     "characters": "שם הילד הוא ארין ושם הכלב שלו הוא ראפי",
     "customStyle": "הסיפור צריך להיות מוזר ומאוד מצחיק, לכלול מסתורין ללא סגירה",
@@ -117,9 +122,11 @@
   "submitButtonText": "שלח",
   "text": "טקסט",
   "textToImage": "טקסט לתמונה",
+  "toEnd": "לסוף",
   "undefined": "לא ידוע",
   "unpacking": "פותח",
   "update": "עדכון",
   "updateFailed": "עדכון נכשל",
-  "updateNow": "עדכן עכשיו"
+  "updateNow": "עדכן עכשיו",
+  "user": "משתמש"
 }

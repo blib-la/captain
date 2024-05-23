@@ -5,6 +5,7 @@
   "app": "App",
   "art": "Art",
   "artStyle": "Style artistique",
+  "assistant": "Assistant",
   "back": "Retour",
   "brushSize": "Taille Pinceau",
   "checkForUpdates": "Vérifier les mises à jour",
@@ -12,6 +13,7 @@
   "clickDownloadToStart": "Cliquez sur \"Télécharger\" pour commencer !",
   "close": "Fermer",
   "color": "Couleur",
+  "copy": "",
   "createStory": "Créer Histoire",
   "dashboard": "Tableau de bord",
   "delete": "Supprimer",
@@ -22,6 +24,7 @@
   "downloading": "Téléchargement",
   "downloads": "Téléchargements",
   "explorer": "Explorateur",
+  "favorite": "Favori",
   "finish": "Terminer",
   "finishing": "Fin",
   "formLabel": {
@@ -74,8 +77,10 @@
     "suspenseful": "Suspense"
   },
   "negativePrompt": "Prompt Négatif",
+  "newChat": "Nouvelle Discussion",
   "none": "Aucun",
   "overlay": "Superposition",
+  "pin": "Épingler",
   "placeholder": {
     "characters": "Le nom du garçon est Erin et celui de son chien est Ruffy",
     "customStyle": "L'histoire doit être excentrique et très drôle, inclure un mystère sans clôture",
@@ -117,9 +122,11 @@
   "submitButtonText": "Soumettre",
   "text": "Texte",
   "textToImage": "Texte en Image",
+  "toEnd": "À la Fin",
   "undefined": "Inconnu",
   "unpacking": "Déballage",
   "update": "Mettre à jour",
   "updateFailed": "Échec de la mise à jour",
-  "updateNow": "Mettre à jour maintenant"
+  "updateNow": "Mettre à jour maintenant",
+  "user": "Utilisateur"
 }

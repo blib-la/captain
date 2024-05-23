@@ -5,6 +5,7 @@
   "app": "App",
   "art": "Kunst",
   "artStyle": "Kunststijl",
+  "assistant": "Assistent",
   "back": "Terug",
   "brushSize": "Penseelgrootte",
   "checkForUpdates": "Controleren op updates",
@@ -12,6 +13,7 @@
   "clickDownloadToStart": "Klik op \"Downloaden\" om te starten!",
   "close": "Sluiten",
   "color": "Kleur",
+  "copy": "Kopiëren",
   "createStory": "Verhaal Maken",
   "dashboard": "Dashboard",
   "delete": "Verwijderen",
@@ -22,6 +24,7 @@
   "downloading": "Downloaden",
   "downloads": "Downloads",
   "explorer": "Verkenner",
+  "favorite": "Vastpinnen",
   "finish": "Voltooien",
   "finishing": "Afronding",
   "formLabel": {
@@ -74,8 +77,10 @@
     "suspenseful": "Spannend"
   },
   "negativePrompt": "Negatieve Prompt",
+  "newChat": "Nieuwe Chat",
   "none": "Geen",
   "overlay": "Overlay",
+  "pin": "Vastpinnen",
   "placeholder": {
     "characters": "De naam van de jongen is Erin en de naam van zijn hond is Ruffy",
     "customStyle": "Het verhaal moet eigenzinnig en erg grappig zijn, inclusief een mysterie zonder afsluiting",
@@ -117,9 +122,11 @@
   "submitButtonText": "Indienen",
   "text": "Tekst",
   "textToImage": "Tekst naar Afbeelding",
+  "toEnd": "Naar het Einde",
   "undefined": "Onbekend",
   "unpacking": "Uitpakken",
   "update": "Bijwerken",
   "updateFailed": "Update mislukt",
-  "updateNow": "Nu bijwerken"
+  "updateNow": "Nu bijwerken",
+  "user": "Gebruiker"
 }

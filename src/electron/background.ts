@@ -48,6 +48,7 @@ import "@/electron/ipc/sdk/global";
 // listeners.
 import "@/electron/ipc/sdk/comfyui";
 import "@/electron/ipc/sdk/story";
+import "@/electron/ipc/sdk/openai";
 
 // Import install handlers and listeners
 import "@/electron/ipc/install";

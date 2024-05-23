@@ -5,6 +5,7 @@
   "app": "アプリ",
   "art": "アート",
   "artStyle": "アートスタイル",
+  "assistant": "アシスタント",
   "back": "戻る",
   "brushSize": "ブラシサイズ",
   "checkForUpdates": "更新を確認",
@@ -12,6 +13,7 @@
   "clickDownloadToStart": "「ダウンロード」をクリックして開始！",
   "close": "閉じる",
   "color": "色",
+  "copy": "コピー",
   "createStory": "ストーリー作成",
   "dashboard": "ダッシュボード",
   "delete": "削除",
@@ -22,6 +24,7 @@
   "downloading": "ダウンロード中",
   "downloads": "ダウンロード",
   "explorer": "エクスプローラー",
+  "favorite": "ピン留め",
   "finish": "完了",
   "finishing": "完成",
   "formLabel": {
@@ -74,8 +77,10 @@
     "suspenseful": "サスペンス"
   },
   "negativePrompt": "ネガティブプロンプト",
+  "newChat": "新しいチャット",
   "none": "なし",
   "overlay": "オーバーレイ",
+  "pin": "ピン留め",
   "placeholder": {
     "characters": "少年の名前はエリン、彼の犬の名前はラフィです",
     "customStyle": "物語は風変わりでとても面白く、結末のないミステリーを含めるべきです",
@@ -117,9 +122,11 @@
   "submitButtonText": "送信",
   "text": "テキスト",
   "textToImage": "テキストから画像へ",
+  "toEnd": "最後へ",
   "undefined": "不明",
   "unpacking": "解凍中",
   "update": "更新",
   "updateFailed": "更新に失敗しました",
-  "updateNow": "今すぐ更新"
+  "updateNow": "今すぐ更新",
+  "user": "ユーザー"
 }

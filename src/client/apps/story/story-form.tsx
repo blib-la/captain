@@ -75,9 +75,7 @@ export function StoryForm({
 							slotProps={{ startDecorator: { sx: { alignSelf: "flexStart" } } }}
 							sx={{ mb: 2 }}
 						>
-							<Typography>
-								{t("common:pages.dataset.enterKeyToUseGPTVision")}
-							</Typography>
+							<Typography>{t("texts:enterOpenAIAPIKey")}</Typography>
 						</Alert>
 					)}
 					<Typography sx={{ mb: 2 }}>{t("texts:storyFormIntroduction")}</Typography>

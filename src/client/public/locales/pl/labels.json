@@ -5,6 +5,7 @@
   "app": "Aplikacja",
   "art": "Sztuka",
   "artStyle": "Styl artystyczny",
+  "assistant": "Asystent",
   "back": "Wstecz",
   "brushSize": "Rozmiar Pędzla",
   "checkForUpdates": "Sprawdź aktualizacje",
@@ -12,6 +13,7 @@
   "clickDownloadToStart": "Kliknij \"Pobierz\", aby rozpocząć!",
   "close": "Zamknij",
   "color": "Kolor",
+  "copy": "Kopiuj",
   "createStory": "Stwórz Historię",
   "dashboard": "Pulpit",
   "delete": "Usuń",
@@ -22,6 +24,7 @@
   "downloading": "Pobieranie",
   "downloads": "Pobrania",
   "explorer": "Eksplorator",
+  "favorite": "Przypnij",
   "finish": "Zakończyć",
   "finishing": "Zakończenie",
   "formLabel": {
@@ -74,8 +77,10 @@
     "suspenseful": "Pełen napięcia"
   },
   "negativePrompt": "Negatywny Prompt",
+  "newChat": "Nowa rozmowa",
   "none": "Żaden",
   "overlay": "Nakładka",
+  "pin": "Przypnij",
   "placeholder": {
     "characters": "Imię chłopca to Erin, a jego psa to Ruffy",
     "customStyle": "Historia powinna być osobliwa i bardzo zabawna, zawierać tajemnicę bez zakończenia",
@@ -117,9 +122,11 @@
   "submitButtonText": "Prześlij",
   "text": "Tekst",
   "textToImage": "Tekst na Obraz",
+  "toEnd": "Na koniec",
   "undefined": "Nieznany",
   "unpacking": "Rozpakowywanie",
   "update": "Aktualizuj",
   "updateFailed": "Aktualizacja nieudana",
-  "updateNow": "Aktualizuj teraz"
+  "updateNow": "Aktualizuj teraz",
+  "user": "Użytkownik"
 }

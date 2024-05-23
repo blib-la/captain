@@ -265,6 +265,6 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 	);
 }
 
-export const getStaticProps = makeStaticProperties(["common", "labels"]);
+export const getStaticProps = makeStaticProperties(["common", "labels", "texts"]);
 
 export { getStaticPaths } from "@/client/ions/i18n/get-static";

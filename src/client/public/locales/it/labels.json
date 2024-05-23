@@ -5,6 +5,7 @@
   "app": "App",
   "art": "Arte",
   "artStyle": "Stile artistico",
+  "assistant": "Assistente",
   "back": "Indietro",
   "brushSize": "Dimensione Pennello",
   "checkForUpdates": "Verifica aggiornamenti",
@@ -12,6 +13,7 @@
   "clickDownloadToStart": "Clicca su \"Scarica\" per iniziare!",
   "close": "Chiudi",
   "color": "Colore",
+  "copy": "Copia",
   "createStory": "Crea Storia",
   "dashboard": "Cruscotto",
   "delete": "Elimina",
@@ -22,6 +24,7 @@
   "downloading": "Scaricamento",
   "downloads": "Download",
   "explorer": "Esploratore",
+  "favorite": "Pinnare",
   "finish": "Completare",
   "finishing": "Conclusione",
   "formLabel": {
@@ -74,8 +77,10 @@
     "suspenseful": "Suspense"
   },
   "negativePrompt": "Prompt Negativo",
+  "newChat": "Nuova Chat",
   "none": "Nessuno",
   "overlay": "Sovrapposizione",
+  "pin": "Pinnare",
   "placeholder": {
     "characters": "Il nome del ragazzo è Erin e il nome del suo cane è Ruffy",
     "customStyle": "La storia dovrebbe essere eccentrica e molto divertente, includere un mistero senza conclusione",
@@ -117,9 +122,11 @@
   "submitButtonText": "Invia",
   "text": "Testo",
   "textToImage": "Testo in Immagine",
+  "toEnd": "Alla Fine",
   "undefined": "Sconosciuto",
   "unpacking": "Estrazione",
   "update": "Aggiorna",
   "updateFailed": "Aggiornamento fallito",
-  "updateNow": "Aggiorna ora"
+  "updateNow": "Aggiorna ora",
+  "user": "Utente"
 }

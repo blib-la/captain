@@ -10,6 +10,7 @@ import { createElement } from "react";
 
 import { thirdPartyAppsPathAtom } from "@/client/ions/atoms";
 
+const Assistant = dynamic(() => import("@mui/icons-material/Assistant"));
 const Brush = dynamic(() => import("@mui/icons-material/Brush"));
 const DarkMode = dynamic(() => import("@mui/icons-material/DarkMode"));
 const Dashboard = dynamic(() => import("@mui/icons-material/Dashboard"));
@@ -30,6 +31,7 @@ const iconCache: Record<
 	string,
 	ComponentType<DefaultComponentProps<SvgIconTypeMap<object, "svg">>>
 > = {
+	Assistant,
 	Brush,
 	DarkMode,
 	Dashboard,
