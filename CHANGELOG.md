@@ -1,3 +1,10 @@
+# [1.0.0-alpha.88](https://github.com/blib-la/captain/compare/v1.0.0-alpha.87...v1.0.0-alpha.88) (2024-05-24)
+
+
+### Bug Fixes
+
+* seed logic broke with hook extraction ([#318](https://github.com/blib-la/captain/issues/318)) ([24b65e2](https://github.com/blib-la/captain/commit/24b65e2707fde2cbe92b93ff66e24ff12969aa3d))
+
 # [1.0.0-alpha.87](https://github.com/blib-la/captain/compare/v1.0.0-alpha.86...v1.0.0-alpha.87) (2024-05-24)
 
 
