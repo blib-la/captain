@@ -13,7 +13,7 @@ import { isCoreApp, isCoreView } from "@/electron/utils/core";
 import { handleDeepLink } from "@/electron/utils/handle-deep-link";
 import { initPorts } from "@/electron/utils/init-ports";
 import { checkUpdates, listenForUpdates } from "@/electron/utils/update";
-import { initialize, populateFromDocuments, reset } from "@/electron/utils/vector-store";
+import { initialize, populateFromDocuments } from "@/electron/utils/vector-store";
 import {
 	createInstallerWindow,
 	handleCoreAppWindow,
@@ -136,7 +136,6 @@ export async function main() {
 		});
 		// Start the vector store and fill it with data
 		await initialize();
-		await reset();
 		await populateFromDocuments();
 		logger.info(`main(): initialized vector store`);
 
@@ -178,7 +177,6 @@ export async function main() {
 		ipcMain.on(buildKey([ID.APP], { suffix: ":ready" }), async () => {
 			// Start the vector store and fill it with data
 			await initialize();
-			await reset();
 			await populateFromDocuments();
 			logger.info(`main(): initialized vector store`);
 
