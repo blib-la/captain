@@ -126,11 +126,9 @@ export function Hero() {
 			>
 				<SvgCaptain />
 			</div>
-			<h1 className="text-2xl md:text-5xl font-bold">
-				The AI platform that evolves to your needs
-			</h1>
+			<h1 className="text-2xl md:text-5xl font-bold">The AI platform</h1>
 			<h2 className="text-xl md:text-2xl mt-8">
-				Your all-in-one platform to build and use AI apps effortlessly on your own computer
+				Give your computer an <strong>AI Brain</strong>
 			</h2>
 			<div className="mt-8">
 				<Link

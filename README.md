@@ -1,14 +1,10 @@
 <p align="center">
-    <img src="https://github.com/blib-la/captain/assets/1148334/63796c40-34e2-487a-b891-a333ef5a8102" alt="Download Captain" width="300"/>
+    <img src="https://github.com/blib-la/captain/assets/1148334/63796c40-34e2-487a-b891-a333ef5a8102" alt="Download Captain" width="150"/>
 </p>
 
 <h1 align="center">Captain | The AI Platform</h1>
-<p align="center">
-A tool that lets you use AI directly on your computer.
-</p>
-<p align="center">
-    <img src="https://github.com/blib-la/captain/assets/1148334/8d23166e-dc0a-402d-a919-d44013140edc" alt="the global search" />
-</p>
+<h2 align="center">Give your computer an <strong>AI Brain</strong></h2>
+<div align="center"><img src="https://github.com/blib-la/captain/assets/1148334/8d23166e-dc0a-402d-a919-d44013140edc" alt="the global search" /></div>
 
 ---
 
@@ -55,7 +51,7 @@ Captain is a tool that helps you use AI directly on your computer. It is designe
 
 ## Why use Captain?
 
-- **Privacy**: Your data stays on your computer. We don’t see or store your data.
+- **Privacy**: 100% of your data stays on your computer. We don’t see or store any of your data.
 - **Easy to use**: If you can use a computer, you can use Captain. It’s that simple.
 - **Free to start**: Get started for free and explore what you can do with AI.
 
