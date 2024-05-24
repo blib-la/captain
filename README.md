@@ -4,8 +4,7 @@
 
 <h1 align="center">Captain | The AI Platform</h1>
 <p align="center">
-Explore, create, and innovate with Captain, your all-in-one platform to build and use AI
-apps effortlessly on your own computer.
+A tool that lets you use AI directly on your computer.
 </p>
 <p align="center">
     <img src="https://github.com/blib-la/captain/assets/1148334/8d23166e-dc0a-402d-a919-d44013140edc" alt="the global search" />
