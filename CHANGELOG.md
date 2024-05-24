@@ -1,3 +1,10 @@
+# [1.0.0-alpha.85](https://github.com/blib-la/captain/compare/v1.0.0-alpha.84...v1.0.0-alpha.85) (2024-05-24)
+
+
+### Features
+
+* adjust mitral icon ([#306](https://github.com/blib-la/captain/issues/306)) ([516b324](https://github.com/blib-la/captain/commit/516b3240b95d1494a1bda7336563c3b7c1cde63f))
+
 # [1.0.0-alpha.84](https://github.com/blib-la/captain/compare/v1.0.0-alpha.83...v1.0.0-alpha.84) (2024-05-24)
 
 
