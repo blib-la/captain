@@ -266,6 +266,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 			send({ action: "assistant:history", payload: { id: chatId } });
 		} else {
 			setChatId(v4());
+			setChatName("New Chat");
 		}
 	}, [send, chatId]);
 
@@ -325,6 +326,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 							color={color}
 							onClick={() => {
 								setChatId(v4());
+								setChatName("New Chat");
 							}}
 						>
 							<ListItemDecorator>
@@ -434,6 +436,11 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 														action: "assistant:delete",
 														payload: { id: chat.id },
 													});
+
+													if (chat.id === chatId) {
+														setChatId(v4());
+														setChatName("New Chat");
+													}
 												}}
 											>
 												<ListItemDecorator
