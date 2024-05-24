@@ -1,3 +1,10 @@
+# [1.0.0-alpha.89](https://github.com/blib-la/captain/compare/v1.0.0-alpha.88...v1.0.0-alpha.89) (2024-05-24)
+
+
+### Features
+
+* persistent vector store ([#315](https://github.com/blib-la/captain/issues/315)) ([f649fed](https://github.com/blib-la/captain/commit/f649feda08807668e08e4c4b5b1bd54218e38d6a)), closes [#309](https://github.com/blib-la/captain/issues/309)
+
 # [1.0.0-alpha.88](https://github.com/blib-la/captain/compare/v1.0.0-alpha.87...v1.0.0-alpha.88) (2024-05-24)
 
 
