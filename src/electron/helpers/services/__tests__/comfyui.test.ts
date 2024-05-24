@@ -113,6 +113,8 @@ describe("ComfyUI", () => {
 				base_path: "/path/to/downloads",
 				checkpoints: "stable-diffusion/checkpoints",
 				loras: "stable-diffusion/loras",
+				vae: "stable-diffusion/vae",
+				upscalers: "stable-diffusion/upscalers",
 				custom_nodes: "comfyui/custom_nodes",
 			},
 		};

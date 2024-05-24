@@ -1,3 +1,10 @@
+# [1.0.0-alpha.87](https://github.com/blib-la/captain/compare/v1.0.0-alpha.86...v1.0.0-alpha.87) (2024-05-24)
+
+
+### Features
+
+* use SDK for painting apps ([#316](https://github.com/blib-la/captain/issues/316)) ([e90972b](https://github.com/blib-la/captain/commit/e90972bc55ed269624969f98066862954ae77c5f))
+
 # [1.0.0-alpha.86](https://github.com/blib-la/captain/compare/v1.0.0-alpha.85...v1.0.0-alpha.86) (2024-05-24)
 
 
