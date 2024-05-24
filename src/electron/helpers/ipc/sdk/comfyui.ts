@@ -86,7 +86,7 @@ ipcMain.on(
 					try {
 						event.sender.send(channel, {
 							action: "comfyui:update",
-							payload: { data },
+							payload: { data, comfyUITemporaryPath: getComfyUIPath("temp") },
 						});
 					} catch (error) {
 						logError(error, `comfyui:update from: ${appId}`);
@@ -97,7 +97,7 @@ ipcMain.on(
 			}
 
 			case "comfyui:unregisterClient": {
-				logger.info(`ComfyUI received unrregister request from ${appId}`);
+				logger.info(`ComfyUI received unregister request from ${appId}`);
 				// Unregister the client and receive updates from ComfyUI
 				try {
 					ComfyUI.getInstance.unregisterClient(appId);

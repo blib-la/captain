@@ -43,6 +43,16 @@ export const handlers = {
 	readFile(name: string, encoding?: BufferEncoding) {
 		return ipcRenderer.invoke(buildKey([ID.FILE], { suffix: ":read" }), name, encoding);
 	},
+	copyFileWithMetadata(options: {
+		source: string;
+		destination: string;
+		metadata?: { prompt?: string; description?: string; caption?: string };
+	}) {
+		return ipcRenderer.invoke(
+			buildKey([ID.FILE], { suffix: ":copy-image-with-metadata" }),
+			options
+		);
+	},
 	downloadFiles(
 		data: {
 			label: string;
