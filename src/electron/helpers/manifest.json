@@ -41,13 +41,13 @@
     },
     {
       "name": "qdrant",
-      "version": "1.0.0",
+      "version": "1.9.2",
       "sources": [
         {
-          "url": "https://blibla-captain-assets.s3.eu-central-1.amazonaws.com/qdrant-win.7z",
+          "url": "https://github.com/qdrant/qdrant/releases/download/v1.9.2/qdrant-x86_64-pc-windows-msvc.zip",
           "destination": "qdrant",
           "name": "Qdrant",
-          "size": "13.9 MB",
+          "size": "15.9 MB",
           "unzip": true
         }
       ]
