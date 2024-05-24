@@ -37,12 +37,8 @@ apps effortlessly on your own computer.
 </div>
 
 <div align="center">
-  <a href="https://app.codacy.com/gh/blib-la/captain/dashboard?branch=alpha">
-    <img src="https://img.shields.io/codacy/coverage/d8a4f3a79f3f44ce8c3abd94b83fc77a?logo=jest&style=for-the-badge" alt="Codacy coverage"/>
-  </a>
-  <a href="https://app.codacy.com/gh/blib-la/captain/dashboard?branch=alpha">
-    <img src="https://img.shields.io/codacy/grade/d8a4f3a79f3f44ce8c3abd94b83fc77a?logo=codacy&style=for-the-badge" alt="Codacy grade"/>
-  </a>
+  <a href="https://app.codacy.com/gh/blib-la/captain/dashboard?branch=alpha"><img src="https://img.shields.io/codacy/coverage/d8a4f3a79f3f44ce8c3abd94b83fc77a?logo=jest&style=for-the-badge" alt="Codacy coverage"/></a>
+  <a href="https://app.codacy.com/gh/blib-la/captain/dashboard?branch=alpha"><img src="https://img.shields.io/codacy/grade/d8a4f3a79f3f44ce8c3abd94b83fc77a?logo=codacy&style=for-the-badge" alt="Codacy grade"/></a>
 </div>
 
 ---
