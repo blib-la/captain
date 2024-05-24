@@ -13,6 +13,7 @@
     "system": "系统"
   },
   "comingSoon": "即将推出",
+  "commonApiKey": "{{provider}} API密钥",
   "create": "创建",
   "dataset": "数据集",
   "datasetName": "数据集名称",
@@ -51,7 +52,6 @@
   "next": "下一个",
   "noDatasets": "没有数据集",
   "onlyCaptionEmptyItems": "仅空白标题项",
-  "openAiApiKey": "OpenAI API密钥",
   "openFolder": "打开文件夹",
   "pages": {
     "dataset": {
@@ -75,10 +75,10 @@
     "settings": {
       "colorMode": "颜色模式",
       "colorModeDescription": "选择适合您偏好的颜色主题以自定义视觉体验。",
+      "commonApiKeyDescription": "输入您的{{provider}}密钥以启用{{provider}}服务的集成。",
+      "commonSettings": "{{provider}}设置",
       "languageSettings": "语言设置",
       "languageSettingsDescription": "选择您最舒适的语言以定制体验。",
-      "openAiApiKeyDescription": "输入您的OpenAI API密钥以启用OpenAI服务的集成。",
-      "openAiSettings": "OpenAI设置",
       "runPodSettings": "RunPod设置",
       "stableDiffusionCheckpoints": "Stable Diffusion检查点",
       "stableDiffusionCheckpointsDescription": "选择包含您的Stable Diffusion检查点的文件夹。",

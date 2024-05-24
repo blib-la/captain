@@ -13,6 +13,7 @@
     "system": "System"
   },
   "comingSoon": "Coming Soon",
+  "commonApiKey": "{{provider}} API Key",
   "create": "Create",
   "dataset": "Dataset",
   "datasetName": "Dataset Name",
@@ -51,7 +52,6 @@
   "next": "Next",
   "noDatasets": "No Datasets",
   "onlyCaptionEmptyItems": "Only caption empty items",
-  "openAiApiKey": "OpenAI API Key",
   "openFolder": "Open Folder",
   "pages": {
     "dataset": {
@@ -75,10 +75,10 @@
     "settings": {
       "colorMode": "Color Mode",
       "colorModeDescription": "Customize your visual experience by selecting a color theme that suits your preference.",
+      "commonApiKeyDescription": "Enter your {{provider}} API key to enable integration with {{provider}} services.",
+      "commonSettings": "{{provider}} Settings",
       "languageSettings": "Language Settings",
       "languageSettingsDescription": "Tailor your experience by choosing the language you are most comfortable with.",
-      "openAiApiKeyDescription": "Enter your OpenAI API key to enable integration with OpenAI services.",
-      "openAiSettings": "OpenAI Settings",
       "runPodSettings": "RunPod Settings",
       "stableDiffusionCheckpoints": "Stable Diffusion Checkpoints",
       "stableDiffusionCheckpointsDescription": "Select the folder containing your Stable Diffusion checkpoints.",

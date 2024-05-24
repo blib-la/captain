@@ -1,3 +1,10 @@
+import type { AnthropicProvider } from "@ai-sdk/anthropic";
+import { createAnthropic } from "@ai-sdk/anthropic";
+import type { GoogleGenerativeAIProvider } from "@ai-sdk/google";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import type { MistralProvider } from "@ai-sdk/mistral";
+import { createMistral } from "@ai-sdk/mistral";
+import type { OpenAIProvider } from "@ai-sdk/openai";
 import { createOpenAI } from "@ai-sdk/openai";
 import type { SDKMessage } from "@captn/react/types";
 import { APP_MESSAGE_KEY } from "@captn/utils/constants";
@@ -9,10 +16,12 @@ import { v4 } from "uuid";
 
 import { logError } from "@/electron/services/logger";
 import { keyStore } from "@/electron/stores";
+import { buildKey } from "@/shared/build-key";
+import { KEY } from "@/shared/enums";
 import type { ChatModel } from "@/shared/types/openai";
 
-export const openAIStore = new Store<Record<string, ChatModel>>({
-	name: "OPENAI_HISTORY",
+export const assistantStore = new Store<Record<string, ChatModel>>({
+	name: buildKey([KEY.STORE, KEY.ASSISTANT]),
 });
 
 ipcMain.on(
@@ -33,13 +42,13 @@ ipcMain.on(
 			appId: string;
 		}
 	) => {
-		if (!message.action.startsWith("openai:")) {
+		if (!message.action.startsWith("assistant:")) {
 			return;
 		}
 
 		const channel = `${appId}:${APP_MESSAGE_KEY}`;
 		const chatId = message.payload.id;
-		let chat = openAIStore.get(chatId, {
+		let chat = assistantStore.get(chatId, {
 			label: "New Chat",
 			messages: [],
 			model: "gpt-3.5-turbo",
@@ -47,19 +56,19 @@ ipcMain.on(
 
 		switch (message.action) {
 			// Update the data of achat. Allows partial objects
-			case "openai:update": {
+			case "assistant:update": {
 				try {
 					const { update } = message.payload;
 					chat = { ...chat, ...update };
-					openAIStore.set(chatId, chat);
-					const chats = Object.entries(openAIStore.store).map(([id, value]) => ({
+					assistantStore.set(chatId, chat);
+					const chats = Object.entries(assistantStore.store).map(([id, value]) => ({
 						id,
 						label: value.label,
 						pinned: value.pinned,
 						favorite: value.favorite,
 					}));
 					event.sender.send(channel, {
-						action: "openai:chats",
+						action: "assistant:chats",
 						payload: {
 							chats,
 						},
@@ -67,7 +76,7 @@ ipcMain.on(
 				} catch (error) {
 					logError(error);
 					event.sender.send(channel, {
-						action: "openai:error",
+						action: "assistant:error",
 						payload: { error: error instanceof Error ? error.message : String(error) },
 					});
 				}
@@ -76,18 +85,18 @@ ipcMain.on(
 			}
 
 			// Delete a chat from the store
-			case "openai:delete": {
+			case "assistant:delete": {
 				chat = { label: "New Chat", messages: [], model: "gpt-3.5-turbo" };
-				openAIStore.delete(chatId);
+				assistantStore.delete(chatId);
 				try {
-					const chats = Object.entries(openAIStore.store).map(([id, value]) => ({
+					const chats = Object.entries(assistantStore.store).map(([id, value]) => ({
 						id,
 						label: value.label,
 						pinned: value.pinned,
 						favorite: value.favorite,
 					}));
 					event.sender.send(channel, {
-						action: "openai:chats",
+						action: "assistant:chats",
 						payload: {
 							chats,
 						},
@@ -95,7 +104,7 @@ ipcMain.on(
 				} catch (error) {
 					logError(error);
 					event.sender.send(channel, {
-						action: "openai:error",
+						action: "assistant:error",
 						payload: { error: error instanceof Error ? error.message : String(error) },
 					});
 				}
@@ -105,9 +114,9 @@ ipcMain.on(
 
 			// Get the entire history of chats and the currently selected chat
 			// The list of all chats does not include their messages
-			case "openai:history": {
+			case "assistant:history": {
 				event.sender.send(channel, {
-					action: "openai:messages",
+					action: "assistant:messages",
 					payload: {
 						chat: {
 							...chat,
@@ -116,14 +125,14 @@ ipcMain.on(
 					},
 				});
 				try {
-					const chats = Object.entries(openAIStore.store).map(([id, value]) => ({
+					const chats = Object.entries(assistantStore.store).map(([id, value]) => ({
 						id,
 						label: value.label,
 						pinned: value.pinned,
 						favorite: value.favorite,
 					}));
 					event.sender.send(channel, {
-						action: "openai:chats",
+						action: "assistant:chats",
 						payload: {
 							chats,
 						},
@@ -131,7 +140,7 @@ ipcMain.on(
 				} catch (error) {
 					logError(error);
 					event.sender.send(channel, {
-						action: "openai:error",
+						action: "assistant:error",
 						payload: { error: error instanceof Error ? error.message : String(error) },
 					});
 				}
@@ -140,22 +149,59 @@ ipcMain.on(
 			}
 
 			// Send an input and trigger a chat generation
-			case "openai:chat": {
+			case "assistant:chat": {
 				try {
-					const openai = createOpenAI({ apiKey: keyStore.get("openAiApiKey") });
+					let assistant:
+						| OpenAIProvider
+						| AnthropicProvider
+						| GoogleGenerativeAIProvider
+						| MistralProvider;
+
 					const userInput = message.payload.input!;
 					const model = message.payload.model ?? "gpt-3.5-turbo";
+					const [modelPrefix] = model.split("-");
+					switch (modelPrefix) {
+						case "gpt": {
+							assistant = createOpenAI({ apiKey: keyStore.get("openAiApiKey") });
+							break;
+						}
+
+						case "claude": {
+							assistant = createAnthropic({
+								apiKey: keyStore.get("anthropicApiKey"),
+							});
+							break;
+						}
+
+						case "mistral": {
+							assistant = createMistral({
+								apiKey: keyStore.get("mistralApiKey"),
+							});
+							break;
+						}
+
+						case "models/gemini": {
+							assistant = createGoogleGenerativeAI({
+								apiKey: keyStore.get("googleGenerativeAiApiKey"),
+							});
+							break;
+						}
+
+						default: {
+							return;
+						}
+					}
 
 					chat.messages.push({ role: "user" as const, content: userInput });
 					chat.model = model;
-					openAIStore.set(chatId, chat);
+					assistantStore.set(chatId, chat);
 
 					// Only send the last N messages
 					const limit = message.payload.maxHistory ?? 10;
 					const limitedHistory = chat.messages.slice(-limit);
 
 					const result = await streamText({
-						model: openai(model),
+						model: assistant(model),
 						system: `You are a best friend: extremely honest, always helpful, and ready to offer candid advice. You are supportive and trustworthy, but your honesty can make you a bit nagging and annoying from time to time. Despite this, you keep things fun and lively, always maintaining a friendly and straightforward attitude.`,
 						messages: limitedHistory,
 					});
@@ -164,22 +210,22 @@ ipcMain.on(
 					for await (const delta of result.textStream) {
 						fullResponse += delta;
 						event.sender.send(channel, {
-							action: "openai:response",
+							action: "assistant:response",
 							payload: { output: fullResponse, done: false },
 						});
 					}
 
 					chat.messages.push({ role: "assistant", content: fullResponse, model });
-					openAIStore.set(chatId, chat);
+					assistantStore.set(chatId, chat);
 					event.sender.send(channel, {
-						action: "openai:response",
+						action: "assistant:response",
 						payload: { output: fullResponse, done: true, model },
 					});
 				} catch (error) {
 					logError(error);
 
 					event.sender.send(channel, {
-						action: "openai:error",
+						action: "assistant:error",
 						payload: { error: error instanceof Error ? error.message : String(error) },
 					});
 				}

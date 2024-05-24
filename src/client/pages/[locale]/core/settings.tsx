@@ -65,16 +65,22 @@ export function UserPreferences() {
 	);
 }
 
-export function OpenAISettings() {
+export function CommonSettings({
+	provider,
+	providerKey,
+}: {
+	provider: string;
+	providerKey: string;
+}) {
 	const { t } = useTranslation(["common"]);
-	const [openAiApiKey, setOpenAiApiKey] = useState("");
+	const [apiKey, setApiKey] = useState("");
 
 	useEffect(() => {
-		window.ipc.send(buildKey([ID.KEYS], { suffix: ":get-openAiApiKey" }));
+		window.ipc.send(buildKey([ID.KEYS], { suffix: `:get-${providerKey}` }));
 		const unsubscribe = window.ipc.on(
-			buildKey([ID.KEYS], { suffix: ":openAiApiKey" }),
-			(openAiApiKey_: string) => {
-				setOpenAiApiKey(openAiApiKey_);
+			buildKey([ID.KEYS], { suffix: `:${providerKey}` }),
+			(googleGenerativeAiApiKey_: string) => {
+				setApiKey(googleGenerativeAiApiKey_);
 			}
 		);
 		return () => {
@@ -84,34 +90,38 @@ export function OpenAISettings() {
 
 	return (
 		<Card variant="soft">
-			<Typography>{t("common:pages.settings.openAiSettings")}</Typography>
+			<Typography>{t("common:pages.settings.commonSettings", { provider })}</Typography>
 			<CardContent>
 				<List>
 					<ListItem>
 						<ListItemContent>
-							<Typography level="title-sm">{t("common:openAiApiKey")}</Typography>
+							<Typography level="title-sm">
+								{t("common:commonApiKey", { provider })}
+							</Typography>
 							<Typography level="body-sm">
-								{t("common:pages.settings.openAiApiKeyDescription")}
+								{t("common:pages.settings.commonApiKeyDescription", { provider })}
 							</Typography>
 						</ListItemContent>
 						<ListItemDecorator sx={{ width: 288, flexShrink: 0 }}>
 							<PasswordField
 								fullWidth
-								aria-label={t("common:openAiApiKey")}
-								value={openAiApiKey}
+								aria-label={t("common:commonApiKey", { provider })}
+								value={apiKey}
 								slotProps={{
 									input: {
-										"data-captainid": "openai-api-key",
+										"data-captainid": `${provider.toLowerCase()}-api-key`,
 									},
 								}}
 								onBlur={event => {
 									window.ipc.send(
-										buildKey([ID.KEYS], { suffix: ":set-openAiApiKey" }),
+										buildKey([ID.KEYS], {
+											suffix: `:set-${providerKey}`,
+										}),
 										event.target.value
 									);
 								}}
 								onChange={event => {
-									setOpenAiApiKey(event.target.value);
+									setApiKey(event.target.value);
 								}}
 							/>
 						</ListItemDecorator>
@@ -242,8 +252,11 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 				<Container sx={{ py: 2, pb: 8 }}>
 					<Stack spacing={4}>
 						<UserPreferences />
-						<OpenAISettings />
 						<AutoUpdate />
+						<CommonSettings provider="OpenAI" providerKey="openAiApiKey" />
+						<CommonSettings provider="Anthropic" providerKey="anthropicApiKey" />
+						<CommonSettings provider="Mistral" providerKey="mistralApiKey" />
+						<CommonSettings provider="Google" providerKey="googleGenerativeAiApiKey" />
 					</Stack>
 					<Sheet
 						variant="soft"

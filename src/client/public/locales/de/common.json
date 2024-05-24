@@ -13,6 +13,7 @@
     "system": "System"
   },
   "comingSoon": "Demnächst",
+  "commonApiKey": "{{provider}} API-Schlüssel",
   "create": "Erstellen",
   "dataset": "Datensatz",
   "datasetName": "Datensatzname",
@@ -51,7 +52,6 @@
   "next": "Weiter",
   "noDatasets": "Keine Datensätze",
   "onlyCaptionEmptyItems": "Nur Elemente ohne Beschriftung",
-  "openAiApiKey": "OpenAI API-Schlüssel",
   "openFolder": "Ordner öffnen",
   "pages": {
     "dataset": {
@@ -75,10 +75,10 @@
     "settings": {
       "colorMode": "Farbmodus",
       "colorModeDescription": "Passen Sie Ihr visuelles Erlebnis an, indem Sie ein Farbschema auswählen, das Ihren Vorlieben entspricht.",
+      "commonApiKeyDescription": "Geben Sie Ihren {{provider}} API-Schlüssel ein, um die Integration mit {{provider}}-Diensten zu ermöglichen.",
+      "commonSettings": "{{provider}}-Einstellungen",
       "languageSettings": "Spracheinstellungen",
       "languageSettingsDescription": "Passen Sie Ihr Erlebnis an, indem Sie die Sprache auswählen, mit der Sie sich am wohlsten fühlen.",
-      "openAiApiKeyDescription": "Geben Sie Ihren OpenAI API-Schlüssel ein, um die Integration mit OpenAI-Diensten zu ermöglichen.",
-      "openAiSettings": "OpenAI-Einstellungen",
       "runPodSettings": "RunPod-Einstellungen",
       "stableDiffusionCheckpoints": "Stable Diffusion Checkpoints",
       "stableDiffusionCheckpointsDescription": "Wählen Sie den Ordner mit Ihren Stable Diffusion Checkpoints aus.",

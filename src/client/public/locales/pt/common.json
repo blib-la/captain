@@ -13,6 +13,7 @@
     "system": "Sistema"
   },
   "comingSoon": "Em Breve",
+  "commonApiKey": "Chave API {{provider}}",
   "create": "Criar",
   "dataset": "Conjunto de Dados",
   "datasetName": "Nome do Conjunto de Dados",
@@ -51,7 +52,6 @@
   "next": "Próximo",
   "noDatasets": "Sem Conjuntos de Dados",
   "onlyCaptionEmptyItems": "Apenas itens sem legenda",
-  "openAiApiKey": "Chave API OpenAI",
   "openFolder": "Abrir Pasta",
   "pages": {
     "dataset": {
@@ -75,10 +75,10 @@
     "settings": {
       "colorMode": "Modo de Cor",
       "colorModeDescription": "Personalize sua experiência visual selecionando um tema de cor que se adapte à sua preferência.",
+      "commonApiKeyDescription": "Insira sua chave API {{provider}} para habilitar a integração com os serviços {{provider}}.",
+      "commonSettings": "Configurações {{provider}}",
       "languageSettings": "Configurações de Idioma",
       "languageSettingsDescription": "Personalize sua experiência escolhendo o idioma com o qual você se sente mais confortável.",
-      "openAiApiKeyDescription": "Insira sua chave API OpenAI para habilitar a integração com os serviços OpenAI.",
-      "openAiSettings": "Configurações OpenAI",
       "runPodSettings": "Configurações RunPod",
       "stableDiffusionCheckpoints": "Pontos de controle do Stable Diffusion",
       "stableDiffusionCheckpointsDescription": "Selecione a pasta contendo os pontos de controle do Stable Diffusion.",

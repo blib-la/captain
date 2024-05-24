@@ -13,6 +13,7 @@
     "system": "Sistema"
   },
   "comingSoon": "Prossimamente",
+  "commonApiKey": "Chiave API di {{provider}}",
   "create": "Crea",
   "dataset": "Dataset",
   "datasetName": "Nome del Dataset",
@@ -51,7 +52,6 @@
   "next": "Avanti",
   "noDatasets": "Nessun Dataset",
   "onlyCaptionEmptyItems": "Solo elementi senza didascalia",
-  "openAiApiKey": "Chiave API di OpenAI",
   "openFolder": "Apri Cartella",
   "pages": {
     "dataset": {
@@ -75,10 +75,10 @@
     "settings": {
       "colorMode": "Modalità Colore",
       "colorModeDescription": "Personalizza la tua esperienza visiva selezionando un tema di colore che si adatta alle tue preferenze.",
+      "commonApiKeyDescription": "Inserisci la tua chiave API {{provider}} per abilitare l'integrazione con i servizi {{provider}}.",
+      "commonSettings": "Impostazioni {{provider}}",
       "languageSettings": "Impostazioni Lingua",
       "languageSettingsDescription": "Personalizza la tua esperienza scegliendo la lingua con cui ti senti più a tuo agio.",
-      "openAiApiKeyDescription": "Inserisci la tua chiave API OpenAI per abilitare l'integrazione con i servizi OpenAI.",
-      "openAiSettings": "Impostazioni OpenAI",
       "runPodSettings": "Impostazioni RunPod",
       "stableDiffusionCheckpoints": "Checkpoint di Stable Diffusion",
       "stableDiffusionCheckpointsDescription": "Seleziona la cartella contenente i tuoi checkpoint di Stable Diffusion.",

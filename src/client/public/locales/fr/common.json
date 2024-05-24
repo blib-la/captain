@@ -13,6 +13,7 @@
     "system": "Système"
   },
   "comingSoon": "Prochainement",
+  "commonApiKey": "Clé API {{provider}}",
   "create": "Créer",
   "dataset": "Jeu de Données",
   "datasetName": "Nom du Jeu de Données",
@@ -51,7 +52,6 @@
   "next": "Suivant",
   "noDatasets": "Pas de Jeux de Données",
   "onlyCaptionEmptyItems": "Uniquement les éléments sans légende",
-  "openAiApiKey": "Clé API OpenAI",
   "openFolder": "Ouvrir le Dossier",
   "pages": {
     "dataset": {
@@ -75,10 +75,10 @@
     "settings": {
       "colorMode": "Mode Couleur",
       "colorModeDescription": "Personnalisez votre expérience visuelle en sélectionnant un thème de couleur qui correspond à vos préférences.",
+      "commonApiKeyDescription": "Entrez votre clé API {{provider}} pour activer l'intégration avec les services {{provider}}.",
+      "commonSettings": "Paramètres {{provider}}",
       "languageSettings": "Paramètres de Langue",
       "languageSettingsDescription": "Personnalisez votre expérience en choisissant la langue avec laquelle vous êtes le plus à l'aise.",
-      "openAiApiKeyDescription": "Entrez votre clé API OpenAI pour activer l'intégration avec les services OpenAI.",
-      "openAiSettings": "Paramètres OpenAI",
       "runPodSettings": "Paramètres RunPod",
       "stableDiffusionCheckpoints": "Points de contrôle de Stable Diffusion",
       "stableDiffusionCheckpointsDescription": "Sélectionnez le dossier contenant vos points de contrôle de Stable Diffusion.",

@@ -13,6 +13,7 @@
     "system": "מערכת"
   },
   "comingSoon": "בקרוב",
+  "commonApiKey": "מפתח API של {{provider}}",
   "create": "צור",
   "dataset": "מערך נתונים",
   "datasetName": "שם מערך הנתונים",
@@ -51,7 +52,6 @@
   "next": "הבא",
   "noDatasets": "אין מערכי נתונים",
   "onlyCaptionEmptyItems": "רק פריטים ללא כיתוב",
-  "openAiApiKey": "מפתח API של OpenAI",
   "openFolder": "פתח תיקייה",
   "pages": {
     "dataset": {
@@ -75,10 +75,10 @@
     "settings": {
       "colorMode": "מצב צבע",
       "colorModeDescription": "התאם את חוויית הצפייה שלך על ידי בחירת ערכת צבעים המתאימה להעדפות שלך.",
+      "commonApiKeyDescription": "הזן את מפתח ה-API של {{provider}} שלך כדי לאפשר אינטגרציה עם שירותי {{provider}}.",
+      "commonSettings": "הגדרות {{provider}}",
       "languageSettings": "הגדרות שפה",
       "languageSettingsDescription": "התאמת החוויה שלך על ידי בחירת השפה שבה אתה מרגיש הכי בנוח.",
-      "openAiApiKeyDescription": "הזן את מפתח ה-API של OpenAI שלך כדי לאפשר אינטגרציה עם שירותי OpenAI.",
-      "openAiSettings": "הגדרות OpenAI",
       "runPodSettings": "הגדרות RunPod",
       "stableDiffusionCheckpoints": "נקודות בקרה של Stable Diffusion",
       "stableDiffusionCheckpointsDescription": "בחר את התיקייה המכילה את נקודות הבקרה של Stable Diffusion שלך.",
