@@ -15,7 +15,7 @@ import matter from "gray-matter";
 import { PORTS } from "@/electron/constants";
 import { CustomHuggingFaceTransformersEmbeddings } from "@/electron/langchain/custom-hugging-face-transformers-embeddings";
 import { VectorStore } from "@/electron/services/vector-store";
-import { getCaptainDownloads, getDirectory } from "@/electron/utils/path-helpers";
+import { getCaptainData, getCaptainDownloads, getDirectory } from "@/electron/utils/path-helpers";
 import { VECTOR_STORE_COLLECTION } from "@/shared/constants";
 
 export async function initialize() {
@@ -48,8 +48,13 @@ export async function populateFromDocuments() {
 		absolute: true,
 	});
 
+	const appPaths = await globby(["**/captain.md"], {
+		cwd: getCaptainData("apps"),
+		absolute: true,
+	});
+
 	const documents = await Promise.all(
-		[...corePaths].map(async documentPath => {
+		[...corePaths, ...appPaths].map(async documentPath => {
 			const markdownWithFrontmatter = await fsp.readFile(documentPath, "utf8");
 			const { content, data } = matter(markdownWithFrontmatter);
 			return {
