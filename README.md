@@ -4,8 +4,7 @@
 
 <h1 align="center">Captain | The AI Platform</h1>
 <p align="center">
-Explore, create, and innovate with Captain, your all-in-one platform to build and use AI
-apps effortlessly on your own computer.
+A tool that lets you use AI directly on your computer.
 </p>
 <p align="center">
     <img src="https://github.com/blib-la/captain/assets/1148334/8d23166e-dc0a-402d-a919-d44013140edc" alt="the global search" />
@@ -37,12 +36,8 @@ apps effortlessly on your own computer.
 </div>
 
 <div align="center">
-  <a href="https://app.codacy.com/gh/blib-la/captain/dashboard?branch=alpha">
-    <img src="https://img.shields.io/codacy/coverage/d8a4f3a79f3f44ce8c3abd94b83fc77a?logo=jest&style=for-the-badge" alt="Codacy coverage"/>
-  </a>
-  <a href="https://app.codacy.com/gh/blib-la/captain/dashboard?branch=alpha">
-    <img src="https://img.shields.io/codacy/grade/d8a4f3a79f3f44ce8c3abd94b83fc77a?logo=codacy&style=for-the-badge" alt="Codacy grade"/>
-  </a>
+  <a href="https://app.codacy.com/gh/blib-la/captain/dashboard?branch=alpha"><img src="https://img.shields.io/codacy/coverage/d8a4f3a79f3f44ce8c3abd94b83fc77a?logo=jest&style=for-the-badge" alt="Codacy coverage"/></a>
+  <a href="https://app.codacy.com/gh/blib-la/captain/dashboard?branch=alpha"><img src="https://img.shields.io/codacy/grade/d8a4f3a79f3f44ce8c3abd94b83fc77a?logo=codacy&style=for-the-badge" alt="Codacy grade"/></a>
 </div>
 
 ---
