@@ -1,3 +1,10 @@
+# [1.0.0-alpha.84](https://github.com/blib-la/captain/compare/v1.0.0-alpha.83...v1.0.0-alpha.84) (2024-05-24)
+
+
+### Features
+
+* adds more model providers ([#305](https://github.com/blib-la/captain/issues/305)) ([9602be3](https://github.com/blib-la/captain/commit/9602be375baa18aca50578df1ca79b0069328c73))
+
 # [1.0.0-alpha.83](https://github.com/blib-la/captain/compare/v1.0.0-alpha.82...v1.0.0-alpha.83) (2024-05-23)
 
 

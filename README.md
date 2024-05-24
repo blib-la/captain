@@ -14,7 +14,7 @@ A tool that lets you use AI directly on your computer.
 
 <!-- releases -->
 <div align="center">
-  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-alpha.83/Captain-Setup-1.0.0-alpha.83.exe">
+  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-alpha.84/Captain-Setup-1.0.0-alpha.84.exe">
     <img alt="Windows" src="https://img.shields.io/badge/Windows-Download Now-2c2?style=for-the-badge"/>
   </a>
 </div>
