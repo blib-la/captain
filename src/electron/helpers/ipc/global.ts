@@ -251,7 +251,7 @@ ipcMain.handle(
 	}
 );
 
-ipcMain.on(
+ipcMain.handle(
 	buildKey([ID.FILE], { suffix: ":copy-image-with-metadata" }),
 	async (
 		event,
@@ -295,7 +295,7 @@ ipcMain.on(
 
 			try {
 				const vectorStore = VectorStore.getInstance;
-				const operations = await vectorStore.upsert(VECTOR_STORE_COLLECTION, [
+				return await vectorStore.upsert(VECTOR_STORE_COLLECTION, [
 					{
 						content: metadata.description,
 						payload: {
@@ -308,8 +308,6 @@ ipcMain.on(
 						},
 					},
 				]);
-
-				event.sender.send(VECTOR_STORE_SAVED_KEY, operations);
 			} catch (error) {
 				logError(error, "vectorStore.upsert:copy-image-with-metadata");
 			}

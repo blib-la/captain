@@ -129,6 +129,8 @@ export class ComfyUI {
 				base_path: getCaptainDownloads(),
 				checkpoints: "stable-diffusion/checkpoints",
 				loras: "stable-diffusion/loras",
+				vae: "stable-diffusion/vae",
+				upscalers: "stable-diffusion/upscalers",
 				custom_nodes: "comfyui/custom_nodes",
 			},
 		};
@@ -137,6 +139,8 @@ export class ComfyUI {
 
 		createDirectory(getCaptainDownloads(config.captain.checkpoints));
 		createDirectory(getCaptainDownloads(config.captain.loras));
+		createDirectory(getCaptainDownloads(config.captain.vae));
+		createDirectory(getCaptainDownloads(config.captain.upscalers));
 		createDirectory(getCaptainDownloads(config.captain.custom_nodes));
 		createDirectory(getCaptainTemporary("comfyui"));
 		const filePath = getCaptainTemporary("comfyui/model_paths.yaml");

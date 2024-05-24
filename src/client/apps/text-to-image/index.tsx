@@ -1,5 +1,6 @@
+import { useComfyUI, useSeed } from "@captn/react";
 import { useSDK } from "@captn/react/use-sdk";
-import { useUnload } from "@captn/react/use-unload";
+import { randomSeed } from "@captn/utils/number";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
@@ -16,9 +17,9 @@ import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
 import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { imageAtom, selectedLoraAtom } from "./atoms";
+import { selectedLoraAtom } from "./atoms";
 import { allRequiredDownloads, APP_ID } from "./constants";
 import { createWorkflow } from "./create-workflow";
 
@@ -30,8 +31,6 @@ import {
 	SizeSelector,
 } from "@/client/apps/shared/components";
 import { sizes } from "@/client/apps/shared/constants";
-import type { StableDiffusion } from "@/client/apps/shared/hooks";
-import { useInventory } from "@/client/apps/shared/hooks";
 import type { IllustrationStyles } from "@/client/apps/shared/illustration-styles";
 import { illustrationStyles, injectPrompt } from "@/client/apps/shared/illustration-styles";
 import { RenderingArea } from "@/client/apps/shared/rendering-area";
@@ -41,13 +40,7 @@ import {
 	StyledRenderingAreaWrapper,
 	StyledStickyHeader,
 } from "@/client/apps/shared/styled";
-import type { ComfyExecuted, ComfyStatusMessage } from "@/client/apps/shared/types";
 import { SizeIcon, TimerIcon } from "@/client/atoms/icons/custom";
-import { comfyUITemporaryPathAtom } from "@/client/ions/atoms";
-import { useComfyUIPath } from "@/client/ions/hooks/comfyui-path";
-import { buildKey } from "@/shared/build-key";
-import { ID } from "@/shared/enums";
-import { randomSeed } from "@/shared/number";
 
 export function TextToImage() {
 	const { t } = useTranslation(["common", "labels"]);
@@ -58,20 +51,11 @@ export function TextToImage() {
 	const [size, setSize] = useState(sizes[4]);
 	const [cfg, setCfg] = useState(7.5);
 	const [steps, setSteps] = useState(30);
-	const [lastSeed, setLastSeed] = useState(randomSeed());
-	const [seed, setSeed] = useState(-1);
-	const [queueSize, setQueueSize] = useState(0);
-	const [illustrationStyle, setIllustrationStyle] = useState<IllustrationStyles>("bliblaStyle");
-	const [isGenerating, setIsGenerating] = useState(false);
-	const { data } = useInventory<StableDiffusion>("stable-diffusion");
 
-	const loras = data?.loras ?? [];
-	//
-	// const checkpoints = data?.checkpoints ?? [];
+	const [illustrationStyle, setIllustrationStyle] = useState<IllustrationStyles>("bliblaStyle");
 
 	// Global States
-	const [image, setImage] = useAtom(imageAtom);
-	const [comfyUITemporaryPath] = useAtom(comfyUITemporaryPathAtom);
+
 	const [selectedLora, setSelectedLora] = useAtom(selectedLoraAtom);
 
 	// Set the lora and ensure the required backward slashes for windows.
@@ -81,60 +65,25 @@ export function TextToImage() {
 		loraName = selectedLora.replaceAll("/", "\\");
 	}
 
-	const { send } = useSDK<unknown, object>(APP_ID, {
-		onMessage(message) {
-			switch (message.action) {
-				case "comfyui:update": {
-					const { data } = message.payload as {
-						data: ComfyExecuted | ComfyStatusMessage;
-					};
-					if (data.type === "status") {
-						setQueueSize(data.data.status.exec_info.queue_remaining);
-						setIsGenerating(data.data.status.exec_info.queue_remaining > 0);
-					} else if (data.type === "executed") {
-						const { filename, subfolder } = data.data.output.images[0];
-						const temporaryImage =
-							`${comfyUITemporaryPath}/${subfolder}/${filename}`.replaceAll(
-								/\?+/g,
-								"/"
-							);
-						setImage(temporaryImage);
-						window.ipc.send(
-							buildKey([ID.FILE], { suffix: ":copy-image-with-metadata" }),
-							{
-								source: temporaryImage,
-								destination: `images/${filename}`,
-								metadata: { description: prompt },
-							}
-						);
-					}
-
-					break;
-				}
-
-				default: {
-					break;
-				}
-			}
-		},
-	});
-
-	useUnload(APP_ID, "comfyui:unregisterClient", {});
-
-	useEffect(() => {
-		send({
-			action: "comfyui:registerClient",
-			payload: {},
-		});
-		return () => {
-			send({
-				action: "comfyui:unregisterClient",
-				payload: {},
+	const { copyFileWithMetadata } = useSDK<unknown, object>(APP_ID, {});
+	const { seed, lastSeed, cacheSeed, getSeed } = useSeed(-1);
+	const {
+		models: { loras },
+		image,
+		generate,
+		isGenerating,
+		queueSize,
+	} = useComfyUI(APP_ID, async (temporaryImage, { filename }) => {
+		try {
+			await copyFileWithMetadata({
+				source: temporaryImage,
+				destination: `images/${filename}`,
+				metadata: { description: prompt },
 			});
-		};
-	}, [send]);
-
-	useComfyUIPath();
+		} catch (error) {
+			console.log(error);
+		}
+	});
 
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
@@ -152,40 +101,33 @@ export function TextToImage() {
 							}}
 						>
 							<Button
-								//
-								// disabled={isGenerating}
 								color={size.color}
 								startDecorator={
 									isGenerating ? <CircularProgress /> : <PlayArrowIcon />
 								}
 								onClick={() => {
-									setIsGenerating(true);
-
 									// The seed needs to be stored, so we can allow using the last random seed.
 									const usedSeed = seed < 0 ? randomSeed() : seed;
-									setLastSeed(usedSeed);
+									cacheSeed(usedSeed);
 
-									send({
-										action: "comfyui:queue",
-										payload: {
-											workflow: createWorkflow({
-												height: size.height,
-												width: size.width,
-												cfg,
-												steps,
-												prompt: injectPrompt(
-													prompt,
-													illustrationStyles[illustrationStyle].positive
-												),
-												negativePrompt: injectPrompt(
-													negativePrompt,
-													illustrationStyles[illustrationStyle].negative
-												),
-												seed: usedSeed,
-												loraName,
-											}),
-										},
-									});
+									generate(
+										createWorkflow({
+											height: size.height,
+											width: size.width,
+											cfg,
+											steps,
+											prompt: injectPrompt(
+												prompt,
+												illustrationStyles[illustrationStyle].positive
+											),
+											negativePrompt: injectPrompt(
+												negativePrompt,
+												illustrationStyles[illustrationStyle].negative
+											),
+											seed: usedSeed,
+											loraName,
+										})
+									);
 								}}
 							>
 								{t("labels:generate")}{" "}
@@ -222,7 +164,7 @@ export function TextToImage() {
 						fixedLabel={t("labels:setFixedSeed")}
 						randomLabel={t("labels:setRandomSeed")}
 						onChange={seed_ => {
-							setSeed(seed_);
+							getSeed(seed_);
 						}}
 					/>
 					<Box sx={{ pr: 2 }} />

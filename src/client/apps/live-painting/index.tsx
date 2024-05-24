@@ -58,10 +58,6 @@ import type {
 	ComfyStatusMessage,
 } from "@/client/apps/shared/types";
 import { TimerIcon } from "@/client/atoms/icons/custom";
-import { comfyUITemporaryPathAtom } from "@/client/ions/atoms";
-import { useComfyUIPath } from "@/client/ions/hooks/comfyui-path";
-import { buildKey } from "@/shared/build-key";
-import { ID } from "@/shared/enums";
 import { randomSeed } from "@/shared/number";
 
 export function SaveButton({
@@ -80,7 +76,7 @@ export function SaveButton({
 
 	const saveImage = useCallback(async () => {
 		if (fileName && image) {
-			window.ipc.send(buildKey([ID.FILE], { suffix: ":copy-image-with-metadata" }), {
+			window.ipc.copyFileWithMetadata({
 				source: image,
 				destination: `images/${fileName}`,
 				metadata: { description: prompt },
@@ -146,15 +142,15 @@ export function LivePainting() {
 	const [image, setImage] = useAtom(imageAtom);
 	const [, setClearCounter] = useAtom(clearCounterAtom);
 	const receivedReference = useRef(false);
-	const [comfyUITemporaryPath] = useAtom(comfyUITemporaryPathAtom);
 	const [selectedCheckpoint, setSelectedCheckpoint] = useAtom(selectedCheckpointAtom);
 
 	const { send } = useSDK<unknown, unknown>(APP_ID, {
 		onMessage(message) {
 			switch (message.action) {
 				case "comfyui:update": {
-					const { data } = message.payload as {
+					const { data, comfyUITemporaryPath } = message.payload as {
 						data: ComfyExecuted | ComfyExecuting | ComfyCached | ComfyStatusMessage;
+						comfyUITemporaryPath: string;
 					};
 					switch (data.type) {
 						case "status": {
@@ -263,12 +259,6 @@ export function LivePainting() {
 			cancelAnimationFrame(animationFrame);
 		};
 	}, [selectedCheckpoint, illustrationStyle, prompt, seed, send, started, cfg, steps]);
-
-	useComfyUIPath();
-
-	useEffect(() => {
-		console.log({ selectedCheckpoint });
-	}, [selectedCheckpoint]);
 
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}>
