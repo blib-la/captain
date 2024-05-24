@@ -221,6 +221,18 @@ ipcMain.on(
 						action: "assistant:response",
 						payload: { output: fullResponse, done: true, model },
 					});
+					const chats = Object.entries(assistantStore.store).map(([id, value]) => ({
+						id,
+						label: value.label,
+						pinned: value.pinned,
+						favorite: value.favorite,
+					}));
+					event.sender.send(channel, {
+						action: "assistant:chats",
+						payload: {
+							chats,
+						},
+					});
 				} catch (error) {
 					logError(error);
 
