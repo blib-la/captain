@@ -1,6 +1,5 @@
 import { useComfyUI, useSeed } from "@captn/react";
 import { useSDK } from "@captn/react/use-sdk";
-import { randomSeed } from "@captn/utils/number";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
@@ -66,7 +65,7 @@ export function TextToImage() {
 	}
 
 	const { copyFileWithMetadata } = useSDK<unknown, object>(APP_ID, {});
-	const { seed, lastSeed, cacheSeed, getSeed } = useSeed(-1);
+	const { seed, lastSeed, cacheSeed, getNewSeed, setSeed } = useSeed(-1);
 	const {
 		models: { loras },
 		image,
@@ -107,7 +106,7 @@ export function TextToImage() {
 								}
 								onClick={() => {
 									// The seed needs to be stored, so we can allow using the last random seed.
-									const usedSeed = seed < 0 ? randomSeed() : seed;
+									const usedSeed = getNewSeed(seed);
 									cacheSeed(usedSeed);
 
 									generate(
@@ -164,7 +163,7 @@ export function TextToImage() {
 						fixedLabel={t("labels:setFixedSeed")}
 						randomLabel={t("labels:setRandomSeed")}
 						onChange={seed_ => {
-							getSeed(seed_);
+							setSeed(seed_);
 						}}
 					/>
 					<Box sx={{ pr: 2 }} />
