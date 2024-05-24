@@ -1,3 +1,10 @@
+# [1.0.0-alpha.86](https://github.com/blib-la/captain/compare/v1.0.0-alpha.85...v1.0.0-alpha.86) (2024-05-24)
+
+
+### Bug Fixes
+
+* open new chat after selected is deleted ([#307](https://github.com/blib-la/captain/issues/307)) ([ff226da](https://github.com/blib-la/captain/commit/ff226daba0b81115f41a9a3bacf5f4634f451bd8))
+
 # [1.0.0-alpha.85](https://github.com/blib-la/captain/compare/v1.0.0-alpha.84...v1.0.0-alpha.85) (2024-05-24)
 
 
