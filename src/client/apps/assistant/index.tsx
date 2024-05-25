@@ -548,6 +548,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 							name={chatName}
 							color="neutral"
 							onUpdate={label => {
+								setChatName(label);
 								send({
 									action: "assistant:update",
 									payload: {
