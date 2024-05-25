@@ -98,6 +98,7 @@ export function ChatName({
 }) {
 	const [currentName, setCurrentName] = useState(name);
 	useEffect(() => {
+		console.log({ name });
 		setCurrentName(name);
 	}, [name]);
 	return (
@@ -265,8 +266,8 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 		if (chatId) {
 			send({ action: "assistant:history", payload: { id: chatId } });
 		} else {
-			setChatId(v4());
 			setChatName("New Chat");
+			setChatId(v4());
 		}
 	}, [send, chatId]);
 
@@ -325,8 +326,8 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 						<ListItemButton
 							color={color}
 							onClick={() => {
-								setChatId(v4());
 								setChatName("New Chat");
+								setChatId(v4());
 							}}
 						>
 							<ListItemDecorator>
@@ -438,8 +439,8 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 													});
 
 													if (chat.id === chatId) {
-														setChatId(v4());
 														setChatName("New Chat");
+														setChatId(v4());
 													}
 												}}
 											>

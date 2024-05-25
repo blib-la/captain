@@ -1,3 +1,4 @@
+import { localFile } from "@captn/utils/string";
 import CopyAllIcon from "@mui/icons-material/CopyAll";
 import Box from "@mui/joy/Box";
 import Chip from "@mui/joy/Chip";
@@ -131,12 +132,56 @@ export const components: Partial<Components> = {
 			</code>
 		);
 	},
+	img({ src, alt }: { src?: string; alt?: string }) {
+		if (!src) {
+			return null;
+		}
+
+		return (
+			<Sheet
+				component="figure"
+				sx={{
+					display: "flex",
+					flexDirection: "column",
+					alignItems: "center",
+					p: 0,
+					mx: 0,
+					my: 0.5,
+				}}
+			>
+				<Box
+					component="img"
+					src={src}
+					alt={alt}
+					sx={{
+						my: 1,
+						width: { xs: "100%", md: "50%" },
+						maxWidth: 512,
+						height: "auto",
+					}}
+				/>
+				<Typography level="body-xs" component="figcaption">
+					{alt}
+				</Typography>
+			</Sheet>
+		);
+	},
 };
 
 export function Markdown({ markdown }: { markdown: string }) {
 	return (
 		<Box sx={{ "*": { userSelect: "text" } }}>
-			<ReactMarkdown components={components} remarkPlugins={[remarkGemoji]}>
+			<ReactMarkdown
+				components={components}
+				remarkPlugins={[remarkGemoji]}
+				urlTransform={url => {
+					if (url.startsWith("http")) {
+						return url;
+					}
+
+					return localFile(url);
+				}}
+			>
 				{markdown}
 			</ReactMarkdown>
 		</Box>

@@ -11,12 +11,15 @@ import { APP_MESSAGE_KEY } from "@captn/utils/constants";
 import { streamText } from "ai";
 import { ipcMain, type IpcMainEvent } from "electron";
 import Store from "electron-store";
+import exifr from "exifr";
 import type { Except } from "type-fest";
 import { v4 } from "uuid";
 
 import { logError } from "@/electron/services/logger";
+import { VectorStore } from "@/electron/services/vector-store";
 import { keyStore } from "@/electron/stores";
 import { buildKey } from "@/shared/build-key";
+import { VECTOR_STORE_COLLECTION } from "@/shared/constants";
 import { KEY } from "@/shared/enums";
 import type { ChatModel } from "@/shared/types/openai";
 
@@ -199,10 +202,41 @@ ipcMain.on(
 					// Only send the last N messages
 					const limit = message.payload.maxHistory ?? 10;
 					const limitedHistory = chat.messages.slice(-limit);
+					const lastMessage = { ...limitedHistory.at(-1)! };
+					limitedHistory[limitedHistory.length - 1] = lastMessage;
+					const vectorStore = VectorStore.getInstance;
 
+					const response = await vectorStore.search(
+						VECTOR_STORE_COLLECTION,
+						lastMessage.content as string,
+						{ limit: 10, score_threshold: 0.4, with_payload: true, with_vector: true }
+					);
+					const context = await Promise.all(
+						response.map(async entry => {
+							if (entry.payload!.fileType === "png") {
+								try {
+									const exif = await exifr.parse(
+										entry.payload!.filePath as string
+									);
+									const info = exif.Caption || exif.Prompt || exif.Description;
+									return {
+										filePath: entry.payload!.filePath as string,
+										info,
+									};
+								} catch {
+									// Use native log here as this is only useful while developing
+									console.log("No image data found");
+								}
+							} else {
+								return entry.payload;
+							}
+						})
+					);
+					console.log(context);
+					lastMessage.content = `Context: ${JSON.stringify(context)}\n${lastMessage.content}`;
 					const result = await streamText({
 						model: assistant(model),
-						system: `You are a best friend: extremely honest, always helpful, and ready to offer candid advice. You are supportive and trustworthy, but your honesty can make you a bit nagging and annoying from time to time. Despite this, you keep things fun and lively, always maintaining a friendly and straightforward attitude.`,
+						system: `You are a helpful assistant and answer based on the given context If the context includes images, you answer with image tags so that they can be rendered. like so ![alt value](path/to/image). If asked to write a story about  them, you inline the images within the story, so that they underline the story. You select only one or two images, the ones,  that best fit the storyline.`,
 						messages: limitedHistory,
 					});
 
