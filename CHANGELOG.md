@@ -1,3 +1,10 @@
+# [1.0.0-alpha.90](https://github.com/blib-la/captain/compare/v1.0.0-alpha.89...v1.0.0-alpha.90) (2024-05-25)
+
+
+### Bug Fixes
+
+* chat name does not update or reset ([#319](https://github.com/blib-la/captain/issues/319)) ([b4cb205](https://github.com/blib-la/captain/commit/b4cb205cdddbe2d5cef16dd39e7f2fc04843dfcb))
+
 # [1.0.0-alpha.89](https://github.com/blib-la/captain/compare/v1.0.0-alpha.88...v1.0.0-alpha.89) (2024-05-24)
 
 
