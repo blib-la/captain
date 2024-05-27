@@ -14,7 +14,7 @@ insert_final_newline = true
 trim_trailing_whitespace = false
 
 
-[{*.json,*.md,*.yml,.*rc,.*config,*.feature,*.prisma}]
+[{*.json,*.md,*.yml,.*rc,.*config,*.feature,*.prisma,*.py}]
 indent_style = space
 
 [{*.json,*.yml,.*rc,.*config,*.feature,*.prisma}]

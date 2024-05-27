@@ -1,7 +1,11 @@
+import { localFile } from "@captn/utils/string";
 import CopyAllIcon from "@mui/icons-material/CopyAll";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Box from "@mui/joy/Box";
 import Chip from "@mui/joy/Chip";
 import IconButton from "@mui/joy/IconButton";
+import type { LinkProps } from "@mui/joy/Link";
+import JoyLink from "@mui/joy/Link";
 import Sheet from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
 import { useTranslation } from "next-i18next";
@@ -11,8 +15,20 @@ import ReactMarkdown from "react-markdown";
 import type { SyntaxHighlighterProps } from "react-syntax-highlighter";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialOceanic } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import rehypeFormat from "rehype-format";
+import rehypeRaw from "rehype-raw";
+import rehypeStringify from "rehype-stringify";
+import remarkBreaks from "remark-breaks";
 import remarkGemoji from "remark-gemoji";
+import remarkGfm from "remark-gfm";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
 import type { Except } from "type-fest";
+import { v4 } from "uuid";
+
+import { handleCaptainAction } from "@/client/ions/handlers/action";
+import { LOCAL_PROTOCOL } from "@/shared/constants";
+
 interface ComponentProperties {
 	children?: ReactNode;
 }
@@ -102,7 +118,7 @@ export const components: Partial<Components> = {
 		</Typography>
 	),
 	p: ({ children }: ComponentProperties) => (
-		<Typography component="p" my={1}>
+		<Typography component="div" my={1}>
 			{children}
 		</Typography>
 	),
@@ -115,7 +131,49 @@ export const components: Partial<Components> = {
 			{children}
 		</Typography>
 	),
-	li: ({ children }: ComponentProperties) => <Typography component="li">{children}</Typography>,
+	ol: ({ children }: ComponentProperties) => (
+		<Typography component="ol" my={1} sx={{ display: "block" }}>
+			{children}
+		</Typography>
+	),
+	li: ({ children }: ComponentProperties) => (
+		<Typography component="li" sx={{ display: "list-item" }}>
+			{children}
+		</Typography>
+	),
+	a({ children, href, node: _node, ...properties }) {
+		return href ? (
+			<JoyLink
+				{...(properties as LinkProps)}
+				href={href}
+				onClick={event => {
+					event.preventDefault();
+					handleCaptainAction(
+						{
+							score: 1,
+							payload: {
+								id: "preview",
+								language: "en",
+								type: "app",
+								label: "Preview",
+								creatorID: "Blibla",
+								content: "",
+							},
+						},
+						{
+							id: v4(),
+							fileType: "story",
+							filePath: href.replace(`${LOCAL_PROTOCOL}://`, ""),
+						}
+					);
+				}}
+			>
+				{children}
+			</JoyLink>
+		) : (
+			<Typography>{children}</Typography>
+		);
+	},
 	code(properties) {
 		const { children, className, node: _node, ...rest } = properties;
 		const match = /language-(\w+)/.exec(className || "");
@@ -131,14 +189,110 @@ export const components: Partial<Components> = {
 			</code>
 		);
 	},
+	img({ src, alt }: { src?: string; alt?: string }) {
+		if (!src) {
+			return null;
+		}
+
+		return (
+			<Sheet
+				component="figure"
+				sx={{
+					display: "flex",
+					flexDirection: "column",
+					alignItems: "center",
+					p: 0,
+					ml: 0,
+					mr: 1,
+					my: 0.5,
+				}}
+			>
+				<Box>
+					<Box
+						sx={{
+							display: "flex",
+							gap: 1,
+							position: "absolute",
+							top: 0,
+							right: 0,
+							margin: 0.5,
+						}}
+					>
+						<IconButton
+							variant="plain"
+							color="neutral"
+							onClick={event => {
+								event.preventDefault();
+								handleCaptainAction(
+									{
+										score: 1,
+										payload: {
+											id: "preview",
+											language: "en",
+											type: "app",
+											label: "Preview",
+											creatorID: "Blibla",
+											content: "",
+										},
+									},
+									{
+										id: v4(),
+										fileType: "image",
+										filePath: src.replace(`${LOCAL_PROTOCOL}://`, ""),
+									}
+								);
+							}}
+						>
+							<OpenInNewIcon />
+						</IconButton>
+					</Box>
+					<Box
+						component="img"
+						src={src}
+						alt={alt}
+						sx={{
+							my: 1,
+							mx: "auto",
+							width: "100%",
+							height: "auto",
+							maxWidth: 512,
+						}}
+					/>
+				</Box>
+				<Typography level="body-xs" component="figcaption">
+					{alt}
+				</Typography>
+			</Sheet>
+		);
+	},
 };
 
 export function Markdown({ markdown }: { markdown: string }) {
 	return (
 		<Box sx={{ "*": { userSelect: "text" } }}>
-			<ReactMarkdown components={components} remarkPlugins={[remarkGemoji]}>
+			<ReactMarkdown
+				components={components}
+				remarkPlugins={[
+					remarkParse,
+					remarkBreaks,
+					remarkGfm,
+					remarkGemoji,
+					[remarkRehype, { allowDangerousHtml: true }],
+					rehypeRaw,
+					rehypeFormat,
+					rehypeStringify,
+				]}
+				urlTransform={url => {
+					if (url.startsWith("http")) {
+						return url;
+					}
+
+					return localFile(url);
+				}}
+			>
 				{markdown}
 			</ReactMarkdown>
+			<Box sx={{ clear: "both" }} />
 		</Box>
 	);
 }

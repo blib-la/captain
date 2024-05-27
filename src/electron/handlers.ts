@@ -1,3 +1,4 @@
+import type { ComfyUIFileMetaData } from "@captn/utils";
 import type { IpcRendererEvent } from "electron";
 import { ipcRenderer } from "electron";
 
@@ -46,7 +47,7 @@ export const handlers = {
 	copyFileWithMetadata(options: {
 		source: string;
 		destination: string;
-		metadata?: { prompt?: string; description?: string; caption?: string };
+		metadata?: ComfyUIFileMetaData;
 	}) {
 		return ipcRenderer.invoke(
 			buildKey([ID.FILE], { suffix: ":copy-image-with-metadata" }),

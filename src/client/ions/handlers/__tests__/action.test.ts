@@ -29,6 +29,7 @@ describe("handleCaptainAction", () => {
 				action: "function",
 				label: "Test Function",
 				type: "test",
+				content: "",
 			},
 		};
 
@@ -53,6 +54,7 @@ describe("handleCaptainAction", () => {
 				action: "open",
 				label: "Test App",
 				type: "test",
+				content: "",
 			},
 		};
 

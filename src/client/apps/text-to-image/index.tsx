@@ -1,5 +1,6 @@
-import { useComfyUI, useSeed } from "@captn/react";
+import { useComfyUI } from "@captn/react/use-comfyui";
 import { useSDK } from "@captn/react/use-sdk";
+import { useSeed } from "@captn/react/use-seed";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
@@ -72,14 +73,21 @@ export function TextToImage() {
 		generate,
 		isGenerating,
 		queueSize,
-	} = useComfyUI(APP_ID, async (temporaryImage, { filename }) => {
+	} = useComfyUI(APP_ID, async (temporaryImage, { filename, workflow }) => {
 		try {
+			const positivePrompt = workflow.prompt.inputs.text as string;
+			const negativePrompt = workflow.negativePrompt.inputs.text as string;
 			await copyFileWithMetadata({
 				source: temporaryImage,
 				destination: `images/${filename}`,
-				metadata: { description: prompt },
+				metadata: {
+					negativePrompt,
+					positivePrompt,
+					prompt: JSON.stringify(workflow),
+				},
 			});
 		} catch (error) {
+			// TODO introduce better error handling
 			console.log(error);
 		}
 	});
@@ -247,7 +255,7 @@ export function TextToImage() {
 							},
 						}}
 					>
-						<RenderingArea zoomImage image={image} />
+						{image && <RenderingArea zoomImage image={image} />}
 					</StyledRenderingAreaWrapper>
 				</Sheet>
 				{/* The prompt to be used for generations (includes a selector for illustration styles for convenience) */}

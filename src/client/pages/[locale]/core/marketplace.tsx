@@ -105,7 +105,6 @@ function ItemCard({ payload }: { payload: MarketplacePayload }) {
 			setRequiresRestart(true);
 		}
 	}, [isCompleted, mayRequireRestart, setRequiresRestart]);
-	console.log(payload);
 
 	return (
 		<Card variant="soft">

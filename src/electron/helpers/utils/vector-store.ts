@@ -70,6 +70,7 @@ export async function populateFromDocuments() {
 					function: data.function,
 					icon: data.icon,
 					iconColor: data.iconColor,
+					content,
 				},
 			};
 		})

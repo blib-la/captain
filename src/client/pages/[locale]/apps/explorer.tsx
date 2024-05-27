@@ -212,6 +212,7 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 																			type: "app",
 																			label: "Preview",
 																			creatorID: "Blibla",
+																			content: "",
 																		},
 																	},
 																	{
