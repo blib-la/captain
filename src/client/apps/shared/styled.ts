@@ -18,7 +18,8 @@ export const StyledRenderingAreaWrapper = styled("div")(({ theme }) => ({
 	display: "flex",
 	alignItems: "center",
 	justifyContent: "center",
-	padding: theme.spacing(1),
+	//
+	// padding: theme.spacing(1),
 }));
 
 export const StyledDrawingAreaWrapper = styled("div")(({ theme }) => ({

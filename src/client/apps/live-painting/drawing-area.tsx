@@ -97,7 +97,7 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 				canvasRenderCacheReference.current = canvasRenderReference.current;
 				timeoutId = window.setTimeout(() => {
 					send({
-						action: "comfyui:upload-image",
+						action: "comfyui:uploadImage",
 						payload: { dataURL: canvasRenderReference.current },
 					});
 					timeoutId = null;
@@ -147,7 +147,7 @@ export function DrawingArea({ isOverlay }: { isOverlay?: boolean }) {
 			context.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
 			context.current.fillRect(0, 0, canvas.current.width, canvas.current.height);
 			send({
-				action: "comfyui:upload-image",
+				action: "comfyui:uploadImage",
 				payload: { dataURL: canvas.current.toDataURL() },
 			});
 		}

@@ -4,6 +4,7 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import AssistantIcon from "@mui/icons-material/Assistant";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import FindInPageIcon from "@mui/icons-material/FindInPage";
 import GoogleIcon from "@mui/icons-material/Google";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PersonIcon from "@mui/icons-material/Person";
@@ -28,22 +29,25 @@ import Select from "@mui/joy/Select";
 import Sheet from "@mui/joy/Sheet";
 import Snackbar from "@mui/joy/Snackbar";
 import type { ColorPaletteProp } from "@mui/joy/styles";
+import Switch from "@mui/joy/Switch";
 import Textarea from "@mui/joy/Textarea";
 import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
 import { useTranslation } from "next-i18next";
-import type { ReactNode } from "react";
+import type { ChangeEvent as ReactChangeEvent, ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 import type { Except } from "type-fest";
 import { v4 } from "uuid";
 
 import { APP_ID } from "./constants";
 
+import { PopupButton } from "@/client/apps/shared/components";
 import { Markdown } from "@/client/apps/shared/markdown";
 import AnthropicIcon from "@/client/atoms/icons/anthropic";
 import ChatGPTIcon from "@/client/atoms/icons/chat-gpt";
 import MistralIcon from "@/client/atoms/icons/mistral";
-import type { ChatModel } from "@/shared/types/openai";
+import { availableDataTypes } from "@/shared/assistant";
+import type { ChatModel } from "@/shared/types/assistant";
 
 interface MessageModel {
 	id: string;
@@ -98,7 +102,6 @@ export function ChatName({
 }) {
 	const [currentName, setCurrentName] = useState(name);
 	useEffect(() => {
-		console.log({ name });
 		setCurrentName(name);
 	}, [name]);
 	return (
@@ -134,6 +137,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 	const [chats, setChats] = useState<(Except<ChatModel, "messages"> & { id: string })[]>([]);
 	const [isWarningOpen, setIsWarningOpen] = useState(false);
 	const [showScrollToBottom, setShowScrollToBottom] = useState(false);
+	const [dataTypes, setDataTypes] = useState(availableDataTypes);
 
 	const firstRunReference = useRef(true);
 	const scrollContainerReference = useRef<HTMLDivElement | null>(null);
@@ -212,6 +216,15 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 					};
 					firstRunReference.current = true;
 					setMessages(chat.messages);
+					setDataTypes(
+						availableDataTypes.map(dataType => {
+							const chatDataTypes = chat.dataTypes ?? [];
+							const overwrite = chatDataTypes.find(
+								dataType_ => dataType_.id === dataType.id
+							);
+							return overwrite ?? dataType;
+						})
+					);
 					setModel(chat.model);
 					setChatName(chat.label);
 
@@ -276,11 +289,8 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 			return;
 		}
 
-		console.log("checking", apiKeyGetter);
-
 		window.ipc.send(apiKeyGetter);
 		const unsubscribe = window.ipc.on(apiKeyGetter, (hasKey: boolean) => {
-			console.log("checked", apiKeyGetter, hasKey);
 			setIsWarningOpen(!hasKey);
 		});
 		return () => {
@@ -559,6 +569,43 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 								});
 							}}
 						/>
+						<PopupButton label={t("labels:dataUsage")} icon={<FindInPageIcon />}>
+							<List sx={{ minWidth: 200 }}>
+								{dataTypes.map(dataType => (
+									<ListItem key={dataType.id}>
+										<ListItemButton
+											tabIndex={-1}
+											component="label"
+											selected={dataType.active}
+										>
+											<ListItemDecorator>
+												<Switch
+													checked={dataType.active}
+													onChange={(
+														event: ReactChangeEvent<HTMLInputElement>
+													) => {
+														setDataTypes(previousState =>
+															previousState.map(dataType_ =>
+																dataType_.id === dataType.id
+																	? {
+																			...dataType_,
+																			active: event.target
+																				.checked,
+																		}
+																	: dataType_
+															)
+														);
+													}}
+												/>
+											</ListItemDecorator>
+											<ListItemContent>
+												{t(`labels:${dataType.type}`)}
+											</ListItemContent>
+										</ListItemButton>
+									</ListItem>
+								))}
+							</List>
+						</PopupButton>
 					</Box>
 				</Sheet>
 				<Box
@@ -729,6 +776,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 											id: chatId,
 											model,
 											maxHistory: 10,
+											dataTypes,
 										},
 									});
 								}}
@@ -740,7 +788,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 							setInput(event.target.value);
 						}}
 						onKeyDown={event => {
-							if (event.key === "Enter" && !event.shiftKey) {
+							if (event.key === "Enter" && !event.shiftKey && !isGenerating) {
 								event.preventDefault();
 								setIsGenerating(true);
 								setInput("");
@@ -755,6 +803,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 										id: chatId,
 										model,
 										maxHistory: 10,
+										dataTypes,
 									},
 								});
 							}

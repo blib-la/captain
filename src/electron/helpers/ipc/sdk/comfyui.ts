@@ -49,7 +49,7 @@ ipcMain.on(
 					try {
 						event.sender.send(channel, {
 							action: "comfyui:promptId",
-							payload: { promptId: response.promptId },
+							payload: { promptId: response.promptId, workflow },
 						});
 					} catch (error) {
 						logError(error, "comfyui:promptId");
@@ -73,6 +73,7 @@ ipcMain.on(
 						payload: { wasFreed },
 					});
 				} catch (error) {
+					// TODO introduce better error handling
 					console.log(error);
 				}
 
@@ -109,7 +110,7 @@ ipcMain.on(
 				break;
 			}
 
-			case "comfyui:upload-image": {
+			case "comfyui:uploadImage": {
 				const { dataURL } = message.payload as {
 					fileName: string;
 					dataURL: string;
@@ -123,6 +124,7 @@ ipcMain.on(
 						await ComfyUI.getInstance.uploadImage(appId, blob);
 					}
 				} catch (error) {
+					// TODO introduce better error handling
 					console.log(error);
 				}
 

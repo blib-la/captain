@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import fsp from "node:fs/promises";
 import path from "node:path";
 
+import type { ComfyUIFileMetaData } from "@captn/utils";
 import {
 	WINDOW_CLOSE_KEY,
 	WINDOW_MAXIMIZE_KEY,
@@ -103,10 +104,34 @@ ipcMain.handle(buildKey([ID.FILE], { prefix: "path:", suffix: ":get" }), async (
 	}
 });
 
-async function writePngMetaData(filePath: string, description: string) {
+async function writePngMetaData(filePath: string, metadata: ComfyUIFileMetaData) {
 	const pythonBinaryPath = getPythonEmbedded("python.exe");
 	const scriptPath = getDirectory("python/png/main.py");
-	const scriptArguments = ["--image_path", filePath, "--description", description];
+	const scriptArguments = ["--image_path", filePath];
+
+	if (metadata.positivePrompt) {
+		scriptArguments.push("--positive_prompt", metadata.positivePrompt);
+	}
+
+	if (metadata.caption) {
+		scriptArguments.push("--caption", metadata.caption);
+	}
+
+	if (metadata.description) {
+		scriptArguments.push("--description", metadata.description);
+	}
+
+	if (metadata.negativePrompt) {
+		scriptArguments.push("--negative_prompt", metadata.negativePrompt);
+	}
+
+	if (metadata.tags) {
+		scriptArguments.push("--tags", metadata.tags);
+	}
+
+	if (metadata.prompt) {
+		scriptArguments.push("--prompt", metadata.prompt);
+	}
 
 	return execa(pythonBinaryPath, ["-u", scriptPath, ...scriptArguments]);
 }
@@ -148,7 +173,7 @@ ipcMain.handle(
 		await fsp.writeFile(filePath, content, options);
 		if (fileType === "image" && context) {
 			try {
-				await writePngMetaData(filePath, context);
+				await writePngMetaData(filePath, { description: context });
 			} catch (error) {
 				logError(error);
 			}
@@ -159,12 +184,12 @@ ipcMain.handle(
 			const vectorStore = VectorStore.getInstance;
 			let label = fileType;
 			const documents: VectorStoreDocument[] = [];
-			if (fileType === "markdown" && filePath.includes("/stories/")) {
+			if (fileType === "markdown" && filePath.includes("/Captain_Data/files/stories/")) {
 				// For markdown, we use the H1 if it exists
 				label = extractH1Headings(content)[0] || fileType;
 				const chunks = await splitDocument("md", content, {
-					chunkSize: 200,
-					chunkOverlap: 10,
+					chunkSize: 600,
+					chunkOverlap: 20,
 				});
 				for (const chunk of chunks) {
 					documents.push({
@@ -176,6 +201,7 @@ ipcMain.handle(
 							fileType: "md",
 							language: "en",
 							filePath,
+							content: chunk,
 						},
 					});
 				}
@@ -183,8 +209,8 @@ ipcMain.handle(
 				// For markdown, we use the H1 if it exists
 				label = extractH1Headings(content)[0] || fileType;
 				const chunks = await splitDocument("md", content, {
-					chunkSize: 200,
-					chunkOverlap: 10,
+					chunkSize: 600,
+					chunkOverlap: 20,
 				});
 				for (const chunk of chunks) {
 					documents.push({
@@ -196,6 +222,7 @@ ipcMain.handle(
 							fileType: "md",
 							language: "en",
 							filePath,
+							content: context ?? content,
 						},
 					});
 				}
@@ -209,6 +236,7 @@ ipcMain.handle(
 						fileType: ext.replace(".", ""),
 						language: "en",
 						filePath,
+						content: context ?? content,
 					},
 				});
 			} else {
@@ -220,6 +248,7 @@ ipcMain.handle(
 						type: fileType,
 						language: "en",
 						filePath,
+						content: context ?? content,
 					},
 				});
 			}
@@ -262,7 +291,7 @@ ipcMain.handle(
 		}: {
 			source: string;
 			destination: string;
-			metadata?: { prompt?: string; description?: string; caption?: string };
+			metadata?: ComfyUIFileMetaData;
 		}
 	) => {
 		const filePath = getCaptainData("files", cleanPath(destination));
@@ -283,12 +312,12 @@ ipcMain.handle(
 		const destinationPath = path.join(directory, fileName);
 		await fsp.rename(filePath, destinationPath);
 		logger.info(`renamed image from ${filePath} to ${destinationPath}`);
-		if (metadata?.description) {
+		if (metadata?.positivePrompt) {
 			logger.info(
 				`add metadata to image at ${destinationPath} with description: ${metadata.description}`
 			);
 			try {
-				await writePngMetaData(destinationPath, metadata.description);
+				await writePngMetaData(destinationPath, metadata);
 			} catch (error) {
 				logError(error, "writePngMetaData:copy-image-with-metadata");
 			}
@@ -297,7 +326,7 @@ ipcMain.handle(
 				const vectorStore = VectorStore.getInstance;
 				return await vectorStore.upsert(VECTOR_STORE_COLLECTION, [
 					{
-						content: metadata.description,
+						content: metadata.positivePrompt,
 						payload: {
 							id: v4(),
 							label: fileName,
@@ -305,6 +334,7 @@ ipcMain.handle(
 							fileType: ext.replace(".", ""),
 							language: "en",
 							filePath: destinationPath,
+							content: metadata.positivePrompt,
 						},
 					},
 				]);
