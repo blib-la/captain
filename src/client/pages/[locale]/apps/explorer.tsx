@@ -4,6 +4,7 @@ import { TitleBar } from "@captn/joy/title-bar";
 import { useVectorStore } from "@captn/react/use-vector-store";
 import { localFile } from "@captn/utils/string";
 import type { VectorStoreResponse } from "@captn/utils/types";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import FolderIcon from "@mui/icons-material/Folder";
 import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/joy/Box";
@@ -22,11 +23,14 @@ import { useTranslation } from "next-i18next";
 import { Fragment, useMemo, useState } from "react";
 import { FileIcon, defaultStyles } from "react-file-icon";
 
+import { TooltipButton } from "@/client/apps/shared/components";
 import { DynamicIcon } from "@/client/atoms/icons/dynamic";
 import { handleCaptainAction } from "@/client/ions/handlers/action";
 import { useThirdPartyAppsPath } from "@/client/ions/hooks/third-party-apps-path";
 import { makeStaticProperties } from "@/client/ions/i18n/get-static";
 import { getContrastColor } from "@/client/ions/utils/color";
+import { buildKey } from "@/shared/build-key";
+import { ID } from "@/shared/enums";
 
 export function PreviewIcon({ item }: { item: VectorStoreResponse }) {
 	switch (item.payload.type) {
@@ -103,7 +107,7 @@ export function PreviewIcon({ item }: { item: VectorStoreResponse }) {
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["common", "labels"]);
 	const [query, setQuery] = useState("");
-	const { data } = useVectorStore(query, { limit: 100, score_threshold: 0.2 });
+	const { data, mutate } = useVectorStore(query, { limit: 100, score_threshold: 0.2 });
 
 	const uniqueData = useMemo(() => uniqBy(data, "payload.id"), [data]);
 	const groups = useMemo(
@@ -182,12 +186,57 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 										{group.map(item => (
 											<ListItem
 												key={item.id}
+												slotProps={{
+													startAction: {
+														className: "delete--button-wrapper",
+														sx: {
+															top: 0,
+															right: 0,
+															left: "unset",
+															transform: "unset",
+															opacity: 0,
+															"&:focus-within": {
+																opacity: 1,
+															},
+														},
+													},
+												}}
+												startAction={
+													item.payload.type === "image" ? (
+														<TooltipButton
+															label={t("labels:delete")}
+															onClick={() => {
+																mutate(previousState =>
+																	previousState.filter(
+																		entry =>
+																			entry.id !== item.id
+																	)
+																);
+																window.ipc.send(
+																	buildKey([ID.FILE], {
+																		suffix: ":delete-forever",
+																	}),
+																	{
+																		id: item.payload.id,
+																		filePath:
+																			item.payload.filePath,
+																	}
+																);
+															}}
+														>
+															<DeleteForeverIcon />
+														</TooltipButton>
+													) : undefined
+												}
 												sx={{
 													"--focus-outline-offset": "-2px",
+													"&:hover .delete--button-wrapper, &:focus-within .delete--button-wrapper":
+														{
+															opacity: 1,
+														},
 												}}
 											>
 												<ListItemButton
-													// Disabled={item.payload.type !== "app"}
 													sx={{
 														flexDirection: "column",
 														width: 128,

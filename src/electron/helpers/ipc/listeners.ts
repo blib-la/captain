@@ -4,12 +4,15 @@ import path from "node:path";
 import { USER_LANGUAGE_KEY } from "@captn/utils/constants";
 import { ipcMain } from "electron";
 
+import { logError, logger } from "@/electron/services/logger";
+import { VectorStore } from "@/electron/services/vector-store";
 import { keyStore, userStore } from "@/electron/stores";
 import { sendToAllWindows } from "@/electron/stores/watchers";
 import { clone, lfs } from "@/electron/utils/git";
 import { getCaptainData } from "@/electron/utils/path-helpers";
 import { readFilesRecursively } from "@/electron/utils/read-files-recursively";
 import { buildKey } from "@/shared/build-key";
+import { VECTOR_STORE_COLLECTION } from "@/shared/constants";
 import { ID } from "@/shared/enums";
 
 ipcMain.on(USER_LANGUAGE_KEY, (_event, language) => {
@@ -117,3 +120,19 @@ ipcMain.on(
 		event.sender.send(buildKey([ID.STORY], { suffix: ":all" }), parsedFiles);
 	}
 );
+
+ipcMain.on(buildKey([ID.FILE], { suffix: ":delete-forever" }), async (event, { id, filePath }) => {
+	try {
+		logger.log(`deleting ${id}`);
+		const instance = VectorStore.getInstance;
+		await instance.delete(VECTOR_STORE_COLLECTION, id);
+		await fsp.rm(filePath);
+		event.sender.send(buildKey([ID.FILE], { suffix: ":delete-forever" }), true);
+		logger.log(`deleted ${id}`);
+	} catch (error) {
+		logError(error);
+		event.sender.send(buildKey([ID.FILE], { suffix: ":delete-error" }), {
+			error: `Could not delete ${id}`,
+		});
+	}
+});
