@@ -1,3 +1,24 @@
+# [1.0.0-alpha.93](https://github.com/blib-la/captain/compare/v1.0.0-alpha.92...v1.0.0-alpha.93) (2024-05-27)
+
+
+### Features
+
+* remove some options from the context menu ([#323](https://github.com/blib-la/captain/issues/323)) ([4aeebeb](https://github.com/blib-la/captain/commit/4aeebeb21410c5653406c818262ff577a718c26c))
+
+# [1.0.0-alpha.92](https://github.com/blib-la/captain/compare/v1.0.0-alpha.91...v1.0.0-alpha.92) (2024-05-27)
+
+
+### Bug Fixes
+
+* init ports should await ([#322](https://github.com/blib-la/captain/issues/322)) ([5b12fa9](https://github.com/blib-la/captain/commit/5b12fa91b6249ad1bff50108e0226a0767c85d8d))
+
+# [1.0.0-alpha.91](https://github.com/blib-la/captain/compare/v1.0.0-alpha.90...v1.0.0-alpha.91) (2024-05-27)
+
+
+### Features
+
+* rag assistant ([#320](https://github.com/blib-la/captain/issues/320)) ([9bc0960](https://github.com/blib-la/captain/commit/9bc09605dbb9723662921edecc3bfa614404d243))
+
 # [1.0.0-alpha.90](https://github.com/blib-la/captain/compare/v1.0.0-alpha.89...v1.0.0-alpha.90) (2024-05-25)
 
 
