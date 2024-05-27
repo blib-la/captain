@@ -1,3 +1,10 @@
+# [1.0.0-alpha.93](https://github.com/blib-la/captain/compare/v1.0.0-alpha.92...v1.0.0-alpha.93) (2024-05-27)
+
+
+### Features
+
+* remove some options from the context menu ([#323](https://github.com/blib-la/captain/issues/323)) ([4aeebeb](https://github.com/blib-la/captain/commit/4aeebeb21410c5653406c818262ff577a718c26c))
+
 # [1.0.0-alpha.92](https://github.com/blib-la/captain/compare/v1.0.0-alpha.91...v1.0.0-alpha.92) (2024-05-27)
 
 
