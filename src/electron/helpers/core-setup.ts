@@ -24,6 +24,9 @@ if (gotTheLock || isTest) {
 	contextMenu({
 		showSaveImageAs: true,
 		showSearchWithGoogle: false,
+		showLearnSpelling: false,
+		showLookUpSelection: false,
+		showSelectAll: false,
 	});
 
 	app.commandLine.appendSwitch("enable-smooth-scrolling");
