@@ -1,3 +1,10 @@
+# [1.0.0-alpha.94](https://github.com/blib-la/captain/compare/v1.0.0-alpha.93...v1.0.0-alpha.94) (2024-05-27)
+
+
+### Features
+
+* allow deleting images in the explorer ([#321](https://github.com/blib-la/captain/issues/321)) ([cdd558b](https://github.com/blib-la/captain/commit/cdd558b28ad31b898542ad24c92ef2c799fa451b))
+
 # [1.0.0-alpha.93](https://github.com/blib-la/captain/compare/v1.0.0-alpha.92...v1.0.0-alpha.93) (2024-05-27)
 
 
