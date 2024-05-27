@@ -281,6 +281,28 @@ export class VectorStore {
 	}
 
 	/**
+	 * Deletes all points related to a given entry id in the specified collection.
+	 *
+	 * @param {string} collectionName - The name of the collection to search in.
+	 * @param {string} id - The id in the payload.
+	 * @returns {ReturnType<QdrantClient["delete"]>} A promise that resolves with the delete results.
+	 */
+	public async delete(collectionName: string, id: string): ReturnType<QdrantClient["delete"]> {
+		return this.client!.delete(collectionName, {
+			filter: {
+				must: [
+					{
+						key: "id",
+						match: {
+							value: id,
+						},
+					},
+				],
+			},
+		});
+	}
+
+	/**
 	 * Ensures the existence of the specified collection. If the collection does not exist,
 	 * it can be automatically created with a default configuration based on the embeddings model.
 	 *
