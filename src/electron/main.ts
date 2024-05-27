@@ -51,7 +51,7 @@ export async function main() {
 	logger.info(`main(): app is ready`);
 
 	// Initialize the ports for third-party software
-	initPorts();
+	await initPorts();
 
 	// Initialize the local protocol to allow serving files from disk
 	initLocalProtocol();

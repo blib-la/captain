@@ -1,3 +1,10 @@
+# [1.0.0-alpha.92](https://github.com/blib-la/captain/compare/v1.0.0-alpha.91...v1.0.0-alpha.92) (2024-05-27)
+
+
+### Bug Fixes
+
+* init ports should await ([#322](https://github.com/blib-la/captain/issues/322)) ([5b12fa9](https://github.com/blib-la/captain/commit/5b12fa91b6249ad1bff50108e0226a0767c85d8d))
+
 # [1.0.0-alpha.91](https://github.com/blib-la/captain/compare/v1.0.0-alpha.90...v1.0.0-alpha.91) (2024-05-27)
 
 
