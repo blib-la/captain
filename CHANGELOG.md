@@ -1,3 +1,10 @@
+# [1.0.0-alpha.98](https://github.com/blib-la/captain/compare/v1.0.0-alpha.97...v1.0.0-alpha.98) (2024-05-28)
+
+
+### Bug Fixes
+
+* marketplace offline note flashing ([#327](https://github.com/blib-la/captain/issues/327)) ([46316bd](https://github.com/blib-la/captain/commit/46316bd5380a175ef92eba15970ea93563428fa9))
+
 # [1.0.0-alpha.97](https://github.com/blib-la/captain/compare/v1.0.0-alpha.96...v1.0.0-alpha.97) (2024-05-28)
 
 

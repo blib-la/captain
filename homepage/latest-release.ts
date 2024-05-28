@@ -1,2 +1,2 @@
 export const latestRelease =
-	"https://github.com/blib-la/captain/releases/download/v1.0.0-alpha.97/Captain-Setup-1.0.0-alpha.97.exe";
+	"https://github.com/blib-la/captain/releases/download/v1.0.0-alpha.98/Captain-Setup-1.0.0-alpha.98.exe";
