@@ -1,3 +1,10 @@
+# [1.0.0-alpha.95](https://github.com/blib-la/captain/compare/v1.0.0-alpha.94...v1.0.0-alpha.95) (2024-05-28)
+
+
+### Features
+
+* assistant improvements ([#324](https://github.com/blib-la/captain/issues/324)) ([509e474](https://github.com/blib-la/captain/commit/509e474dd60fa662b446715e83f1a7be9f4cd18b))
+
 # [1.0.0-alpha.94](https://github.com/blib-la/captain/compare/v1.0.0-alpha.93...v1.0.0-alpha.94) (2024-05-27)
 
 
