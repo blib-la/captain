@@ -1,5 +1,7 @@
 import { localFile } from "@captn/utils/string";
 import CopyAllIcon from "@mui/icons-material/CopyAll";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Box from "@mui/joy/Box";
 import Chip from "@mui/joy/Chip";
@@ -7,14 +9,17 @@ import IconButton from "@mui/joy/IconButton";
 import type { LinkProps } from "@mui/joy/Link";
 import JoyLink from "@mui/joy/Link";
 import Sheet from "@mui/joy/Sheet";
+import Switch from "@mui/joy/Switch";
 import Typography from "@mui/joy/Typography";
+import { useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 import { useTranslation } from "next-i18next";
-import type { ReactNode } from "react";
+import type { ChangeEvent, ReactNode } from "react";
 import type { Components } from "react-markdown";
 import ReactMarkdown from "react-markdown";
 import type { SyntaxHighlighterProps } from "react-syntax-highlighter";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { materialOceanic } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { oneLight, oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import rehypeFormat from "rehype-format";
 import rehypeRaw from "rehype-raw";
 import rehypeStringify from "rehype-stringify";
@@ -36,12 +41,16 @@ const codeMappers: Record<string, string> = {
 	svelte: "html",
 	vue: "html",
 };
+
+const codeModeAtom = atomWithStorage("code-mode", "dark");
+
 export function Code({
 	language,
 	code,
 	...rest
 }: { code: string } & Except<SyntaxHighlighterProps, "children">) {
 	const { t } = useTranslation(["labels"]);
+	const [mode, setMode] = useAtom(codeModeAtom);
 	return (
 		<Sheet color="primary" variant="soft" sx={{ p: 0.5 }}>
 			<Sheet
@@ -63,21 +72,32 @@ export function Code({
 				) : (
 					<Box />
 				)}
-				<IconButton
-					aria-label={t("labels:copy")}
-					onClick={() => {
-						navigator.clipboard.writeText(code);
-					}}
-				>
-					<CopyAllIcon />
-				</IconButton>
+				<Box>
+					<Switch
+						checked={mode === "dark"}
+						startDecorator={<LightModeIcon />}
+						endDecorator={<DarkModeIcon />}
+						onChange={(event: ChangeEvent<HTMLInputElement>) => {
+							setMode(event.target.checked ? "dark" : "light");
+						}}
+					/>
+					<IconButton
+						aria-label={t("labels:copy")}
+						onClick={() => {
+							navigator.clipboard.writeText(code);
+						}}
+					>
+						<CopyAllIcon />
+					</IconButton>
+				</Box>
 			</Sheet>
 			<Box sx={{ overflowX: "auto" }}>
 				<SyntaxHighlighter
 					{...(rest as SyntaxHighlighterProps)}
+					wrapLongLines
 					PreTag="div"
 					language={language && (codeMappers[language] ?? language)}
-					style={materialOceanic}
+					style={mode === "dark" ? oneDark : oneLight}
 				>
 					{code}
 				</SyntaxHighlighter>
@@ -189,6 +209,9 @@ export const components: Partial<Components> = {
 			</code>
 		);
 	},
+	pre({ children }) {
+		return <div>{children}</div>;
+	},
 	img({ src, alt }: { src?: string; alt?: string }) {
 		if (!src) {
 			return null;
@@ -215,11 +238,10 @@ export const components: Partial<Components> = {
 							position: "absolute",
 							top: 0,
 							right: 0,
-							margin: 0.5,
 						}}
 					>
 						<IconButton
-							variant="plain"
+							variant="soft"
 							color="neutral"
 							onClick={event => {
 								event.preventDefault();
@@ -254,8 +276,9 @@ export const components: Partial<Components> = {
 							my: 1,
 							mx: "auto",
 							width: "100%",
-							height: "auto",
-							maxWidth: 512,
+							maxHeight: 640,
+							objectFit: "contain",
+							objectPosition: "center",
 						}}
 					/>
 				</Box>
