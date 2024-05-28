@@ -29,8 +29,8 @@
   "feedback": "Feedback",
   "form": {
     "errors": {
-      "directory": "Bitte geben Sie ein Verzeichnis an",
-      "name": "Bitte geben Sie einen Namen an"
+      "directory": "Bitte gib ein Verzeichnis an",
+      "name": "Bitte gib einen Namen an"
     }
   },
   "free": "Kostenlos",
@@ -55,18 +55,18 @@
   "openFolder": "Ordner öffnen",
   "pages": {
     "dataset": {
-      "chooseCaptioningMethod": "Wählen Sie eine Beschriftungsmethode",
+      "chooseCaptioningMethod": "Wähle eine Beschriftungsmethode",
       "customCaptionsWithGPTVision": "Benutzerdefinierte Beschriftungen mit GPT-Vision",
-      "enterKeyToUseGPTVision": "Geben Sie Ihren OpenAI API-Schlüssel ein, um GPT-Vision zu verwenden.",
+      "enterKeyToUseGPTVision": "Gib deinen OpenAI API-Schlüssel ein, um GPT-Vision zu verwenden.",
       "generateCaptionWithBLIP": "Beschriftungen mit BLIP generieren",
       "generateTagsWithWD14": "Tags mit WD14 generieren",
       "oneTimeDownloadNote": "Unsere fortschrittlichen Beschriftungsmethoden erfordern einen einmaligen Download der notwendigen Modelle, was einige Momente dauern kann.",
       "proceedWithGPTVision": "Mit GPT-Vision fortfahren",
       "selectImage": "Bild auswählen",
-      "warningOpenAI": "Achtung: Die Verwendung von GPT-Vision wird Ihre Bilder an OpenAI senden. Bitte beachten Sie die <1>Nutzungsbedingungen</1> von OpenAI."
+      "warningOpenAI": "Achtung: Die Verwendung von GPT-Vision wird deine Bilder an OpenAI senden. Bitte beachte die <1>Nutzungsbedingungen</1> von OpenAI."
     },
     "datasets": {
-      "dropToAdd": "Legen Sie hier einen Ordner mit Bildern des Datensatzes ab",
+      "dropToAdd": "Leg hier einen Ordner mit Bildern des Datensatzes ab",
       "newDataset": "Neuen Datensatz erstellen"
     },
     "feedback": {
@@ -74,16 +74,16 @@
     },
     "settings": {
       "colorMode": "Farbmodus",
-      "colorModeDescription": "Passen Sie Ihr visuelles Erlebnis an, indem Sie ein Farbschema auswählen, das Ihren Vorlieben entspricht.",
-      "commonApiKeyDescription": "Geben Sie Ihren {{provider}} API-Schlüssel ein, um die Integration mit {{provider}}-Diensten zu ermöglichen.",
+      "colorModeDescription": "Passe dein visuelles Erlebnis an, indem du ein Farbschema auswählen, das deinen Vorlieben entspricht.",
+      "commonApiKeyDescription": "Gib deinen {{provider}} API-Schlüssel ein, um die Integration mit {{provider}}-Diensten zu ermöglichen.",
       "commonSettings": "{{provider}}-Einstellungen",
       "languageSettings": "Spracheinstellungen",
-      "languageSettingsDescription": "Passen Sie Ihr Erlebnis an, indem Sie die Sprache auswählen, mit der Sie sich am wohlsten fühlen.",
+      "languageSettingsDescription": "Pass dein Erlebnis an, indem du die Sprache auswählen, mit der du dich am wohlsten fühlst.",
       "runPodSettings": "RunPod-Einstellungen",
       "stableDiffusionCheckpoints": "Stable Diffusion Checkpoints",
-      "stableDiffusionCheckpointsDescription": "Wählen Sie den Ordner mit Ihren Stable Diffusion Checkpoints aus.",
+      "stableDiffusionCheckpointsDescription": "Wähle den Ordner mit deinen Stable Diffusion Checkpoints aus.",
       "stableDiffusionLoras": "Stable Diffusion LoRAs",
-      "stableDiffusionLorasDescription": "Wählen Sie den Ordner mit Ihren Stable Diffusion LoRAs aus.",
+      "stableDiffusionLorasDescription": "Wähle den Ordner mit deinen Stable Diffusion LoRAs aus.",
       "stableDiffusionSettings": "Stable Diffusion Einstellungen",
       "userPreferences": "Benutzereinstellungen"
     }
