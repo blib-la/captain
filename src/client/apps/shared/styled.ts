@@ -11,16 +11,14 @@ export const StyledColorInput = styled("input")({
 	cursor: "pointer",
 });
 
-export const StyledRenderingAreaWrapper = styled("div")(({ theme }) => ({
+export const StyledRenderingAreaWrapper = styled("div")({
 	minWidth: "min-content",
 	position: "relative",
 	zIndex: 0,
 	display: "flex",
 	alignItems: "center",
 	justifyContent: "center",
-	//
-	// padding: theme.spacing(1),
-}));
+});
 
 export const StyledDrawingAreaWrapper = styled("div")(({ theme }) => ({
 	minWidth: "min-content",
