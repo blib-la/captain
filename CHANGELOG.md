@@ -1,3 +1,10 @@
+# [1.0.0-alpha.96](https://github.com/blib-la/captain/compare/v1.0.0-alpha.95...v1.0.0-alpha.96) (2024-05-28)
+
+
+### Bug Fixes
+
+* small glitches ([#325](https://github.com/blib-la/captain/issues/325)) ([5d9ba32](https://github.com/blib-la/captain/commit/5d9ba3263bf405a2964e723c4311669e2f2f78d4))
+
 # [1.0.0-alpha.95](https://github.com/blib-la/captain/compare/v1.0.0-alpha.94...v1.0.0-alpha.95) (2024-05-28)
 
 
