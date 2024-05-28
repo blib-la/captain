@@ -82,6 +82,8 @@ export function Code({
 						}}
 					/>
 					<IconButton
+						color="primary"
+						variant="soft"
 						aria-label={t("labels:copy")}
 						onClick={() => {
 							navigator.clipboard.writeText(code);

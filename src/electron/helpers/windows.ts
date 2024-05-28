@@ -458,6 +458,7 @@ export async function handleCoreAppWindow(
 		apps[appId]!.restore();
 	}
 
+	apps[appId]!.focus();
 	return apps[appId];
 }
 
