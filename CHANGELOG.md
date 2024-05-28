@@ -1,3 +1,10 @@
+# [1.0.0-alpha.97](https://github.com/blib-la/captain/compare/v1.0.0-alpha.96...v1.0.0-alpha.97) (2024-05-28)
+
+
+### Features
+
+* consistent usage of Du vs Sie ([#326](https://github.com/blib-la/captain/issues/326)) ([0c4b239](https://github.com/blib-la/captain/commit/0c4b23921f6506374ab51b5bbd36b5fe50456fee))
+
 # [1.0.0-alpha.96](https://github.com/blib-la/captain/compare/v1.0.0-alpha.95...v1.0.0-alpha.96) (2024-05-28)
 
 
