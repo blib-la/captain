@@ -207,6 +207,7 @@ function ErrorMessage({ error }: { error: string }) {
 
 export default function Page(_properties: InferGetStaticPropsType<typeof getStaticProps>) {
 	const { t } = useTranslation(["common", "labels"]);
+	const [errorMessage, setErrorMessage] = useState<string | undefined | null>(null);
 
 	const connected = useOnlineStatus();
 
@@ -218,7 +219,9 @@ export default function Page(_properties: InferGetStaticPropsType<typeof getStat
 			revalidateOnFocus: true,
 		}
 	);
-	const errorMessage = connected ? error?.message : t("texts:notConnectedToTheInternet");
+	useEffect(() => {
+		setErrorMessage(connected ? error?.message : t("texts:notConnectedToTheInternet"));
+	}, [connected, error, t]);
 
 	return (
 		<>
