@@ -57,7 +57,6 @@ export function useAssistant() {
 					};
 					if (done) {
 						setMessage("");
-						console.log("DONE", model_);
 						setMessages(previousState => [
 							...previousState,
 							{
@@ -72,6 +71,7 @@ export function useAssistant() {
 							setChatName(chatLabel);
 						}
 					} else {
+						console.log(output);
 						setIsGenerating(true);
 						setMessage(output);
 					}

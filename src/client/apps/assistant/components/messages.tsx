@@ -9,7 +9,6 @@ import Sheet from "@mui/joy/Sheet";
 import type { ColorPaletteProp } from "@mui/joy/styles";
 import Tooltip from "@mui/joy/Tooltip";
 import { useTranslation } from "next-i18next";
-import { useEffect } from "react";
 
 import { StreamingMessage } from "@/client/apps/assistant/components/streaming-message";
 import { modelColors, modelNames } from "@/client/apps/assistant/constants";
@@ -30,9 +29,6 @@ export function Messages({
 	message: string;
 	color: ColorPaletteProp;
 }) {
-	useEffect(() => {
-		console.log(message, messages);
-	}, [messages, message]);
 	const { t } = useTranslation(["labels"]);
 	return (
 		<List

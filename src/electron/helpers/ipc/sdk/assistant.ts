@@ -11,7 +11,7 @@ import type { SDKMessage } from "@captn/react/types";
 import { APP_MESSAGE_KEY } from "@captn/utils/constants";
 import type { ComfyUIUpdate, VectorStoreDocument } from "@captn/utils/types";
 import type { Schemas as QdrantSchemas } from "@qdrant/js-client-rest";
-import type { CoreMessage, ToolCallPart, ToolResultPart } from "ai";
+import type { CoreMessage, CoreTool, ToolCallPart, ToolResultPart } from "ai";
 import { tool } from "ai";
 import { streamText } from "ai";
 import { ipcMain, type IpcMainEvent } from "electron";
@@ -97,6 +97,7 @@ export function createSystemPrompt() {
 - Store data locally and keep personal data private.
 - Retrieve data based on user queries using the integrated local vector store (powered by Qdrant and local embeddings).
 - Access files from the user's computer, but only those files registered in Captain.
+- Generate images with ComfyUI.
 - Link to or display certain files inline if asked to do so.
 - Speak 11 languages (German, English, Spanish, French, Italian, Japanese, Dutch, Polish, Portuguese, Russian, Chinese) and respond in the user's language.
 
@@ -120,6 +121,7 @@ export function createSystemPrompt() {
 
 - **Scenario: User requests a story**
   - Select 1-3 fitting images from the context.
+  - Generate Images as required
   - Return the story including the image as inline image tags.
 
 - **Scenario: User requests links or lists**
@@ -271,7 +273,7 @@ export function createWorkflow({
 function tools(appId: string, send?: <T>(action: string, payload: T) => void) {
 	return {
 		textToImage: tool({
-			description: "Generate an image for the user.",
+			description: "Generate an image for the user (using ComfyUI).",
 			parameters: z
 				.object({
 					prompt: z
@@ -290,22 +292,22 @@ function tools(appId: string, send?: <T>(action: string, payload: T) => void) {
 							height: z
 								.number()
 								.positive()
-								.gt(640)
-								.lt(1536)
+								.gte(640)
+								.lte(1536)
 								.int()
-								.describe("The height of the generated image (640-1536)."),
+								.describe("The height of the generated image int(640-1536)."),
 							width: z
 								.number()
 								.positive()
-								.gt(640)
-								.lt(1536)
+								.gte(640)
+								.lte(1536)
 								.int()
-								.describe("The width of the generated image (640-1536)."),
+								.describe("The width of the generated image int(640-1536)."),
 						})
 						.required({ height: true, width: true })
 						.default({ height: 1024, width: 1024 })
 						.describe(
-							"The dimensions: height and width of the generated image (max area of ~1024x1024)."
+							"The dimensions: height and width of the generated image (max area of ~1024*1024)."
 						),
 				})
 				.required({ prompt: true }),
@@ -359,7 +361,20 @@ function tools(appId: string, send?: <T>(action: string, payload: T) => void) {
 						ComfyUI.getInstance
 							.queueWorkflow(
 								createWorkflow({
-									prompt,
+									prompt: [
+										prompt,
+										"highres",
+										"4k resolution",
+										"best quality",
+									].join(", "),
+									negativePrompt: [
+										"worst quality",
+										"lowres",
+										"blurry",
+										"smudge",
+										"nsfw",
+										"nude",
+									].join(", "),
 									seed,
 									height,
 									width,
@@ -382,6 +397,225 @@ function tools(appId: string, send?: <T>(action: string, payload: T) => void) {
 			},
 		}),
 	};
+}
+
+export function getAssistant(model: string) {
+	const [modelPrefix] = model.split("-");
+	switch (modelPrefix) {
+		case "gpt": {
+			return createOpenAI({ apiKey: keyStore.get("openAiApiKey") });
+		}
+
+		case "claude": {
+			return createAnthropic({
+				apiKey: keyStore.get("anthropicApiKey"),
+			});
+		}
+
+		case "mistral": {
+			return createMistral({
+				apiKey: keyStore.get("mistralApiKey"),
+			});
+		}
+
+		case "models/gemini": {
+			return createGoogleGenerativeAI({
+				apiKey: keyStore.get("googleGenerativeAiApiKey"),
+			});
+		}
+
+		default:
+	}
+}
+
+export async function getContext(
+	assistant: OpenAIProvider | AnthropicProvider | MistralProvider | GoogleGenerativeAIProvider,
+	chat: ChatModel,
+	{
+		includedDataTypes,
+		userInput,
+		model,
+	}: { includedDataTypes: string[]; userInput: string; model: string }
+) {
+	let optimizedContext = "\n<!-- NO CONTEXT -->\n";
+	if (includedDataTypes.length > 0) {
+		logger.info(`Assistant uses data: ${includedDataTypes.join(", ")}`);
+
+		const minorContent = [
+			...chat.messages.slice(-2),
+			{
+				role: "user" as const,
+				content: userInput + " => ONLY ANSWER WITH A SEARCH QUERY!!!",
+			},
+		].filter(Boolean);
+		if (minorContent[0] && minorContent[0].role !== "user") {
+			minorContent.shift();
+		}
+
+		const query = await chatCompletion({
+			model: assistant(model),
+			system: createVectorSearchPrompt({ dataTypes: includedDataTypes }),
+			messages: minorContent,
+		});
+
+		logger.info("Sending Query for RAG:", query);
+
+		const vectorStore = VectorStore.getInstance;
+
+		// Prepare array of dataTypes used in the lookup
+		const must: QdrantSchemas["Filter"]["must"] = [
+			{ key: "type", match: { any: includedDataTypes } },
+		];
+
+		const response = await vectorStore.search(VECTOR_STORE_COLLECTION, query, {
+			limit: 10,
+			score_threshold: 0.3,
+			filter: {
+				must,
+			},
+		});
+
+		const context = await Promise.all(
+			response.map(async entry => {
+				const entryPayload = (entry as unknown as VectorStoreDocument).payload!;
+				const { filePath } = entryPayload;
+				//
+				const cleanFilePath = filePath && cropCaptainData(filePath);
+
+				if (entry.payload!.fileType === "png") {
+					return {
+						id: entryPayload.id,
+						type: entryPayload.type,
+						score: entry.score,
+						filePath: cleanFilePath,
+						content: entryPayload.content,
+						label: entryPayload.label,
+					};
+				}
+
+				if (entry.payload!.fileType === "md") {
+					return {
+						id: entryPayload.id,
+						type: entryPayload.type,
+						score: entry.score,
+						filePath: cleanFilePath,
+						content: entryPayload.content,
+						label: entryPayload.label,
+					};
+				}
+
+				return {
+					id: entryPayload.id,
+					type: entryPayload.type,
+					score: entry.score,
+					filePath: cleanFilePath,
+					content: entryPayload.content,
+					label: entryPayload.label,
+				};
+			})
+		);
+		const files: Record<string, RAGDocument> = {};
+		for (const entry of context.filter(Boolean)) {
+			if (files[entry.id]) {
+				files[entry.id].content += `...\n...${entry.content}`;
+			} else {
+				files[entry.id] = entry;
+			}
+		}
+
+		const fileArray = Object.values(files);
+		optimizedContext = optimizeContext(fileArray);
+	} else {
+		logger.info("Assistant NOT sing data");
+	}
+
+	return optimizedContext;
+}
+
+export async function streamWithTools<TOOLS extends Record<string, CoreTool>>(
+	assistant: OpenAIProvider | AnthropicProvider | MistralProvider | GoogleGenerativeAIProvider,
+	{
+		history,
+		onStream,
+		tools,
+		model,
+	}: {
+		history: CoreMessage[];
+		onStream(response: string): void;
+		tools: TOOLS;
+		model: string;
+	}
+) {
+	let fullResponse = "";
+
+	try {
+		let result = await streamText<TOOLS>({
+			model: assistant(model),
+			system: createSystemPrompt(),
+			messages: history,
+			tools,
+		});
+
+		const toolCalls: ToolCallPart[] = [];
+		const toolResults: ToolResultPart[] = [];
+		for await (const delta of result.fullStream) {
+			switch (delta.type) {
+				case "tool-call": {
+					logger.info("toolCall", delta);
+					toolCalls.push(delta);
+
+					break;
+				}
+
+				case "tool-result": {
+					logger.info("toolResult", delta);
+					toolResults.push(delta);
+
+					break;
+				}
+
+				case "text-delta": {
+					fullResponse += delta.textDelta;
+					onStream(fullResponse);
+					break;
+				}
+
+				default: {
+					break;
+				}
+			}
+		}
+
+		logger.info("toolCalls", toolCalls);
+		logger.info("toolResults", toolResults);
+
+		if (toolResults.length > 0) {
+			history.push(
+				{
+					role: "assistant",
+					content: toolCalls,
+				},
+				{
+					role: "tool",
+					content: toolResults,
+				}
+			);
+			result = await streamText<TOOLS>({
+				model: assistant(model),
+				system: createSystemPrompt(),
+				messages: history,
+				tools,
+			});
+			for await (const delta of result.textStream) {
+				fullResponse += delta;
+				onStream(fullResponse);
+			}
+		}
+	} catch (error) {
+		logError(error);
+	}
+
+	return fullResponse;
 }
 
 ipcMain.on(
@@ -516,50 +750,20 @@ ipcMain.on(
 			// Send an input and trigger a chat generation
 			case "assistant:chat": {
 				try {
-					let assistant:
-						| OpenAIProvider
-						| AnthropicProvider
-						| GoogleGenerativeAIProvider
-						| MistralProvider;
-
 					const userInput = message.payload.input!;
 					const model = message.payload.model ?? "gpt-3.5-turbo";
 					const dataTypes = message.payload.dataTypes ?? availableDataTypes;
 					const includedDataTypes = dataTypes
 						.filter(dataType => dataType.active)
 						.map(dataType => dataType.type);
+					const assistant = getAssistant(model);
 
-					const [modelPrefix] = model.split("-");
-					switch (modelPrefix) {
-						case "gpt": {
-							assistant = createOpenAI({ apiKey: keyStore.get("openAiApiKey") });
-							break;
-						}
-
-						case "claude": {
-							assistant = createAnthropic({
-								apiKey: keyStore.get("anthropicApiKey"),
-							});
-							break;
-						}
-
-						case "mistral": {
-							assistant = createMistral({
-								apiKey: keyStore.get("mistralApiKey"),
-							});
-							break;
-						}
-
-						case "models/gemini": {
-							assistant = createGoogleGenerativeAI({
-								apiKey: keyStore.get("googleGenerativeAiApiKey"),
-							});
-							break;
-						}
-
-						default: {
-							return;
-						}
+					if (!assistant) {
+						event.sender.send(channel, {
+							action: "assistant:error",
+							payload: { error: `Failed creating assistant for model: "${model}"` },
+						});
+						return;
 					}
 
 					const lastMessage = { role: "user" as const, content: userInput };
@@ -578,170 +782,28 @@ ipcMain.on(
 						});
 					}
 
-					let optimizedContext = "\n<!-- NO CONTEXT -->\n";
-					if (includedDataTypes.length > 0) {
-						logger.info(`Assistant uses data: ${includedDataTypes.join(", ")}`);
-
-						const minorContent = [
-							...chat.messages.slice(-2),
-							{
-								role: "user" as const,
-								content: userInput + " => ONLY ANSWER WITH A SEARCH QUERY!!!",
-							},
-						].filter(Boolean);
-						if (minorContent[0] && minorContent[0].role !== "user") {
-							minorContent.shift();
-						}
-
-						const query = await chatCompletion({
-							model: assistant(model),
-							system: createVectorSearchPrompt({ dataTypes: includedDataTypes }),
-							messages: minorContent,
-						});
-
-						logger.info("Sending Query for RAG:", query);
-
-						const vectorStore = VectorStore.getInstance;
-
-						// Prepare array of dataTypes used in the lookup
-						const must: QdrantSchemas["Filter"]["must"] = [
-							{ key: "type", match: { any: includedDataTypes } },
-						];
-
-						const response = await vectorStore.search(VECTOR_STORE_COLLECTION, query, {
-							limit: 10,
-							score_threshold: 0.3,
-							filter: {
-								must,
-							},
-						});
-
-						const context = await Promise.all(
-							response.map(async entry => {
-								const entryPayload = (entry as unknown as VectorStoreDocument)
-									.payload!;
-								const { filePath } = entryPayload;
-								//
-								const cleanFilePath = filePath && cropCaptainData(filePath);
-
-								if (entry.payload!.fileType === "png") {
-									return {
-										id: entryPayload.id,
-										type: entryPayload.type,
-										score: entry.score,
-										filePath: cleanFilePath,
-										content: entryPayload.content,
-										label: entryPayload.label,
-									};
-								}
-
-								if (entry.payload!.fileType === "md") {
-									return {
-										id: entryPayload.id,
-										type: entryPayload.type,
-										score: entry.score,
-										filePath: cleanFilePath,
-										content: entryPayload.content,
-										label: entryPayload.label,
-									};
-								}
-
-								return {
-									id: entryPayload.id,
-									type: entryPayload.type,
-									score: entry.score,
-									filePath: cleanFilePath,
-									content: entryPayload.content,
-									label: entryPayload.label,
-								};
-							})
-						);
-						const files: Record<string, RAGDocument> = {};
-						for (const entry of context.filter(Boolean)) {
-							if (files[entry.id]) {
-								files[entry.id].content += `...\n...${entry.content}`;
-							} else {
-								files[entry.id] = entry;
-							}
-						}
-
-						const fileArray = Object.values(files);
-						optimizedContext = optimizeContext(fileArray);
-					} else {
-						logger.info("Assistant NOT sing data");
-					}
+					const optimizedContext = getContext(assistant, chat, {
+						includedDataTypes,
+						model,
+						userInput,
+					});
 
 					// Only send the last N messages
 					const limit = message.payload.maxHistory ?? 10;
 					const limitedHistory = chat.messages.slice(-limit);
-					const messageWithContext = {
-						role: "user" as const,
+
+					limitedHistory.push({
+						role: "user",
 						content: `${optimizedContext}\n${lastMessage.content}`,
-					};
-					limitedHistory.push(messageWithContext);
-					let fullResponse = "";
+					});
 
-					try {
-						let result = await streamText({
-							model: assistant(model),
-							system: createSystemPrompt(),
-							messages: limitedHistory,
-							tools: tools(appId, (action, payload) => {
-								event.sender.send(channel, {
-									action,
-									payload,
-								});
-							}),
-						});
-
-						const toolCalls: ToolCallPart[] = [];
-						const toolResults: ToolResultPart[] = [];
-						for await (const delta of result.fullStream) {
-							switch (delta.type) {
-								case "tool-call": {
-									logger.info("toolCall", delta);
-									toolCalls.push(delta);
-
-									break;
-								}
-
-								case "tool-result": {
-									logger.info("toolResult", delta);
-									toolResults.push(delta);
-
-									break;
-								}
-
-								default: {
-									break;
-								}
-							}
-						}
-
-						logger.info("toolCalls", toolCalls);
-						logger.info("toolResults", toolResults);
-
-						if (toolResults.length > 0) {
-							limitedHistory.push(
-								{
-									role: "assistant",
-									content: toolCalls,
-								},
-								{
-									role: "tool",
-									content: toolResults,
-								}
-							);
-							result = await streamText({
-								model: assistant(model),
-								system: createSystemPrompt(),
-								messages: limitedHistory,
-								tools: tools(appId),
-							});
-						}
-
-						for await (const delta of result.textStream) {
-							fullResponse += delta;
+					const fullResponse = await streamWithTools(assistant, {
+						history: limitedHistory,
+						model,
+						tools: tools(appId, (action, payload) => {
+							event.sender.send(channel, { action, payload });
+						}),
+						onStream(fullResponse: string) {
 							event.sender.send(channel, {
 								action: "assistant:response",
 								payload: {
@@ -749,10 +811,8 @@ ipcMain.on(
 									done: false,
 								},
 							});
-						}
-					} catch (error) {
-						logError(error);
-					}
+						},
+					});
 
 					chat.model = model;
 					chat.dataTypes = dataTypes;

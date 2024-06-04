@@ -92,7 +92,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 					flexShrink: 0,
 				}}
 			>
-				<List sx={{ flexGrow: 0 }}>
+				<List sx={{ flexGrow: 0, overflow: "hidden" }}>
 					<StickyChatList
 						color={color}
 						onNew={() => {
@@ -100,6 +100,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 							setChatId(v4());
 						}}
 					/>
+
 					<ChatList
 						chatId={chatId}
 						chats={chats}
