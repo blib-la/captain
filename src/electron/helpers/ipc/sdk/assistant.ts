@@ -545,7 +545,7 @@ export async function getContext(
 		const fileArray = Object.values(files);
 		optimizedContext = optimizeContext(fileArray);
 	} else {
-		logger.info("Assistant NOT sing data");
+		logger.info("Assistant NOT using data");
 	}
 
 	return optimizedContext;
@@ -623,7 +623,7 @@ export async function streamWithTools<TOOLS extends Record<string, CoreTool>>(
 				model: assistant(model),
 				system: createSystemPrompt(),
 				messages: history,
-				tools,
+				tools: {} as TOOLS,
 			});
 			for await (const delta of result.textStream) {
 				fullResponse += delta;
