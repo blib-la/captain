@@ -24,7 +24,7 @@ import { copyWithMetaData } from "@/electron/png";
 import { ComfyUI } from "@/electron/services/comfyui";
 import { logError, logger } from "@/electron/services/logger";
 import { VectorStore } from "@/electron/services/vector-store";
-import { keyStore } from "@/electron/stores";
+import { inventoryStore, keyStore } from "@/electron/stores";
 import { normalizePath } from "@/electron/utils/normalize-path";
 import { getCaptainData, getComfyUIPath } from "@/electron/utils/path-helpers";
 import { availableDataTypes } from "@/shared/assistant";
@@ -313,6 +313,25 @@ function tools(appId: string, send?: <T>(action: string, payload: T) => void) {
 				.required({ prompt: true }),
 
 			async execute({ prompt, seed, dimensions: { height, width } }) {
+				const checkpoints = inventoryStore.get<string, { id: string }[]>(
+					"stable-diffusion.checkpoints",
+					[]
+				);
+				const hasSDXL = checkpoints.some(
+					checkpoint => checkpoint.id === "stabilityai/stable-diffusion-xl-base-1.0"
+				);
+				if (!hasSDXL) {
+					const error =
+						"Stable Diffusion XL (SDXL) is not available. Please download it in the Marketplace.";
+					if (send) {
+						send("assistant:error", { error });
+					}
+
+					return {
+						error,
+					};
+				}
+
 				const comfyClient = v4();
 				if (send) {
 					send("assistant:tool", { tool: "textToImage", status: "loading" });
@@ -782,7 +801,7 @@ ipcMain.on(
 						});
 					}
 
-					const optimizedContext = getContext(assistant, chat, {
+					const optimizedContext = await getContext(assistant, chat, {
 						includedDataTypes,
 						model,
 						userInput,

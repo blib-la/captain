@@ -71,7 +71,6 @@ export function useAssistant() {
 							setChatName(chatLabel);
 						}
 					} else {
-						console.log(output);
 						setIsGenerating(true);
 						setMessage(output);
 					}
