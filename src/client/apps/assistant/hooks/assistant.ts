@@ -11,7 +11,7 @@ import type { ChatModel } from "@/shared/types/assistant";
 
 export function useAssistant() {
 	const [messages, setMessages] = useState<MessageModel[]>([]);
-	const [message, setMesssage] = useState("");
+	const [message, setMessage] = useState("");
 	const [chatName, setChatName] = useState("");
 	const [isGenerating, setIsGenerating] = useState(false);
 	const [input, setInput] = useState("");
@@ -56,7 +56,8 @@ export function useAssistant() {
 						label?: string;
 					};
 					if (done) {
-						setMesssage("");
+						setMessage("");
+						console.log("DONE", model_);
 						setMessages(previousState => [
 							...previousState,
 							{
@@ -72,7 +73,7 @@ export function useAssistant() {
 						}
 					} else {
 						setIsGenerating(true);
-						setMesssage(output);
+						setMessage(output);
 					}
 
 					break;
@@ -104,6 +105,16 @@ export function useAssistant() {
 						error: string;
 					};
 					setError(error_);
+
+					break;
+				}
+
+				case "assistant:tool": {
+					const { tool, status } = message.payload as {
+						tool: string;
+						status: "loading" | "done";
+					};
+					setMessage(`${tool}: ${status}`);
 
 					break;
 				}

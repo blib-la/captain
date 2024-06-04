@@ -9,25 +9,31 @@ import { createOpenAI } from "@ai-sdk/openai";
 import type { LanguageModelV1 } from "@ai-sdk/provider";
 import type { SDKMessage } from "@captn/react/types";
 import { APP_MESSAGE_KEY } from "@captn/utils/constants";
-import type { VectorStoreDocument } from "@captn/utils/types";
+import type { ComfyUIUpdate, VectorStoreDocument } from "@captn/utils/types";
 import type { Schemas as QdrantSchemas } from "@qdrant/js-client-rest";
-import type { CoreMessage } from "ai";
+import type { CoreMessage, ToolCallPart, ToolResultPart } from "ai";
+import { tool } from "ai";
 import { streamText } from "ai";
 import { ipcMain, type IpcMainEvent } from "electron";
 import Store from "electron-store";
 import type { Except } from "type-fest";
 import { v4 } from "uuid";
+import { z } from "zod";
 
+import { copyWithMetaData } from "@/electron/png";
+import { ComfyUI } from "@/electron/services/comfyui";
 import { logError, logger } from "@/electron/services/logger";
 import { VectorStore } from "@/electron/services/vector-store";
 import { keyStore } from "@/electron/stores";
 import { normalizePath } from "@/electron/utils/normalize-path";
-import { getCaptainData } from "@/electron/utils/path-helpers";
+import { getCaptainData, getComfyUIPath } from "@/electron/utils/path-helpers";
 import { availableDataTypes } from "@/shared/assistant";
 import { buildKey } from "@/shared/build-key";
 import { VECTOR_STORE_COLLECTION } from "@/shared/constants";
 import { KEY } from "@/shared/enums";
+import { randomSeed } from "@/shared/number";
 import type { ChatModel, DataTypeItem } from "@/shared/types/assistant";
+import type { NodeChain } from "@/shared/types/comfyui";
 
 export const assistantStore = new Store<Record<string, ChatModel>>({
 	name: buildKey([KEY.STORE, KEY.ASSISTANT]),
@@ -41,7 +47,8 @@ interface RAGDocument {
 	label: string;
 	score: number;
 }
-function optimizeContext(context: RAGDocument[]) {
+
+export function optimizeContext(context: RAGDocument[]) {
 	if (context.length === 0) {
 		return "\n<!-- NO CONTEXT -->\n";
 	}
@@ -159,6 +166,222 @@ export async function chatCompletion({
 	}
 
 	return fullResponse;
+}
+
+export function createWorkflow({
+	prompt = "",
+	negativePrompt = "",
+	seed = 1234,
+	steps = 20,
+	height,
+	width,
+	cfg = 7,
+	loraWeight = 1,
+	checkpointName = "stabilityai\\stable-diffusion-xl-base-1.0\\sd_xl_base_1.0_0.9vae.safetensors",
+	loraName,
+}: {
+	prompt?: string;
+	negativePrompt?: string;
+	seed?: number;
+	height: number;
+	width: number;
+	steps?: number;
+	cfg?: number;
+	checkpointName?: string;
+	loraName?: string;
+	loraWeight?: number;
+}) {
+	const hasLora = loraName && loraWeight > 0;
+	const finalModel = hasLora ? "lora" : "model";
+	const workflow: NodeChain = {
+		kSampler: {
+			inputs: {
+				seed,
+				steps,
+				cfg,
+				sampler_name: "dpmpp_2m_sde_gpu",
+				scheduler: "karras",
+				denoise: 1,
+				model: [finalModel, 0],
+				positive: ["prompt", 0],
+				negative: ["negativePrompt", 0],
+				latent_image: ["latentImage", 0],
+			},
+			class_type: "KSampler",
+		},
+		model: {
+			inputs: {
+				ckpt_name: checkpointName,
+			},
+			class_type: "CheckpointLoaderSimple",
+		},
+		latentImage: {
+			inputs: {
+				width,
+				height,
+				batch_size: 1,
+			},
+			class_type: "EmptyLatentImage",
+		},
+		prompt: {
+			inputs: {
+				text: prompt,
+				clip: [finalModel, 1],
+			},
+			class_type: "CLIPTextEncode",
+		},
+		negativePrompt: {
+			inputs: {
+				text: negativePrompt,
+				clip: [finalModel, 1],
+			},
+			class_type: "CLIPTextEncode",
+		},
+		vaeDecode: {
+			inputs: {
+				samples: ["kSampler", 0],
+				vae: ["model", 2],
+			},
+			class_type: "VAEDecode",
+		},
+		output: {
+			inputs: {
+				filename_prefix: "images/captain",
+				images: ["vaeDecode", 0],
+			},
+			class_type: "PreviewImage",
+		},
+	};
+	if (hasLora) {
+		workflow.lora = {
+			inputs: {
+				lora_name: loraName,
+				strength_model: loraWeight,
+				strength_clip: loraWeight,
+				model: ["model", 0],
+				clip: ["model", 1],
+			},
+			class_type: "LoraLoader",
+		};
+	}
+
+	return workflow;
+}
+
+function tools(appId: string, send?: <T>(action: string, payload: T) => void) {
+	return {
+		textToImage: tool({
+			description: "Generate an image for the user.",
+			parameters: z
+				.object({
+					prompt: z
+						.string()
+						.describe("The enhanced/optimized prompt for the image to be generated."),
+					seed: z
+						.number()
+						.gt(0)
+						.lt(2 ** 32)
+						.default(randomSeed())
+						.describe(
+							`An optional seed to be used for the generation (1 - ${2 ** 32}). You can reuse old seeds too.`
+						),
+					dimensions: z
+						.object({
+							height: z
+								.number()
+								.positive()
+								.gt(640)
+								.lt(1536)
+								.int()
+								.describe("The height of the generated image (640-1536)."),
+							width: z
+								.number()
+								.positive()
+								.gt(640)
+								.lt(1536)
+								.int()
+								.describe("The width of the generated image (640-1536)."),
+						})
+						.required({ height: true, width: true })
+						.default({ height: 1024, width: 1024 })
+						.describe(
+							"The dimensions: height and width of the generated image (max area of ~1024x1024)."
+						),
+				})
+				.required({ prompt: true }),
+
+			async execute({ prompt, seed, dimensions: { height, width } }) {
+				const comfyClient = v4();
+				if (send) {
+					send("assistant:tool", { tool: "textToImage", status: "loading" });
+				}
+
+				logger.info("Generating Image:", {
+					height,
+					width,
+					seed,
+					prompt,
+				});
+
+				const filePath = await new Promise<string>((resolve, reject) => {
+					try {
+						ComfyUI.getInstance.registerClient(
+							comfyClient,
+							async (data: ComfyUIUpdate) => {
+								switch (data.type) {
+									case "executed": {
+										const [image] = data.data.output.images;
+										const filePath = getComfyUIPath(
+											"temp",
+											image.subfolder,
+											image.filename
+										);
+										const destinationPath = await copyWithMetaData({
+											source: filePath,
+											destination: `images/${v4()}.png`,
+											metadata: { positivePrompt: prompt },
+										});
+										if (destinationPath) {
+											resolve(destinationPath);
+										} else {
+											reject(new Error("Could not generate the image"));
+										}
+
+										break;
+									}
+
+									default: {
+										break;
+									}
+								}
+							}
+						);
+						ComfyUI.getInstance
+							.queueWorkflow(
+								createWorkflow({
+									prompt,
+									seed,
+									height,
+									width,
+								}),
+								comfyClient
+							)
+							.catch(error => {
+								reject(error);
+							});
+					} catch (error) {
+						reject(error);
+					}
+				});
+				ComfyUI.getInstance.unregisterClient(comfyClient);
+
+				return {
+					prompt,
+					filePath: cropCaptainData(filePath),
+				};
+			},
+		}),
+	};
 }
 
 ipcMain.on(
@@ -456,23 +679,79 @@ ipcMain.on(
 						content: `${optimizedContext}\n${lastMessage.content}`,
 					};
 					limitedHistory.push(messageWithContext);
-
-					const result = await streamText({
-						model: assistant(model),
-						system: createSystemPrompt(),
-						messages: limitedHistory,
-					});
-
 					let fullResponse = "";
-					for await (const delta of result.textStream) {
-						fullResponse += delta;
-						event.sender.send(channel, {
-							action: "assistant:response",
-							payload: {
-								output: extendCaptainData(fullResponse),
-								done: false,
-							},
+
+					try {
+						let result = await streamText({
+							model: assistant(model),
+							system: createSystemPrompt(),
+							messages: limitedHistory,
+							tools: tools(appId, (action, payload) => {
+								event.sender.send(channel, {
+									action,
+									payload,
+								});
+							}),
 						});
+
+						const toolCalls: ToolCallPart[] = [];
+						const toolResults: ToolResultPart[] = [];
+						for await (const delta of result.fullStream) {
+							switch (delta.type) {
+								case "tool-call": {
+									logger.info("toolCall", delta);
+									toolCalls.push(delta);
+
+									break;
+								}
+
+								case "tool-result": {
+									logger.info("toolResult", delta);
+									toolResults.push(delta);
+
+									break;
+								}
+
+								default: {
+									break;
+								}
+							}
+						}
+
+						logger.info("toolCalls", toolCalls);
+						logger.info("toolResults", toolResults);
+
+						if (toolResults.length > 0) {
+							limitedHistory.push(
+								{
+									role: "assistant",
+									content: toolCalls,
+								},
+								{
+									role: "tool",
+									content: toolResults,
+								}
+							);
+							result = await streamText({
+								model: assistant(model),
+								system: createSystemPrompt(),
+								messages: limitedHistory,
+								tools: tools(appId),
+							});
+						}
+
+						for await (const delta of result.textStream) {
+							fullResponse += delta;
+							event.sender.send(channel, {
+								action: "assistant:response",
+								payload: {
+									output: extendCaptainData(fullResponse),
+									done: false,
+								},
+							});
+						}
+					} catch (error) {
+						logError(error);
 					}
 
 					chat.model = model;
