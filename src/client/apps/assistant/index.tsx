@@ -8,7 +8,10 @@ import Sheet from "@mui/joy/Sheet";
 import type { ColorPaletteProp } from "@mui/joy/styles";
 import Textarea from "@mui/joy/Textarea";
 import { useTranslation } from "next-i18next";
-import { useState } from "react";
+import type { LegacyRef } from "react";
+import { useEffect } from "react";
+import { useRef, useState } from "react";
+import type { List as VirtualList } from "react-virtualized";
 import { v4 } from "uuid";
 
 import { APP_ID } from "./constants";
@@ -25,6 +28,7 @@ import { useAssistant } from "@/client/apps/assistant/hooks/assistant";
 export function Assistant({ color }: { color: ColorPaletteProp }) {
 	const { t } = useTranslation(["labels", "common"]);
 	const [showScrollToBottom, setShowScrollToBottom] = useState(false);
+	const listReference = useRef<VirtualList>();
 
 	const {
 		error,
@@ -40,7 +44,6 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 		chatName,
 		chatId,
 		chats,
-		scrollContainerReference,
 		modelPrefix,
 		input,
 		setInput,
@@ -50,7 +53,12 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 		message,
 		setMessages,
 	} = useAssistant();
+	const [scrollToIndex, setScrollToIndex] = useState(messages.length + (message ? 1 : 0) - 1);
 	const { send } = useSDK<unknown, object>(APP_ID, {});
+
+	useEffect(() => {
+		setScrollToIndex(messages.length + (message ? 1 : 0) - 1);
+	}, [messages, message]);
 
 	function sendMessage() {
 		setIsGenerating(true);
@@ -154,7 +162,6 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 						<DataTypeSelector
 							dataTypes={dataTypes}
 							onChange={(dataTypeId, isChecked) => {
-								console.log("");
 								setDataTypes(previousState =>
 									previousState.map(dataType_ =>
 										dataType_.id === dataTypeId
@@ -170,28 +177,29 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 					</Box>
 				</Sheet>
 				<Box
-					ref={scrollContainerReference}
 					sx={{
 						flex: 1,
-						overflowY: "auto",
-						overflowX: "hidden",
-						maxWidth: "100%",
-					}}
-					onScroll={event => {
-						const container = event.target as HTMLDivElement;
-						const threshold = 200;
-						const isNearBottom =
-							container.scrollHeight - container.scrollTop - container.clientHeight <
-							threshold;
-						setShowScrollToBottom(!isNearBottom);
+						overflow: "hidden",
+						display: "flex",
 					}}
 				>
 					<Messages
+						ref={listReference as LegacyRef<VirtualList>}
 						messages={messages}
 						message={message}
 						model={model}
 						modelPrefix={modelPrefix}
 						color={color}
+						scrollToIndex={scrollToIndex}
+						onScroll={({ clientHeight, scrollHeight, scrollTop }) => {
+							const threshold = 200;
+							const isNearBottom =
+								scrollHeight - scrollTop - clientHeight < threshold;
+							setShowScrollToBottom(!isNearBottom);
+							setScrollToIndex(
+								isNearBottom ? messages.length + (message ? 1 : 0) - 1 : -1
+							);
+						}}
 					/>
 				</Box>
 				<Box sx={{ p: 1, position: "relative" }}>
@@ -200,6 +208,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 							position: "absolute",
 							bottom: "100%",
 							left: "50%",
+							mb: 1,
 							transform: "translateX(-50%)",
 							display: showScrollToBottom ? "flex" : "none",
 						}}
@@ -209,10 +218,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 							variant="soft"
 							aria-label={t("labels:toEnd")}
 							onClick={() => {
-								const container = scrollContainerReference.current;
-								if (container) {
-									container.scrollTop = container.scrollHeight;
-								}
+								setScrollToIndex(messages.length + (message ? 1 : 0) - 1);
 							}}
 						>
 							<ArrowDownwardIcon />

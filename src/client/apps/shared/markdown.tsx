@@ -225,14 +225,14 @@ export const components: Partial<Components> = {
 				sx={{
 					display: "flex",
 					flexDirection: "column",
-					alignItems: "center",
+					height: 700,
 					p: 0,
 					ml: 0,
 					mr: 1,
 					my: 0.5,
 				}}
 			>
-				<Box>
+				<Box sx={{ flex: 1, position: "relative" }}>
 					<Box
 						sx={{
 							display: "flex",
@@ -275,10 +275,10 @@ export const components: Partial<Components> = {
 						src={src}
 						alt={alt}
 						sx={{
-							my: 1,
-							mx: "auto",
+							position: "absolute",
+							inset: 0,
 							width: "100%",
-							maxHeight: 640,
+							height: "100%",
 							objectFit: "contain",
 							objectPosition: "center",
 						}}
