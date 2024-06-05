@@ -1,6 +1,6 @@
 {
   "name": "captain",
-  "version": "1.0.0-alpha.98",
+  "version": "1.0.0-alpha.99",
   "private": true,
   "description": "The Captain of AI",
   "license": "AGPL 3.0",
@@ -97,6 +97,7 @@
     "@types/react-dom": "^18.3.0",
     "@types/react-file-icon": "^1.0.4",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "@types/react-virtualized": "^9.21.30",
     "@types/react-window": "^1.8.8",
     "@types/sort-json": "^2.0.3",
     "@types/uuid": "^9.0.8",
@@ -174,6 +175,7 @@
     "react-markdown": "^9.0.1",
     "react-syntax-highlighter": "^15.5.0",
     "react-textarea-autosize": "^8.5.3",
+    "react-virtualized": "^9.22.5",
     "react-virtualized-auto-sizer": "^1.0.24",
     "react-window": "^1.8.10",
     "react-zoom-pan-pinch": "^3.4.4",

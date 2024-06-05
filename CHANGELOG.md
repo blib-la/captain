@@ -1,3 +1,10 @@
+# [1.0.0-alpha.99](https://github.com/blib-la/captain/compare/v1.0.0-alpha.98...v1.0.0-alpha.99) (2024-06-05)
+
+
+### Features
+
+* make chats virtualized ([#330](https://github.com/blib-la/captain/issues/330)) ([2f5eb80](https://github.com/blib-la/captain/commit/2f5eb808e71ca9c751a07c2b3900e20e468ac7ad))
+
 # [1.0.0-alpha.98](https://github.com/blib-la/captain/compare/v1.0.0-alpha.97...v1.0.0-alpha.98) (2024-05-28)
 
 
