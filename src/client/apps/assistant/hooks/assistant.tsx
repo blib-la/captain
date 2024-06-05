@@ -1,5 +1,5 @@
 import { useSDK } from "@captn/react/use-sdk";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Except } from "type-fest";
 import { v4 } from "uuid";
 
@@ -21,9 +21,6 @@ export function useAssistant() {
 	const [chats, setChats] = useState<(Except<ChatModel, "messages"> & { id: string })[]>([]);
 	const [isWarningOpen, setIsWarningOpen] = useState(false);
 	const [dataTypes, setDataTypes] = useState(availableDataTypes);
-
-	const firstRunReference = useRef(true);
-	const scrollContainerReference = useRef<HTMLDivElement | null>(null);
 
 	const [modelPrefix] = model.split("-");
 
@@ -82,7 +79,6 @@ export function useAssistant() {
 					const { chat } = message.payload as {
 						chat: Except<ChatModel, "messages"> & { messages: MessageModel[] };
 					};
-					firstRunReference.current = true;
 					setMessages(chat.messages);
 					setDataTypes(
 						availableDataTypes.map(dataType => {
@@ -125,25 +121,6 @@ export function useAssistant() {
 	});
 
 	useEffect(() => {
-		const container = scrollContainerReference.current;
-		if (container) {
-			const threshold = 200;
-			const isNearBottom =
-				container.scrollHeight - container.scrollTop - container.clientHeight < threshold;
-
-			if (isNearBottom || firstRunReference.current) {
-				container.scrollTop = container.scrollHeight;
-				firstRunReference.current = false;
-			}
-		}
-	}, [messages, message]);
-
-	useEffect(() => {
-		const container = scrollContainerReference.current;
-		if (container) {
-			container.scrollTop = container.scrollHeight;
-		}
-
 		if (chatId) {
 			send({ action: "assistant:history", payload: { id: chatId } });
 		} else {
@@ -180,7 +157,6 @@ export function useAssistant() {
 		dataTypes,
 		setDataTypes,
 		modelPrefix,
-		scrollContainerReference,
 		chatName,
 		isGenerating,
 		setIsGenerating,
