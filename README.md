@@ -10,7 +10,7 @@
 
 <!-- releases -->
 <div align="center">
-  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-alpha.99/Captain-Setup-1.0.0-alpha.99.exe">
+  <a href="https://github.com/blib-la/captain/releases/download/v1.0.0-alpha.100/Captain-Setup-1.0.0-alpha.100.exe">
     <img alt="Windows" src="https://img.shields.io/badge/Windows-Download Now-2c2?style=for-the-badge"/>
   </a>
 </div>

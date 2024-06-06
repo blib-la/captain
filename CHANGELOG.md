@@ -1,3 +1,10 @@
+# [1.0.0-alpha.100](https://github.com/blib-la/captain/compare/v1.0.0-alpha.99...v1.0.0-alpha.100) (2024-06-06)
+
+
+### Features
+
+* add tools to assistant ([#329](https://github.com/blib-la/captain/issues/329)) ([cf1326c](https://github.com/blib-la/captain/commit/cf1326cd77bfa2271155853c3e4bf421a1056397)), closes [#328](https://github.com/blib-la/captain/issues/328)
+
 # [1.0.0-alpha.99](https://github.com/blib-la/captain/compare/v1.0.0-alpha.98...v1.0.0-alpha.99) (2024-06-05)
 
 
