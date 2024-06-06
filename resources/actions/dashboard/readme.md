@@ -22,23 +22,4 @@ icon: Dashboard
 iconColor: "#20827c"
 ---
 
-Search for applications with AI precision.
-Display documents relevant to my current project.
-Show images from my latest vacation.
-Find tools and apps that boost my productivity.
-Activate dark mode for evening use.
-Switch to a light theme during the day.
-Recommend new tools based on my usage patterns.
-Organize my files and documents smartly.
-Adjust settings for optimal widget display.
-Customize the dashboard to my visual preferences.
-Update my preferences for more personalized suggestions.
-Guide me through the latest marketplace offerings.
-Enhance privacy settings for secure data processing.
-Integrate seamlessly with installed applications.
-Sort media files by relevance to my interests.
-Use natural language queries for intuitive search.
-Discover hidden features in commonly used apps.
-Tailor the dashboard display to my work habits.
-Explore content with AI-generated summaries.
-Prioritize dashboard content based on my behavior.
+App, application, manage all your creative tools in one place with the Dashboard. This app provides an organized and intuitive interface, showing all installed applications and acting as a central launcher. Users can easily access ComfyUI, Assistant, Generate Images, Live Painting, Explorer, and third-party apps from a single, streamlined dashboard. The Dashboard enhances productivity by allowing quick launching and switching between tools. With its user-friendly design, this app ensures that all your creative and productivity tools are just a click away, simplifying workflow management and boosting efficiency.
