@@ -9,7 +9,7 @@ import { createOpenAI } from "@ai-sdk/openai";
 import type { LanguageModelV1 } from "@ai-sdk/provider";
 import type { SDKMessage } from "@captn/react/types";
 import { APP_MESSAGE_KEY } from "@captn/utils/constants";
-import type { ComfyUIUpdate, VectorStoreDocument } from "@captn/utils/types";
+import type { ComfyUIUpdate } from "@captn/utils/types";
 import type { Schemas as QdrantSchemas } from "@qdrant/js-client-rest";
 import type { CoreMessage, CoreTool, ToolCallPart, ToolResultPart } from "ai";
 import { tool } from "ai";
@@ -416,6 +416,9 @@ export function tools(appId: string, send?: <T>(action: string, payload: T) => v
 				.required({ query: true }),
 			async execute({ query, categories }) {
 				logger.info("Sending Query for RAG:", query);
+				if (send) {
+					send("assistant:tool", { tool: "vectorSearch", status: "loading" });
+				}
 
 				const vectorStore = VectorStore.getInstance;
 
@@ -423,8 +426,6 @@ export function tools(appId: string, send?: <T>(action: string, payload: T) => v
 				const must: QdrantSchemas["Filter"]["must"] = [
 					{ key: "type", match: { any: categories } },
 				];
-
-				console.log("must", must);
 
 				try {
 					const response = await vectorStore.search(VECTOR_STORE_COLLECTION, query, {
@@ -434,10 +435,7 @@ export function tools(appId: string, send?: <T>(action: string, payload: T) => v
 							must,
 						},
 					});
-					console.log(
-						"response",
-						response.map(entry => entry.payload)
-					);
+
 					return {
 						matches: response.map(entry => ({
 							...entry.payload,
@@ -448,8 +446,13 @@ export function tools(appId: string, send?: <T>(action: string, payload: T) => v
 					};
 				} catch (error) {
 					logError(error);
+					const message = `Could not perform the vector search for {query: ${query}, categories: ${JSON.stringify(categories)}`;
+					if (send) {
+						send("assistant:error", { error: message });
+					}
+
 					return {
-						error: `Could not perform the vector search for {query: ${query}, categories: ${JSON.stringify(categories)}`,
+						error: message,
 					};
 				}
 			},
@@ -657,110 +660,6 @@ export function getProvider(model: string) {
 			return "Unknown";
 		}
 	}
-}
-
-export async function getContext(
-	assistant: OpenAIProvider | AnthropicProvider | MistralProvider | GoogleGenerativeAIProvider,
-	chat: ChatModel,
-	{
-		includedDataTypes,
-		userInput,
-		model,
-	}: { includedDataTypes: string[]; userInput: string; model: string }
-) {
-	let optimizedContext = "\n<!-- NO CONTEXT -->\n";
-	if (includedDataTypes.length > 0) {
-		logger.info(`Assistant uses data: ${includedDataTypes.join(", ")}`);
-
-		const minorContent = [
-			...chat.messages.slice(-2),
-			{
-				role: "user" as const,
-				content: userInput + " => ONLY ANSWER WITH A SEARCH QUERY!!!",
-			},
-		].filter(Boolean);
-		if (minorContent[0] && minorContent[0].role !== "user") {
-			minorContent.shift();
-		}
-
-		const query = await chatCompletion({
-			model: assistant(model),
-			system: createVectorSearchPrompt({ dataTypes: includedDataTypes }),
-			messages: minorContent,
-		});
-
-		logger.info("Sending Query for RAG:", query);
-
-		const vectorStore = VectorStore.getInstance;
-
-		// Prepare array of dataTypes used in the lookup
-		const must: QdrantSchemas["Filter"]["must"] = [
-			{ key: "type", match: { any: includedDataTypes } },
-		];
-
-		const response = await vectorStore.search(VECTOR_STORE_COLLECTION, query, {
-			limit: 10,
-			score_threshold: 0.3,
-			filter: {
-				must,
-			},
-		});
-
-		const context = await Promise.all(
-			response.map(async entry => {
-				const entryPayload = (entry as unknown as VectorStoreDocument).payload!;
-				const { filePath } = entryPayload;
-				//
-				const cleanFilePath = filePath && cropCaptainData(filePath);
-
-				if (entry.payload!.fileType === "png") {
-					return {
-						id: entryPayload.id,
-						type: entryPayload.type,
-						score: entry.score,
-						filePath: cleanFilePath,
-						content: entryPayload.content,
-						label: entryPayload.label,
-					};
-				}
-
-				if (entry.payload!.fileType === "md") {
-					return {
-						id: entryPayload.id,
-						type: entryPayload.type,
-						score: entry.score,
-						filePath: cleanFilePath,
-						content: entryPayload.content,
-						label: entryPayload.label,
-					};
-				}
-
-				return {
-					id: entryPayload.id,
-					type: entryPayload.type,
-					score: entry.score,
-					filePath: cleanFilePath,
-					content: entryPayload.content,
-					label: entryPayload.label,
-				};
-			})
-		);
-		const files: Record<string, RAGDocument> = {};
-		for (const entry of context.filter(Boolean)) {
-			if (files[entry.id]) {
-				files[entry.id].content += `...\n...${entry.content}`;
-			} else {
-				files[entry.id] = entry;
-			}
-		}
-
-		const fileArray = Object.values(files);
-		optimizedContext = optimizeContext(fileArray);
-	} else {
-		logger.info("Assistant NOT using data");
-	}
-
-	return optimizedContext;
 }
 
 export async function streamWithTools<TOOLS extends Record<string, CoreTool>>(
@@ -984,9 +883,6 @@ ipcMain.on(
 					const userInput = message.payload.input!;
 					const model = message.payload.model ?? "gpt-3.5-turbo";
 					const dataTypes = message.payload.dataTypes ?? availableDataTypes;
-					const includedDataTypes = dataTypes
-						.filter(dataType => dataType.active)
-						.map(dataType => dataType.type);
 					const assistant = getAssistant(model);
 
 					if (!assistant) {
@@ -997,13 +893,14 @@ ipcMain.on(
 						return;
 					}
 
-					const lastMessage = { role: "user" as const, content: userInput };
 					if (chat.messages.length === 0) {
 						// LastMessage is first message. Let AI create a label / title
 						chat.label = await chatCompletion({
 							model: assistant(model),
 							system: createChatLabelPrompt(),
-							messages: [lastMessage],
+							messages: [
+								{ role: "user", content: `Create a label for: ${userInput}` },
+							],
 						});
 						event.sender.send(channel, {
 							action: "assistant:nameSuggestion",
@@ -1013,20 +910,12 @@ ipcMain.on(
 						});
 					}
 
-					const optimizedContext = await getContext(assistant, chat, {
-						includedDataTypes,
-						model,
-						userInput,
-					});
-
 					// Only send the last N messages
 					const limit = message.payload.maxHistory ?? 10;
 					const limitedHistory = chat.messages.slice(-limit);
+					const lastMessage = { role: "user" as const, content: userInput };
 
-					limitedHistory.push({
-						role: "user",
-						content: `${optimizedContext}\n${lastMessage.content}`,
-					});
+					limitedHistory.push(lastMessage);
 
 					const fullResponse = await streamWithTools(assistant, {
 						history: limitedHistory,

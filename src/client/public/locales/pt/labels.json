@@ -124,6 +124,10 @@
   "text": "Texto",
   "textToImage": "Texto para Imagem",
   "toEnd": "Para o Fim",
+  "tools": {
+    "textToImage": "Gerando imagem",
+    "vectorSearch": "Procurando arquivos"
+  },
   "undefined": "Desconhecido",
   "unpacking": "Desembalando",
   "update": "Atualizar",

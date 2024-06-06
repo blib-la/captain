@@ -124,6 +124,10 @@
   "text": "Text",
   "textToImage": "Text to Image",
   "toEnd": "To End",
+  "tools": {
+    "textToImage": "Generating Image",
+    "vectorSearch": "Searching files"
+  },
   "undefined": "Unknown",
   "unpacking": "Unpacking",
   "update": "Update",

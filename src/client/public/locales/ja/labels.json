@@ -124,6 +124,10 @@
   "text": "テキスト",
   "textToImage": "テキストから画像へ",
   "toEnd": "最後へ",
+  "tools": {
+    "textToImage": "画像を生成中",
+    "vectorSearch": "ファイルを検索中"
+  },
   "undefined": "不明",
   "unpacking": "解凍中",
   "update": "更新",

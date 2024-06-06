@@ -6,7 +6,6 @@ import { v4 } from "uuid";
 import { APP_ID, models } from "@/client/apps/assistant/constants";
 import type { MessageModel } from "@/client/apps/assistant/types";
 import { getModelInfo } from "@/client/apps/assistant/utils";
-import { availableDataTypes } from "@/shared/assistant";
 import type { ChatModel } from "@/shared/types/assistant";
 
 export function useAssistant() {
@@ -15,12 +14,12 @@ export function useAssistant() {
 	const [chatName, setChatName] = useState("");
 	const [isGenerating, setIsGenerating] = useState(false);
 	const [input, setInput] = useState("");
+	const [activeTool, setActiveTool] = useState<null | "textToImage" | "vectorSearch">(null);
 	const [chatId, setChatId] = useState("");
 	const [model, setModel] = useState(models[0].id);
 	const [error, setError] = useState("");
 	const [chats, setChats] = useState<(Except<ChatModel, "messages"> & { id: string })[]>([]);
 	const [isWarningOpen, setIsWarningOpen] = useState(false);
-	const [dataTypes, setDataTypes] = useState(availableDataTypes);
 
 	const [modelPrefix] = model.split("-");
 
@@ -28,6 +27,7 @@ export function useAssistant() {
 
 	const { send } = useSDK<unknown, object>(APP_ID, {
 		onMessage(message) {
+			setError("");
 			switch (message.action) {
 				case "assistant:nameSuggestion": {
 					const { chatName: chatName_ } = message.payload as {
@@ -72,6 +72,8 @@ export function useAssistant() {
 						setMessage(output);
 					}
 
+					setActiveTool(null);
+
 					break;
 				}
 
@@ -80,15 +82,6 @@ export function useAssistant() {
 						chat: Except<ChatModel, "messages"> & { messages: MessageModel[] };
 					};
 					setMessages(chat.messages);
-					setDataTypes(
-						availableDataTypes.map(dataType => {
-							const chatDataTypes = chat.dataTypes ?? [];
-							const overwrite = chatDataTypes.find(
-								dataType_ => dataType_.id === dataType.id
-							);
-							return overwrite ?? dataType;
-						})
-					);
 					setModel(chat.model);
 					setChatName(chat.label);
 
@@ -100,16 +93,20 @@ export function useAssistant() {
 						error: string;
 					};
 					setError(error_);
+					setActiveTool(null);
 
 					break;
 				}
 
 				case "assistant:tool": {
 					const { tool, status } = message.payload as {
-						tool: string;
+						tool: "textToImage" | "vectorSearch";
 						status: "loading" | "done";
 					};
-					setMessage(`${tool}: ${status}`);
+					if (status === "loading") {
+						setActiveTool(tool);
+						setMessage(`${tool}: ${status}`);
+					}
 
 					break;
 				}
@@ -160,12 +157,12 @@ export function useAssistant() {
 		setError,
 		setChatName,
 		setChatId,
+		activeTool,
 		chatId,
 		chats,
 		model,
 		setModel,
-		dataTypes,
-		setDataTypes,
+
 		modelPrefix,
 		chatName,
 		isGenerating,

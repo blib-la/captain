@@ -124,6 +124,10 @@
   "text": "Текст",
   "textToImage": "Текст в Изображение",
   "toEnd": "В конец",
+  "tools": {
+    "textToImage": "Генерация изображения",
+    "vectorSearch": "Поиск файлов"
+  },
   "undefined": "Неизвестно",
   "unpacking": "Распаковка",
   "update": "Обновить",
