@@ -225,7 +225,8 @@ export const components: Partial<Components> = {
 				sx={{
 					display: "flex",
 					flexDirection: "column",
-					height: 700,
+					height: { xs: 300, md: 500, lg: 700 },
+					minWidth: { xs: 300, md: 500, lg: 700 },
 					p: 0,
 					ml: 0,
 					mr: 1,
