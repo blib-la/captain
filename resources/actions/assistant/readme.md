@@ -18,24 +18,10 @@ icon: Assistant
 iconColor: "#4D822F"
 ---
 
-I need AI assistance.
-I want to chat with AI.
-Open the AI chat.
-Launch the AI assistant.
-Start a conversation with the AI.
-Access AI chat functionality.
-Engage in a chat with the AI assistant.
-Initiate AI-based chat.
-Connect with the AI assistant.
-Open the AI-based conversation tool.
-Begin a session with the AI assistant.
-Request AI chat support.
-Activate the AI assistant for help.
-Start chatting with the AI now.
-Open the AI for interactive chat.
-Access the intelligent assistant for conversation.
-Begin a dialogue with the AI.
-Open the virtual assistant chat.
-Start the AI-powered assistant.
-Get AI assistance for my queries.
+App, application, chat with your personal assistant with RAG and tools like generating images.
+The AI Assistant app with Retrieval-Augmented Generation and integrated tools is a solution to enhance productivity and streamline tasks. supported Models include:
+OpenAI: gpt-4o, gpt-4-turbo, gpt-4, gpt-3.5-turbo.
+Anthropic: claude-3-opus, claude-3-sonnet, claude-3-haiku.
+Mistral: mistral-large, mistral-small.
+Google: gemini-1.5-pro.
 

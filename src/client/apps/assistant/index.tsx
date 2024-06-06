@@ -18,7 +18,6 @@ import { APP_ID } from "./constants";
 
 import { ChatList } from "@/client/apps/assistant/components/chat-list";
 import { ChatName } from "@/client/apps/assistant/components/chat-name";
-import { DataTypeSelector } from "@/client/apps/assistant/components/data-type-selector";
 import { MessageStack } from "@/client/apps/assistant/components/message-stack";
 import { Messages } from "@/client/apps/assistant/components/messages";
 import { ModelSelector } from "@/client/apps/assistant/components/model-selector";
@@ -34,8 +33,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 		error,
 		model,
 		setModel,
-		dataTypes,
-		setDataTypes,
+		activeTool,
 		provider,
 		isWarningOpen,
 		setError,
@@ -74,7 +72,6 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 				id: chatId,
 				model,
 				maxHistory: 10,
-				dataTypes,
 			},
 		});
 	}
@@ -100,7 +97,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 					flexShrink: 0,
 				}}
 			>
-				<List sx={{ flexGrow: 0 }}>
+				<List sx={{ flexGrow: 0, overflow: "hidden" }}>
 					<StickyChatList
 						color={color}
 						onNew={() => {
@@ -108,6 +105,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 							setChatId(v4());
 						}}
 					/>
+
 					<ChatList
 						chatId={chatId}
 						chats={chats}
@@ -159,21 +157,6 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 								});
 							}}
 						/>
-						<DataTypeSelector
-							dataTypes={dataTypes}
-							onChange={(dataTypeId, isChecked) => {
-								setDataTypes(previousState =>
-									previousState.map(dataType_ =>
-										dataType_.id === dataTypeId
-											? {
-													...dataType_,
-													active: isChecked,
-												}
-											: dataType_
-									)
-								);
-							}}
-						/>
 					</Box>
 				</Sheet>
 				<Box
@@ -187,6 +170,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 						ref={listReference as LegacyRef<VirtualList>}
 						messages={messages}
 						message={message}
+						activeTool={activeTool}
 						model={model}
 						modelPrefix={modelPrefix}
 						color={color}

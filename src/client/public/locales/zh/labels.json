@@ -124,6 +124,10 @@
   "text": "文本",
   "textToImage": "文字转图片",
   "toEnd": "到结尾",
+  "tools": {
+    "textToImage": "生成图像",
+    "vectorSearch": "搜索文件"
+  },
   "undefined": "未知",
   "unpacking": "解压中",
   "update": "更新",

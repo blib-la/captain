@@ -2,12 +2,15 @@ import AssistantIcon from "@mui/icons-material/Assistant";
 import PersonIcon from "@mui/icons-material/Person";
 import Avatar from "@mui/joy/Avatar";
 import Box from "@mui/joy/Box";
+import Chip from "@mui/joy/Chip";
+import CircularProgress from "@mui/joy/CircularProgress";
 import ListItem from "@mui/joy/ListItem";
 import ListItemContent from "@mui/joy/ListItemContent";
 import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import Sheet from "@mui/joy/Sheet";
 import type { ColorPaletteProp } from "@mui/joy/styles";
 import Tooltip from "@mui/joy/Tooltip";
+import Typography from "@mui/joy/Typography";
 import { useTranslation } from "next-i18next";
 import type { CSSProperties, LegacyRef } from "react";
 import { useEffect, useRef } from "react";
@@ -22,10 +25,36 @@ import type { MessageModel } from "@/client/apps/assistant/types";
 import { Markdown } from "@/client/apps/shared/markdown";
 import { useResizeObserver } from "@/client/ions/hooks/resize-observer";
 
+export function ActiveTool({ tool }: { tool: "textToImage" | "vectorSearch" }) {
+	const { t } = useTranslation(["labels"]);
+	return (
+		<Chip
+			color="neutral"
+			variant="outlined"
+			startDecorator={
+				<CircularProgress
+					color="neutral"
+					variant="solid"
+					sx={{
+						"--CircularProgress-size": "16px",
+						"--CircularProgress-trackThickness": "2px",
+						"--CircularProgress-progressThickness": "2px",
+					}}
+				/>
+			}
+			sx={{
+				"--Chip-decoratorChildHeight": "16px",
+			}}
+		>
+			<Typography>{t(`labels:tools.${tool}`)}</Typography>
+		</Chip>
+	);
+}
+
 export const MessageRenderer = forwardRef<
 	HTMLLIElement,
 	{
-		message: MessageModel;
+		message: MessageModel & { activeTool?: null | "textToImage" | "vectorSearch" };
 		color: ColorPaletteProp;
 		style?: CSSProperties;
 		onResize?(): void;
@@ -80,7 +109,7 @@ export const MessageRenderer = forwardRef<
 				sx={{
 					flexDirection: message.role === "user" ? "row-reverse" : "row",
 					alignItems: "flex-start",
-					alignSelf: message.role === "user" ? "flex-end" : "flex-start",
+					alignSelf: message.role === "user" ? "flex-end" : "stretch",
 					gap: 2,
 				}}
 			>
@@ -124,7 +153,11 @@ export const MessageRenderer = forwardRef<
 							borderRadius: "sm",
 						}}
 					>
-						<Markdown markdown={message.content} />
+						{message.activeTool ? (
+							<ActiveTool tool={message.activeTool} />
+						) : (
+							<Markdown markdown={message.content} />
+						)}
 					</Sheet>
 				</ListItemContent>
 			</ListItem>
@@ -141,11 +174,12 @@ export const Messages = forwardRef<
 		model: string;
 		modelPrefix: string;
 		message: string;
+		activeTool: null | "textToImage" | "vectorSearch";
 		color: ColorPaletteProp;
 		onScroll: ListProps["onScroll"];
 		scrollToIndex: ListProps["scrollToIndex"];
 	}
->(({ messages, model, message, color, onScroll, scrollToIndex }, reference) => {
+>(({ messages, model, message, color, onScroll, scrollToIndex, activeTool }, reference) => {
 	const cache = useMemo(
 		() =>
 			new CellMeasurerCache({
@@ -190,6 +224,7 @@ export const Messages = forwardRef<
 										role: "assistant",
 										content: message,
 										model,
+										activeTool,
 									};
 									return (
 										<MessageRenderer

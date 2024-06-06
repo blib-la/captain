@@ -9,25 +9,31 @@ import { createOpenAI } from "@ai-sdk/openai";
 import type { LanguageModelV1 } from "@ai-sdk/provider";
 import type { SDKMessage } from "@captn/react/types";
 import { APP_MESSAGE_KEY } from "@captn/utils/constants";
-import type { VectorStoreDocument } from "@captn/utils/types";
+import type { ComfyUIUpdate } from "@captn/utils/types";
 import type { Schemas as QdrantSchemas } from "@qdrant/js-client-rest";
-import type { CoreMessage } from "ai";
+import type { CoreMessage, CoreTool, ToolCallPart, ToolResultPart } from "ai";
+import { tool } from "ai";
 import { streamText } from "ai";
 import { ipcMain, type IpcMainEvent } from "electron";
 import Store from "electron-store";
 import type { Except } from "type-fest";
 import { v4 } from "uuid";
+import { z } from "zod";
 
+import { copyWithMetaData } from "@/electron/png";
+import { ComfyUI } from "@/electron/services/comfyui";
 import { logError, logger } from "@/electron/services/logger";
 import { VectorStore } from "@/electron/services/vector-store";
-import { keyStore } from "@/electron/stores";
+import { inventoryStore, keyStore } from "@/electron/stores";
 import { normalizePath } from "@/electron/utils/normalize-path";
-import { getCaptainData } from "@/electron/utils/path-helpers";
+import { getCaptainData, getComfyUIPath } from "@/electron/utils/path-helpers";
 import { availableDataTypes } from "@/shared/assistant";
 import { buildKey } from "@/shared/build-key";
 import { VECTOR_STORE_COLLECTION } from "@/shared/constants";
 import { KEY } from "@/shared/enums";
+import { randomSeed } from "@/shared/number";
 import type { ChatModel, DataTypeItem } from "@/shared/types/assistant";
+import type { NodeChain } from "@/shared/types/comfyui";
 
 export const assistantStore = new Store<Record<string, ChatModel>>({
 	name: buildKey([KEY.STORE, KEY.ASSISTANT]),
@@ -41,7 +47,8 @@ interface RAGDocument {
 	label: string;
 	score: number;
 }
-function optimizeContext(context: RAGDocument[]) {
+
+export function optimizeContext(context: RAGDocument[]) {
 	if (context.length === 0) {
 		return "\n<!-- NO CONTEXT -->\n";
 	}
@@ -69,6 +76,13 @@ export function extendCaptainData(content: string) {
 	);
 }
 
+export function replaceCaptainData(content: string) {
+	return normalizePath(content).replaceAll(
+		new RegExp(getCaptainData() + "/", "ig"),
+		PATH_PLACEHOLDER
+	);
+}
+
 export function createVectorSearchPrompt({ dataTypes }: { dataTypes: string[] }) {
 	return `Based on the history of user-assistant messages, generate a single, highly relevant search query that includes several tags or keywords for a vector search. The query should be 1-2 sentences long and tailored to find specific results within the following data types: ${JSON.stringify(dataTypes)}. Do not interact with the user or provide any additional comments. The user will not see your query; it is only used for the search process.`;
 }
@@ -77,59 +91,153 @@ export function createChatLabelPrompt() {
 	return `Your task is to generate a short and concise label or title for the chat based on the user's initial question. The label should accurately reflect the main topic or intent of the user's inquiry, be in the same language as the user's question, and must be no more than four words. Ensure the label is clear and specific, capturing the essence of the conversation that is about to start. Yur answer is just the label, no comments or explanation, the user will not see your message or be able to interact with you.`;
 }
 
-export function createSystemPrompt() {
-	return `# You are Captain | The AI Platform
+export function createSystemPrompt({ model, provider }: { model: string; provider: string }) {
+	return `# System Guide for "Captain | The AI platform"
 
 ## You are:
-- An open source app developed by Blibla, a German startup from Mainz.
+- Captain
+- An app that uses different AI models.
 - Always nice to the user, encouraging, and a bit quirky but honest.
 - The user's best friend and a great support for any problem.
 - Extremely precise when precision is required.
+- Currently using the model: ${model} by ${provider}.
 
 ## You can:
 - Store data locally and keep personal data private.
-- Retrieve data based on user queries using the integrated local vector store (powered by Qdrant and local embeddings).
+- Retrieve data based on user queries using the local vector store.
 - Access files from the user's computer, but only those files registered in Captain.
+- Generate images with ComfyUI.
 - Link to or display certain files inline if asked to do so.
-- Speak 11 languages (German, English, Spanish, French, Italian, Japanese, Dutch, Polish, Portuguese, Russian, Chinese) and respond in the user's language.
 
-> [!NOTE]
-> You always act as Captain. Each user query includes context retrieved by a vector search. To activate the context, the user must select the datatypes in the menu. Only files in the selected category are included.
 
-## Interaction Guide:
+## User Interaction Guide:
 
-### User Interaction
-- **Scenario: User speaks {language}**
-  - Respond in {language} using simple, clear language.
+\`\`\`gherkin
+Scenario: User speaks {language}
+  When user speaks {language}
+  Then you answer in {language}
+  And your response is simple and clear
 
-- **Scenario: Context is empty**
-  - Indicate there may not be related data.
+Scenario: User wants to know about Captain
+  When user asks about Captain and it's usage
+  Then you briefly introduce yourself
+  And you tell them what they want to know
 
-- **Scenario: Context has entries**
-  - Indicate they might be related to the user's query.
+Scenario: A vector search is required
+  When a vector search is required
+  Then you select the correct category
+  And you prepare a perfect query
+  And your query uses several trigger words in natural language format
 
-- **Scenario: Context includes images**
-  - Answer with image tags (e.g., ![Image content](${PATH_PLACEHOLDER}/path/to/image.ext)).
+Scenario: Your response includes images
+  When your response includes images
+  Then you answer with image tags (e.g., ![{Image prompt or caption}](${PATH_PLACEHOLDER}/path/to/image.ext))
 
-- **Scenario: User requests a story**
-  - Select 1-3 fitting images from the context.
-  - Return the story including the image as inline image tags.
+Scenario: Your response includes links
+  When your response includes images
+  Then you include references to entries as links (e.g., [{Link label}](${PATH_PLACEHOLDER}/path/to/file.ext))
 
-- **Scenario: User requests links or lists**
-  - Include references to found entries as links (e.g., [Link label](${PATH_PLACEHOLDER}/path/to/file.ext)).
+Scenario: User wants an image generated
+  When user asks you to generate an image
+  Then you create an optimized and contextualized prompt
+  And you generate the image with ComfyUI
 
-- **Scenario: User has a question about Captain**
-  - Explain Captain's features and offer things to try out.
+Scenario: User wants to search existing images
+  When user asks you to look for an image
+  Then you perform a vector search for "image"
+  And your response includes images
 
-- **Scenario: Miscellaneous user input**
-  - Use context to answer questions or perform tasks, and always add references if applicable.
+Scenario: User requests links or lists
+  When the user asks you to list links
+  Then you perform a vector search for {category}
+  And your response includes links
 
-- **Scenario: User wants responses based on the last message**
-  - Ignore the context and use previous messages as context.
+Scenario: User requests info on apps
+  When the user asks you about the included apps
+  Then you perform a vector search for "app"
+  And your response includes links
 
-### Error Handling
-- **Scenario: An error occurs**
-  - Apologize and provide guidance on how to proceed or troubleshoot.
+Scenario: User wants a story
+  When the user wants a story
+  Then you generate images
+  And you write a story about the images
+  And each image has a paragraph
+  And your response includes text with inline images
+
+Scenario: Miscellaneous user input
+  When the user submits a miscellaneous input
+  Then you act accordingly
+  And you aim to fulfill their request
+
+Scenario: An error occurs
+  When an error occurs
+  Then you inform the user kindly
+\`\`\`
+`;
+}
+
+export function createSystemPrompt2({ model, provider }: { model: string; provider: string }) {
+	return `# System Guide for "Captain | The AI platform"
+
+## You are:
+- Captain
+- An app that uses different AI models.
+- Always nice to the user, encouraging, and a bit quirky but honest.
+- The user's best friend and a great support for any problem.
+- Extremely precise when precision is required.
+- Currently using the model: ${model} by ${provider}.
+
+## You can:
+- Store data locally and keep personal data private.
+- Retrieve data based on user queries using the local vector store.
+- Access files from the user's computer, but only those files registered in Captain.
+- Generate images with ComfyUI.
+- Link to or display certain files inline if asked to do so.
+
+## User Interaction Guide:
+
+\`\`\`gherkin
+Scenario: User speaks {language}
+  When user speaks {language}
+  Then you answer in {language}
+  And your response is simple and clear
+
+Scenario: User wants to know about Captain
+  When user asks about Captain and it's usage
+  Then you briefly introduce yourself
+  And you tell them what they want to know
+
+Scenario: Your response includes images
+  When your response includes images
+  Then you answer with image tags (e.g., ![{Image prompt or caption}](${PATH_PLACEHOLDER}/path/to/image.ext))
+
+Scenario: Your response includes links
+  When your response includes images
+  Then you include references to entries as links (e.g., [{Link label}](${PATH_PLACEHOLDER}/path/to/file.ext))
+
+Scenario: User requests links or lists
+  When the user asks you to list links
+  Then your response includes links
+
+Scenario: User requests info on apps
+  When the user asks you about the included apps
+  Then your response includes links
+
+Scenario: User wants a story
+  When the user wants a story
+  Then you write a story about the images
+  And each image has a paragraph
+  And your response includes text with inline images
+
+Scenario: Miscellaneous user input
+  When the user submits a miscellaneous input
+  Then you act accordingly
+  And you aim to fulfill their request
+
+Scenario: An error occurs
+  When an error occurs
+  Then you inform the user kindly
+\`\`\`
 `;
 }
 
@@ -156,6 +264,485 @@ export async function chatCompletion({
 		if (onStep) {
 			onStep(fullResponse);
 		}
+	}
+
+	return fullResponse;
+}
+
+export function createWorkflow({
+	prompt = "",
+	negativePrompt = "",
+	seed = 1234,
+	steps = 20,
+	height,
+	width,
+	cfg = 7,
+	loraWeight = 1,
+	checkpointName = "stabilityai\\stable-diffusion-xl-base-1.0\\sd_xl_base_1.0_0.9vae.safetensors",
+	loraName,
+}: {
+	prompt?: string;
+	negativePrompt?: string;
+	seed?: number;
+	height: number;
+	width: number;
+	steps?: number;
+	cfg?: number;
+	checkpointName?: string;
+	loraName?: string;
+	loraWeight?: number;
+}) {
+	const hasLora = loraName && loraWeight > 0;
+	const finalModel = hasLora ? "lora" : "model";
+	const workflow: NodeChain = {
+		kSampler: {
+			inputs: {
+				seed,
+				steps,
+				cfg,
+				sampler_name: "dpmpp_2m_sde_gpu",
+				scheduler: "karras",
+				denoise: 1,
+				model: [finalModel, 0],
+				positive: ["prompt", 0],
+				negative: ["negativePrompt", 0],
+				latent_image: ["latentImage", 0],
+			},
+			class_type: "KSampler",
+		},
+		model: {
+			inputs: {
+				ckpt_name: checkpointName,
+			},
+			class_type: "CheckpointLoaderSimple",
+		},
+		latentImage: {
+			inputs: {
+				width,
+				height,
+				batch_size: 1,
+			},
+			class_type: "EmptyLatentImage",
+		},
+		prompt: {
+			inputs: {
+				text: prompt,
+				clip: [finalModel, 1],
+			},
+			class_type: "CLIPTextEncode",
+		},
+		negativePrompt: {
+			inputs: {
+				text: negativePrompt,
+				clip: [finalModel, 1],
+			},
+			class_type: "CLIPTextEncode",
+		},
+		vaeDecode: {
+			inputs: {
+				samples: ["kSampler", 0],
+				vae: ["model", 2],
+			},
+			class_type: "VAEDecode",
+		},
+		output: {
+			inputs: {
+				filename_prefix: "images/captain",
+				images: ["vaeDecode", 0],
+			},
+			class_type: "PreviewImage",
+		},
+	};
+	if (hasLora) {
+		workflow.lora = {
+			inputs: {
+				lora_name: loraName,
+				strength_model: loraWeight,
+				strength_clip: loraWeight,
+				model: ["model", 0],
+				clip: ["model", 1],
+			},
+			class_type: "LoraLoader",
+		};
+	}
+
+	return workflow;
+}
+
+export const STORE_CATEGORIES = ["image", "story", "app"] as const;
+
+export function cropIncompleteImageTag(markdown: string): string {
+	const imgTagOpen = "![";
+	const imgTagClose = "](";
+	const imgTagEnd = ")";
+
+	// Find the last occurrence of an open image tag
+	const lastOpenTagIndex = markdown.lastIndexOf(imgTagOpen);
+	if (lastOpenTagIndex === -1) {
+		return markdown;
+	} // No image tag found, return as is
+
+	// Find the corresponding closing brackets
+	const lastCloseTagIndex = markdown.indexOf(imgTagClose, lastOpenTagIndex);
+	if (lastCloseTagIndex === -1) {
+		// Incomplete image tag, crop the tail
+		return markdown.slice(0, Math.max(0, lastOpenTagIndex));
+	}
+
+	// Find the end of the image tag
+	const lastEndTagIndex = markdown.indexOf(imgTagEnd, lastCloseTagIndex);
+	if (lastEndTagIndex === -1) {
+		// Incomplete image tag, crop the tail
+		return markdown.slice(0, Math.max(0, lastOpenTagIndex));
+	}
+
+	// If the image tag is complete, return as is
+	return markdown;
+}
+
+export function tools(appId: string, send?: <T>(action: string, payload: T) => void) {
+	return {
+		vectorSearch: tool({
+			description: "Search the user's files for matches in the vector store",
+			parameters: z
+				.object({
+					query: z.string().describe("The search query"),
+					categories: z
+						.array(z.enum(STORE_CATEGORIES))
+						.describe(
+							`Categories to search, one or more of: ${STORE_CATEGORIES.join(", ")}`
+						),
+				})
+				.required({ query: true }),
+			async execute({ query, categories }) {
+				logger.info("Sending Query for RAG:", query);
+				if (send) {
+					send("assistant:tool", { tool: "vectorSearch", status: "loading" });
+				}
+
+				const vectorStore = VectorStore.getInstance;
+
+				// Prepare array of dataTypes used in the lookup
+				const must: QdrantSchemas["Filter"]["must"] = [
+					{ key: "type", match: { any: categories } },
+				];
+
+				try {
+					const response = await vectorStore.search(VECTOR_STORE_COLLECTION, query, {
+						limit: 10,
+						score_threshold: 0.3,
+						filter: {
+							must,
+						},
+					});
+
+					return {
+						matches: response.map(entry => ({
+							...entry.payload,
+							filePath:
+								entry.payload?.filePath &&
+								cropCaptainData(entry.payload!.filePath as string),
+						})),
+					};
+				} catch (error) {
+					logError(error);
+					const message = `Could not perform the vector search for {query: ${query}, categories: ${JSON.stringify(categories)}`;
+					if (send) {
+						send("assistant:error", { error: message });
+					}
+
+					return {
+						error: message,
+					};
+				}
+			},
+		}),
+		textToImage: tool({
+			description: "Generate an image for the user (using ComfyUI).",
+			parameters: z
+				.object({
+					prompt: z
+						.string()
+						.describe("The enhanced/optimized prompt for the image to be generated."),
+					seed: z
+						.number()
+						.gt(0)
+						.lt(2 ** 32)
+						.default(randomSeed())
+						.describe(
+							`An optional seed to be used for the generation (1 - ${2 ** 32}). You can reuse old seeds too.`
+						),
+					dimensions: z
+						.object({
+							height: z
+								.number()
+								.positive()
+								.gte(640)
+								.lte(1536)
+								.int()
+								.describe("The height of the generated image int(640-1536)."),
+							width: z
+								.number()
+								.positive()
+								.gte(640)
+								.lte(1536)
+								.int()
+								.describe("The width of the generated image int(640-1536)."),
+						})
+						.required({ height: true, width: true })
+						.default({ height: 1024, width: 1024 })
+						.describe(
+							"The dimensions: height and width of the generated image (max area of ~1024*1024)."
+						),
+				})
+				.required({ prompt: true }),
+
+			async execute({ prompt, seed, dimensions: { height, width } }) {
+				const checkpoints = inventoryStore.get<string, { id: string }[]>(
+					"stable-diffusion.checkpoints",
+					[]
+				);
+				const hasSDXL = checkpoints.some(
+					checkpoint => checkpoint.id === "stabilityai/stable-diffusion-xl-base-1.0"
+				);
+				if (!hasSDXL) {
+					const error =
+						"Stable Diffusion XL (SDXL) is not available. Please download it in the Marketplace.";
+					if (send) {
+						send("assistant:error", { error });
+					}
+
+					return {
+						error,
+					};
+				}
+
+				const comfyClient = v4();
+				if (send) {
+					send("assistant:tool", { tool: "textToImage", status: "loading" });
+				}
+
+				logger.info("Generating Image:", {
+					height,
+					width,
+					seed,
+					prompt,
+				});
+
+				const filePath = await new Promise<string>((resolve, reject) => {
+					try {
+						ComfyUI.getInstance.registerClient(
+							comfyClient,
+							async (data: ComfyUIUpdate) => {
+								switch (data.type) {
+									case "executed": {
+										const [image] = data.data.output.images;
+										const filePath = getComfyUIPath(
+											"temp",
+											image.subfolder,
+											image.filename
+										);
+										const destinationPath = await copyWithMetaData({
+											source: filePath,
+											destination: `images/${v4()}.png`,
+											metadata: { positivePrompt: prompt },
+										});
+										if (destinationPath) {
+											resolve(destinationPath);
+										} else {
+											reject(new Error("Could not generate the image"));
+										}
+
+										break;
+									}
+
+									default: {
+										break;
+									}
+								}
+							}
+						);
+						ComfyUI.getInstance
+							.queueWorkflow(
+								createWorkflow({
+									prompt: [
+										prompt,
+										"highres",
+										"4k resolution",
+										"best quality",
+									].join(", "),
+									negativePrompt: [
+										"worst quality",
+										"lowres",
+										"blurry",
+										"smudge",
+										"nsfw",
+										"nude",
+									].join(", "),
+									seed,
+									height,
+									width,
+								}),
+								comfyClient
+							)
+							.catch(error => {
+								reject(error);
+							});
+					} catch (error) {
+						reject(error);
+					}
+				});
+				ComfyUI.getInstance.unregisterClient(comfyClient);
+
+				return {
+					prompt,
+					height,
+					width,
+					seed,
+					filePath: cropCaptainData(filePath),
+				};
+			},
+		}),
+	};
+}
+
+export function getAssistant(model: string) {
+	const [modelPrefix] = model.split("-");
+	switch (modelPrefix) {
+		case "gpt": {
+			return createOpenAI({ apiKey: keyStore.get("openAiApiKey") });
+		}
+
+		case "claude": {
+			return createAnthropic({
+				apiKey: keyStore.get("anthropicApiKey"),
+			});
+		}
+
+		case "mistral": {
+			return createMistral({
+				apiKey: keyStore.get("mistralApiKey"),
+			});
+		}
+
+		case "models/gemini": {
+			return createGoogleGenerativeAI({
+				apiKey: keyStore.get("googleGenerativeAiApiKey"),
+			});
+		}
+
+		default: {
+			return null;
+		}
+	}
+}
+
+export function getProvider(model: string) {
+	const [modelPrefix] = model.split("-");
+	switch (modelPrefix) {
+		case "gpt": {
+			return "Open AI";
+		}
+
+		case "claude": {
+			return "Anthropic";
+		}
+
+		case "mistral": {
+			return "Mistral";
+		}
+
+		case "models/gemini": {
+			return "Google";
+		}
+
+		default: {
+			return "Unknown";
+		}
+	}
+}
+
+export async function streamWithTools<TOOLS extends Record<string, CoreTool>>(
+	assistant: OpenAIProvider | AnthropicProvider | MistralProvider | GoogleGenerativeAIProvider,
+	{
+		history,
+		onStream,
+		tools,
+		model,
+	}: {
+		history: CoreMessage[];
+		onStream(response: string): void;
+		tools: TOOLS;
+		model: string;
+	}
+) {
+	let fullResponse = "";
+
+	try {
+		let result = await streamText<TOOLS>({
+			model: assistant(model),
+			system: createSystemPrompt({ model, provider: getProvider(model) }),
+			messages: history,
+			tools,
+		});
+
+		const toolCalls: ToolCallPart[] = [];
+		const toolResults: ToolResultPart[] = [];
+		for await (const delta of result.fullStream) {
+			switch (delta.type) {
+				case "tool-call": {
+					logger.info("toolCall", delta);
+					toolCalls.push(delta);
+
+					break;
+				}
+
+				case "tool-result": {
+					logger.info("toolResult", delta);
+					toolResults.push(delta);
+
+					break;
+				}
+
+				case "text-delta": {
+					fullResponse += delta.textDelta;
+					onStream(fullResponse);
+					break;
+				}
+
+				default: {
+					break;
+				}
+			}
+		}
+
+		logger.info("toolCalls", toolCalls);
+		logger.info("toolResults", toolResults);
+
+		if (toolResults.length > 0) {
+			history.push(
+				{
+					role: "assistant",
+					content: toolCalls,
+				},
+				{
+					role: "tool",
+					content: toolResults,
+				}
+			);
+			result = await streamText<TOOLS>({
+				model: assistant(model),
+				system: createSystemPrompt2({ model, provider: getProvider(model) }),
+				messages: history,
+				tools: {} as TOOLS,
+			});
+			for await (const delta of result.textStream) {
+				fullResponse += delta;
+				onStream(cropIncompleteImageTag(fullResponse));
+			}
+		}
+	} catch (error) {
+		logError(error);
 	}
 
 	return fullResponse;
@@ -293,59 +880,27 @@ ipcMain.on(
 			// Send an input and trigger a chat generation
 			case "assistant:chat": {
 				try {
-					let assistant:
-						| OpenAIProvider
-						| AnthropicProvider
-						| GoogleGenerativeAIProvider
-						| MistralProvider;
-
 					const userInput = message.payload.input!;
 					const model = message.payload.model ?? "gpt-3.5-turbo";
 					const dataTypes = message.payload.dataTypes ?? availableDataTypes;
-					const includedDataTypes = dataTypes
-						.filter(dataType => dataType.active)
-						.map(dataType => dataType.type);
+					const assistant = getAssistant(model);
 
-					const [modelPrefix] = model.split("-");
-					switch (modelPrefix) {
-						case "gpt": {
-							assistant = createOpenAI({ apiKey: keyStore.get("openAiApiKey") });
-							break;
-						}
-
-						case "claude": {
-							assistant = createAnthropic({
-								apiKey: keyStore.get("anthropicApiKey"),
-							});
-							break;
-						}
-
-						case "mistral": {
-							assistant = createMistral({
-								apiKey: keyStore.get("mistralApiKey"),
-							});
-							break;
-						}
-
-						case "models/gemini": {
-							assistant = createGoogleGenerativeAI({
-								apiKey: keyStore.get("googleGenerativeAiApiKey"),
-							});
-							break;
-						}
-
-						default: {
-							return;
-						}
+					if (!assistant) {
+						event.sender.send(channel, {
+							action: "assistant:error",
+							payload: { error: `Failed creating assistant for model: "${model}"` },
+						});
+						return;
 					}
 
-					const lastMessage = { role: "user" as const, content: userInput };
 					if (chat.messages.length === 0) {
 						// LastMessage is first message. Let AI create a label / title
 						chat.label = await chatCompletion({
 							model: assistant(model),
 							system: createChatLabelPrompt(),
-							messages: [lastMessage],
+							messages: [
+								{ role: "user", content: `Create a label for: ${userInput}` },
+							],
 						});
 						event.sender.send(channel, {
 							action: "assistant:nameSuggestion",
@@ -355,125 +910,29 @@ ipcMain.on(
 						});
 					}
 
-					let optimizedContext = "\n<!-- NO CONTEXT -->\n";
-					if (includedDataTypes.length > 0) {
-						logger.info(`Assistant uses data: ${includedDataTypes.join(", ")}`);
-
-						const minorContent = [
-							...chat.messages.slice(-2),
-							{
-								role: "user" as const,
-								content: userInput + " => ONLY ANSWER WITH A SEARCH QUERY!!!",
-							},
-						].filter(Boolean);
-						if (minorContent[0] && minorContent[0].role !== "user") {
-							minorContent.shift();
-						}
-
-						const query = await chatCompletion({
-							model: assistant(model),
-							system: createVectorSearchPrompt({ dataTypes: includedDataTypes }),
-							messages: minorContent,
-						});
-
-						logger.info("Sending Query for RAG:", query);
-
-						const vectorStore = VectorStore.getInstance;
-
-						// Prepare array of dataTypes used in the lookup
-						const must: QdrantSchemas["Filter"]["must"] = [
-							{ key: "type", match: { any: includedDataTypes } },
-						];
-
-						const response = await vectorStore.search(VECTOR_STORE_COLLECTION, query, {
-							limit: 10,
-							score_threshold: 0.3,
-							filter: {
-								must,
-							},
-						});
-
-						const context = await Promise.all(
-							response.map(async entry => {
-								const entryPayload = (entry as unknown as VectorStoreDocument)
-									.payload!;
-								const { filePath } = entryPayload;
-								//
-								const cleanFilePath = filePath && cropCaptainData(filePath);
-
-								if (entry.payload!.fileType === "png") {
-									return {
-										id: entryPayload.id,
-										type: entryPayload.type,
-										score: entry.score,
-										filePath: cleanFilePath,
-										content: entryPayload.content,
-										label: entryPayload.label,
-									};
-								}
-
-								if (entry.payload!.fileType === "md") {
-									return {
-										id: entryPayload.id,
-										type: entryPayload.type,
-										score: entry.score,
-										filePath: cleanFilePath,
-										content: entryPayload.content,
-										label: entryPayload.label,
-									};
-								}
-
-								return {
-									id: entryPayload.id,
-									type: entryPayload.type,
-									score: entry.score,
-									filePath: cleanFilePath,
-									content: entryPayload.content,
-									label: entryPayload.label,
-								};
-							})
-						);
-						const files: Record<string, RAGDocument> = {};
-						for (const entry of context.filter(Boolean)) {
-							if (files[entry.id]) {
-								files[entry.id].content += `...\n...${entry.content}`;
-							} else {
-								files[entry.id] = entry;
-							}
-						}
-
-						const fileArray = Object.values(files);
-						optimizedContext = optimizeContext(fileArray);
-					} else {
-						logger.info("Assistant NOT sing data");
-					}
-
 					// Only send the last N messages
 					const limit = message.payload.maxHistory ?? 10;
 					const limitedHistory = chat.messages.slice(-limit);
-					const messageWithContext = {
-						role: "user" as const,
-						content: `${optimizedContext}\n${lastMessage.content}`,
-					};
-					limitedHistory.push(messageWithContext);
+					const lastMessage = { role: "user" as const, content: userInput };
 
-					const result = await streamText({
-						model: assistant(model),
-						system: createSystemPrompt(),
-						messages: limitedHistory,
+					limitedHistory.push(lastMessage);
+
+					const fullResponse = await streamWithTools(assistant, {
+						history: limitedHistory,
+						model,
+						tools: tools(appId, (action, payload) => {
+							event.sender.send(channel, { action, payload });
+						}),
+						onStream(fullResponse: string) {
+							event.sender.send(channel, {
+								action: "assistant:response",
+								payload: {
+									output: extendCaptainData(fullResponse),
+									done: false,
+								},
+							});
+						},
 					});
-
-					let fullResponse = "";
-					for await (const delta of result.textStream) {
-						fullResponse += delta;
-						event.sender.send(channel, {
-							action: "assistant:response",
-							payload: {
-								output: extendCaptainData(fullResponse),
-								done: false,
-							},
-						});
-					}
 
 					chat.model = model;
 					chat.dataTypes = dataTypes;

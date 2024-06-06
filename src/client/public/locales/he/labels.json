@@ -124,6 +124,10 @@
   "text": "טקסט",
   "textToImage": "טקסט לתמונה",
   "toEnd": "לסוף",
+  "tools": {
+    "textToImage": "וצר תמונה",
+    "vectorSearch": "מחפש קבצים"
+  },
   "undefined": "לא ידוע",
   "unpacking": "פותח",
   "update": "עדכון",

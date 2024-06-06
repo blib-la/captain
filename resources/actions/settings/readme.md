@@ -19,23 +19,4 @@ icon: Settings
 iconColor: "#717676"
 ---
 
-Adjust the language settings.
-I want dark mode enabled.
-Change API keys for OpenAI integration.
-How can I switch the language?
-Enable light theme for the app.
-Update preferences for visual theme.
-Set application to system default color mode.
-Configure OpenAI API settings.
-Personalize my app experience with preferences.
-Modify configuration for better usability.
-Show me how to enter OpenAI API keys.
-Switch to dark mode for nighttime use.
-Select my preferred language.
-Access advanced settings options.
-Save my custom settings configuration.
-Guide to customizing application interface.
-Steps for changing the app's visual theme.
-Activate dark theme in Captain.
-Update user preferences and keys.
-Customize interface language.
+App, application, customize your Captain experience with the versatile Settings app. This app allows users to change the color theme, toggle between light and dark modes, and select from 11 included locales: German (de), English (en), Spanish (es), French (fr), Italian (it), Japanese (ja), Dutch (nl), Polish (pl), Portuguese (pt), Russian (ru), and Chinese (zh). Additionally, it provides functionality to manage API keys for OpenAI, Anthropic, Google, and Mistral. The Settings app is also the hub for keeping your system up-to-date, allowing you to check for and install the latest updates for Captain. This comprehensive settings management tool ensures a personalized and optimized experience for all users.

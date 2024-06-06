@@ -124,6 +124,10 @@
   "text": "Tekst",
   "textToImage": "Tekst naar Afbeelding",
   "toEnd": "Naar het Einde",
+  "tools": {
+    "textToImage": "Afbeelding genereren",
+    "vectorSearch": "Bestanden doorzoeken"
+  },
   "undefined": "Onbekend",
   "unpacking": "Uitpakken",
   "update": "Bijwerken",

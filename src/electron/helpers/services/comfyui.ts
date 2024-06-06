@@ -33,7 +33,7 @@ type Device = {
 	torch_vram_free: number;
 };
 
-export type WebSocketMessageHandler = (data: string) => void;
+export type WebSocketMessageHandler<T = unknown> = (data: T) => void;
 
 export enum ComfyUIStatus {
 	NOT_RUNNING = "NOT_RUNNING",
@@ -227,7 +227,7 @@ export class ComfyUI {
 	 * @param {string} clientId - The unique identifier for the client.
 	 * @param {WebSocketMessageHandler} handleMessage - The function to call when a message is received on the WebSocket.
 	 */
-	public setupWebSocket(clientId: string, handleMessage: WebSocketMessageHandler) {
+	public setupWebSocket<T>(clientId: string, handleMessage: WebSocketMessageHandler<T>) {
 		const webSocket = new WebSocket(`ws://${this.url}/ws?clientId=${clientId}`);
 
 		webSocket.on("open", () => {
@@ -327,7 +327,7 @@ export class ComfyUI {
 	 * @param {string} clientId - The unique identifier for the client.
 	 * @param {WebSocketMessageHandler} handleMessage - The function to handle incoming WebSocket messages.
 	 */
-	public registerClient(clientId: string, handleMessage: WebSocketMessageHandler) {
+	public registerClient<T>(clientId: string, handleMessage: WebSocketMessageHandler<T>) {
 		if (this.clients.has(clientId)) {
 			logger.info(`Client ${clientId} is already registered.`);
 		} else {

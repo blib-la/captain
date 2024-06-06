@@ -225,19 +225,28 @@ export const components: Partial<Components> = {
 				sx={{
 					display: "flex",
 					flexDirection: "column",
-					height: 700,
+
 					p: 0,
-					ml: 0,
-					mr: 1,
+					m: 0,
 					my: 0.5,
 				}}
 			>
-				<Box sx={{ flex: 1, position: "relative" }}>
+				<Sheet
+					color="neutral"
+					variant="outlined"
+					sx={{ p: 1, position: "sticky", top: 0, zIndex: 2 }}
+				>
+					<Typography level="body-xs" component="figcaption" sx={{ color: "inherit" }}>
+						{alt}
+					</Typography>
+				</Sheet>
+				<Box sx={{ flex: 1, position: "relative", display: "flex", p: 2 }}>
 					<Box
 						sx={{
 							display: "flex",
 							gap: 1,
 							position: "absolute",
+							zIndex: 1,
 							top: 0,
 							right: 0,
 						}}
@@ -275,18 +284,13 @@ export const components: Partial<Components> = {
 						src={src}
 						alt={alt}
 						sx={{
-							position: "absolute",
-							inset: 0,
+							height: { xs: 300, md: 500, lg: 700 },
 							width: "100%",
-							height: "100%",
 							objectFit: "contain",
 							objectPosition: "center",
 						}}
 					/>
 				</Box>
-				<Typography level="body-xs" component="figcaption">
-					{alt}
-				</Typography>
 			</Sheet>
 		);
 	},

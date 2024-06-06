@@ -4,34 +4,29 @@ import path from "node:path";
 
 import type { ComfyUIFileMetaData } from "@captn/utils";
 import {
-	WINDOW_CLOSE_KEY,
-	WINDOW_MAXIMIZE_KEY,
-	WINDOW_MINIMIZE_KEY,
-	VECTOR_STORE_SAVED_KEY,
 	DownloadState,
 	ERROR_KEY,
 	USER_THEME_KEY,
+	VECTOR_STORE_SAVED_KEY,
+	WINDOW_CLOSE_KEY,
+	WINDOW_MAXIMIZE_KEY,
+	WINDOW_MINIMIZE_KEY,
 } from "@captn/utils/constants";
 import type { VectorStoreDocument } from "@captn/utils/types";
 import { BrowserWindow, dialog, ipcMain } from "electron";
 import { download } from "electron-dl";
 import type ElectronStore from "electron-store";
-import { execa } from "execa";
 import { v4 } from "uuid";
 
 import { apps } from "@/electron/apps";
-import { logError, logger } from "@/electron/services/logger";
+import { copyWithMetaData, writePngMetaData } from "@/electron/png";
+import { logError } from "@/electron/services/logger";
 import { VectorStore } from "@/electron/services/vector-store";
-import { inventoryStore, downloadsStore, userStore, appSettingsStore } from "@/electron/stores";
+import { appSettingsStore, downloadsStore, inventoryStore, userStore } from "@/electron/stores";
 import { pushToStore } from "@/electron/stores/utils";
 import type { DownloadsSettings } from "@/electron/types";
 import { createDirectory } from "@/electron/utils/fs";
-import {
-	getCaptainData,
-	getCaptainDownloads,
-	getDirectory,
-	getPythonEmbedded,
-} from "@/electron/utils/path-helpers";
+import { getCaptainData, getCaptainDownloads, getDirectory } from "@/electron/utils/path-helpers";
 import { splitDocument } from "@/electron/utils/split-documents";
 import { unpack } from "@/electron/utils/unpack";
 import { buildKey } from "@/shared/build-key";
@@ -103,38 +98,6 @@ ipcMain.handle(buildKey([ID.FILE], { prefix: "path:", suffix: ":get" }), async (
 		return filePath;
 	}
 });
-
-async function writePngMetaData(filePath: string, metadata: ComfyUIFileMetaData) {
-	const pythonBinaryPath = getPythonEmbedded("python.exe");
-	const scriptPath = getDirectory("python/png/main.py");
-	const scriptArguments = ["--image_path", filePath];
-
-	if (metadata.positivePrompt) {
-		scriptArguments.push("--positive_prompt", metadata.positivePrompt);
-	}
-
-	if (metadata.caption) {
-		scriptArguments.push("--caption", metadata.caption);
-	}
-
-	if (metadata.description) {
-		scriptArguments.push("--description", metadata.description);
-	}
-
-	if (metadata.negativePrompt) {
-		scriptArguments.push("--negative_prompt", metadata.negativePrompt);
-	}
-
-	if (metadata.tags) {
-		scriptArguments.push("--tags", metadata.tags);
-	}
-
-	if (metadata.prompt) {
-		scriptArguments.push("--prompt", metadata.prompt);
-	}
-
-	return execa(pythonBinaryPath, ["-u", scriptPath, ...scriptArguments]);
-}
 
 /**
  * Handles an IPC event to write content to a file at a specified subpath within the application's data directory.
@@ -283,65 +246,14 @@ ipcMain.handle(
 ipcMain.handle(
 	buildKey([ID.FILE], { suffix: ":copy-image-with-metadata" }),
 	async (
-		event,
-		{
-			source,
-			destination,
-			metadata,
-		}: {
+		_event,
+		data: {
 			source: string;
 			destination: string;
 			metadata?: ComfyUIFileMetaData;
 		}
 	) => {
-		const filePath = getCaptainData("files", cleanPath(destination));
-		const { dir: directory, ext } = path.parse(filePath);
-
-		try {
-			createDirectory(directory);
-			// Copy the file
-			await fsp.copyFile(source, filePath);
-		} catch (error) {
-			logError(error, "createDirectory:copy-image-with-metadata");
-		}
-
-		logger.info(`copy image from ${source} to ${filePath}`);
-		const id = v4();
-
-		const fileName = `${id}${ext}`;
-		const destinationPath = path.join(directory, fileName);
-		await fsp.rename(filePath, destinationPath);
-		logger.info(`renamed image from ${filePath} to ${destinationPath}`);
-		if (metadata?.positivePrompt) {
-			logger.info(
-				`add metadata to image at ${destinationPath} with description: ${metadata.description}`
-			);
-			try {
-				await writePngMetaData(destinationPath, metadata);
-			} catch (error) {
-				logError(error, "writePngMetaData:copy-image-with-metadata");
-			}
-
-			try {
-				const vectorStore = VectorStore.getInstance;
-				return await vectorStore.upsert(VECTOR_STORE_COLLECTION, [
-					{
-						content: metadata.positivePrompt,
-						payload: {
-							id: v4(),
-							label: fileName,
-							type: "image",
-							fileType: ext.replace(".", ""),
-							language: "en",
-							filePath: destinationPath,
-							content: metadata.positivePrompt,
-						},
-					},
-				]);
-			} catch (error) {
-				logError(error, "vectorStore.upsert:copy-image-with-metadata");
-			}
-		}
+		await copyWithMetaData(data);
 	}
 );
 
