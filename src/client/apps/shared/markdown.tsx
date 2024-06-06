@@ -239,6 +239,7 @@ export const components: Partial<Components> = {
 							display: "flex",
 							gap: 1,
 							position: "absolute",
+							zIndex: 1,
 							top: 0,
 							right: 0,
 						}}
