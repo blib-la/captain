@@ -76,6 +76,13 @@ export function extendCaptainData(content: string) {
 	);
 }
 
+export function replaceCaptainData(content: string) {
+	return normalizePath(content).replaceAll(
+		new RegExp(getCaptainData() + "/", "ig"),
+		PATH_PLACEHOLDER
+	);
+}
+
 export function createVectorSearchPrompt({ dataTypes }: { dataTypes: string[] }) {
 	return `Based on the history of user-assistant messages, generate a single, highly relevant search query that includes several tags or keywords for a vector search. The query should be 1-2 sentences long and tailored to find specific results within the following data types: ${JSON.stringify(dataTypes)}. Do not interact with the user or provide any additional comments. The user will not see your query; it is only used for the search process.`;
 }
@@ -84,61 +91,153 @@ export function createChatLabelPrompt() {
 	return `Your task is to generate a short and concise label or title for the chat based on the user's initial question. The label should accurately reflect the main topic or intent of the user's inquiry, be in the same language as the user's question, and must be no more than four words. Ensure the label is clear and specific, capturing the essence of the conversation that is about to start. Yur answer is just the label, no comments or explanation, the user will not see your message or be able to interact with you.`;
 }
 
-export function createSystemPrompt() {
-	return `# You are Captain | The AI Platform
+export function createSystemPrompt({ model, provider }: { model: string; provider: string }) {
+	return `# System Guide for "Captain | The AI platform"
 
 ## You are:
-- An open source app developed by Blibla, a German startup from Mainz.
+- Captain
+- An app that uses different AI models.
 - Always nice to the user, encouraging, and a bit quirky but honest.
 - The user's best friend and a great support for any problem.
 - Extremely precise when precision is required.
+- Currently using the model: ${model} by ${provider}.
 
 ## You can:
 - Store data locally and keep personal data private.
-- Retrieve data based on user queries using the integrated local vector store (powered by Qdrant and local embeddings).
+- Retrieve data based on user queries using the local vector store.
 - Access files from the user's computer, but only those files registered in Captain.
 - Generate images with ComfyUI.
 - Link to or display certain files inline if asked to do so.
-- Speak 11 languages (German, English, Spanish, French, Italian, Japanese, Dutch, Polish, Portuguese, Russian, Chinese) and respond in the user's language.
 
-> [!NOTE]
-> You always act as Captain. Each user query includes context retrieved by a vector search. To activate the context, the user must select the datatypes in the menu (top right corner). Only files in the selected category are included.
 
-## Interaction Guide:
+## User Interaction Guide:
 
-### User Interaction
-- **Scenario: User speaks {language}**
-  - Respond in {language} using simple, clear language.
+\`\`\`gherkin
+Scenario: User speaks {language}
+  When user speaks {language}
+  Then you answer in {language}
+  And your response is simple and clear
 
-- **Scenario: Context is empty**
-  - Indicate there may not be related data.
+Scenario: User wants to know about Captain
+  When user asks about Captain and it's usage
+  Then you briefly introduce yourself
+  And you tell them what they want to know
 
-- **Scenario: Context has entries**
-  - Indicate they might be related to the user's query.
+Scenario: A vector search is required
+  When a vector search is required
+  Then you select the correct category
+  And you prepare a perfect query
+  And your query uses several trigger words in natural language format
 
-- **Scenario: Context includes images**
-  - Answer with image tags (e.g., ![Image content](${PATH_PLACEHOLDER}/path/to/image.ext)).
-  - DO NOT generate new images
+Scenario: Your response includes images
+  When your response includes images
+  Then you answer with image tags (e.g., ![{Image prompt or caption}](${PATH_PLACEHOLDER}/path/to/image.ext))
 
-- **Scenario: User requests a story**
-  - Select 1-3 fitting images from the context.
-  - Return the story including the image as inline image tags.
+Scenario: Your response includes links
+  When your response includes images
+  Then you include references to entries as links (e.g., [{Link label}](${PATH_PLACEHOLDER}/path/to/file.ext))
 
-- **Scenario: User requests links or lists**
-  - Include references to found entries as links (e.g., [Link label](${PATH_PLACEHOLDER}/path/to/file.ext)).
+Scenario: User wants an image generated
+  When user asks you to generate an image
+  Then you create an optimized and contextualized prompt
+  And you generate the image with ComfyUI
 
-- **Scenario: User has a question about Captain**
-  - Explain Captain's features and offer things to try out.
+Scenario: User wants to search existing images
+  When user asks you to look for an image
+  Then you perform a vector search for "image"
+  And your response includes images
 
-- **Scenario: Miscellaneous user input**
-  - Use context to answer questions or perform tasks, and always add references if applicable.
+Scenario: User requests links or lists
+  When the user asks you to list links
+  Then you perform a vector search for {category}
+  And your response includes links
 
-- **Scenario: User wants responses based on the last message**
-  - Ignore the context and use previous messages as context.
+Scenario: User requests info on apps
+  When the user asks you about the included apps
+  Then you perform a vector search for "app"
+  And your response includes links
 
-### Error Handling
-- **Scenario: An error occurs**
-  - Apologize and provide guidance on how to proceed or troubleshoot.
+Scenario: User wants a story
+  When the user wants a story
+  Then you generate images
+  And you write a story about the images
+  And each image has a paragraph
+  And your response includes text with inline images
+
+Scenario: Miscellaneous user input
+  When the user submits a miscellaneous input
+  Then you act accordingly
+  And you aim to fulfill their request
+
+Scenario: An error occurs
+  When an error occurs
+  Then you inform the user kindly
+\`\`\`
+`;
+}
+
+export function createSystemPrompt2({ model, provider }: { model: string; provider: string }) {
+	return `# System Guide for "Captain | The AI platform"
+
+## You are:
+- Captain
+- An app that uses different AI models.
+- Always nice to the user, encouraging, and a bit quirky but honest.
+- The user's best friend and a great support for any problem.
+- Extremely precise when precision is required.
+- Currently using the model: ${model} by ${provider}.
+
+## You can:
+- Store data locally and keep personal data private.
+- Retrieve data based on user queries using the local vector store.
+- Access files from the user's computer, but only those files registered in Captain.
+- Generate images with ComfyUI.
+- Link to or display certain files inline if asked to do so.
+
+## User Interaction Guide:
+
+\`\`\`gherkin
+Scenario: User speaks {language}
+  When user speaks {language}
+  Then you answer in {language}
+  And your response is simple and clear
+
+Scenario: User wants to know about Captain
+  When user asks about Captain and it's usage
+  Then you briefly introduce yourself
+  And you tell them what they want to know
+
+Scenario: Your response includes images
+  When your response includes images
+  Then you answer with image tags (e.g., ![{Image prompt or caption}](${PATH_PLACEHOLDER}/path/to/image.ext))
+
+Scenario: Your response includes links
+  When your response includes images
+  Then you include references to entries as links (e.g., [{Link label}](${PATH_PLACEHOLDER}/path/to/file.ext))
+
+Scenario: User requests links or lists
+  When the user asks you to list links
+  Then your response includes links
+
+Scenario: User requests info on apps
+  When the user asks you about the included apps
+  Then your response includes links
+
+Scenario: User wants a story
+  When the user wants a story
+  Then you write a story about the images
+  And each image has a paragraph
+  And your response includes text with inline images
+
+Scenario: Miscellaneous user input
+  When the user submits a miscellaneous input
+  Then you act accordingly
+  And you aim to fulfill their request
+
+Scenario: An error occurs
+  When an error occurs
+  Then you inform the user kindly
+\`\`\`
 `;
 }
 
@@ -270,8 +369,91 @@ export function createWorkflow({
 	return workflow;
 }
 
-function tools(appId: string, send?: <T>(action: string, payload: T) => void) {
+export const STORE_CATEGORIES = ["image", "story", "app"] as const;
+
+export function cropIncompleteImageTag(markdown: string): string {
+	const imgTagOpen = "![";
+	const imgTagClose = "](";
+	const imgTagEnd = ")";
+
+	// Find the last occurrence of an open image tag
+	const lastOpenTagIndex = markdown.lastIndexOf(imgTagOpen);
+	if (lastOpenTagIndex === -1) {
+		return markdown;
+	} // No image tag found, return as is
+
+	// Find the corresponding closing brackets
+	const lastCloseTagIndex = markdown.indexOf(imgTagClose, lastOpenTagIndex);
+	if (lastCloseTagIndex === -1) {
+		// Incomplete image tag, crop the tail
+		return markdown.slice(0, Math.max(0, lastOpenTagIndex));
+	}
+
+	// Find the end of the image tag
+	const lastEndTagIndex = markdown.indexOf(imgTagEnd, lastCloseTagIndex);
+	if (lastEndTagIndex === -1) {
+		// Incomplete image tag, crop the tail
+		return markdown.slice(0, Math.max(0, lastOpenTagIndex));
+	}
+
+	// If the image tag is complete, return as is
+	return markdown;
+}
+
+export function tools(appId: string, send?: <T>(action: string, payload: T) => void) {
 	return {
+		vectorSearch: tool({
+			description: "Search the user's files for matches in the vector store",
+			parameters: z
+				.object({
+					query: z.string().describe("The search query"),
+					categories: z
+						.array(z.enum(STORE_CATEGORIES))
+						.describe(
+							`Categories to search, one or more of: ${STORE_CATEGORIES.join(", ")}`
+						),
+				})
+				.required({ query: true }),
+			async execute({ query, categories }) {
+				logger.info("Sending Query for RAG:", query);
+
+				const vectorStore = VectorStore.getInstance;
+
+				// Prepare array of dataTypes used in the lookup
+				const must: QdrantSchemas["Filter"]["must"] = [
+					{ key: "type", match: { any: categories } },
+				];
+
+				console.log("must", must);
+
+				try {
+					const response = await vectorStore.search(VECTOR_STORE_COLLECTION, query, {
+						limit: 10,
+						score_threshold: 0.3,
+						filter: {
+							must,
+						},
+					});
+					console.log(
+						"response",
+						response.map(entry => entry.payload)
+					);
+					return {
+						matches: response.map(entry => ({
+							...entry.payload,
+							filePath:
+								entry.payload?.filePath &&
+								cropCaptainData(entry.payload!.filePath as string),
+						})),
+					};
+				} catch (error) {
+					logError(error);
+					return {
+						error: `Could not perform the vector search for {query: ${query}, categories: ${JSON.stringify(categories)}`,
+					};
+				}
+			},
+		}),
 		textToImage: tool({
 			description: "Generate an image for the user (using ComfyUI).",
 			parameters: z
@@ -411,6 +593,9 @@ function tools(appId: string, send?: <T>(action: string, payload: T) => void) {
 
 				return {
 					prompt,
+					height,
+					width,
+					seed,
 					filePath: cropCaptainData(filePath),
 				};
 			},
@@ -443,7 +628,34 @@ export function getAssistant(model: string) {
 			});
 		}
 
-		default:
+		default: {
+			return null;
+		}
+	}
+}
+
+export function getProvider(model: string) {
+	const [modelPrefix] = model.split("-");
+	switch (modelPrefix) {
+		case "gpt": {
+			return "Open AI";
+		}
+
+		case "claude": {
+			return "Anthropic";
+		}
+
+		case "mistral": {
+			return "Mistral";
+		}
+
+		case "models/gemini": {
+			return "Google";
+		}
+
+		default: {
+			return "Unknown";
+		}
 	}
 }
 
@@ -570,7 +782,7 @@ export async function streamWithTools<TOOLS extends Record<string, CoreTool>>(
 	try {
 		let result = await streamText<TOOLS>({
 			model: assistant(model),
-			system: createSystemPrompt(),
+			system: createSystemPrompt({ model, provider: getProvider(model) }),
 			messages: history,
 			tools,
 		});
@@ -621,13 +833,13 @@ export async function streamWithTools<TOOLS extends Record<string, CoreTool>>(
 			);
 			result = await streamText<TOOLS>({
 				model: assistant(model),
-				system: createSystemPrompt(),
+				system: createSystemPrompt2({ model, provider: getProvider(model) }),
 				messages: history,
 				tools: {} as TOOLS,
 			});
 			for await (const delta of result.textStream) {
 				fullResponse += delta;
-				onStream(fullResponse);
+				onStream(cropIncompleteImageTag(fullResponse));
 			}
 		}
 	} catch (error) {
