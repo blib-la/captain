@@ -5,7 +5,7 @@ import type { EmbeddingsInterface } from "@langchain/core/embeddings";
 import type { Schemas as QdrantSchemas } from "@qdrant/js-client-rest";
 import { QdrantClient } from "@qdrant/js-client-rest";
 import axios from "axios";
-import type { ExecaChildProcess } from "execa";
+import type { ResultPromise } from "execa";
 import { execa } from "execa";
 import { v4 } from "uuid";
 
@@ -21,7 +21,7 @@ export interface ServiceReadyConfig {
 export class VectorStore {
 	private static instance: VectorStore | null = null;
 	private client: QdrantClient | null = null;
-	private process: ExecaChildProcess<string> | undefined;
+	private process: ResultPromise<NonNullable<unknown>> | undefined;
 	private embeddings: EmbeddingsInterface;
 	private host: string;
 	private port: number;

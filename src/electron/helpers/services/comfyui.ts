@@ -1,7 +1,8 @@
 import fsp from "node:fs/promises";
 
 import axios from "axios";
-import { execa, type ExecaChildProcess } from "execa";
+import type { ResultPromise } from "execa";
+import { execa } from "execa";
 import WebSocket from "ws";
 import { stringify } from "yaml";
 
@@ -48,7 +49,7 @@ export enum ComfyUIStatus {
  */
 export class ComfyUI {
 	public static instance: ComfyUI | null = null;
-	private process: ExecaChildProcess<string> | undefined;
+	private process: ResultPromise<NonNullable<unknown>> | undefined;
 	private url: string;
 	private host: string;
 	private port: number;
