@@ -1,3 +1,10 @@
+# [1.0.0-alpha.101](https://github.com/blib-la/captain/compare/v1.0.0-alpha.100...v1.0.0-alpha.101) (2024-06-07)
+
+
+### Features
+
+* delete app data when captain is uninstalled ([#332](https://github.com/blib-la/captain/issues/332)) ([eb75654](https://github.com/blib-la/captain/commit/eb7565424e0b3fd3eb0ec5c5dc9614539fce1a47)), closes [#317](https://github.com/blib-la/captain/issues/317)
+
 # [1.0.0-alpha.100](https://github.com/blib-la/captain/compare/v1.0.0-alpha.99...v1.0.0-alpha.100) (2024-06-06)
 
 
