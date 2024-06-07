@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import type { ExecaChildProcess } from "execa";
+import type { ResultPromise } from "execa";
 import { execa } from "execa";
 
 import { createDirectory } from "@/electron/utils/fs";
@@ -39,7 +39,7 @@ export async function clone(repository: string, destination: string, options?: G
 
 	createDirectory(destinationPath);
 
-	let process_: ExecaChildProcess | null = null;
+	let process_: ResultPromise<NonNullable<unknown>> | null = null;
 
 	function cancel() {
 		if (process_) {

@@ -1,6 +1,6 @@
 import fs from "node:fs";
 
-import type { ExecaChildProcess } from "execa";
+import type { ResultPromise } from "execa";
 import { execa } from "execa";
 
 jest.mock("execa");
@@ -196,7 +196,9 @@ describe("clone", () => {
 				}),
 			},
 		};
-		mockedExeca.mockReturnValueOnce(mockChildProcess as unknown as ExecaChildProcess<Buffer>);
+		mockedExeca.mockReturnValueOnce(
+			mockChildProcess as unknown as ResultPromise<NonNullable<unknown>>
+		);
 
 		const onProgressMock = jest.fn();
 
