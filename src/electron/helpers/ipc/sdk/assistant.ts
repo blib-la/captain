@@ -39,29 +39,6 @@ export const assistantStore = new Store<Record<string, ChatModel>>({
 	name: buildKey([KEY.STORE, KEY.ASSISTANT]),
 });
 
-interface RAGDocument {
-	id: string;
-	filePath: string | undefined;
-	content: string;
-	type: string;
-	label: string;
-	score: number;
-}
-
-export function optimizeContext(context: RAGDocument[]) {
-	if (context.length === 0) {
-		return "\n<!-- NO CONTEXT -->\n";
-	}
-
-	let result = "\n<!-- CONTEXT START -->\n";
-	for (const entry of context) {
-		result += `${context.indexOf(entry) + 1}. ${entry.label}\n  - Type: ${entry.type}\n  - Path: ${entry.filePath}\n  - Score (0-1): ${entry.score.toFixed(2)}\n  - Content: \`\`\`\n${entry.content}\n\`\`\`\n`;
-	}
-
-	result += "\n<!-- CONTEXT END -->\n";
-	return result;
-}
-
 export const PATH_PLACEHOLDER = "c:/users/anon/";
 
 export function cropCaptainData(filePath: string) {
@@ -278,7 +255,7 @@ export function createWorkflow({
 	width,
 	cfg = 7,
 	loraWeight = 1,
-	checkpointName = "stabilityai\\stable-diffusion-xl-base-1.0\\sd_xl_base_1.0_0.9vae.safetensors",
+	checkpointName = String.raw`stabilityai\stable-diffusion-xl-base-1.0\sd_xl_base_1.0_0.9vae.safetensors`,
 	loraName,
 }: {
 	prompt?: string;
@@ -706,7 +683,7 @@ export async function streamWithTools<TOOLS extends Record<string, CoreTool>>(
 
 				case "text-delta": {
 					fullResponse += delta.textDelta;
-					onStream(fullResponse);
+					onStream(cropIncompleteImageTag(fullResponse));
 					break;
 				}
 
