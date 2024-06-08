@@ -1,3 +1,10 @@
+# [1.0.0-alpha.102](https://github.com/blib-la/captain/compare/v1.0.0-alpha.101...v1.0.0-alpha.102) (2024-06-08)
+
+
+### Bug Fixes
+
+* incomplete images in first run are not cropped ([#333](https://github.com/blib-la/captain/issues/333)) ([022c602](https://github.com/blib-la/captain/commit/022c602496646b56a6b1a5fc516fa6c6b1d79ab9))
+
 # [1.0.0-alpha.101](https://github.com/blib-la/captain/compare/v1.0.0-alpha.100...v1.0.0-alpha.101) (2024-06-07)
 
 
