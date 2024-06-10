@@ -1,3 +1,10 @@
+# [1.0.0-alpha.103](https://github.com/blib-la/captain/compare/v1.0.0-alpha.102...v1.0.0-alpha.103) (2024-06-10)
+
+
+### Features
+
+* better scrollbars ([#334](https://github.com/blib-la/captain/issues/334)) ([a556e95](https://github.com/blib-la/captain/commit/a556e95506b649a4bcfcbf38f519912515262194))
+
 # [1.0.0-alpha.102](https://github.com/blib-la/captain/compare/v1.0.0-alpha.101...v1.0.0-alpha.102) (2024-06-08)
 
 
