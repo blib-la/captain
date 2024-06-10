@@ -21,17 +21,14 @@ import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import Sheet from "@mui/joy/Sheet";
 import { useAtom } from "jotai/index";
-import type { CSSProperties, RefCallback } from "react";
-import { useMemo } from "react";
-import { useState } from "react";
-import { forwardRef, type LegacyRef, type ReactNode, useCallback, useRef } from "react";
-import type { ScrollbarProps } from "react-custom-scrollbars";
-import Scrollbars from "react-custom-scrollbars";
+import type { CSSProperties } from "react";
+import { type ReactNode, useMemo, useRef, useState } from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeGrid } from "react-window";
 
 import { selectedStoryImagesAtom, storyImagesAtom } from "./atoms";
 
+import { CustomScrollbarsVirtual } from "@/client/apps/shared/scrollbars";
 import { AutoGrid } from "@/client/organisms/auto-grid";
 
 export function SortableItem({ id, children }: { id: string; children?: ReactNode }) {
@@ -184,65 +181,6 @@ export function ImageSelectorCell({
 	);
 }
 
-export function LegacyCustomScrollbars({
-	onScroll,
-	forwardedRef,
-	style,
-	children,
-}: {
-	onScroll?: ScrollbarProps["onScroll"];
-	forwardedRef?: RefCallback<HTMLDivElement>;
-	style?: CSSProperties;
-	children?: ReactNode;
-}) {
-	const referenceSetter: LegacyRef<unknown> = useCallback(
-		(scrollbarsReference: { view: HTMLDivElement }) => {
-			if (forwardedRef) {
-				if (scrollbarsReference) {
-					forwardedRef(scrollbarsReference.view);
-				} else {
-					forwardedRef(null);
-				}
-			}
-		},
-		[forwardedRef]
-	);
-
-	return (
-		<Scrollbars
-			ref={referenceSetter}
-			autoHide
-			universal
-			style={{ ...style, overflow: "hidden" }}
-			renderThumbVertical={properties => (
-				<Box
-					{...properties}
-					className="thumb-vertical"
-					style={{ ...properties.style }}
-					sx={theme => ({
-						bgcolor: "text.secondary",
-						zIndex: theme.zIndex.badge + 1,
-					})}
-				/>
-			)}
-			onScroll={onScroll}
-		>
-			{children}
-		</Scrollbars>
-	);
-}
-
-export const CustomScrollbarsVirtualList = forwardRef<HTMLDivElement | undefined>(
-	(properties, reference) => (
-		<LegacyCustomScrollbars
-			{...properties}
-			forwardedRef={reference as RefCallback<HTMLDivElement>}
-		/>
-	)
-);
-
-CustomScrollbarsVirtualList.displayName = "CustomScrollbarsVirtualList";
-
 export function VirtualGrid({ items }: { items: number }) {
 	return (
 		<AutoSizer>
@@ -252,7 +190,7 @@ export function VirtualGrid({ items }: { items: number }) {
 
 				return (
 					<FixedSizeGrid
-						outerElementType={CustomScrollbarsVirtualList}
+						outerElementType={CustomScrollbarsVirtual}
 						className="react-window"
 						columnCount={columnCount}
 						height={height}

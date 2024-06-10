@@ -97,7 +97,7 @@ export function Assistant({ color }: { color: ColorPaletteProp }) {
 					flexShrink: 0,
 				}}
 			>
-				<List sx={{ flexGrow: 0, overflow: "hidden" }}>
+				<List sx={{ overflow: "hidden" }}>
 					<StickyChatList
 						color={color}
 						onNew={() => {

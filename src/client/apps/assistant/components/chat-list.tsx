@@ -6,7 +6,6 @@ import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/joy/Box";
 import Dropdown from "@mui/joy/Dropdown";
 import IconButton from "@mui/joy/IconButton";
-import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import ListItemButton from "@mui/joy/ListItemButton";
 import ListItemDecorator from "@mui/joy/ListItemDecorator";
@@ -19,6 +18,7 @@ import { useTranslation } from "next-i18next";
 import type { Except } from "type-fest";
 
 import { APP_ID } from "@/client/apps/assistant/constants";
+import { VirtualList } from "@/client/apps/shared/scrollbars";
 import type { ChatModel } from "@/shared/types/assistant";
 
 export function ChatList({
@@ -42,134 +42,135 @@ export function ChatList({
 			sx={{
 				flex: 1,
 				width: "100%",
-				overflowY: "auto",
-				overflowX: "hidden",
+				position: "relative",
 			}}
 		>
-			<List>
-				{chats
-					.sort((a, b) => {
-						if (a.pinned && b.pinned) {
-							return 0;
-						}
+			<VirtualList
+				itemSize={36}
+				items={chats.sort((a, b) => {
+					if (a.pinned && b.pinned) {
+						return 0;
+					}
 
-						return a.pinned ? -1 : 1;
-					})
-					.map(chat => (
-						<ListItem
-							key={chat.id}
-							sx={{
-								"& .MuiListItem-endAction": {
-									mr: -0.75,
-								},
-							}}
-							endAction={
-								<Dropdown>
-									<MenuButton
-										aria-label={t("common:menu")}
-										slots={{ root: IconButton }}
-										slotProps={{
-											root: {
-												variant: "plain",
-												color: "neutral",
-												sx: {
-													"&:focus-visible": {
-														zIndex: "unset",
-														outlineOffset: -2,
-													},
+					return a.pinned ? -1 : 1;
+				})}
+				renderItem={(chat, style) => (
+					<ListItem
+						key={chat.id}
+						component="div"
+						style={style}
+						sx={{
+							"& .MuiListItem-endAction": {
+								mr: -0.75,
+							},
+						}}
+						endAction={
+							<Dropdown>
+								<MenuButton
+									aria-label={t("common:menu")}
+									slots={{ root: IconButton }}
+									slotProps={{
+										root: {
+											variant: "plain",
+											color: "neutral",
+											sx: {
+												"&:focus-visible": {
+													zIndex: "unset",
+													outlineOffset: -2,
 												},
 											},
+										},
+									}}
+								>
+									<MoreVertIcon />
+								</MenuButton>
+								<Menu color="neutral" variant="plain">
+									<MenuItem
+										onClick={() => {
+											send({
+												action: "assistant:update",
+												payload: {
+													id: chat.id,
+													update: { pinned: !chat.pinned },
+												},
+											});
 										}}
 									>
-										<MoreVertIcon />
-									</MenuButton>
-									<Menu color="neutral" variant="plain">
-										<MenuItem
-											onClick={() => {
-												send({
-													action: "assistant:update",
-													payload: {
-														id: chat.id,
-														update: { pinned: !chat.pinned },
+										<ListItemDecorator
+											sx={theme => ({
+												"--Icon-color": chat.pinned
+													? theme.vars.palette.primary["500"]
+													: "currentColor",
+											})}
+										>
+											<PushPinIcon />
+										</ListItemDecorator>{" "}
+										{t("labels:pin")}
+									</MenuItem>
+									<MenuItem
+										onClick={() => {
+											send({
+												action: "assistant:update",
+												payload: {
+													id: chat.id,
+													update: {
+														favorite: !chat.favorite,
 													},
-												});
-											}}
+												},
+											});
+										}}
+									>
+										<ListItemDecorator
+											sx={theme => ({
+												"--Icon-color": chat.favorite
+													? theme.vars.palette.primary["500"]
+													: "currentColor",
+											})}
 										>
-											<ListItemDecorator
-												sx={theme => ({
-													"--Icon-color": chat.pinned
-														? theme.vars.palette.primary["500"]
-														: "currentColor",
-												})}
-											>
-												<PushPinIcon />
-											</ListItemDecorator>{" "}
-											{t("labels:pin")}
-										</MenuItem>
-										<MenuItem
-											onClick={() => {
-												send({
-													action: "assistant:update",
-													payload: {
-														id: chat.id,
-														update: {
-															favorite: !chat.favorite,
-														},
-													},
-												});
-											}}
+											<StarIcon />
+										</ListItemDecorator>{" "}
+										{t("labels:favorite")}
+									</MenuItem>
+									<MenuItem
+										onClick={() => {
+											if (onDelete) {
+												onDelete(chat.id);
+											}
+										}}
+									>
+										<ListItemDecorator
+											sx={theme => ({
+												"--Icon-color": theme.vars.palette.red["500"],
+											})}
 										>
-											<ListItemDecorator
-												sx={theme => ({
-													"--Icon-color": chat.favorite
-														? theme.vars.palette.primary["500"]
-														: "currentColor",
-												})}
-											>
-												<StarIcon />
-											</ListItemDecorator>{" "}
-											{t("labels:favorite")}
-										</MenuItem>
-										<MenuItem
-											onClick={() => {
-												if (onDelete) {
-													onDelete(chat.id);
-												}
-											}}
-										>
-											<ListItemDecorator
-												sx={theme => ({
-													"--Icon-color": theme.vars.palette.red["500"],
-												})}
-											>
-												<DeleteForeverIcon />
-											</ListItemDecorator>{" "}
-											{t("labels:delete")}
-										</MenuItem>
-									</Menu>
-								</Dropdown>
-							}
+											<DeleteForeverIcon />
+										</ListItemDecorator>{" "}
+										{t("labels:delete")}
+									</MenuItem>
+								</Menu>
+							</Dropdown>
+						}
+					>
+						<ListItemButton
+							selected={chatId === chat.id}
+							color={color}
+							sx={{
+								"&.Mui-focusVisible": {
+									zIndex: "unset",
+									outlineOffset: -2,
+								},
+							}}
+							onClick={() => {
+								if (onChatSelect) {
+									onChatSelect(chat.id);
+								}
+							}}
 						>
-							<ListItemButton
-								selected={chatId === chat.id}
-								color={color}
-								sx={{
-									"&.Mui-focusVisible": {
-										zIndex: "unset",
-										outlineOffset: -2,
-									},
-								}}
-								onClick={() => {
-									if (onChatSelect) {
-										onChatSelect(chat.id);
-									}
-								}}
-							>
-								<Typography noWrap>{chat.label}</Typography>
-							</ListItemButton>
-						</ListItem>
-					))}
-			</List>
+							<Typography noWrap>{chat.label}</Typography>
+						</ListItemButton>
+					</ListItem>
+				)}
+			/>
 		</Box>
 	);
 }
